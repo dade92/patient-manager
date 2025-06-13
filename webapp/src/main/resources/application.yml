@@ -7,6 +7,6 @@ spring:
 bucket:
   host: localhost
   port: 9000
-  username: minioadmin
-  password: minioadmin
+  username: ${BLOB_DB_USERNAME}
+  password: ${BLOB_DB_PASSWORD}
   bucketName: my-bucket
