@@ -15,18 +15,6 @@
 
     <name>domain</name>
 
-    <properties>
-        <arrow-core.version>1.1.2</arrow-core.version>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>io.arrow-kt</groupId>
-            <artifactId>arrow-core</artifactId>
-            <version>${arrow-core.version}</version>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
