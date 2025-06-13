@@ -21,10 +21,10 @@ class FileController(
 
     @PostMapping("/upload")
     fun uploadFile(@RequestParam file: MultipartFile): ResponseEntity<*> =
-        file.originalFilename?.let {
+        file.originalFilename?.let { name ->
             storageService.uploadFile(
                 UploadFileRequest(
-                    key = file.originalFilename ?: "unnamed",
+                    key = name,
                     contentLength = file.size,
                     contentType = file.contentType ?: MediaType.APPLICATION_OCTET_STREAM_VALUE,
                     inputStream = file.inputStream
