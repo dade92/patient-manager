@@ -1,0 +1,12 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+bucket:
+  host: localhost
+  port: 9000
+  username: minioadmin
+  password: minioadmin
+  bucketName: my-bucket
