@@ -1,6 +1,8 @@
 package adapters.configuration
 
 import adapters.MinioStorageService
+import domain.StorageService
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
@@ -11,22 +13,24 @@ import software.amazon.awssdk.services.s3.S3Configuration
 import java.net.URI
 
 @Configuration
+@EnableConfigurationProperties(BucketProperties::class)
 class MinioClientConfig {
+
     @Bean
-    fun s3Client(): S3Client {
-        return S3Client.builder()
+    fun s3Client(
+        bucketProperties: BucketProperties
+    ): S3Client =
+        S3Client.builder()
             .credentialsProvider(
                 StaticCredentialsProvider.create(
-                    AwsBasicCredentials.create("minioadmin", "minioadmin")
+                    AwsBasicCredentials.create(bucketProperties.username, bucketProperties.password)
                 )
             )
-            .endpointOverride(URI.create("http://localhost:9000"))
+            .endpointOverride(URI.create("http://${bucketProperties.host}:${bucketProperties.port}"))
             .region(Region.US_EAST_1)
             .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
             .build()
-    }
 
     @Bean
-    fun minioStorageService(s3Client: S3Client): MinioStorageService =
-        MinioStorageService(s3Client)
+    fun minioStorageService(s3Client: S3Client): StorageService = MinioStorageService(s3Client)
 }

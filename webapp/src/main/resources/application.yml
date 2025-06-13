@@ -1,0 +1,5 @@
+bucket:
+  host: localhost
+  port: 9000
+  username: minioadmin
+  password: minioadmin
