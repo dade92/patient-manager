@@ -1,6 +1,7 @@
 package webapp.controller
 
 import domain.StorageService
+import domain.UploadFileRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import java.io.InputStream
 
 @RestController
 @RequestMapping("/files")
@@ -19,15 +21,18 @@ class FileController(
 ) {
 
     @PostMapping("/upload")
-    fun uploadFile(@RequestParam file: MultipartFile): ResponseEntity<String> {
-        storageService.uploadFile(
-            key = file.originalFilename ?: "unnamed",
-            inputStream = file.inputStream,
-            contentLength = file.size,
-            contentType = file.contentType ?: MediaType.APPLICATION_OCTET_STREAM_VALUE
-        )
-        return ResponseEntity.ok("File uploaded successfully.")
-    }
+    fun uploadFile(@RequestParam file: MultipartFile): ResponseEntity<*> =
+        file.originalFilename?.let {
+            storageService.uploadFile(
+                UploadFileRequest(
+                    key = file.originalFilename ?: "unnamed",
+                    contentLength = file.size,
+                    contentType = file.contentType ?: MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                    inputStream = file.inputStream
+                )
+            )
+            ResponseEntity.noContent().build<Any>()
+        } ?: ResponseEntity.badRequest().body("File name is missing")
 
     @GetMapping("/{filename}")
     fun getFile(
@@ -36,6 +41,14 @@ class FileController(
     ) {
         val fileStream = storageService.getFile(filename)
 
+        retrieve(response, filename, fileStream)
+    }
+
+    private fun retrieve(
+        response: HttpServletResponse,
+        filename: String,
+        fileStream: InputStream
+    ) {
         response.contentType = "application/octet-stream"
         response.setHeader("Content-Disposition", "attachment; filename=\"$filename\"")
 

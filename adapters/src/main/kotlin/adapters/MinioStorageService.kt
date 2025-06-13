@@ -1,6 +1,7 @@
 package adapters
 
 import domain.StorageService
+import domain.UploadFileRequest
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.GetObjectRequest
@@ -12,14 +13,17 @@ class MinioStorageService(
 ) : StorageService {
     private val bucketName = "my-bucket"
 
-    override fun uploadFile(key: String, inputStream: InputStream, contentLength: Long, contentType: String) {
+    override fun uploadFile(request: UploadFileRequest) {
         val putRequest = PutObjectRequest.builder()
             .bucket(bucketName)
-            .key(key)
-            .contentType(contentType)
+            .key(request.key)
+            .contentType(request.contentType)
             .build()
 
-        s3Client.putObject(putRequest, RequestBody.fromInputStream(inputStream, contentLength))
+        s3Client.putObject(
+            putRequest,
+            RequestBody.fromInputStream(request.inputStream, request.contentLength)
+        )
     }
 
     override fun getFile(key: String): InputStream {
