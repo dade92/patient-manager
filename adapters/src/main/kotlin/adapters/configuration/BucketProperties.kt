@@ -8,4 +8,5 @@ class BucketProperties {
     var port: Int? = null
     var username: String? = null
     var password: String? = null
+    var bucketName: String? = null
 }

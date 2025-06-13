@@ -2,6 +2,7 @@ package adapters
 
 import domain.StorageService
 import domain.UploadFileRequest
+import org.springframework.context.annotation.Primary
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.GetObjectRequest
@@ -9,10 +10,9 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import java.io.InputStream
 
 class MinioStorageService(
-    private val s3Client: S3Client
+    private val s3Client: S3Client,
+    private val bucketName: String
 ) : StorageService {
-    private val bucketName = "my-bucket"
-
     override fun uploadFile(request: UploadFileRequest) {
         val putRequest = PutObjectRequest.builder()
             .bucket(bucketName)

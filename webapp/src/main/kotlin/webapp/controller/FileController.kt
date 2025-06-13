@@ -20,11 +20,11 @@ class FileController(
 ) {
 
     @PostMapping("/upload")
-    fun uploadFile(@RequestParam file: MultipartFile): ResponseEntity<*> {
-        return file.originalFilename?.let { name ->
+    fun uploadFile(@RequestParam file: MultipartFile): ResponseEntity<*> =
+        file.originalFilename?.let { filename ->
             storageService.uploadFile(
                 UploadFileRequest(
-                    key = name,
+                    key = filename,
                     contentLength = file.size,
                     contentType = file.contentType ?: DEFAULT_CONTENT_TYPE,
                     inputStream = file.inputStream
@@ -32,7 +32,6 @@ class FileController(
             )
             ResponseEntity.noContent().build<Any>()
         } ?: ResponseEntity.badRequest().body("File name is missing")
-    }
 
     @GetMapping
     fun getFile(

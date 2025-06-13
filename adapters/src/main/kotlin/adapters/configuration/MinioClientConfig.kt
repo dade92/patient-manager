@@ -32,5 +32,9 @@ class MinioClientConfig {
             .build()
 
     @Bean
-    fun minioStorageService(s3Client: S3Client): StorageService = MinioStorageService(s3Client)
+    fun minioStorageService(
+        s3Client: S3Client,
+        bucketProperties: BucketProperties
+    ): StorageService =
+        MinioStorageService(s3Client, bucketProperties.bucketName!!)
 }
