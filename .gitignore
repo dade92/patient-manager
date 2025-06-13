@@ -1,0 +1,13 @@
+adapters/target
+domain/target
+webapp/target
+webapp/node_modules
+.classpath
+.project
+spring-example1.iml
+/domain/*.iml
+/domain/*.iml
+/webapp/*.iml
+.idea
+.settings
+*.jar

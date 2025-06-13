@@ -1,0 +1,57 @@
+### Create Author
+POST {{host}}/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { createAuthor(name: \"George\", surname: \"Orwell\", dateOfBirth: \"1903-06-25\") { id } }"
+}
+
+### Create Book
+POST {{host}}/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { createBook(title: \"Animal farm\", description: \"Dystopian novel\", authorName: \"George\") { id }}"
+}
+
+### Get Book by Title
+POST {{host}}/graphql
+Content-Type: application/json
+
+{
+  "query": "query { getBookByTitle(title: \"1984\") { id title description author { name surname } } }"
+}
+
+### Get Book by ID
+POST {{host}}/graphql
+Content-Type: application/json
+
+{
+  "query": "query { getBookById(id: \"db488387-0a70-464e-a539-2474530b6db8\") { id title description author { name surname } } }"
+}
+
+
+### Get Books By Author ID
+POST http://localhost:8080/graphql
+Content-Type: application/json
+
+{
+  "query": "query { getBooksByAuthor(authorId: \"396bb6ee-b9c0-4770-9f3a-9fc28ff335a8\") { id title description author {name surname} } }"
+}
+
+
+### Get Author by Name
+POST {{host}}/graphql
+Content-Type: application/json
+
+{
+  "query": "query { getAuthorByName(name: \"George\") { id name surname dateOfBirth } }"
+}
+
+### Get Author by ID
+POST {{host}}/graphql
+Content-Type: application/json
+
+{
+  "query": "query { getAuthorById(id: \"<AUTHOR_ID>\") { id name surname dateOfBirth } }"
+}
