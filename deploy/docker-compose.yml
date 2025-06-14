@@ -18,7 +18,6 @@ services:
       MINIO_ROOT_USER: ${BLOB_DB_USERNAME}
       MINIO_ROOT_PASSWORD: ${BLOB_DB_PASSWORD}
     ports:
-      - "9000:9000"   # S3 API
       - "9001:9001"   # MinIO Console
     volumes:
       - minio-data:/data
