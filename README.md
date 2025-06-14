@@ -12,3 +12,8 @@ referenced in the docker compose file.
 Inside the `deploy` folder, run the script `run.sh`. It will download and execute the spring boot app along with minio
 container used as a file storage.
 Note that you have to set two environment variables in your OS, the `BLOB_DB_USERNAME` and `BLOB_DB_PASSWORD`.
+
+## Local testing
+
+You can run the spring boot application locally and then run the script `run-local-env.sh` that will run an instance of
+minIO locally, without any volume attached.
