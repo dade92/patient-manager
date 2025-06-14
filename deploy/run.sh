@@ -1,3 +1,7 @@
 #!/bin/bash
 
-docker compose up -d
+docker compose up -d minio
+sleep 2
+
+docker compose up -d app
+echo "App should be app and running now!"
