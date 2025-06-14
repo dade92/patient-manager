@@ -1,0 +1,6 @@
+FROM openjdk:22-jdk-slim
+ARG project
+COPY ./webapp/target/webapp-1.0-SNAPSHOT.jar /usr/app/
+WORKDIR /usr/app
+EXPOSE 8080
+ENTRYPOINT ["sh", "-c", "java -jar -Dspring.profiles.active=prod -DBLOB_DB_USERNAME=$BLOB_DB_USERNAME -DBLOB_DB_PASSWORD=$BLOB_DB_PASSWORD webapp-1.0-SNAPSHOT.jar"]

@@ -1,6 +1,17 @@
 services:
+  app:
+    container_name: app
+    image: davide92/patient-manager
+    environment:
+      BLOB_DB_USERNAME: ${BLOB_DB_USERNAME}
+      BLOB_DB_PASSWORD: ${BLOB_DB_PASSWORD}
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
   minio:
-    container_name: minio-linux
+    container_name: minio
     image: minio/minio:latest
     command: server /data --console-address ":9001"
     environment:
