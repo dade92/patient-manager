@@ -49,7 +49,7 @@ class FileController(
         fileStream: InputStream
     ) {
         response.contentType = "application/octet-stream"
-        response.setHeader("Content-Disposition", "attachment; filename=\"$filename\"")
+        response.setHeader("Content-Disposition", "inline; filename=\"$filename\"")
 
         fileStream.use { input ->
             response.outputStream.use { output ->
