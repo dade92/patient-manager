@@ -1,6 +1,5 @@
 package webapp.configuration
 
-import adapters.JdbcUserRepository
 import domain.generator.UserIdGenerator
 import domain.user.UserRepository
 import domain.user.UserService
@@ -9,9 +8,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class UserConfiguration {
-
-    @Bean
-    fun userRepository(): UserRepository = JdbcUserRepository()
 
     @Bean
     fun userIdGenerator(): UserIdGenerator = UserIdGenerator()

@@ -1,0 +1,14 @@
+### Create a new user
+
+POST {{host}}/users
+Content-Type: application/json
+
+{
+  "name": "Alice Johnson",
+  "email": "alice@example.com",
+  "birthDate": "1990-07-15"
+}
+
+### Get a specific user by ID (using the first sample ID)
+
+GET {{host}}/users/22222222-2222-2222-2222-222222222222
