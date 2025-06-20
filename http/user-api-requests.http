@@ -1,6 +1,6 @@
 ### Create a new user
 
-POST {{host}}/users
+POST {{host}}/user
 Content-Type: application/json
 
 {
@@ -11,4 +11,5 @@ Content-Type: application/json
 
 ### Get a specific user by ID (using the first sample ID)
 
-GET {{host}}/users/22222222-2222-2222-2222-222222222222
+GET {{host}}/user/22222222-2222-2222-2222-222222222223
+

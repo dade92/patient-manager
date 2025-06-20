@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 class UserController(
     private val userService: UserService
 ) {
@@ -45,3 +45,4 @@ class UserController(
         val birthDate: LocalDate
     )
 }
+

@@ -29,8 +29,9 @@ services:
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_USER: app_user
-      MYSQL_PASSWORD: app_pass
+      MYSQL_DATABASE: users
+      MYSQL_USER: ${USER_DB_USERNAME}
+      MYSQL_PASSWORD: ${USER_DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
