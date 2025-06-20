@@ -3,14 +3,86 @@ package adapters
 import domain.user.User
 import domain.user.UserId
 import domain.user.UserRepository
+import java.sql.ResultSet
+import javax.sql.DataSource
 
-class JdbcUserRepository : UserRepository {
+class JdbcUserRepository(private val dataSource: DataSource) : UserRepository {
 
     override fun retrieve(userId: UserId): User? {
-        return null // Placeholder return
+        val sql = "SELECT id, name, email, birth_date FROM users WHERE id = ?"
+
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(sql).use { statement ->
+                statement.setString(1, userId.value)
+                statement.executeQuery().use { resultSet ->
+                    if (resultSet.next()) {
+                        return mapToUser(resultSet)
+                    }
+                }
+            }
+        }
+
+        return null
     }
 
     override fun save(user: User): User {
-        return user // Placeholder return
+        val existingUser = user.id.let { retrieve(it) }
+
+        return if (existingUser == null) {
+            insertUser(user)
+        } else {
+            updateUser(user)
+        }
+    }
+
+    private fun insertUser(user: User): User {
+        val sql = """
+            INSERT INTO users (id, name, email, birth_date) 
+            VALUES (?, ?, ?, ?)
+        """.trimIndent()
+
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(sql).use { statement ->
+                statement.setString(1, user.id.value)
+                statement.setString(2, user.name)
+                statement.setString(3, user.email)
+                statement.setDate(4, java.sql.Date.valueOf(user.birthDate))
+
+                statement.executeUpdate()
+            }
+        }
+
+        return user
+    }
+
+    private fun updateUser(user: User): User {
+        val sql = """
+            UPDATE users 
+            SET name = ?, email = ?, birth_date = ? 
+            WHERE id = ?
+        """.trimIndent()
+
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(sql).use { statement ->
+                statement.setString(1, user.name)
+                statement.setString(2, user.email)
+                statement.setDate(3, java.sql.Date.valueOf(user.birthDate))
+                statement.setString(4, user.id.value)
+
+                statement.executeUpdate()
+            }
+        }
+
+        return user
+    }
+
+    private fun mapToUser(resultSet: ResultSet): User {
+        return User(
+            id = UserId(resultSet.getString("id")),
+            name = resultSet.getString("name"),
+            email = resultSet.getString("email"),
+            birthDate = resultSet.getDate("birth_date").toLocalDate()
+        )
     }
 }
+

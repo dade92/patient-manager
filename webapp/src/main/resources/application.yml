@@ -3,6 +3,17 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+  datasource:
+    url: jdbc:mysql://localhost:3306/user_db
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
 
 bucket:
   host: localhost
@@ -10,3 +21,4 @@ bucket:
   username: ${BLOB_DB_USERNAME}
   password: ${BLOB_DB_PASSWORD}
   bucketName: my-bucket
+
