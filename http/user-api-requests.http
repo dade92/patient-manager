@@ -11,5 +11,5 @@ Content-Type: application/json
 
 ### Get a specific user by ID (using the first sample ID)
 
-GET {{host}}/user/22222222-2222-2222-2222-222222222223
+GET {{host}}/user/22222222-2222-2222-2222-222222222222
 
