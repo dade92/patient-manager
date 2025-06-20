@@ -41,6 +41,8 @@ class UserController(
         val user = userService.createUser(
             name = request.name,
             email = request.email,
+            phoneNumber = request.phoneNumber,
+            address = request.address,
             birthDate = request.birthDate
         )
         return ResponseEntity.status(HttpStatus.CREATED).body(user)
@@ -49,6 +51,8 @@ class UserController(
     data class CreateUserRequest(
         val name: String,
         val email: String,
+        val phoneNumber: String? = null,
+        val address: String? = null,
         val birthDate: LocalDate
     )
 

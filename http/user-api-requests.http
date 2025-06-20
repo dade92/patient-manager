@@ -6,6 +6,8 @@ Content-Type: application/json
 {
   "name": "Alice Johnson",
   "email": "alice@example.com",
+  "phoneNumber": "+1-555-555-5555",
+  "address": "789 Elm St, Chicago, IL 60601",
   "birthDate": "1990-07-15"
 }
 

@@ -17,6 +17,8 @@ data class User(
     val id: UserId,
     val name: String,
     val email: String,
+    val phoneNumber: String? = null,
+    val address: String? = null,
     val birthDate: LocalDate
 )
 

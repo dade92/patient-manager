@@ -11,7 +11,7 @@ class JdbcUserRepository(
 ) : UserRepository {
 
     override fun retrieve(userId: UserId): User? {
-        val sql = "SELECT user_id, name, email, birth_date FROM users WHERE user_id = ?"
+        val sql = "SELECT user_id, name, email, phone_number, address, birth_date FROM users WHERE user_id = ?"
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -38,7 +38,7 @@ class JdbcUserRepository(
     }
 
     override fun searchByName(name: String): List<User> {
-        val sql = "SELECT user_id, name, email, birth_date FROM users WHERE name LIKE ?"
+        val sql = "SELECT user_id, name, email, phone_number, address, birth_date FROM users WHERE name LIKE ?"
         val users = mutableListOf<User>()
 
         dataSource.connection.use { connection ->
@@ -57,8 +57,8 @@ class JdbcUserRepository(
 
     private fun insertUser(user: User): User {
         val sql = """
-            INSERT INTO users (user_id, name, email, birth_date) 
-            VALUES (?, ?, ?, ?)
+            INSERT INTO users (user_id, name, email, phone_number, address, birth_date) 
+            VALUES (?, ?, ?, ?, ?, ?)
         """.trimIndent()
 
         dataSource.connection.use { connection ->
@@ -66,7 +66,9 @@ class JdbcUserRepository(
                 statement.setString(1, user.id.value)
                 statement.setString(2, user.name)
                 statement.setString(3, user.email)
-                statement.setDate(4, java.sql.Date.valueOf(user.birthDate))
+                statement.setString(4, user.phoneNumber)
+                statement.setString(5, user.address)
+                statement.setDate(6, java.sql.Date.valueOf(user.birthDate))
 
                 statement.executeUpdate()
             }
@@ -78,7 +80,7 @@ class JdbcUserRepository(
     private fun updateUser(user: User): User {
         val sql = """
             UPDATE users 
-            SET name = ?, email = ?, birth_date = ? 
+            SET name = ?, email = ?, phone_number = ?, address = ?, birth_date = ? 
             WHERE user_id = ?
         """.trimIndent()
 
@@ -86,8 +88,10 @@ class JdbcUserRepository(
             connection.prepareStatement(sql).use { statement ->
                 statement.setString(1, user.name)
                 statement.setString(2, user.email)
-                statement.setDate(3, java.sql.Date.valueOf(user.birthDate))
-                statement.setString(4, user.id.value)
+                statement.setString(3, user.phoneNumber)
+                statement.setString(4, user.address)
+                statement.setDate(5, java.sql.Date.valueOf(user.birthDate))
+                statement.setString(6, user.id.value)
 
                 statement.executeUpdate()
             }
@@ -101,6 +105,8 @@ class JdbcUserRepository(
             id = UserId(resultSet.getString("user_id")),
             name = resultSet.getString("name"),
             email = resultSet.getString("email"),
+            phoneNumber = resultSet.getString("phone_number"),
+            address = resultSet.getString("address"),
             birthDate = resultSet.getDate("birth_date").toLocalDate()
         )
 }

@@ -10,12 +10,20 @@ class UserService(
 
     fun retrieveUser(userId: UserId): User? = userRepository.retrieve(userId)
 
-    fun createUser(name: String, email: String, birthDate: LocalDate): User =
+    fun createUser(
+        name: String,
+        email: String,
+        phoneNumber: String? = null,
+        address: String? = null,
+        birthDate: LocalDate
+    ): User =
         userRepository.save(
             User(
                 id = userIdGenerator.get(),
                 name = name,
                 email = email,
+                phoneNumber = phoneNumber,
+                address = address,
                 birthDate = birthDate
             )
         )
