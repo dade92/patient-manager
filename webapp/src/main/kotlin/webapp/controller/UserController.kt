@@ -1,7 +1,7 @@
 package webapp.controller
 
-import domain.user.User
-import domain.user.UserId
+import domain.model.User
+import domain.model.UserId
 import domain.user.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

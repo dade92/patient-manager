@@ -1,6 +1,8 @@
 package domain.user
 
 import domain.generator.UserIdGenerator
+import domain.model.User
+import domain.model.UserId
 import java.time.LocalDate
 
 class UserService(

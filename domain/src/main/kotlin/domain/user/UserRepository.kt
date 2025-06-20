@@ -1,24 +1,11 @@
 package domain.user
 
-import java.time.LocalDate
+import domain.model.User
+import domain.model.UserId
 
 interface UserRepository {
     fun retrieve(userId: UserId): User?
     fun save(user: User): User
     fun searchByName(name: String): List<User>
 }
-
-@JvmInline
-value class UserId(val value: String) {
-    override fun toString(): String = value
-}
-
-data class User(
-    val id: UserId,
-    val name: String,
-    val email: String,
-    val phoneNumber: String? = null,
-    val address: String? = null,
-    val birthDate: LocalDate
-)
 

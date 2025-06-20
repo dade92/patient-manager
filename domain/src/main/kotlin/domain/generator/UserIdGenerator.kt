@@ -1,6 +1,6 @@
 package domain.generator
 
-import domain.user.UserId
+import domain.model.UserId
 import java.util.UUID
 
 class UserIdGenerator {

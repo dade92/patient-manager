@@ -1,7 +1,7 @@
 package adapters
 
-import domain.user.User
-import domain.user.UserId
+import domain.model.User
+import domain.model.UserId
 import domain.user.UserRepository
 import java.sql.ResultSet
 import javax.sql.DataSource
