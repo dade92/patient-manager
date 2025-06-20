@@ -13,8 +13,11 @@ class UserConfiguration {
     fun userIdGenerator(): UserIdGenerator = UserIdGenerator()
 
     @Bean
-    fun userService(userRepository: UserRepository, userIdGenerator: UserIdGenerator): UserService = UserService(
-        userRepository = userRepository,
-        userIdGenerator = userIdGenerator
+    fun userService(
+        userRepository: UserRepository,
+        userIdGenerator: UserIdGenerator
+    ): UserService = UserService(
+        userRepository,
+        userIdGenerator
     )
 }

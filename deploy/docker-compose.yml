@@ -5,6 +5,8 @@ services:
     environment:
       BLOB_DB_USERNAME: ${BLOB_DB_USERNAME}
       BLOB_DB_PASSWORD: ${BLOB_DB_PASSWORD}
+      USER_DB_USERNAME: ${USER_DB_USERNAME}
+      USER_DB_PASSWORD: ${USER_DB_PASSWORD}
     ports:
       - "8080:8080"
     networks:
