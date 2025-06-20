@@ -20,4 +20,7 @@ class UserService(
             )
         )
 
+    fun searchUsersByName(name: String): List<User> = userRepository.searchByName(name)
+
 }
+

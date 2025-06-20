@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
 
@@ -29,6 +30,12 @@ class UserController(
         }
     }
 
+    @GetMapping("/search")
+    fun searchUsers(@RequestParam name: String): ResponseEntity<SearchUsersResponse> {
+        val users = userService.searchUsersByName(name)
+        return ResponseEntity.ok(SearchUsersResponse(users))
+    }
+
     @PostMapping
     fun createUser(@RequestBody request: CreateUserRequest): ResponseEntity<User> {
         val user = userService.createUser(
@@ -44,5 +51,8 @@ class UserController(
         val email: String,
         val birthDate: LocalDate
     )
-}
 
+    data class SearchUsersResponse(
+        val users: List<User>
+    )
+}

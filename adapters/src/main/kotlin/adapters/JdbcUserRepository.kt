@@ -28,13 +28,31 @@ class JdbcUserRepository(
     }
 
     override fun save(user: User): User {
-        val existingUser = user.id.let { retrieve(it) }
+        val existingUser = retrieve(user.id)
 
         return if (existingUser == null) {
             insertUser(user)
         } else {
             updateUser(user)
         }
+    }
+
+    override fun searchByName(name: String): List<User> {
+        val sql = "SELECT user_id, name, email, birth_date FROM users WHERE name LIKE ?"
+        val users = mutableListOf<User>()
+
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(sql).use { statement ->
+                statement.setString(1, "%$name%")
+                statement.executeQuery().use { resultSet ->
+                    while (resultSet.next()) {
+                        users.add(mapToUser(resultSet))
+                    }
+                }
+            }
+        }
+
+        return users
     }
 
     private fun insertUser(user: User): User {
@@ -78,12 +96,11 @@ class JdbcUserRepository(
         return user
     }
 
-    private fun mapToUser(resultSet: ResultSet): User {
-        return User(
+    private fun mapToUser(resultSet: ResultSet): User =
+        User(
             id = UserId(resultSet.getString("user_id")),
             name = resultSet.getString("name"),
             email = resultSet.getString("email"),
             birthDate = resultSet.getDate("birth_date").toLocalDate()
         )
-    }
 }

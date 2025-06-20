@@ -5,6 +5,7 @@ import java.time.LocalDate
 interface UserRepository {
     fun retrieve(userId: UserId): User?
     fun save(user: User): User
+    fun searchByName(name: String): List<User>
 }
 
 @JvmInline
@@ -18,3 +19,4 @@ data class User(
     val email: String,
     val birthDate: LocalDate
 )
+
