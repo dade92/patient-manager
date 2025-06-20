@@ -8,7 +8,6 @@ import javax.sql.DataSource
 
 @Configuration
 class DatabaseConfiguration(
-    private val databaseProperties: DatabaseProperties,
     private val dataSource: DataSource
 ) {
 

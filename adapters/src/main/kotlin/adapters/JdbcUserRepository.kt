@@ -6,7 +6,9 @@ import domain.user.UserRepository
 import java.sql.ResultSet
 import javax.sql.DataSource
 
-class JdbcUserRepository(private val dataSource: DataSource) : UserRepository {
+class JdbcUserRepository(
+    private val dataSource: DataSource
+) : UserRepository {
 
     override fun retrieve(userId: UserId): User? {
         val sql = "SELECT id, name, email, birth_date FROM users WHERE id = ?"
@@ -26,7 +28,7 @@ class JdbcUserRepository(private val dataSource: DataSource) : UserRepository {
     }
 
     override fun save(user: User): User {
-        val existingUser = user.id.let { retrieve(it) }
+        val existingUser = retrieve(user.id)
 
         return if (existingUser == null) {
             insertUser(user)
@@ -76,13 +78,11 @@ class JdbcUserRepository(private val dataSource: DataSource) : UserRepository {
         return user
     }
 
-    private fun mapToUser(resultSet: ResultSet): User {
-        return User(
-            id = UserId(resultSet.getString("id")),
-            name = resultSet.getString("name"),
-            email = resultSet.getString("email"),
-            birthDate = resultSet.getDate("birth_date").toLocalDate()
-        )
-    }
+    private fun mapToUser(resultSet: ResultSet): User = User(
+        id = UserId(resultSet.getString("id")),
+        name = resultSet.getString("name"),
+        email = resultSet.getString("email"),
+        birthDate = resultSet.getDate("birth_date").toLocalDate()
+    )
 }
 
