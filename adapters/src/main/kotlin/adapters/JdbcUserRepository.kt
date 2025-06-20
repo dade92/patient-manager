@@ -11,7 +11,7 @@ class JdbcUserRepository(
 ) : UserRepository {
 
     override fun retrieve(userId: UserId): User? {
-        val sql = "SELECT id, name, email, birth_date FROM users WHERE id = ?"
+        val sql = "SELECT user_id, name, email, birth_date FROM users WHERE user_id = ?"
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -28,7 +28,7 @@ class JdbcUserRepository(
     }
 
     override fun save(user: User): User {
-        val existingUser = retrieve(user.id)
+        val existingUser = user.id.let { retrieve(it) }
 
         return if (existingUser == null) {
             insertUser(user)
@@ -39,7 +39,7 @@ class JdbcUserRepository(
 
     private fun insertUser(user: User): User {
         val sql = """
-            INSERT INTO users (id, name, email, birth_date) 
+            INSERT INTO users (user_id, name, email, birth_date) 
             VALUES (?, ?, ?, ?)
         """.trimIndent()
 
@@ -61,7 +61,7 @@ class JdbcUserRepository(
         val sql = """
             UPDATE users 
             SET name = ?, email = ?, birth_date = ? 
-            WHERE id = ?
+            WHERE user_id = ?
         """.trimIndent()
 
         dataSource.connection.use { connection ->
@@ -78,11 +78,12 @@ class JdbcUserRepository(
         return user
     }
 
-    private fun mapToUser(resultSet: ResultSet): User = User(
-        id = UserId(resultSet.getString("id")),
-        name = resultSet.getString("name"),
-        email = resultSet.getString("email"),
-        birthDate = resultSet.getDate("birth_date").toLocalDate()
-    )
+    private fun mapToUser(resultSet: ResultSet): User {
+        return User(
+            id = UserId(resultSet.getString("user_id")),
+            name = resultSet.getString("name"),
+            email = resultSet.getString("email"),
+            birthDate = resultSet.getDate("birth_date").toLocalDate()
+        )
+    }
 }
-

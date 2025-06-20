@@ -20,16 +20,19 @@ services:
       "
     networks:
       - backend
+
   mysql:
     image: mysql:8.3
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: app_db
+      MYSQL_DATABASE: users
       MYSQL_USER: ${USER_DB_USERNAME}
       MYSQL_PASSWORD: ${USER_DB_PASSWORD}
     ports:
       - "3306:3306"
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
     networks:
       - backend
 
