@@ -44,7 +44,7 @@ class UserController(
             email = request.email,
             phoneNumber = request.phoneNumber,
             address = request.address,
-            city = request.city,
+            cityOfResidence = request.cityOfResidence,
             nationality = request.nationality,
             birthDate = request.birthDate
         )
@@ -58,7 +58,7 @@ class UserController(
         val email: String,
         val phoneNumber: String? = null,
         val address: String? = null,
-        val city: String? = null,
+        val cityOfResidence: String? = null,
         val nationality: String? = null,
         val birthDate: LocalDate
     )

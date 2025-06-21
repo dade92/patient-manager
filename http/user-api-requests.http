@@ -8,7 +8,7 @@ Content-Type: application/json
   "email": "alice@example.com",
   "phoneNumber": "+1-555-555-5555",
   "address": "789 Elm St, Chicago, IL 60601",
-  "city": "Chicago",
+  "cityOfResidence": "Chicago",
   "nationality": "USA",
   "birthDate": "1990-07-15"
 }

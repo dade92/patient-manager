@@ -13,7 +13,7 @@ data class User(
     val email: String,
     val phoneNumber: String? = null,
     val address: String? = null,
-    val city: String? = null,
+    val cityOfResidence: String? = null,
     val nationality: String? = null,
     val birthDate: LocalDate
 )
