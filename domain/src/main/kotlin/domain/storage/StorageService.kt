@@ -1,4 +1,4 @@
-package domain
+package domain.storage
 
 import java.io.InputStream
 

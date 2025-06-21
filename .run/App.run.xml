@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="App" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <option name="ALTERNATIVE_JRE_PATH" value="openjdk-24" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <envs>
+      <env name="BLOB_DB_USERNAME" value="minioadmin" />
+      <env name="BLOB_DB_PASSWORD" value="minioadmin" />
+      <env name="PATIENT_DB_USERNAME" value="user" />
+      <env name="PATIENT_DB_PASSWORD" value="password" />
+    </envs>
+    <module name="webapp" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="webapp.App" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

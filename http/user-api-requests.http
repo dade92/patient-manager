@@ -1,0 +1,22 @@
+### Create a new user
+
+POST {{host}}/patient
+Content-Type: application/json
+
+{
+  "name": "Alice Johnson",
+  "email": "alice@example.com",
+  "phoneNumber": "+1-555-555-5555",
+  "address": "789 Elm St, Chicago, IL 60601",
+  "cityOfResidence": "Chicago",
+  "nationality": "USA",
+  "birthDate": "1990-07-15"
+}
+
+### Get a specific patient by ID (using the first sample ID)
+
+GET {{host}}/patient/22222222-2222-2222-2222-222222222222
+
+### Search patients by name
+
+GET {{host}}/patient/search?name=Alice

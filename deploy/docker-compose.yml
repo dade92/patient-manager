@@ -5,11 +5,14 @@ services:
     environment:
       BLOB_DB_USERNAME: ${BLOB_DB_USERNAME}
       BLOB_DB_PASSWORD: ${BLOB_DB_PASSWORD}
+      USER_DB_USERNAME: ${USER_DB_USERNAME}
+      USER_DB_PASSWORD: ${USER_DB_PASSWORD}
     ports:
       - "8080:8080"
     networks:
       - backend
 
+# TODO the volume should be mounted to a specific folder in the host
   minio:
     container_name: minio
     image: minio/minio:latest
@@ -24,20 +27,20 @@ services:
     networks:
       - backend
 
-#  mysql:
-#    image: mysql:8.3
-#    container_name: mysql
-#    environment:
-#      MYSQL_ROOT_PASSWORD: rootpass
-#      MYSQL_DATABASE: app_db
-#      MYSQL_USER: app_user
-#      MYSQL_PASSWORD: app_pass
-#    ports:
-#      - "3306:3306"
-#    volumes:
-#      - mysql-data:/var/lib/mysql
-#    networks:
-#      - backend
+  mysql:
+    image: mysql:8.3
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: patient-manager-db
+      MYSQL_USER: ${PATIENT_DB_USERNAME}
+      MYSQL_PASSWORD: ${PATIENT_DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - backend
 
 volumes:
   minio-data:
@@ -45,4 +48,3 @@ volumes:
 
 networks:
   backend:
-
