@@ -1,6 +1,6 @@
 ### Create a new user
 
-POST {{host}}/user
+POST {{host}}/patient
 Content-Type: application/json
 
 {
@@ -13,10 +13,10 @@ Content-Type: application/json
   "birthDate": "1990-07-15"
 }
 
-### Get a specific user by ID (using the first sample ID)
+### Get a specific patient by ID (using the first sample ID)
 
-GET {{host}}/user/22222222-2222-2222-2222-222222222222
+GET {{host}}/patient/4b3b96f9-f72b-44a8-8269-a8e3df9bff88
 
-### Search users by name
+### Search patients by name
 
-GET {{host}}/user/search?name=John
+GET {{host}}/patient/search?name=John
