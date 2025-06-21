@@ -5,16 +5,6 @@ import domain.model.Patient
 import domain.model.PatientId
 import java.time.LocalDate
 
-data class CreatePatientRequest(
-    val name: String,
-    val email: String,
-    val phoneNumber: String? = null,
-    val address: String? = null,
-    val cityOfResidence: String? = null,
-    val nationality: String? = null,
-    val birthDate: LocalDate
-)
-
 class PatientService(
     private val patientRepository: PatientRepository,
     private val patientIdGenerator: PatientIdGenerator
@@ -39,3 +29,13 @@ class PatientService(
     fun searchPatientsByName(name: String): List<Patient> = patientRepository.searchByName(name)
 
 }
+
+data class CreatePatientRequest(
+    val name: String,
+    val email: String,
+    val phoneNumber: String? = null,
+    val address: String? = null,
+    val cityOfResidence: String? = null,
+    val nationality: String? = null,
+    val birthDate: LocalDate
+)
