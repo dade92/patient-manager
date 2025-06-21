@@ -1,7 +1,7 @@
 package adapters.configuration
 
-import adapters.JdbcUserRepository
-import domain.user.UserRepository
+import adapters.JdbcPatientRepository
+import domain.user.PatientRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import javax.sql.DataSource
@@ -12,5 +12,5 @@ class DatabaseConfiguration(
 ) {
 
     @Bean
-    fun userRepository(): UserRepository = JdbcUserRepository(dataSource)
+    fun patientRepository(): PatientRepository = JdbcPatientRepository(dataSource)
 }

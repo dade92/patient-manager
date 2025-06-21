@@ -1,23 +1,23 @@
 package webapp.configuration
 
-import domain.generator.UserIdGenerator
-import domain.user.UserRepository
-import domain.user.UserService
+import domain.generator.PatientIdGenerator
+import domain.user.PatientRepository
+import domain.user.PatientService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class UserConfiguration {
+class PatientConfiguration {
 
     @Bean
-    fun userIdGenerator(): UserIdGenerator = UserIdGenerator()
+    fun userIdGenerator(): PatientIdGenerator = PatientIdGenerator()
 
     @Bean
-    fun userService(
-        userRepository: UserRepository,
-        userIdGenerator: UserIdGenerator
-    ): UserService = UserService(
-        userRepository,
-        userIdGenerator
+    fun patientService(
+        patientRepository: PatientRepository,
+        patientIdGenerator: PatientIdGenerator
+    ): PatientService = PatientService(
+        patientRepository,
+        patientIdGenerator
     )
 }

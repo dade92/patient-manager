@@ -1,9 +1,9 @@
 package webapp.controller
 
-import domain.model.User
-import domain.model.UserId
-import domain.user.CreateUserRequest as DomainCreateUserRequest
-import domain.user.UserService
+import domain.model.Patient
+import domain.model.PatientId
+import domain.user.CreatePatientRequest as DomainCreatePatientRequest
+import domain.user.PatientService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,30 +16,30 @@ import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
 
 @RestController
-@RequestMapping("/user")
-class UserController(
-    private val userService: UserService
+@RequestMapping("/patient")
+class PatientController(
+    private val patientService: PatientService
 ) {
 
-    @GetMapping("/{userId}")
-    fun getUser(@PathVariable userId: String): ResponseEntity<User> {
-        val user = userService.retrieveUser(UserId(userId))
-        return if (user != null) {
-            ResponseEntity.ok(user)
+    @GetMapping("/{patientId}")
+    fun getPatient(@PathVariable patientId: String): ResponseEntity<Patient> {
+        val patient = patientService.retrievePatient(PatientId(patientId))
+        return if (patient != null) {
+            ResponseEntity.ok(patient)
         } else {
             ResponseEntity.notFound().build()
         }
     }
 
     @GetMapping("/search")
-    fun searchUsers(@RequestParam name: String): ResponseEntity<SearchUsersResponse> {
-        val users = userService.searchUsersByName(name)
-        return ResponseEntity.ok(SearchUsersResponse(users))
+    fun searchPatients(@RequestParam name: String): ResponseEntity<SearchPatientsResponse> {
+        val patients = patientService.searchPatientsByName(name)
+        return ResponseEntity.ok(SearchPatientsResponse(patients))
     }
 
     @PostMapping
-    fun createUser(@RequestBody request: CreateUserRequest): ResponseEntity<User> {
-        val domainRequest = DomainCreateUserRequest(
+    fun createPatient(@RequestBody request: CreatePatientRequest): ResponseEntity<Patient> {
+        val domainRequest = DomainCreatePatientRequest(
             name = request.name,
             email = request.email,
             phoneNumber = request.phoneNumber,
@@ -49,11 +49,11 @@ class UserController(
             birthDate = request.birthDate
         )
 
-        val user = userService.createUser(domainRequest)
-        return ResponseEntity.status(HttpStatus.CREATED).body(user)
+        val patient = patientService.createPatient(domainRequest)
+        return ResponseEntity.status(HttpStatus.CREATED).body(patient)
     }
 
-    data class CreateUserRequest(
+    data class CreatePatientRequest(
         val name: String,
         val email: String,
         val phoneNumber: String? = null,
@@ -63,7 +63,7 @@ class UserController(
         val birthDate: LocalDate
     )
 
-    data class SearchUsersResponse(
-        val users: List<User>
+    data class SearchPatientsResponse(
+        val patients: List<Patient>
     )
 }

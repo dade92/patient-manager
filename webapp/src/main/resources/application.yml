@@ -4,7 +4,7 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
   datasource:
-    url: jdbc:mysql://localhost:3306/users
+    url: jdbc:mysql://localhost:3306/patient-manager-db
     username: ${USER_DB_USERNAME}
     password: ${USER_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,4 +15,3 @@ bucket:
   username: ${BLOB_DB_USERNAME}
   password: ${BLOB_DB_PASSWORD}
   bucketName: my-bucket
-

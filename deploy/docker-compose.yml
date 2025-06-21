@@ -32,7 +32,7 @@ services:
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: users
+      MYSQL_DATABASE: patient-manager-db
       MYSQL_USER: ${USER_DB_USERNAME}
       MYSQL_PASSWORD: ${USER_DB_PASSWORD}
     ports:
@@ -48,4 +48,3 @@ volumes:
 
 networks:
   backend:
-
