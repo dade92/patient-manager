@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 import javax.sql.DataSource
 
 @Configuration
-class DatabaseConfiguration(
+class RepositoryConfiguration(
     private val dataSource: DataSource
 ) {
 

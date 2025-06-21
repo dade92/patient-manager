@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration
 class PatientConfiguration {
 
     @Bean
-    fun userIdGenerator(): PatientIdGenerator = PatientIdGenerator()
+    fun patientIdGenerator(): PatientIdGenerator = PatientIdGenerator()
 
     @Bean
     fun patientService(
