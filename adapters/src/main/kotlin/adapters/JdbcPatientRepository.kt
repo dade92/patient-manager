@@ -4,6 +4,7 @@ import domain.model.Patient
 import domain.model.PatientId
 import domain.user.PatientRepository
 import java.sql.ResultSet
+import java.time.LocalDateTime
 import javax.sql.DataSource
 
 class JdbcPatientRepository(
@@ -57,9 +58,11 @@ class JdbcPatientRepository(
 
     private fun insertPatient(patient: Patient): Patient {
         val sql = """
-            INSERT INTO `PATIENT` (user_id, name, email, phone_number, address, city_of_residence, nationality, birth_date) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO `PATIENT` (user_id, name, email, phone_number, address, city_of_residence, nationality, birth_date, creation_date) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """.trimIndent()
+
+        val now = LocalDateTime.now()
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -71,6 +74,7 @@ class JdbcPatientRepository(
                 statement.setString(6, patient.cityOfResidence)
                 statement.setString(7, patient.nationality)
                 statement.setDate(8, java.sql.Date.valueOf(patient.birthDate))
+                statement.setTimestamp(9, java.sql.Timestamp.valueOf(now))
 
                 statement.executeUpdate()
             }
