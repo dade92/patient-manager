@@ -1,7 +1,7 @@
 package adapters.configuration
 
-import adapters.JdbcPatientRepository
-import domain.user.PatientRepository
+import adapters.patient.JdbcPatientRepository
+import domain.patient.PatientRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import javax.sql.DataSource

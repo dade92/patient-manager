@@ -1,4 +1,4 @@
-package domain.user
+package domain.patient
 
 import domain.model.Patient
 import domain.model.PatientId

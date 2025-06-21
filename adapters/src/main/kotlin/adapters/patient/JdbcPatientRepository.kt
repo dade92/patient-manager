@@ -1,9 +1,11 @@
-package adapters
+package adapters.patient
 
 import domain.model.Patient
 import domain.model.PatientId
-import domain.user.PatientRepository
+import domain.patient.PatientRepository
+import java.sql.Date
 import java.sql.ResultSet
+import java.sql.Timestamp
 import java.time.LocalDateTime
 import javax.sql.DataSource
 
@@ -73,8 +75,8 @@ class JdbcPatientRepository(
                 statement.setString(5, patient.address)
                 statement.setString(6, patient.cityOfResidence)
                 statement.setString(7, patient.nationality)
-                statement.setDate(8, java.sql.Date.valueOf(patient.birthDate))
-                statement.setTimestamp(9, java.sql.Timestamp.valueOf(now))
+                statement.setDate(8, Date.valueOf(patient.birthDate))
+                statement.setTimestamp(9, Timestamp.valueOf(now))
 
                 statement.executeUpdate()
             }
@@ -98,7 +100,7 @@ class JdbcPatientRepository(
                 statement.setString(4, patient.address)
                 statement.setString(5, patient.cityOfResidence)
                 statement.setString(6, patient.nationality)
-                statement.setDate(7, java.sql.Date.valueOf(patient.birthDate))
+                statement.setDate(7, Date.valueOf(patient.birthDate))
                 statement.setString(8, patient.id.value)
 
                 statement.executeUpdate()

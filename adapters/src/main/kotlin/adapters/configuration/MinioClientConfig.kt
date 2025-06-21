@@ -1,7 +1,7 @@
 package adapters.configuration
 
-import adapters.MinioStorageService
-import domain.StorageService
+import adapters.storage.MinioStorageService
+import domain.storage.StorageService
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

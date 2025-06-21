@@ -2,8 +2,8 @@ package webapp.controller
 
 import domain.model.Patient
 import domain.model.PatientId
-import domain.user.CreatePatientRequest as DomainCreatePatientRequest
-import domain.user.PatientService
+import domain.patient.CreatePatientRequest as DomainCreatePatientRequest
+import domain.patient.PatientService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

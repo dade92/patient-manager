@@ -1,4 +1,4 @@
-package domain.user
+package domain.patient
 
 import domain.generator.PatientIdGenerator
 import domain.model.Patient
@@ -27,7 +27,6 @@ class PatientService(
         )
 
     fun searchPatientsByName(name: String): List<Patient> = patientRepository.searchByName(name)
-
 }
 
 data class CreatePatientRequest(

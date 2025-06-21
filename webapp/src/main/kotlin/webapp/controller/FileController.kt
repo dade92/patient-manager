@@ -1,7 +1,7 @@
 package webapp.controller
 
-import domain.StorageService
-import domain.UploadFileRequest
+import domain.storage.StorageService
+import domain.storage.UploadFileRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity

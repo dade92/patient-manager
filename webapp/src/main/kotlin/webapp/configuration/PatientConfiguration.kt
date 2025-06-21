@@ -1,8 +1,8 @@
 package webapp.configuration
 
 import domain.generator.PatientIdGenerator
-import domain.user.PatientRepository
-import domain.user.PatientService
+import domain.patient.PatientRepository
+import domain.patient.PatientService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 

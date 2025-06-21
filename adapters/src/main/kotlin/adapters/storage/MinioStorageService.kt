@@ -1,8 +1,7 @@
-package adapters
+package adapters.storage
 
-import domain.StorageService
-import domain.UploadFileRequest
-import org.springframework.context.annotation.Primary
+import domain.storage.StorageService
+import domain.storage.UploadFileRequest
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.GetObjectRequest
