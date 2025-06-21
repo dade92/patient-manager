@@ -5,6 +5,16 @@ import domain.model.User
 import domain.model.UserId
 import java.time.LocalDate
 
+data class CreateUserRequest(
+    val name: String,
+    val email: String,
+    val phoneNumber: String? = null,
+    val address: String? = null,
+    val city: String? = null,
+    val nationality: String? = null,
+    val birthDate: LocalDate
+)
+
 class UserService(
     private val userRepository: UserRepository,
     private val userIdGenerator: UserIdGenerator
@@ -12,25 +22,20 @@ class UserService(
 
     fun retrieveUser(userId: UserId): User? = userRepository.retrieve(userId)
 
-    fun createUser(
-        name: String,
-        email: String,
-        phoneNumber: String? = null,
-        address: String? = null,
-        birthDate: LocalDate
-    ): User =
+    fun createUser(request: CreateUserRequest): User =
         userRepository.save(
             User(
                 id = userIdGenerator.get(),
-                name = name,
-                email = email,
-                phoneNumber = phoneNumber,
-                address = address,
-                birthDate = birthDate
+                name = request.name,
+                email = request.email,
+                phoneNumber = request.phoneNumber,
+                address = request.address,
+                city = request.city,
+                nationality = request.nationality,
+                birthDate = request.birthDate
             )
         )
 
     fun searchUsersByName(name: String): List<User> = userRepository.searchByName(name)
 
 }
-

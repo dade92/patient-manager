@@ -8,12 +8,14 @@ Content-Type: application/json
   "email": "alice@example.com",
   "phoneNumber": "+1-555-555-5555",
   "address": "789 Elm St, Chicago, IL 60601",
+  "city": "Chicago",
+  "nationality": "USA",
   "birthDate": "1990-07-15"
 }
 
 ### Get a specific user by ID (using the first sample ID)
 
-GET {{host}}/user/22222222-2222-2222-2222-222222222222
+GET {{host}}/user/3e915a98-d6b1-40d4-9737-468e3d394556
 
 ### Search users by name
 

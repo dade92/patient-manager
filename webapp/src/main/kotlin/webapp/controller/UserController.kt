@@ -2,6 +2,7 @@ package webapp.controller
 
 import domain.model.User
 import domain.model.UserId
+import domain.user.CreateUserRequest as DomainCreateUserRequest
 import domain.user.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -38,13 +39,17 @@ class UserController(
 
     @PostMapping
     fun createUser(@RequestBody request: CreateUserRequest): ResponseEntity<User> {
-        val user = userService.createUser(
+        val domainRequest = DomainCreateUserRequest(
             name = request.name,
             email = request.email,
             phoneNumber = request.phoneNumber,
             address = request.address,
+            city = request.city,
+            nationality = request.nationality,
             birthDate = request.birthDate
         )
+
+        val user = userService.createUser(domainRequest)
         return ResponseEntity.status(HttpStatus.CREATED).body(user)
     }
 
@@ -53,6 +58,8 @@ class UserController(
         val email: String,
         val phoneNumber: String? = null,
         val address: String? = null,
+        val city: String? = null,
+        val nationality: String? = null,
         val birthDate: LocalDate
     )
 

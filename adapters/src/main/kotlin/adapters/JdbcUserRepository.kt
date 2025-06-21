@@ -11,7 +11,7 @@ class JdbcUserRepository(
 ) : UserRepository {
 
     override fun retrieve(userId: UserId): User? {
-        val sql = "SELECT user_id, name, email, phone_number, address, birth_date FROM users WHERE user_id = ?"
+        val sql = "SELECT user_id, name, email, phone_number, address, city, nationality, birth_date FROM users WHERE user_id = ?"
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -38,7 +38,7 @@ class JdbcUserRepository(
     }
 
     override fun searchByName(name: String): List<User> {
-        val sql = "SELECT user_id, name, email, phone_number, address, birth_date FROM users WHERE name LIKE ?"
+        val sql = "SELECT user_id, name, email, phone_number, address, city, nationality, birth_date FROM users WHERE name LIKE ?"
         val users = mutableListOf<User>()
 
         dataSource.connection.use { connection ->
@@ -57,8 +57,8 @@ class JdbcUserRepository(
 
     private fun insertUser(user: User): User {
         val sql = """
-            INSERT INTO users (user_id, name, email, phone_number, address, birth_date) 
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO users (user_id, name, email, phone_number, address, city, nationality, birth_date) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """.trimIndent()
 
         dataSource.connection.use { connection ->
@@ -68,7 +68,9 @@ class JdbcUserRepository(
                 statement.setString(3, user.email)
                 statement.setString(4, user.phoneNumber)
                 statement.setString(5, user.address)
-                statement.setDate(6, java.sql.Date.valueOf(user.birthDate))
+                statement.setString(6, user.city)
+                statement.setString(7, user.nationality)
+                statement.setDate(8, java.sql.Date.valueOf(user.birthDate))
 
                 statement.executeUpdate()
             }
@@ -80,7 +82,7 @@ class JdbcUserRepository(
     private fun updateUser(user: User): User {
         val sql = """
             UPDATE users 
-            SET name = ?, email = ?, phone_number = ?, address = ?, birth_date = ? 
+            SET name = ?, email = ?, phone_number = ?, address = ?, city = ?, nationality = ?, birth_date = ? 
             WHERE user_id = ?
         """.trimIndent()
 
@@ -90,8 +92,10 @@ class JdbcUserRepository(
                 statement.setString(2, user.email)
                 statement.setString(3, user.phoneNumber)
                 statement.setString(4, user.address)
-                statement.setDate(5, java.sql.Date.valueOf(user.birthDate))
-                statement.setString(6, user.id.value)
+                statement.setString(5, user.city)
+                statement.setString(6, user.nationality)
+                statement.setDate(7, java.sql.Date.valueOf(user.birthDate))
+                statement.setString(8, user.id.value)
 
                 statement.executeUpdate()
             }
@@ -107,6 +111,8 @@ class JdbcUserRepository(
             email = resultSet.getString("email"),
             phoneNumber = resultSet.getString("phone_number"),
             address = resultSet.getString("address"),
+            city = resultSet.getString("city"),
+            nationality = resultSet.getString("nationality"),
             birthDate = resultSet.getDate("birth_date").toLocalDate()
         )
 }
