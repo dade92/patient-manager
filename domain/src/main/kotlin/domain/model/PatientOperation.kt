@@ -14,8 +14,8 @@ data class PatientOperation(
     val description: String,
     val assets: List<String>,
     val additionalNotes: List<OperationNote>,
-    val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    val creationDateTime: LocalDateTime,
+    val lastUpdate: LocalDateTime
 )
 
 enum class OperationType {
@@ -28,5 +28,5 @@ enum class OperationType {
 
 data class OperationNote(
     val content: String,
-    val createdAt: LocalDateTime = LocalDateTime.now()
+    val creationTime: LocalDateTime = LocalDateTime.now()
 )

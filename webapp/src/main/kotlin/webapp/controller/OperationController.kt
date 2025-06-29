@@ -41,10 +41,10 @@ class OperationController(
     }
 
     @GetMapping("/patient/{patientId}")
-    fun getPatientOperations(@PathVariable patientId: String): ResponseEntity<List<OperationResponseDto>> {
+    fun getPatientOperations(@PathVariable patientId: String): ResponseEntity<PatientOperationsResponse> {
         val operations = operationService.getOperationsBy(PatientId(patientId))
 
-        return ResponseEntity.ok(operations.map { it.toResponseDto() })
+        return ResponseEntity.ok(PatientOperationsResponse(operations.map { it.toResponseDto() }))
     }
 
     @PostMapping("/{id}/notes")
@@ -77,10 +77,10 @@ class OperationController(
             description = this.description,
             assets = this.assets,
             additionalNotes = this.additionalNotes.map {
-                OperationNoteDto(it.content, it.createdAt)
+                OperationNoteDto(it.content, it.creationTime)
             },
-            createdAt = this.createdAt,
-            updatedAt = this.updatedAt
+            createdAt = this.creationDateTime,
+            updatedAt = this.lastUpdate
         )
 
     data class CreateOperationRequestDto(
@@ -113,5 +113,9 @@ class OperationController(
     data class OperationNoteDto(
         val content: String,
         val createdAt: LocalDateTime
+    )
+
+    data class PatientOperationsResponse(
+        val operations: List<OperationResponseDto>
     )
 }

@@ -29,8 +29,8 @@ class OperationService(
                 type = request.type,
                 description = request.description,
                 assets = request.assets ?: emptyList(),
-                createdAt = now,
-                updatedAt = now,
+                creationDateTime = now,
+                lastUpdate = now,
                 additionalNotes = emptyList()
             )
         )

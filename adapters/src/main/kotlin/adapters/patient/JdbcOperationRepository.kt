@@ -115,16 +115,16 @@ class JdbcOperationRepository(
         dataSource.connection.use { connection ->
             connection.prepareStatement(
                 """
-                INSERT INTO OPERATION (operation_id, patient_id, type, description, notes, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO OPERATION (operation_id, patient_id, type, description, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """
             ).use { statement ->
                 statement.setString(1, operation.id.value)
                 statement.setString(2, operation.patientId.value)
                 statement.setString(3, operation.type.name)
                 statement.setString(4, operation.description)
-                statement.setTimestamp(6, Timestamp.valueOf(operation.createdAt))
-                statement.setTimestamp(7, Timestamp.valueOf(operation.updatedAt))
+                statement.setTimestamp(5, Timestamp.valueOf(operation.creationDateTime))
+                statement.setTimestamp(6, Timestamp.valueOf(operation.lastUpdate))
                 statement.executeUpdate()
             }
 
@@ -144,7 +144,7 @@ class JdbcOperationRepository(
                 ).use { statement ->
                     statement.setString(1, operation.id.value)
                     statement.setString(2, note.content)
-                    statement.setTimestamp(3, Timestamp.valueOf(note.createdAt))
+                    statement.setTimestamp(3, Timestamp.valueOf(note.creationTime))
                     statement.executeUpdate()
                 }
             }
@@ -164,7 +164,7 @@ class JdbcOperationRepository(
             ).use { statement ->
                 statement.setString(1, operation.type.name)
                 statement.setString(2, operation.description)
-                statement.setTimestamp(4, Timestamp.valueOf(operation.updatedAt))
+                statement.setTimestamp(4, Timestamp.valueOf(operation.lastUpdate))
                 statement.setString(5, operation.id.value)
                 statement.executeUpdate()
             }
@@ -209,8 +209,8 @@ class JdbcOperationRepository(
             description = description,
             assets = assets,
             additionalNotes = additionalNotes,
-            createdAt = createdAt,
-            updatedAt = updatedAt
+            creationDateTime = createdAt,
+            lastUpdate = updatedAt
         )
     }
 
@@ -240,7 +240,7 @@ class JdbcOperationRepository(
                     notes.add(
                         OperationNote(
                             content = resultSet.getString("content"),
-                            createdAt = resultSet.getTimestamp("created_at").toLocalDateTime()
+                            creationTime = resultSet.getTimestamp("created_at").toLocalDateTime()
                         )
                     )
                 }
