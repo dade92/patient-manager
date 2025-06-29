@@ -31,7 +31,6 @@ class OperationController(
             patientId = PatientId(request.patientId),
             type = request.type,
             description = request.description,
-            notes = request.notes,
             assets = request.assets
         )
 
@@ -113,16 +112,11 @@ class OperationController(
         val patientId: String,
         val type: OperationType,
         val description: String,
-        val notes: String? = null,
         val assets: List<String>? = null
     )
 
     data class AddOperationNoteJsonRequest(
         val content: String
-    )
-
-    data class AddOperationAssetJsonRequest(
-        val assetName: String
     )
 
     data class OperationResponse(
