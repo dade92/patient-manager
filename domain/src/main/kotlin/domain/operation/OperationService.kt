@@ -33,7 +33,8 @@ class OperationService(
                 patientId = request.patientId,
                 type = request.type,
                 description = request.description,
-                assets = request.assets ?: emptyList(),
+                executor = request.executor,
+                assets = request.assets,
                 creationDateTime = now,
                 lastUpdate = now,
                 additionalNotes = emptyList()
@@ -78,5 +79,6 @@ data class CreateOperationRequest(
     val patientId: PatientId,
     val type: OperationType,
     val description: String,
-    val assets: List<String>
+    val executor: String,
+    val assets: List<String> = emptyList()
 )

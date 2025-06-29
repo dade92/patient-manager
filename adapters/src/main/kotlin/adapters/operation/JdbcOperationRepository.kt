@@ -25,7 +25,7 @@ class JdbcOperationRepository(
 
     override fun retrieve(operationId: OperationId): PatientOperation? {
         val sql =
-            "SELECT operation_id, patient_id, type, description, created_at, updated_at FROM OPERATION WHERE operation_id = ?"
+            "SELECT operation_id, patient_id, type, description, executor, created_at, updated_at FROM OPERATION WHERE operation_id = ?"
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -43,7 +43,7 @@ class JdbcOperationRepository(
 
     override fun findByPatientId(patientId: PatientId): List<PatientOperation> {
         val sql =
-            "SELECT operation_id, patient_id, type, description, created_at, updated_at FROM OPERATION WHERE patient_id = ? ORDER BY created_at DESC LIMIT 20"
+            "SELECT operation_id, patient_id, type, description, executor, created_at, updated_at FROM OPERATION WHERE patient_id = ? ORDER BY created_at DESC LIMIT 10"
         val operations = mutableListOf<PatientOperation>()
 
         dataSource.connection.use { connection ->
@@ -109,16 +109,17 @@ class JdbcOperationRepository(
         dataSource.connection.use { connection ->
             connection.prepareStatement(
                 """
-                INSERT INTO OPERATION (operation_id, patient_id, type, description, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO OPERATION (operation_id, patient_id, type, description, executor, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """
             ).use { statement ->
                 statement.setString(1, operation.id.value)
                 statement.setString(2, operation.patientId.value)
                 statement.setString(3, operation.type.name)
                 statement.setString(4, operation.description)
-                statement.setTimestamp(5, Timestamp.valueOf(operation.creationDateTime))
-                statement.setTimestamp(6, Timestamp.valueOf(operation.lastUpdate))
+                statement.setString(5, operation.executor)
+                statement.setTimestamp(6, Timestamp.valueOf(operation.creationDateTime))
+                statement.setTimestamp(7, Timestamp.valueOf(operation.lastUpdate))
                 statement.executeUpdate()
             }
 
@@ -152,12 +153,13 @@ class JdbcOperationRepository(
             connection.prepareStatement(
                 """
                 UPDATE OPERATION
-                SET type = ?, description = ?, updated_at = ?
+                SET type = ?, description = ?, executor = ?, updated_at = ?
                 WHERE operation_id = ?
                 """
             ).use { statement ->
                 statement.setString(1, operation.type.name)
                 statement.setString(2, operation.description)
+                statement.setString(3, operation.executor)
                 statement.setTimestamp(4, Timestamp.valueOf(operation.lastUpdate))
                 statement.setString(5, operation.id.value)
                 statement.executeUpdate()
@@ -196,6 +198,7 @@ class JdbcOperationRepository(
             patientId = PatientId(resultSet.getString("patient_id")),
             type = OperationType.valueOf(resultSet.getString("type")),
             description = resultSet.getString("description"),
+            executor = resultSet.getString("executor"),
             assets = assets,
             additionalNotes = additionalNotes,
             creationDateTime = resultSet.getTimestamp("created_at").toLocalDateTime(),

@@ -12,6 +12,7 @@ data class PatientOperation(
     val patientId: PatientId,
     val type: OperationType,
     val description: String,
+    val executor: String,
     val assets: List<String>,
     val additionalNotes: List<OperationNote>,
     val creationDateTime: LocalDateTime,

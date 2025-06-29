@@ -31,6 +31,7 @@ class OperationController(
             patientId = PatientId(request.patientId),
             type = request.type,
             description = request.description,
+            executor = request.executor,
             assets = request.assets ?: emptyList()
         )
 
@@ -100,6 +101,7 @@ class OperationController(
             patientId = this.patientId.value,
             type = this.type,
             description = this.description,
+            executor = this.executor,
             assets = this.assets,
             additionalNotes = this.additionalNotes.map {
                 OperationNoteResponse(it.content, it.creationTime)
@@ -112,6 +114,7 @@ class OperationController(
         val patientId: String,
         val type: OperationType,
         val description: String,
+        val executor: String,
         val assets: List<String>? = null
     )
 
@@ -124,6 +127,7 @@ class OperationController(
         val patientId: String,
         val type: OperationType,
         val description: String,
+        val executor: String,
         val assets: List<String>,
         val additionalNotes: List<OperationNoteResponse>,
         val createdAt: LocalDateTime,
