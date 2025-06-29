@@ -16,7 +16,7 @@ GET {{host}}/api/operations/33333333-3333-3333-3333-333333333333
 
 ### Get all operations for a specific patient
 
-GET {{host}}/api/operations/patient/22222222-2222-2222-2222-222222222222
+GET {{host}}/api/operations/patient/11111111-1111-1111-1111-111111111111
 
 ### Add a note to an existing operation
 
@@ -28,10 +28,15 @@ Content-Type: application/json
 }
 
 ### Add an asset (image) to an existing operation
+# Note: This request must be executed using a tool that supports multipart form uploads
+# You cannot execute this directly from the .http file in most IDEs
 
 POST {{host}}/api/operations/33333333-3333-3333-3333-333333333333/assets
-Content-Type: application/json
+Content-Type: multipart/form-data; boundary=boundary
 
-{
-  "assetName": "follow-up-xray-right-knee.jpg"
-}
+--boundary
+Content-Disposition: form-data; name="file"; filename="follow-up-xray-right-knee.jpg"
+Content-Type: image/jpeg
+
+< ./sample-images/follow-up-xray-right-knee.jpg
+--boundary--

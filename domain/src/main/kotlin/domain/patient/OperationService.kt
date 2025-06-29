@@ -1,22 +1,27 @@
 package domain.patient
 
+import domain.exceptions.PatientNotFoundException
 import domain.generator.OperationIdGenerator
 import domain.model.OperationId
 import domain.model.OperationType
 import domain.model.PatientId
 import domain.model.PatientOperation
+import domain.storage.StorageService
+import domain.storage.UploadFileRequest
 import domain.utils.DateTimeProvider
+import java.io.InputStream
 
 class OperationService(
     private val patientRepository: PatientRepository,
     private val operationRepository: OperationRepository,
     private val operationIdGenerator: OperationIdGenerator,
-    private val dateTimeProvider: DateTimeProvider
+    private val dateTimeProvider: DateTimeProvider,
+    private val storageService: StorageService
 ) {
 
     fun createOperation(request: CreateOperationRequest): PatientOperation {
         patientRepository.retrieve(request.patientId)
-            ?: throw IllegalArgumentException("Patient with id ${request.patientId} not found")
+            ?: throw PatientNotFoundException(request.patientId)
 
         val now = dateTimeProvider.now()
 
@@ -36,7 +41,7 @@ class OperationService(
 
     fun retrieveOperationsBy(patientId: PatientId): List<PatientOperation> {
         patientRepository.retrieve(patientId)
-            ?: throw IllegalArgumentException("Patient with id $patientId not found")
+            ?: throw PatientNotFoundException(patientId)
 
         return operationRepository.findByPatientId(patientId)
     }
@@ -47,8 +52,24 @@ class OperationService(
     fun addOperationNote(operationId: OperationId, note: String): PatientOperation? =
         operationRepository.addNote(operationId, note)
 
-    fun addOperationAsset(operationId: OperationId, assetName: String): PatientOperation? =
-        operationRepository.addAsset(operationId, assetName)
+    fun addOperationAsset(
+        operationId: OperationId,
+        assetName: String,
+        contentLength: Long,
+        contentType: String,
+        inputStream: InputStream
+    ): PatientOperation? {
+        storageService.uploadFile(
+            UploadFileRequest(
+                key = assetName,
+                contentLength = contentLength,
+                contentType = contentType,
+                inputStream = inputStream
+            )
+        )
+
+        return operationRepository.addAsset(operationId, assetName)
+    }
 }
 
 data class CreateOperationRequest(
