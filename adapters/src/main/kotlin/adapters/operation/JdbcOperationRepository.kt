@@ -29,7 +29,7 @@ class JdbcOperationRepository(
 
     override fun retrieve(operationId: OperationId): PatientOperation? {
         val sql =
-            "SELECT operation_id, patient_id, type, description, notes, created_at, updated_at FROM OPERATION WHERE operation_id = ?"
+            "SELECT operation_id, patient_id, type, description, created_at, updated_at FROM OPERATION WHERE operation_id = ?"
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -47,7 +47,7 @@ class JdbcOperationRepository(
 
     override fun findByPatientId(patientId: PatientId): List<PatientOperation> {
         val sql =
-            "SELECT operation_id, patient_id, type, description, notes, created_at, updated_at FROM OPERATION WHERE patient_id = ? ORDER BY created_at DESC"
+            "SELECT operation_id, patient_id, type, description, created_at, updated_at FROM OPERATION WHERE patient_id = ? ORDER BY created_at DESC"
         val operations = mutableListOf<PatientOperation>()
 
         dataSource.connection.use { connection ->
@@ -157,7 +157,7 @@ class JdbcOperationRepository(
             connection.prepareStatement(
                 """
                 UPDATE OPERATION
-                SET type = ?, description = ?, notes = ?, updated_at = ?
+                SET type = ?, description = ?, updated_at = ?
                 WHERE operation_id = ?
                 """
             ).use { statement ->
