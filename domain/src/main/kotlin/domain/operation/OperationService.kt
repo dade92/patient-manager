@@ -6,7 +6,6 @@ import domain.model.OperationId
 import domain.model.OperationType
 import domain.model.PatientId
 import domain.model.PatientOperation
-import domain.operation.OperationRepository
 import domain.patient.PatientRepository
 import domain.storage.StorageService
 import domain.storage.UploadFileRequest
@@ -34,10 +33,8 @@ class OperationService(
                 type = request.type,
                 description = request.description,
                 executor = request.executor,
-                assets = request.assets,
                 creationDateTime = now,
-                lastUpdate = now,
-                additionalNotes = emptyList()
+                lastUpdate = now
             )
         )
     }
@@ -80,5 +77,4 @@ data class CreateOperationRequest(
     val type: OperationType,
     val description: String,
     val executor: String,
-    val assets: List<String> = emptyList()
 )

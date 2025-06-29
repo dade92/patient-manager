@@ -13,8 +13,8 @@ data class PatientOperation(
     val type: OperationType,
     val description: String,
     val executor: String,
-    val assets: List<String>,
-    val additionalNotes: List<OperationNote>,
+    val assets: List<String> = emptyList(),
+    val additionalNotes: List<OperationNote> = emptyList(),
     val creationDateTime: LocalDateTime,
     val lastUpdate: LocalDateTime
 )

@@ -32,7 +32,6 @@ class OperationController(
             type = request.type,
             description = request.description,
             executor = request.executor,
-            assets = request.assets ?: emptyList()  //TODO what to do with assets at the creation of the operation?
         )
 
         val operation = operationService.createOperation(domainRequest)
@@ -115,7 +114,6 @@ class OperationController(
         val type: OperationType,
         val description: String,
         val executor: String,
-        val assets: List<String>? = null
     )
 
     data class AddOperationNoteJsonRequest(

@@ -20,10 +20,10 @@ class OperationConfiguration {
         storageService: StorageService
     ): OperationService =
         OperationService(
-            patientRepository = patientRepository,
-            operationRepository = operationRepository,
-            operationIdGenerator = OperationIdGenerator(),
-            dateTimeProvider = dateTimeProvider,
-            storageService = storageService
+            patientRepository,
+            operationRepository,
+            OperationIdGenerator(),
+            dateTimeProvider,
+            storageService
         )
 }
