@@ -29,5 +29,5 @@ enum class OperationType {
 
 data class OperationNote(
     val content: String,
-    val creationTime: LocalDateTime = LocalDateTime.now()
+    val creationTime: LocalDateTime
 )
