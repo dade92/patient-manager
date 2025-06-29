@@ -7,13 +7,12 @@ Content-Type: application/json
   "patientId": "22222222-2222-2222-2222-222222222222",
   "type": "CONSULTATION",
   "description": "Initial consultation for knee pain",
-  "executor": "Dr. Alice Wilson",
-  "assets": ["xray-right-knee.jpg", "mri-right-knee.jpg"]
+  "executor": "Dr. Alice Wilson"
 }
 
 ### Get a specific operation by ID
 
-GET {{host}}/api/operations/33333333-3333-3333-3333-333333333333
+GET {{host}}/api/operations/c2e1fa73-f5fa-459f-9000-16ea9efd1217
 
 ### Get all operations for a specific patient
 
@@ -21,7 +20,7 @@ GET {{host}}/api/operations/patient/22222222-2222-2222-2222-222222222222
 
 ### Add a note to an existing operation
 
-POST {{host}}/api/operations/33333333-3333-3333-3333-333333333333/notes
+POST {{host}}/api/operations/d2a95379-6e74-4213-b356-6b4577f3c257/notes
 Content-Type: application/json
 
 {

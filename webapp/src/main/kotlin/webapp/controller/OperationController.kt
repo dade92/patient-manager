@@ -32,7 +32,7 @@ class OperationController(
             type = request.type,
             description = request.description,
             executor = request.executor,
-            assets = request.assets ?: emptyList()
+            assets = request.assets ?: emptyList()  //TODO what to do with assets at the creation of the operation?
         )
 
         val operation = operationService.createOperation(domainRequest)
