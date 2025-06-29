@@ -19,7 +19,9 @@ class OperationController(
 ) {
 
     @PostMapping
-    fun createOperation(@RequestBody request: CreateOperationRequestDto): ResponseEntity<OperationResponseDto> {
+    fun createOperation(
+        @RequestBody request: CreateOperationRequestDto
+    ): ResponseEntity<OperationResponseDto> {
         val domainRequest = CreateOperationRequest(
             patientId = PatientId(request.patientId),
             type = request.type,
@@ -29,47 +31,51 @@ class OperationController(
         )
 
         val operation = operationService.createOperation(domainRequest)
-        return ResponseEntity.status(HttpStatus.CREATED).body(operation.toResponseDto())
+        return ResponseEntity.status(HttpStatus.CREATED).body(operation.toResponse())
     }
 
     @GetMapping("/{id}")
-    fun getOperation(@PathVariable id: String): ResponseEntity<OperationResponseDto> {
+    fun getOperation(
+        @PathVariable id: String
+    ): ResponseEntity<OperationResponseDto> {
         val operation = operationService.getOperation(OperationId(id))
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Operation not found")
 
-        return ResponseEntity.ok(operation.toResponseDto())
+        return ResponseEntity.ok(operation.toResponse())
     }
 
     @GetMapping("/patient/{patientId}")
-    fun getPatientOperations(@PathVariable patientId: String): ResponseEntity<PatientOperationsResponse> {
-        val operations = operationService.getOperationsBy(PatientId(patientId))
+    fun getPatientOperations(
+        @PathVariable patientId: String
+    ): ResponseEntity<PatientOperationsResponse> {
+        val operations = operationService.retrieveOperationsBy(PatientId(patientId))
 
-        return ResponseEntity.ok(PatientOperationsResponse(operations.map { it.toResponseDto() }))
+        return ResponseEntity.ok(PatientOperationsResponse(operations.map { it.toResponse() }))
     }
 
     @PostMapping("/{id}/notes")
     fun addOperationNote(
         @PathVariable id: String,
-        @RequestBody request: AddOperationNoteRequestDto
+        @RequestBody request: AddOperationNoteRequest
     ): ResponseEntity<OperationResponseDto> {
         val operation = operationService.addOperationNote(OperationId(id), request.content)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Operation not found")
 
-        return ResponseEntity.ok(operation.toResponseDto())
+        return ResponseEntity.ok(operation.toResponse())
     }
 
     @PostMapping("/{id}/assets")
     fun addOperationAsset(
         @PathVariable id: String,
-        @RequestBody request: AddOperationAssetRequestDto
+        @RequestBody request: AddOperationAssetRequest
     ): ResponseEntity<OperationResponseDto> {
         val operation = operationService.addOperationAsset(OperationId(id), request.assetName)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Operation not found")
 
-        return ResponseEntity.ok(operation.toResponseDto())
+        return ResponseEntity.ok(operation.toResponse())
     }
 
-    private fun PatientOperation.toResponseDto(): OperationResponseDto =
+    private fun PatientOperation.toResponse(): OperationResponseDto =
         OperationResponseDto(
             id = this.id.value,
             patientId = this.patientId.value,
@@ -91,11 +97,11 @@ class OperationController(
         val assets: List<String>? = null
     )
 
-    data class AddOperationNoteRequestDto(
+    data class AddOperationNoteRequest(
         val content: String
     )
 
-    data class AddOperationAssetRequestDto(
+    data class AddOperationAssetRequest(
         val assetName: String
     )
 

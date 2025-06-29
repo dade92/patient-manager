@@ -1,7 +1,7 @@
 package webapp.configuration
 
-import domain.utils.DefaultInstantProvider
-import domain.utils.InstantProvider
+import domain.utils.DefaultDateTimeProvider
+import domain.utils.DateTimeProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -9,5 +9,5 @@ import org.springframework.context.annotation.Configuration
 class UtilsConfiguration {
 
     @Bean
-    fun instantProvider(): InstantProvider = DefaultInstantProvider()
+    fun instantProvider(): DateTimeProvider = DefaultDateTimeProvider()
 }

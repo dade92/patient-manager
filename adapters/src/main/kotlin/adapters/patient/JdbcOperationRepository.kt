@@ -2,17 +2,15 @@ package adapters.patient
 
 import domain.model.*
 import domain.patient.OperationRepository
-import domain.utils.InstantProvider
+import domain.utils.DateTimeProvider
 import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.Timestamp
-import java.time.LocalDateTime
-import java.time.ZoneId
 import javax.sql.DataSource
 
 class JdbcOperationRepository(
     private val dataSource: DataSource,
-    private val instantProvider: InstantProvider
+    private val dateTimeProvider: DateTimeProvider
 ) : OperationRepository {
 
     override fun save(operation: PatientOperation): PatientOperation {
@@ -63,22 +61,20 @@ class JdbcOperationRepository(
     }
 
     override fun addNote(operationId: OperationId, note: String): PatientOperation? {
-        val now = LocalDateTime.ofInstant(instantProvider.now(), ZoneId.systemDefault())
-
         dataSource.connection.use { connection ->
             connection.prepareStatement(
                 "INSERT INTO OPERATION_NOTE (operation_id, content, created_at) VALUES (?, ?, ?)"
             ).use { statement ->
                 statement.setString(1, operationId.value)
                 statement.setString(2, note)
-                statement.setTimestamp(3, Timestamp.valueOf(now))
+                statement.setTimestamp(3, Timestamp.valueOf(dateTimeProvider.now()))
                 statement.executeUpdate()
             }
 
             connection.prepareStatement(
                 "UPDATE OPERATION SET updated_at = ? WHERE operation_id = ?"
             ).use { statement ->
-                statement.setTimestamp(1, Timestamp.valueOf(now))
+                statement.setTimestamp(1, Timestamp.valueOf(dateTimeProvider.now()))
                 statement.setString(2, operationId.value)
                 statement.executeUpdate()
             }
@@ -88,7 +84,6 @@ class JdbcOperationRepository(
     }
 
     override fun addAsset(operationId: OperationId, assetName: String): PatientOperation? {
-        val now = LocalDateTime.ofInstant(instantProvider.now(), ZoneId.systemDefault())
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(
@@ -102,7 +97,7 @@ class JdbcOperationRepository(
             connection.prepareStatement(
                 "UPDATE OPERATION SET updated_at = ? WHERE operation_id = ?"
             ).use { statement ->
-                statement.setTimestamp(1, Timestamp.valueOf(now))
+                statement.setTimestamp(1, Timestamp.valueOf(dateTimeProvider.now()))
                 statement.setString(2, operationId.value)
                 statement.executeUpdate()
             }

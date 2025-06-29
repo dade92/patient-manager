@@ -4,7 +4,7 @@ import adapters.patient.JdbcOperationRepository
 import adapters.patient.JdbcPatientRepository
 import domain.patient.OperationRepository
 import domain.patient.PatientRepository
-import domain.utils.InstantProvider
+import domain.utils.DateTimeProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import javax.sql.DataSource
@@ -19,10 +19,10 @@ class RepositoryConfiguration(
     @Bean
     fun operationRepository(
         dataSource: DataSource,
-        instantProvider: InstantProvider
+        dateTimeProvider: DateTimeProvider
     ): OperationRepository =
         JdbcOperationRepository(
             dataSource,
-            instantProvider
+            dateTimeProvider
         )
 }
