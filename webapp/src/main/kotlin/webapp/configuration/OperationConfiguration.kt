@@ -1,8 +1,8 @@
 package webapp.configuration
 
 import domain.generator.OperationIdGenerator
-import domain.patient.OperationRepository
-import domain.patient.OperationService
+import domain.operation.OperationRepository
+import domain.operation.OperationService
 import domain.patient.PatientRepository
 import domain.storage.StorageService
 import domain.utils.DateTimeProvider

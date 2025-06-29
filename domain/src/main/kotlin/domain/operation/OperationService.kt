@@ -1,4 +1,4 @@
-package domain.patient
+package domain.operation
 
 import domain.exceptions.PatientNotFoundException
 import domain.generator.OperationIdGenerator
@@ -6,6 +6,8 @@ import domain.model.OperationId
 import domain.model.OperationType
 import domain.model.PatientId
 import domain.model.PatientOperation
+import domain.operation.OperationRepository
+import domain.patient.PatientRepository
 import domain.storage.StorageService
 import domain.storage.UploadFileRequest
 import domain.utils.DateTimeProvider
@@ -39,15 +41,15 @@ class OperationService(
         )
     }
 
+    fun getOperation(operationId: OperationId): PatientOperation? =
+        operationRepository.retrieve(operationId)
+
     fun retrieveOperationsBy(patientId: PatientId): List<PatientOperation> {
         patientRepository.retrieve(patientId)
             ?: throw PatientNotFoundException(patientId)
 
         return operationRepository.findByPatientId(patientId)
     }
-
-    fun getOperation(operationId: OperationId): PatientOperation? =
-        operationRepository.retrieve(operationId)
 
     fun addOperationNote(operationId: OperationId, note: String): PatientOperation? =
         operationRepository.addNote(operationId, note)

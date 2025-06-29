@@ -5,8 +5,8 @@ import domain.model.OperationId
 import domain.model.OperationType
 import domain.model.PatientId
 import domain.model.PatientOperation
-import domain.patient.CreateOperationRequest
-import domain.patient.OperationService
+import domain.operation.CreateOperationRequest
+import domain.operation.OperationService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

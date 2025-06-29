@@ -1,7 +1,7 @@
 package adapters.patient
 
 import domain.model.*
-import domain.patient.OperationRepository
+import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
 import java.sql.Connection
 import java.sql.ResultSet

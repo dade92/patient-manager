@@ -2,7 +2,7 @@ package adapters.configuration
 
 import adapters.patient.JdbcOperationRepository
 import adapters.patient.JdbcPatientRepository
-import domain.patient.OperationRepository
+import domain.operation.OperationRepository
 import domain.patient.PatientRepository
 import domain.utils.DateTimeProvider
 import org.springframework.context.annotation.Bean
