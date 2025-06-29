@@ -1,10 +1,6 @@
 package adapters.operation
 
-import domain.model.OperationId
-import domain.model.OperationNote
-import domain.model.OperationType
-import domain.model.PatientId
-import domain.model.PatientOperation
+import domain.model.*
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
 import java.sql.Connection
@@ -47,7 +43,7 @@ class JdbcOperationRepository(
 
     override fun findByPatientId(patientId: PatientId): List<PatientOperation> {
         val sql =
-            "SELECT operation_id, patient_id, type, description, created_at, updated_at FROM OPERATION WHERE patient_id = ? ORDER BY created_at DESC"
+            "SELECT operation_id, patient_id, type, description, created_at, updated_at FROM OPERATION WHERE patient_id = ? ORDER BY created_at DESC LIMIT 20"
         val operations = mutableListOf<PatientOperation>()
 
         dataSource.connection.use { connection ->
