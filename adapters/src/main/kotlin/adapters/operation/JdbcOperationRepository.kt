@@ -84,7 +84,6 @@ class JdbcOperationRepository(
     }
 
     override fun addAsset(operationId: OperationId, assetName: String): PatientOperation? {
-
         dataSource.connection.use { connection ->
             connection.prepareStatement(
                 "INSERT INTO OPERATION_ASSET (operation_id, asset_name) VALUES (?, ?)"
@@ -187,11 +186,6 @@ class JdbcOperationRepository(
 
     private fun mapToOperation(resultSet: ResultSet, connection: Connection): PatientOperation {
         val operationId = OperationId(resultSet.getString("operation_id"))
-        val patientId = PatientId(resultSet.getString("patient_id"))
-        val type = OperationType.valueOf(resultSet.getString("type"))
-        val description = resultSet.getString("description")
-        val createdAt = resultSet.getTimestamp("created_at").toLocalDateTime()
-        val updatedAt = resultSet.getTimestamp("updated_at").toLocalDateTime()
 
         val assets = getOperationAssets(operationId, connection)
 
@@ -199,13 +193,13 @@ class JdbcOperationRepository(
 
         return PatientOperation(
             id = operationId,
-            patientId = patientId,
-            type = type,
-            description = description,
+            patientId = PatientId(resultSet.getString("patient_id")),
+            type = OperationType.valueOf(resultSet.getString("type")),
+            description = resultSet.getString("description"),
             assets = assets,
             additionalNotes = additionalNotes,
-            creationDateTime = createdAt,
-            lastUpdate = updatedAt
+            creationDateTime = resultSet.getTimestamp("created_at").toLocalDateTime(),
+            lastUpdate = resultSet.getTimestamp("updated_at").toLocalDateTime()
         )
     }
 
