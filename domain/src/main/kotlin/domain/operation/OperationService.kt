@@ -78,5 +78,5 @@ data class CreateOperationRequest(
     val patientId: PatientId,
     val type: OperationType,
     val description: String,
-    val assets: List<String>? = null
+    val assets: List<String>
 )

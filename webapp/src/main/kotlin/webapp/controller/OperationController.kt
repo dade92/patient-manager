@@ -31,7 +31,7 @@ class OperationController(
             patientId = PatientId(request.patientId),
             type = request.type,
             description = request.description,
-            assets = request.assets
+            assets = request.assets ?: emptyList()
         )
 
         val operation = operationService.createOperation(domainRequest)
