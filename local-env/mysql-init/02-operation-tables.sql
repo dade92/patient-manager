@@ -4,7 +4,6 @@ CREATE TABLE IF NOT EXISTS OPERATION (
     patient_id VARCHAR(36) NOT NULL,
     type VARCHAR(50) NOT NULL,
     description TEXT NOT NULL,
-    notes TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_patient_id (patient_id),

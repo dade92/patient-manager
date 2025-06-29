@@ -1,6 +1,6 @@
 package adapters.configuration
 
-import adapters.patient.JdbcOperationRepository
+import adapters.operation.JdbcOperationRepository
 import adapters.patient.JdbcPatientRepository
 import domain.operation.OperationRepository
 import domain.patient.PatientRepository

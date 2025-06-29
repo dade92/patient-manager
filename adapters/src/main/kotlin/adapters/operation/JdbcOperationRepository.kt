@@ -1,6 +1,10 @@
-package adapters.patient
+package adapters.operation
 
-import domain.model.*
+import domain.model.OperationId
+import domain.model.OperationNote
+import domain.model.OperationType
+import domain.model.PatientId
+import domain.model.PatientOperation
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
 import java.sql.Connection
