@@ -27,13 +27,12 @@ CREATE TABLE IF NOT EXISTS OPERATION_NOTE (
     FOREIGN KEY (operation_id) REFERENCES OPERATION(operation_id) ON DELETE CASCADE
 );
 
-INSERT INTO OPERATION (operation_id, patient_id, type, description, notes, created_at, updated_at)
+INSERT INTO OPERATION (operation_id, patient_id, type, description, created_at, updated_at)
 VALUES
     ('33333333-3333-3333-3333-333333333333',
      '11111111-1111-1111-1111-111111111111',
      'CONSULTATION',
      'Initial consultation for chronic back pain',
-     'Patient reports lower back pain persisting for 3 months',
      '2025-06-15 09:30:00',
      '2025-06-15 09:30:00'),
 
@@ -41,7 +40,6 @@ VALUES
      '11111111-1111-1111-1111-111111111111',
      'DIAGNOSTIC',
      'MRI scan of lumbar spine',
-     'Ordered to investigate potential disc herniation',
      '2025-06-18 14:15:00',
      '2025-06-18 14:15:00'),
 
@@ -49,7 +47,6 @@ VALUES
      '22222222-2222-2222-2222-222222222222',
      'SURGERY',
      'Arthroscopic knee surgery',
-     'Procedure to repair torn meniscus in right knee',
      '2025-06-10 08:00:00',
      '2025-06-10 16:30:00');
 
