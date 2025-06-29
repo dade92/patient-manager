@@ -4,17 +4,25 @@ import adapters.patient.JdbcOperationRepository
 import adapters.patient.JdbcPatientRepository
 import domain.patient.OperationRepository
 import domain.patient.PatientRepository
+import domain.utils.InstantProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import javax.sql.DataSource
 
 @Configuration
 class RepositoryConfiguration(
-    private val dataSource: DataSource
 ) {
     @Bean
-    fun patientRepository(): PatientRepository = JdbcPatientRepository(dataSource)
+    fun patientRepository(dataSource: DataSource): PatientRepository =
+        JdbcPatientRepository(dataSource)
 
     @Bean
-    fun operationRepository(): OperationRepository = JdbcOperationRepository(dataSource)
+    fun operationRepository(
+        dataSource: DataSource,
+        instantProvider: InstantProvider
+    ): OperationRepository =
+        JdbcOperationRepository(
+            dataSource,
+            instantProvider
+        )
 }
