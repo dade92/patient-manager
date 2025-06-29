@@ -30,7 +30,8 @@ class OperationService(
                 description = request.description,
                 assets = request.assets ?: emptyList(),
                 createdAt = now,
-                updatedAt = now
+                updatedAt = now,
+                additionalNotes = emptyList()
             )
         )
     }

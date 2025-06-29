@@ -6,6 +6,6 @@ interface InstantProvider {
     fun now(): Instant
 }
 
-class SystemInstantProvider : InstantProvider {
+class DefaultInstantProvider : InstantProvider {
     override fun now(): Instant = Instant.now()
 }

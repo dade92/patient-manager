@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
 
 @RestController
-@RequestMapping("/patient")
+@RequestMapping("/api/patient")
 class PatientController(
     private val patientService: PatientService
 ) {

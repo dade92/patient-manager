@@ -12,10 +12,10 @@ data class PatientOperation(
     val patientId: PatientId,
     val type: OperationType,
     val description: String,
-    val assets: List<String> = emptyList(),
-    val additionalNotes: List<OperationNote> = emptyList(),
-    val createdAt: LocalDateTime = LocalDateTime.now(),
-    val updatedAt: LocalDateTime = LocalDateTime.now()
+    val assets: List<String>,
+    val additionalNotes: List<OperationNote>,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime
 )
 
 enum class OperationType {
