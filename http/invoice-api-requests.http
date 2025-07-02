@@ -1,0 +1,33 @@
+### Invoice API Requests
+
+### Create a new invoice
+POST {{host}}/api/invoices
+Content-Type: application/json
+
+{
+  "operationId": "OP-12345",
+  "amount": 150.00
+}
+
+### Get invoice by ID
+GET {{host}}/api/invoices/INV-12345
+
+### Get all invoices for a specific operation
+GET {{host}}/api/invoices/operation/OP-12345
+
+### Update invoice status
+POST {{host}}/api/invoices/INV-12345/status
+Content-Type: application/json
+
+{
+  "status": "PAID"
+}
+
+### Example with other status values
+# Status can be: PENDING, PAID, CANCELLED
+POST http://localhost:8080/api/invoices/INV-12345/status
+Content-Type: application/json
+
+{
+  "status": "CANCELLED"
+}
