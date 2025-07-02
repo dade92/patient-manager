@@ -53,11 +53,11 @@ class InvoiceController(
     }
 
     @GetMapping("/operation/{operationId}")
-    fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<List<InvoiceResponseDto>> {
+    fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<Map<String, List<InvoiceResponseDto>>> {
         val invoices = invoiceService.getInvoicesForOperation(OperationId(operationId))
 
         return ResponseEntity(
-            invoices.map { mapToResponseDto(it) },
+            mapOf("invoices" to invoices.map { mapToResponseDto(it) }),
             HttpStatus.OK
         )
     }

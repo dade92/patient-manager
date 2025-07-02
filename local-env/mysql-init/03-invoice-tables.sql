@@ -1,17 +1,16 @@
 -- Create Invoice table
 CREATE TABLE IF NOT EXISTS INVOICE (
-    invoice_id VARCHAR(50) PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    invoice_id VARCHAR(50) NOT NULL UNIQUE,
     operation_id VARCHAR(50) NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     currency VARCHAR(3) NOT NULL DEFAULT 'EUR',
     status VARCHAR(20) NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
-    FOREIGN KEY (operation_id) REFERENCES OPERATION(operation_id)
+    FOREIGN KEY (operation_id) REFERENCES OPERATION(operation_id),
+    INDEX idx_invoice_operation (operation_id)
 );
-
--- Create index for faster operation lookups
-CREATE INDEX IF NOT EXISTS idx_invoice_operation ON INVOICE(operation_id);
 
 -- Insert sample invoices for existing operations
 INSERT INTO INVOICE (invoice_id, operation_id, amount, currency, status, created_at, updated_at)
