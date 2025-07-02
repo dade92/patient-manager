@@ -1,10 +1,12 @@
 package domain.invoice
 
 import domain.generator.InvoiceIdGenerator
-import domain.model.*
+import domain.model.Invoice
+import domain.model.InvoiceId
+import domain.model.InvoiceStatus
+import domain.model.OperationId
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
-import java.math.BigDecimal
 
 class InvoiceService(
     private val invoiceRepository: InvoiceRepository,
@@ -29,15 +31,12 @@ class InvoiceService(
         return invoiceRepository.save(invoice)
     }
 
-    fun getInvoice(invoiceId: InvoiceId): Invoice? {
-        return invoiceRepository.retrieve(invoiceId)
-    }
+    fun getInvoice(invoiceId: InvoiceId): Invoice? =
+        invoiceRepository.retrieve(invoiceId)
 
-    fun getInvoicesForOperation(operationId: OperationId): List<Invoice> {
-        return invoiceRepository.findByOperationId(operationId)
-    }
+    fun getInvoicesForOperation(operationId: OperationId): List<Invoice> =
+        invoiceRepository.findByOperationId(operationId)
 
-    fun updateInvoiceStatus(invoiceId: InvoiceId, newStatus: InvoiceStatus): Invoice? {
-        return invoiceRepository.updateStatus(invoiceId, newStatus)
-    }
+    fun updateInvoiceStatus(invoiceId: InvoiceId, newStatus: InvoiceStatus): Invoice? =
+        invoiceRepository.updateStatus(invoiceId, newStatus)
 }

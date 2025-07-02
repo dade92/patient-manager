@@ -1,9 +1,11 @@
 package adapters.invoice
 
 import domain.invoice.InvoiceRepository
-import domain.model.*
+import domain.model.Invoice
+import domain.model.InvoiceId
+import domain.model.InvoiceStatus
+import domain.model.OperationId
 import domain.utils.DateTimeProvider
-import java.math.BigDecimal
 import java.sql.ResultSet
 import java.sql.Timestamp
 import javax.sql.DataSource
@@ -24,7 +26,8 @@ class JdbcInvoiceRepository(
     }
 
     override fun retrieve(invoiceId: InvoiceId): Invoice? {
-        val sql = "SELECT invoice_id, operation_id, amount, status, created_at, updated_at FROM INVOICE WHERE invoice_id = ?"
+        val sql =
+            "SELECT invoice_id, operation_id, amount, status, created_at, updated_at FROM INVOICE WHERE invoice_id = ?"
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -41,7 +44,8 @@ class JdbcInvoiceRepository(
     }
 
     override fun findByOperationId(operationId: OperationId): List<Invoice> {
-        val sql = "SELECT invoice_id, operation_id, amount, status, created_at, updated_at FROM INVOICE WHERE operation_id = ? ORDER BY created_at DESC"
+        val sql =
+            "SELECT invoice_id, operation_id, amount, status, created_at, updated_at FROM INVOICE WHERE operation_id = ? ORDER BY created_at DESC"
         val invoices = mutableListOf<Invoice>()
 
         dataSource.connection.use { connection ->
@@ -110,8 +114,8 @@ class JdbcInvoiceRepository(
         return invoice
     }
 
-    private fun mapToInvoice(resultSet: ResultSet): Invoice {
-        return Invoice(
+    private fun mapToInvoice(resultSet: ResultSet): Invoice =
+        Invoice(
             id = InvoiceId(resultSet.getString("invoice_id")),
             operationId = OperationId(resultSet.getString("operation_id")),
             amount = resultSet.getBigDecimal("amount"),
@@ -119,5 +123,4 @@ class JdbcInvoiceRepository(
             creationDateTime = resultSet.getTimestamp("created_at").toLocalDateTime(),
             lastUpdateDateTime = resultSet.getTimestamp("updated_at").toLocalDateTime()
         )
-    }
 }
