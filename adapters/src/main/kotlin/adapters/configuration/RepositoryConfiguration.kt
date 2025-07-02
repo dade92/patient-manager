@@ -1,7 +1,9 @@
 package adapters.configuration
 
+import adapters.invoice.JdbcInvoiceRepository
 import adapters.operation.JdbcOperationRepository
 import adapters.patient.JdbcPatientRepository
+import domain.invoice.InvoiceRepository
 import domain.operation.OperationRepository
 import domain.patient.PatientRepository
 import domain.utils.DateTimeProvider
@@ -22,6 +24,16 @@ class RepositoryConfiguration(
         dateTimeProvider: DateTimeProvider
     ): OperationRepository =
         JdbcOperationRepository(
+            dataSource,
+            dateTimeProvider
+        )
+
+    @Bean
+    fun invoiceRepository(
+        dataSource: DataSource,
+        dateTimeProvider: DateTimeProvider
+    ): InvoiceRepository =
+        JdbcInvoiceRepository(
             dataSource,
             dateTimeProvider
         )
