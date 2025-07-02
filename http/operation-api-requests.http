@@ -12,7 +12,7 @@ Content-Type: application/json
 
 ### Get a specific operation by ID
 
-GET {{host}}/api/operations/c2e1fa73-f5fa-459f-9000-16ea9efd1217
+GET {{host}}/api/operations/55555555-5555-5555-5555-555555555555
 
 ### Get all operations for a specific patient
 
@@ -20,7 +20,7 @@ GET {{host}}/api/operations/patient/22222222-2222-2222-2222-222222222222
 
 ### Add a note to an existing operation
 
-POST {{host}}/api/operations/d2a95379-6e74-4213-b356-6b4577f3c257/notes
+POST {{host}}/api/operations/55555555-5555-5555-5555-555555555555/notes
 Content-Type: application/json
 
 {
