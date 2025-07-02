@@ -14,7 +14,7 @@ class JdbcPatientRepository(
 ) : PatientRepository {
 
     override fun retrieve(patientId: PatientId): Patient? {
-        val sql = "SELECT user_id, name, email, phone_number, address, city_of_residence, nationality, birth_date FROM `PATIENT` WHERE user_id = ?"
+        val sql = "SELECT patient_id, name, email, phone_number, address, city_of_residence, nationality, birth_date FROM `PATIENT` WHERE patient_id = ?"
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -41,7 +41,7 @@ class JdbcPatientRepository(
     }
 
     override fun searchByName(name: String): List<Patient> {
-        val sql = "SELECT user_id, name, email, phone_number, address, city_of_residence, nationality, birth_date FROM `PATIENT` WHERE name LIKE ?"
+        val sql = "SELECT patient_id, name, email, phone_number, address, city_of_residence, nationality, birth_date FROM `PATIENT` WHERE name LIKE ?"
         val patients = mutableListOf<Patient>()
 
         dataSource.connection.use { connection ->
@@ -60,7 +60,7 @@ class JdbcPatientRepository(
 
     private fun insertPatient(patient: Patient): Patient {
         val sql = """
-            INSERT INTO `PATIENT` (user_id, name, email, phone_number, address, city_of_residence, nationality, birth_date, creation_date) 
+            INSERT INTO `PATIENT` (patient_id, name, email, phone_number, address, city_of_residence, nationality, birth_date, creation_date) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """.trimIndent()
 
@@ -89,7 +89,7 @@ class JdbcPatientRepository(
         val sql = """
             UPDATE `PATIENT` 
             SET name = ?, email = ?, phone_number = ?, address = ?, city_of_residence = ?, nationality = ?, birth_date = ? 
-            WHERE user_id = ?
+            WHERE patient_id = ?
         """.trimIndent()
 
         dataSource.connection.use { connection ->
@@ -112,7 +112,7 @@ class JdbcPatientRepository(
 
     private fun mapToPatient(resultSet: ResultSet): Patient =
         Patient(
-            id = PatientId(resultSet.getString("user_id")),
+            id = PatientId(resultSet.getString("patient_id")),
             name = resultSet.getString("name"),
             email = resultSet.getString("email"),
             phoneNumber = resultSet.getString("phone_number"),
