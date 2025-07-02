@@ -15,8 +15,8 @@ Content-Type: application/json
 
 ### Get a specific patient by ID (using the first sample ID)
 
-GET {{host}}/api/patient/07330162-e4ff-4338-8522-4708838df305
+GET {{host}}/api/patient/22222222-2222-2222-2222-222222222222
 
 ### Search patients by name
 
-GET {{host}}/api/patient/search?name=Alic
+GET {{host}}/api/patient/search?name=Jo
