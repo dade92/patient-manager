@@ -1,6 +1,5 @@
 package domain.model
 
-import java.math.BigDecimal
 import java.time.LocalDateTime
 
 enum class InvoiceStatus {
@@ -12,7 +11,7 @@ enum class InvoiceStatus {
 data class Invoice(
     val id: InvoiceId,
     val operationId: OperationId,
-    val amount: BigDecimal,
+    val amount: Money,
     val status: InvoiceStatus,
     val creationDateTime: LocalDateTime,
     val lastUpdateDateTime: LocalDateTime

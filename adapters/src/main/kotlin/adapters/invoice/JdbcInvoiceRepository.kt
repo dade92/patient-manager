@@ -4,6 +4,7 @@ import domain.invoice.InvoiceRepository
 import domain.model.Invoice
 import domain.model.InvoiceId
 import domain.model.InvoiceStatus
+import domain.model.Money
 import domain.model.OperationId
 import domain.utils.DateTimeProvider
 import java.sql.ResultSet
@@ -17,7 +18,6 @@ class JdbcInvoiceRepository(
 
     override fun save(invoice: Invoice): Invoice {
         val existingInvoice = retrieve(invoice.id)
-
         return if (existingInvoice == null) {
             insertInvoice(invoice)
         } else {
@@ -26,8 +26,7 @@ class JdbcInvoiceRepository(
     }
 
     override fun retrieve(invoiceId: InvoiceId): Invoice? {
-        val sql =
-            "SELECT invoice_id, operation_id, amount, status, created_at, updated_at FROM INVOICE WHERE invoice_id = ?"
+        val sql = "SELECT invoice_id, operation_id, amount, currency, status, created_at, updated_at FROM INVOICE WHERE invoice_id = ?"
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -44,8 +43,7 @@ class JdbcInvoiceRepository(
     }
 
     override fun findByOperationId(operationId: OperationId): List<Invoice> {
-        val sql =
-            "SELECT invoice_id, operation_id, amount, status, created_at, updated_at FROM INVOICE WHERE operation_id = ? ORDER BY created_at DESC"
+        val sql = "SELECT invoice_id, operation_id, amount, currency, status, created_at, updated_at FROM INVOICE WHERE operation_id = ? ORDER BY created_at DESC"
         val invoices = mutableListOf<Invoice>()
 
         dataSource.connection.use { connection ->
@@ -64,29 +62,28 @@ class JdbcInvoiceRepository(
 
     override fun updateStatus(invoiceId: InvoiceId, status: InvoiceStatus): Invoice? {
         val invoice = retrieve(invoiceId) ?: return null
-
         val updatedInvoice = invoice.copy(
             status = status,
             lastUpdateDateTime = dateTimeProvider.now()
         )
-
         return updateInvoice(updatedInvoice)
     }
 
     private fun insertInvoice(invoice: Invoice): Invoice {
         val sql = """
-            INSERT INTO INVOICE (invoice_id, operation_id, amount, status, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO INVOICE (invoice_id, operation_id, amount, currency, status, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
                 statement.setString(1, invoice.id.value)
                 statement.setString(2, invoice.operationId.value)
-                statement.setBigDecimal(3, invoice.amount)
-                statement.setString(4, invoice.status.name)
-                statement.setTimestamp(5, Timestamp.valueOf(invoice.creationDateTime))
-                statement.setTimestamp(6, Timestamp.valueOf(invoice.lastUpdateDateTime))
+                statement.setBigDecimal(3, invoice.amount.amount)
+                statement.setString(4, invoice.amount.currency)
+                statement.setString(5, invoice.status.name)
+                statement.setTimestamp(6, Timestamp.valueOf(invoice.creationDateTime))
+                statement.setTimestamp(7, Timestamp.valueOf(invoice.lastUpdateDateTime))
                 statement.executeUpdate()
             }
         }
@@ -97,16 +94,17 @@ class JdbcInvoiceRepository(
     private fun updateInvoice(invoice: Invoice): Invoice {
         val sql = """
             UPDATE INVOICE
-            SET amount = ?, status = ?, updated_at = ?
+            SET amount = ?, currency = ?, status = ?, updated_at = ?
             WHERE invoice_id = ?
         """
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
-                statement.setBigDecimal(1, invoice.amount)
-                statement.setString(2, invoice.status.name)
-                statement.setTimestamp(3, Timestamp.valueOf(invoice.lastUpdateDateTime))
-                statement.setString(4, invoice.id.value)
+                statement.setBigDecimal(1, invoice.amount.amount)
+                statement.setString(2, invoice.amount.currency)
+                statement.setString(3, invoice.status.name)
+                statement.setTimestamp(4, Timestamp.valueOf(invoice.lastUpdateDateTime))
+                statement.setString(5, invoice.id.value)
                 statement.executeUpdate()
             }
         }
@@ -118,7 +116,10 @@ class JdbcInvoiceRepository(
         Invoice(
             id = InvoiceId(resultSet.getString("invoice_id")),
             operationId = OperationId(resultSet.getString("operation_id")),
-            amount = resultSet.getBigDecimal("amount"),
+            amount = Money(
+                amount = resultSet.getBigDecimal("amount"),
+                currency = resultSet.getString("currency")
+            ),
             status = InvoiceStatus.valueOf(resultSet.getString("status")),
             creationDateTime = resultSet.getTimestamp("created_at").toLocalDateTime(),
             lastUpdateDateTime = resultSet.getTimestamp("updated_at").toLocalDateTime()

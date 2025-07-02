@@ -4,11 +4,11 @@ import domain.invoice.CreateInvoiceRequest
 import domain.invoice.InvoiceService
 import domain.model.InvoiceId
 import domain.model.InvoiceStatus
+import domain.model.Money
 import domain.model.OperationId
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -33,7 +33,10 @@ class InvoiceController(
     ): ResponseEntity<InvoiceResponseDto> {
         val request = CreateInvoiceRequest(
             operationId = OperationId(requestDto.operationId),
-            amount = requestDto.amount
+            amount = Money(
+                amount = requestDto.amount.amount,
+                currency = requestDto.amount.currency
+            )
         )
 
         val invoice = invoiceService.createInvoice(request)
@@ -75,14 +78,14 @@ class InvoiceController(
         }
     }
 
-    private fun mapToResponseDto(invoice: domain.model.Invoice): InvoiceResponseDto {
-        return InvoiceResponseDto(
+    private fun mapToResponseDto(invoice: domain.model.Invoice): InvoiceResponseDto =
+        InvoiceResponseDto(
             id = invoice.id.value,
             operationId = invoice.operationId.value,
-            amount = invoice.amount,
+            amount = invoice.amount.amount,
+            currency = invoice.amount.currency,
             status = invoice.status.name,
             createdAt = invoice.creationDateTime.format(dateFormatter),
             updatedAt = invoice.lastUpdateDateTime.format(dateFormatter)
         )
-    }
 }
