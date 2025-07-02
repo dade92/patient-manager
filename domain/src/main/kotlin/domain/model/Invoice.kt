@@ -16,3 +16,8 @@ data class Invoice(
     val creationDateTime: LocalDateTime,
     val lastUpdateDateTime: LocalDateTime
 )
+
+@JvmInline
+value class InvoiceId(val value: String) {
+    override fun toString(): String = value
+}

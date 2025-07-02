@@ -4,8 +4,8 @@ import domain.generator.InvoiceIdGenerator
 import domain.model.Invoice
 import domain.model.InvoiceId
 import domain.model.InvoiceStatus
+import domain.model.InvoiceStatus.PENDING
 import domain.model.OperationId
-import domain.model.Money
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
 
@@ -24,7 +24,7 @@ class InvoiceService(
             id = invoiceIdGenerator.generate(),
             operationId = operation.id,
             amount = request.amount,
-            status = InvoiceStatus.PENDING,
+            status = PENDING,
             creationDateTime = now,
             lastUpdateDateTime = now
         )
