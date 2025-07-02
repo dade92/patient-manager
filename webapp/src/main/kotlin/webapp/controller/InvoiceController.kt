@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import webapp.dto.CreateInvoiceRequestDto
-import webapp.dto.InvoiceResponseDto
-import webapp.dto.UpdateInvoiceStatusRequestDto
+import webapp.dto.CreateInvoiceJsonRequest
+import webapp.dto.InvoiceResponse
+import webapp.dto.UpdateInvoiceStatusRequest
 import java.time.format.DateTimeFormatter
 
 @RestController
@@ -29,8 +29,8 @@ class InvoiceController(
 
     @PostMapping
     fun createInvoice(
-        @RequestBody requestDto: CreateInvoiceRequestDto
-    ): ResponseEntity<InvoiceResponseDto> {
+        @RequestBody requestDto: CreateInvoiceJsonRequest
+    ): ResponseEntity<InvoiceResponse> {
         val request = CreateInvoiceRequest(
             operationId = OperationId(requestDto.operationId),
             amount = Money(
@@ -41,23 +41,23 @@ class InvoiceController(
 
         val invoice = invoiceService.createInvoice(request)
 
-        return ResponseEntity(mapToResponseDto(invoice), HttpStatus.CREATED)
+        return ResponseEntity(mapToResponse(invoice), HttpStatus.CREATED)
     }
 
     @GetMapping("/{invoiceId}")
-    fun getInvoice(@PathVariable invoiceId: String): ResponseEntity<InvoiceResponseDto> {
+    fun getInvoice(@PathVariable invoiceId: String): ResponseEntity<InvoiceResponse> {
         val invoice = invoiceService.getInvoice(InvoiceId(invoiceId))
             ?: return ResponseEntity(HttpStatus.NOT_FOUND)
 
-        return ResponseEntity(mapToResponseDto(invoice), HttpStatus.OK)
+        return ResponseEntity(mapToResponse(invoice), HttpStatus.OK)
     }
 
     @GetMapping("/operation/{operationId}")
-    fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<Map<String, List<InvoiceResponseDto>>> {
+    fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<Map<String, List<InvoiceResponse>>> {
         val invoices = invoiceService.getInvoicesForOperation(OperationId(operationId))
 
         return ResponseEntity(
-            mapOf("invoices" to invoices.map { mapToResponseDto(it) }),
+            mapOf("invoices" to invoices.map { mapToResponse(it) }),
             HttpStatus.OK
         )
     }
@@ -65,21 +65,21 @@ class InvoiceController(
     @PostMapping("/{invoiceId}/status")
     fun updateInvoiceStatus(
         @PathVariable invoiceId: String,
-        @RequestBody requestDto: UpdateInvoiceStatusRequestDto
-    ): ResponseEntity<InvoiceResponseDto> {
+        @RequestBody requestDto: UpdateInvoiceStatusRequest
+    ): ResponseEntity<InvoiceResponse> {
         try {
             val status = InvoiceStatus.valueOf(requestDto.status)
             val updatedInvoice = invoiceService.updateInvoiceStatus(InvoiceId(invoiceId), status)
                 ?: return ResponseEntity(HttpStatus.NOT_FOUND)
 
-            return ResponseEntity(mapToResponseDto(updatedInvoice), HttpStatus.OK)
+            return ResponseEntity(mapToResponse(updatedInvoice), HttpStatus.OK)
         } catch (e: IllegalArgumentException) {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
     }
 
-    private fun mapToResponseDto(invoice: domain.model.Invoice): InvoiceResponseDto =
-        InvoiceResponseDto(
+    private fun mapToResponse(invoice: domain.model.Invoice): InvoiceResponse =
+        InvoiceResponse(
             id = invoice.id.value,
             operationId = invoice.operationId.value,
             amount = invoice.amount.amount,

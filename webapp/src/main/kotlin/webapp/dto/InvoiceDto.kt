@@ -7,16 +7,16 @@ data class MoneyDto(
     val currency: String = "USD"
 )
 
-data class CreateInvoiceRequestDto(
+data class CreateInvoiceJsonRequest(
     val operationId: String,
     val amount: MoneyDto,
 )
 
-data class UpdateInvoiceStatusRequestDto(
+data class UpdateInvoiceStatusRequest(
     val status: String
 )
 
-data class InvoiceResponseDto(
+data class InvoiceResponse(
     val id: String,
     val operationId: String,
     val amount: BigDecimal,
