@@ -1,6 +1,6 @@
 ### Create a new user
 
-POST {{host}}/patient
+POST {{host}}/api/patient
 Content-Type: application/json
 
 {
@@ -15,8 +15,8 @@ Content-Type: application/json
 
 ### Get a specific patient by ID (using the first sample ID)
 
-GET {{host}}/patient/22222222-2222-2222-2222-222222222222
+GET {{host}}/api/patient/22222222-2222-2222-2222-222222222222
 
 ### Search patients by name
 
-GET {{host}}/patient/search?name=Alice
+GET {{host}}/api/patient/search?name=Jo

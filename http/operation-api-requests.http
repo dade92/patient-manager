@@ -1,0 +1,28 @@
+### Create a new operation
+
+POST {{host}}/api/operations
+Content-Type: application/json
+
+{
+  "patientId": "22222222-2222-2222-2222-222222222222",
+  "type": "CONSULTATION",
+  "description": "Initial consultation for knee pain",
+  "executor": "Dr. Alice Wilson"
+}
+
+### Get a specific operation by ID
+
+GET {{host}}/api/operations/55555555-5555-5555-5555-555555555555
+
+### Get all operations for a specific patient
+
+GET {{host}}/api/operations/patient/22222222-2222-2222-2222-222222222222
+
+### Add a note to an existing operation
+
+POST {{host}}/api/operations/55555555-5555-5555-5555-555555555555/notes
+Content-Type: application/json
+
+{
+  "content": "Follow-up shows improvement after two weeks of physical therapy"
+}
