@@ -1,5 +1,6 @@
 package domain.invoice
 
+import domain.exceptions.OperationNotFoundException
 import domain.generator.InvoiceIdGenerator
 import domain.model.Invoice
 import domain.model.InvoiceId
@@ -17,7 +18,7 @@ class InvoiceService(
 ) {
     fun createInvoice(request: CreateInvoiceRequest): Invoice {
         val operation = operationRepository.retrieve(request.operationId)
-            ?: throw IllegalArgumentException("Operation with ID ${request.operationId.value} does not exist")
+            ?: throw OperationNotFoundException(request.operationId)
 
         val now = dateTimeProvider.now()
         val invoice = Invoice(
