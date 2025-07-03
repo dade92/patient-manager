@@ -22,6 +22,7 @@
         <module>domain</module>
         <module>adapters</module>
         <module>webapp</module>
+        <module>frontend</module>
     </modules>
 
     <properties>

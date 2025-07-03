@@ -11,3 +11,7 @@ spring-example1.iml
 .idea
 .settings
 *.jar
+frontend/node_modules
+frontend/dist
+frontend/node
+*.js
