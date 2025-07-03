@@ -86,6 +86,6 @@ class InvoiceController(
             currency = invoice.amount.currency,
             status = invoice.status.name,
             createdAt = invoice.creationDateTime.format(dateFormatter),
-            updatedAt = invoice.lastUpdateDateTime.format(dateFormatter)
+            updatedAt = invoice.lastUpdate.format(dateFormatter)
         )
 }

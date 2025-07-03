@@ -14,7 +14,7 @@ data class Invoice(
     val amount: Money,
     val status: InvoiceStatus,
     val creationDateTime: LocalDateTime,
-    val lastUpdateDateTime: LocalDateTime
+    val lastUpdate: LocalDateTime
 )
 
 @JvmInline

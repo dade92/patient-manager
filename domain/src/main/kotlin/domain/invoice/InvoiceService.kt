@@ -27,7 +27,7 @@ class InvoiceService(
             amount = request.amount,
             status = PENDING,
             creationDateTime = now,
-            lastUpdateDateTime = now
+            lastUpdate = now
         )
 
         return invoiceRepository.save(invoice)

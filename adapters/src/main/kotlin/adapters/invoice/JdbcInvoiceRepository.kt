@@ -64,7 +64,7 @@ class JdbcInvoiceRepository(
         val invoice = retrieve(invoiceId) ?: return null
         val updatedInvoice = invoice.copy(
             status = status,
-            lastUpdateDateTime = dateTimeProvider.now()
+            lastUpdate = dateTimeProvider.now()
         )
         return updateInvoice(updatedInvoice)
     }
@@ -83,7 +83,7 @@ class JdbcInvoiceRepository(
                 statement.setString(4, invoice.amount.currency)
                 statement.setString(5, invoice.status.name)
                 statement.setTimestamp(6, Timestamp.valueOf(invoice.creationDateTime))
-                statement.setTimestamp(7, Timestamp.valueOf(invoice.lastUpdateDateTime))
+                statement.setTimestamp(7, Timestamp.valueOf(invoice.lastUpdate))
                 statement.executeUpdate()
             }
         }
@@ -103,7 +103,7 @@ class JdbcInvoiceRepository(
                 statement.setBigDecimal(1, invoice.amount.amount)
                 statement.setString(2, invoice.amount.currency)
                 statement.setString(3, invoice.status.name)
-                statement.setTimestamp(4, Timestamp.valueOf(invoice.lastUpdateDateTime))
+                statement.setTimestamp(4, Timestamp.valueOf(invoice.lastUpdate))
                 statement.setString(5, invoice.id.value)
                 statement.executeUpdate()
             }
@@ -122,6 +122,6 @@ class JdbcInvoiceRepository(
             ),
             status = InvoiceStatus.valueOf(resultSet.getString("status")),
             creationDateTime = resultSet.getTimestamp("created_at").toLocalDateTime(),
-            lastUpdateDateTime = resultSet.getTimestamp("updated_at").toLocalDateTime()
+            lastUpdate = resultSet.getTimestamp("updated_at").toLocalDateTime()
         )
 }

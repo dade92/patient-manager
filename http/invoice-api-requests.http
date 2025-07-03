@@ -23,11 +23,3 @@ Content-Type: application/json
 {
   "status": "PAID"
 }
-
-### Example with other status values
-POST http://localhost:8080/api/invoices/INV-002-2025/status
-Content-Type: application/json
-
-{
-  "status": "PAID"
-}
