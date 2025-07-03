@@ -1,0 +1,25 @@
+### Create an invoice
+POST {{host}}/api/invoices
+Content-Type: application/json
+
+{
+  "operationId": "33333333-3333-3333-3333-333333333333",
+  "amount": {
+    "amount": 120.50,
+    "currency": "EUR"
+  }
+}
+
+### Get invoice by ID
+GET {{host}}/api/invoices/INV-001-2025
+
+### Get all invoices for a specific operation
+GET {{host}}/api/invoices/operation/33333333-3333-3333-3333-333333333333
+
+### Update invoice status
+POST {{host}}/api/invoices/INV-12345/status
+Content-Type: application/json
+
+{
+  "status": "PAID"
+}
