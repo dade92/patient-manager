@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import webapp.dto.CreateInvoiceJsonRequest
 import webapp.dto.InvoiceResponse
+import webapp.dto.MoneyDto
 import webapp.dto.UpdateInvoiceStatusRequest
 import java.time.format.DateTimeFormatter
 
@@ -25,7 +26,7 @@ class InvoiceController(
     private val invoiceService: InvoiceService
 ) {
 
-    private val dateFormatter = DateTimeFormatter.ISO_DATE_TIME
+    private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
 
     @PostMapping
     fun createInvoice(
@@ -82,8 +83,10 @@ class InvoiceController(
         InvoiceResponse(
             id = invoice.id.value,
             operationId = invoice.operationId.value,
-            amount = invoice.amount.amount,
-            currency = invoice.amount.currency,
+            amount = MoneyDto(
+                amount = invoice.amount.amount,
+                currency = invoice.amount.currency
+            ),
             status = invoice.status.name,
             createdAt = invoice.creationDateTime.format(dateFormatter),
             updatedAt = invoice.lastUpdate.format(dateFormatter)
@@ -93,3 +96,4 @@ class InvoiceController(
 data class InvoicesPerOperationResponse(
     val invoices: List<InvoiceResponse>
 )
+
