@@ -19,14 +19,14 @@ export function makeServer({ environment = 'development' } = {}) {
     routes() {
       this.namespace = 'api';
 
-      // Get patient by ID
       this.get('/patient/:id', (schema, request) => {
-        let id = request.params.id;
-        let patient = schema.find('patient', id);
-        return patient || new Response(404);
+        const patient = schema.findBy('patient', { id: request.params.id });
+        if (!patient) {
+          return new Response(404);
+        }
+        return patient.attrs;
       });
 
-      // Search patients
       this.get('/patient/search', (schema, request) => {
         const nameParam = request.queryParams.name;
         const searchTerm = Array.isArray(nameParam) ? nameParam[0] : nameParam;
@@ -39,7 +39,6 @@ export function makeServer({ environment = 'development' } = {}) {
         return { patients };
       });
 
-      // Create new patient
       this.post('/patient', (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
         const patient = schema.create('patient', {
