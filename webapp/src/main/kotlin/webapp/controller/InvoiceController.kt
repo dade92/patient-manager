@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import webapp.dto.CreateInvoiceJsonRequest
-import webapp.dto.InvoiceResponse
-import webapp.dto.MoneyDto
-import webapp.dto.UpdateInvoiceStatusRequest
+import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 
 @RestController
@@ -91,9 +88,31 @@ class InvoiceController(
             createdAt = invoice.creationDateTime.format(dateFormatter),
             updatedAt = invoice.lastUpdate.format(dateFormatter)
         )
+
+    data class InvoicesPerOperationResponse(
+        val invoices: List<InvoiceResponse>
+    )
+
+    data class CreateInvoiceJsonRequest(
+        val operationId: String,
+        val amount: MoneyDto,
+    )
+
+    data class MoneyDto(
+        val amount: BigDecimal,
+        val currency: String
+    )
+
+    data class UpdateInvoiceStatusRequest(
+        val status: String
+    )
+
+    data class InvoiceResponse(
+        val id: String,
+        val operationId: String,
+        val amount: MoneyDto,
+        val status: String,
+        val createdAt: String,
+        val updatedAt: String
+    )
 }
-
-data class InvoicesPerOperationResponse(
-    val invoices: List<InvoiceResponse>
-)
-
