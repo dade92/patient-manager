@@ -14,4 +14,3 @@ spring-example1.iml
 frontend/node_modules
 frontend/dist
 frontend/node
-*.js
