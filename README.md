@@ -12,7 +12,8 @@ referenced in the docker compose file.
 Inside the `deploy` folder, run the script `run.sh`. It will download and execute the spring boot app along with minio
 container used as a file storage.
 Note that you have to set four environment variables in your OS, the `BLOB_DB_USERNAME` and `BLOB_DB_PASSWORD` for the
-minIO blob storage, and `PATIENT_DB_USERNAME` and `PATIENT_DB_PASSWORD` for the patient manager database.
+minIO blob storage, and `PATIENT_DB_USERNAME` and `PATIENT_DB_PASSWORD` for the patient manager database
+(`PATIENT_DB_PASSWORD` is used as root password at the moment).
 
 ## Local testing
 

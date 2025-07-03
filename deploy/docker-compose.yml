@@ -31,7 +31,7 @@ services:
     image: mysql:8.3
     container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_ROOT_PASSWORD: ${PATIENT_DB_PASSWORD}
       MYSQL_DATABASE: patient-manager-db
       MYSQL_USER: ${PATIENT_DB_USERNAME}
       MYSQL_PASSWORD: ${PATIENT_DB_PASSWORD}
