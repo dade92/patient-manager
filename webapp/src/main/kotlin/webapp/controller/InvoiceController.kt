@@ -53,11 +53,11 @@ class InvoiceController(
     }
 
     @GetMapping("/operation/{operationId}")
-    fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<Map<String, List<InvoiceResponse>>> {
+    fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<InvoicesPerOperationResponse> {
         val invoices = invoiceService.getInvoicesForOperation(OperationId(operationId))
 
         return ResponseEntity(
-            mapOf("invoices" to invoices.map { mapToResponse(it) }),
+            InvoicesPerOperationResponse(invoices = invoices.map { mapToResponse(it) }),
             HttpStatus.OK
         )
     }
@@ -89,3 +89,7 @@ class InvoiceController(
             updatedAt = invoice.lastUpdate.format(dateFormatter)
         )
 }
+
+data class InvoicesPerOperationResponse(
+    val invoices: List<InvoiceResponse>
+)
