@@ -19,3 +19,10 @@ minIO blob storage, and `PATIENT_DB_USERNAME` and `PATIENT_DB_PASSWORD` for the 
 
 You can run the spring boot application locally after you have run the script `run-local-env.sh` that will run an instance of
 minIO locally and a fresh mysql instance with all the tables initialized with sample values.
+
+### Local testing with UI
+
+To see the UI, you can:
+- run `npm start` to see it with mocked data.
+- run first a `mvn clean install` to build the spring boot app with inside the real UI, 
+then run the BE application as usual.
