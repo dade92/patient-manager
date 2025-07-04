@@ -11,11 +11,11 @@ import {
   IconButton
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { PatientSearch } from './components/PatientSearch';
-import { PatientDetail } from './pages/PatientDetail';
-import { NewPatient } from './pages/NewPatient';
+import { PatientSearch } from '../components/PatientSearch';
+import { PatientDetail } from './PatientDetail';
+import { NewPatient } from './NewPatient';
 
-const App: React.FC = () => {
+const Welcome: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -86,4 +86,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default Welcome;

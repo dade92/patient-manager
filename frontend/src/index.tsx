@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import Welcome from './pages/Welcome';
 import { makeServer } from './mocks/server';
 
 if (process.env.NODE_ENV === 'development') {
@@ -13,6 +13,6 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App />
+    <Welcome />
   </React.StrictMode>
 );
