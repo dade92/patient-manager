@@ -1,34 +1,7 @@
-import { createServer, Model, Response, Registry } from 'miragejs';
-import Schema from 'miragejs/orm/schema';
-import { Patient } from '../types/patient';
-import { Operation } from '../types/operation';
-import { mockPatients } from './mockData';
-
-// Sample operations data for the mock server
-const mockOperations = [
-  {
-    id: 'OP-1001',
-    patientId: '1',
-    type: 'CONSULTATION',
-    description: 'Initial consultation for back pain',
-    executor: 'Dr. Smith',
-    assets: [],
-    additionalNotes: [],
-    createdAt: '2025-06-01T10:00:00',
-    updatedAt: '2025-06-01T10:30:00'
-  },
-  {
-    id: 'OP-1002',
-    patientId: '1',
-    type: 'DIAGNOSTIC',
-    description: 'X-Ray examination of lower back',
-    executor: 'Dr. Johnson',
-    assets: [],
-    additionalNotes: [],
-    createdAt: '2025-06-15T14:00:00',
-    updatedAt: '2025-06-15T14:45:00'
-  }
-];
+import {createServer, Model, Response} from 'miragejs';
+import {Patient} from '../types/patient';
+import {Operation} from '../types/operation';
+import {mockPatients, mockOperations} from './mockData';
 
 export function makeServer({ environment = 'development' } = {}) {
   return createServer({
