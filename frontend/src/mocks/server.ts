@@ -90,6 +90,18 @@ export function makeServer({ environment = 'development' } = {}) {
         return { operations };
       });
 
+      // Get operation by ID
+      this.get('/operations/:id', (schema, request) => {
+        const operation = (schema.all('operation').models as any[])
+          .find(op => op.attrs.id === request.params.id);
+
+        if (!operation) {
+          return new Response(404, {}, { message: 'Operation not found' });
+        }
+
+        return operation.attrs;
+      });
+
       // Create new operation
       this.post('/operations', (schema, request) => {
         const attrs = JSON.parse(request.requestBody);

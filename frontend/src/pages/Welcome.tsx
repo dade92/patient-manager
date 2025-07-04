@@ -5,6 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {PatientSearch} from '../components/PatientSearch';
 import {PatientDetail} from './PatientDetail';
 import {NewPatient} from './NewPatient';
+import {OperationDetail} from './OperationDetail';
 
 const Welcome: React.FC = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -71,6 +72,7 @@ const Welcome: React.FC = () => {
                     }/>
                     <Route path="/patient/:patientId" element={<PatientDetail/>}/>
                     <Route path="/new-patient" element={<NewPatient/>}/>
+                    <Route path="/operations/:operationId" element={<OperationDetail/>}/>
                 </Routes>
             </Container>
         </BrowserRouter>
