@@ -19,6 +19,7 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { Operation } from '../types/operation';
+import { useCache } from '../context/CacheContext';
 
 export const OperationDetail: React.FC = () => {
   const { operationId } = useParams();
@@ -27,8 +28,21 @@ export const OperationDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Use the cache context
+  const { getCachedOperation, setCachedOperation } = useCache();
+
   useEffect(() => {
     const fetchOperation = async () => {
+      if (!operationId) return;
+
+      // Check if operation is in cache
+      const cachedOperation = getCachedOperation(operationId);
+      if (cachedOperation) {
+        setOperation(cachedOperation);
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         setError(null);
@@ -36,6 +50,8 @@ export const OperationDetail: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setOperation(data);
+          // Store in cache
+          setCachedOperation(operationId, data);
         } else if (response.status === 404) {
           setError(`Operation with ID ${operationId} was not found`);
           setOperation(null);
@@ -51,7 +67,7 @@ export const OperationDetail: React.FC = () => {
     };
 
     fetchOperation();
-  }, [operationId]);
+  }, [operationId, getCachedOperation, setCachedOperation]);
 
   const handleBack = () => {
     navigate(-1);
