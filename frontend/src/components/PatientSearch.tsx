@@ -4,6 +4,8 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 import {useNavigate} from 'react-router-dom';
 import {Patient} from '../types/patient';
 
+const SEARCH_TIMEOUT = 400;
+
 export const PatientSearch: React.FC = () => {
     const [searchInput, setSearchInput] = useState('');
     const [patients, setPatients] = useState<Patient[]>([]);
@@ -26,7 +28,7 @@ export const PatientSearch: React.FC = () => {
     };
 
     useEffect(() => {
-        const timeoutId = setTimeout(searchPatients, 300);
+        const timeoutId = setTimeout(searchPatients, SEARCH_TIMEOUT);
         return () => clearTimeout(timeoutId);
     }, [searchInput]);
 
