@@ -1,7 +1,34 @@
-import { createServer, Model, Response } from 'miragejs';
+import { createServer, Model, Response, Registry } from 'miragejs';
+import Schema from 'miragejs/orm/schema';
 import { Patient } from '../types/patient';
 import { Operation } from '../types/operation';
 import { mockPatients } from './mockData';
+
+// Sample operations data for the mock server
+const mockOperations = [
+  {
+    id: 'OP-1001',
+    patientId: '1',
+    type: 'CONSULTATION',
+    description: 'Initial consultation for back pain',
+    executor: 'Dr. Smith',
+    assets: [],
+    additionalNotes: [],
+    createdAt: '2025-06-01T10:00:00',
+    updatedAt: '2025-06-01T10:30:00'
+  },
+  {
+    id: 'OP-1002',
+    patientId: '1',
+    type: 'DIAGNOSTIC',
+    description: 'X-Ray examination of lower back',
+    executor: 'Dr. Johnson',
+    assets: [],
+    additionalNotes: [],
+    createdAt: '2025-06-15T14:00:00',
+    updatedAt: '2025-06-15T14:45:00'
+  }
+];
 
 export function makeServer({ environment = 'development' } = {}) {
   return createServer({
@@ -15,6 +42,9 @@ export function makeServer({ environment = 'development' } = {}) {
     seeds(server) {
       mockPatients.forEach(patient => {
         server.create('patient', patient);
+      });
+      mockOperations.forEach(operation => {
+        server.create('operation', operation);
       });
     },
 
@@ -34,9 +64,9 @@ export function makeServer({ environment = 'development' } = {}) {
         const searchTerm = Array.isArray(nameParam) ? nameParam[0] : nameParam;
         const name = (searchTerm || '').toLowerCase();
 
-        const patients = (schema.all('patient').models as unknown as { attrs: Patient }[])
+        const patients = (schema.all('patient').models as any[])
           .filter(patient => patient.attrs.name.toLowerCase().includes(name))
-          .map(patient => patient.attrs);
+          .map(patient => patient.attrs as Patient);
 
         return { patients };
       });
@@ -51,6 +81,15 @@ export function makeServer({ environment = 'development' } = {}) {
         return patient.attrs;
       });
 
+      // Get operations by patient ID
+      this.get('/operations/patient/:patientId', (schema, request) => {
+        const allOperations = schema.all('operation');
+        const operations = (allOperations.models as any[])
+          .filter(operation => operation.attrs.patientId === request.params.patientId)
+          .map(operation => operation.attrs as Operation);
+        return { operations };
+      });
+
       // Create new operation
       this.post('/operations', (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
@@ -61,7 +100,6 @@ export function makeServer({ environment = 'development' } = {}) {
           return new Response(404, {}, { message: 'Patient not found' });
         }
 
-        // Create operation with generated ID and timestamps
         const operation = schema.create('operation', {
           ...attrs,
           id: `OP-${Math.floor(Math.random() * 10000)}`,

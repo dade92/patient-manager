@@ -5,14 +5,16 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import {Patient} from '../types/patient';
 import {CreateOperationDialog} from '../components/CreateOperationDialog';
+import {OperationsList} from '../components/OperationsList';
 
 export const PatientDetail: React.FC = () => {
-    const {patientId} = useParams();
+    const { patientId } = useParams();
     const navigate = useNavigate();
     const [patient, setPatient] = useState<Patient | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isCreateOperationOpen, setIsCreateOperationOpen] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
         const fetchPatient = async () => {
@@ -48,32 +50,28 @@ export const PatientDetail: React.FC = () => {
         setIsCreateOperationOpen(true);
     };
 
-    const handleOperationCreated = () => {
-        // Optionally refresh patient data or implement operations list component
-    };
-
     if (loading) {
         return (
-            <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
+            <Box sx={{ maxWidth: 800, mx: 'auto', mt: 4, px: 2 }}>
                 <Button
-                    startIcon={<ArrowBackIcon/>}
+                    startIcon={<ArrowBackIcon />}
                     onClick={handleBack}
-                    sx={{mb: 2}}
+                    sx={{ mb: 2 }}
                 >
                     Back
                 </Button>
                 <Box display="flex" justifyContent="center">
-                    <CircularProgress/>
+                    <CircularProgress />
                 </Box>
             </Box>
         );
     }
 
     return (
-        <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
-            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
+        <Box sx={{ maxWidth: 800, mx: 'auto', mt: 4, px: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Button
-                    startIcon={<ArrowBackIcon/>}
+                    startIcon={<ArrowBackIcon />}
                     onClick={handleBack}
                 >
                     Back
@@ -82,7 +80,7 @@ export const PatientDetail: React.FC = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        startIcon={<AddIcon/>}
+                        startIcon={<AddIcon />}
                         onClick={handleCreateOperation}
                     >
                         New Operation
@@ -91,12 +89,12 @@ export const PatientDetail: React.FC = () => {
             </Box>
 
             {error ? (
-                <Alert severity="error" sx={{mb: 2}}>
+                <Alert severity="error" sx={{ mb: 2 }}>
                     {error}
                 </Alert>
             ) : patient ? (
                 <>
-                    <Card>
+                    <Card sx={{ mb: 4 }}>
                         <CardContent>
                             <Typography variant="h5" gutterBottom>
                                 {patient.name}
@@ -129,11 +127,21 @@ export const PatientDetail: React.FC = () => {
                             </Grid>
                         </CardContent>
                     </Card>
+
+                    {patientId && (
+                        <OperationsList
+                            key={refreshKey}
+                            patientId={patientId}
+                        />
+                    )}
+
                     <CreateOperationDialog
                         open={isCreateOperationOpen}
                         onClose={() => setIsCreateOperationOpen(false)}
-                        patientId={patient.id}
-                        onOperationCreated={handleOperationCreated}
+                        patientId={patient?.id ?? ''}
+                        onOperationCreated={() => {
+                            setRefreshKey(prev => prev + 1);
+                        }}
                     />
                 </>
             ) : null}
