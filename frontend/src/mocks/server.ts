@@ -1,5 +1,6 @@
 import { createServer, Model, Response } from 'miragejs';
 import { Patient } from '../types/patient';
+import { Operation } from '../types/operation';
 import { mockPatients } from './mockData';
 
 export function makeServer({ environment = 'development' } = {}) {
@@ -7,7 +8,8 @@ export function makeServer({ environment = 'development' } = {}) {
     environment,
 
     models: {
-      patient: Model
+      patient: Model,
+      operation: Model
     },
 
     seeds(server) {
@@ -47,6 +49,29 @@ export function makeServer({ environment = 'development' } = {}) {
         });
 
         return patient.attrs;
+      });
+
+      // Create new operation
+      this.post('/operations', (schema, request) => {
+        const attrs = JSON.parse(request.requestBody);
+
+        // Validate that patient exists
+        const patient = schema.findBy('patient', { id: attrs.patientId });
+        if (!patient) {
+          return new Response(404, {}, { message: 'Patient not found' });
+        }
+
+        // Create operation with generated ID and timestamps
+        const operation = schema.create('operation', {
+          ...attrs,
+          id: `OP-${Math.floor(Math.random() * 10000)}`,
+          assets: [],
+          additionalNotes: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+
+        return new Response(201, {}, operation.attrs);
       });
     },
   });
