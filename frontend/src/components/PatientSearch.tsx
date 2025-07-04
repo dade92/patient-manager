@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {TextField, List, ListItemText, Paper, Box, ListItemButton} from '@mui/material';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { useNavigate } from 'react-router-dom';
 import { Patient } from '../types/patient';
 
 export const PatientSearch: React.FC = () => {
   const [searchInput, setSearchInput] = useState('');
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [showResults, setShowResults] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,33 +34,44 @@ export const PatientSearch: React.FC = () => {
     navigate(`/patient/${patientId}`);
   };
 
+  const handleClickAway = () => {
+    setShowResults(false);
+  };
+
+  const handleSearchFocus = () => {
+    setShowResults(true);
+  };
+
   return (
-    <Box sx={{ width: '100%', maxWidth: 600, mx: 'auto', mt: 2 }}>
-      <TextField
-        fullWidth
-        label="Search Patients"
-        variant="outlined"
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-        sx={{ mb: 2 }}
-      />
-      {patients.length > 0 && (
-        <Paper elevation={2}>
-          <List>
-            {patients.map((patient) => (
-              <ListItemButton
-                key={patient.id}
-                onClick={() => handlePatientClick(patient.id)}
-              >
-                <ListItemText
-                  primary={patient.name}
-                  secondary={`${patient.cityOfResidence} • ${patient.email}`}
-                />
-              </ListItemButton>
-            ))}
-          </List>
-        </Paper>
-      )}
-    </Box>
+    <ClickAwayListener onClickAway={handleClickAway}>
+      <Box sx={{ width: '100%', maxWidth: 600, mx: 'auto', mt: 2 }}>
+        <TextField
+          fullWidth
+          label="Search Patients"
+          variant="outlined"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onFocus={handleSearchFocus}
+          sx={{ mb: 2 }}
+        />
+        {showResults && patients.length > 0 && (
+          <Paper elevation={2}>
+            <List>
+              {patients.map((patient) => (
+                <ListItemButton
+                  key={patient.id}
+                  onClick={() => handlePatientClick(patient.id)}
+                >
+                  <ListItemText
+                    primary={patient.name}
+                    secondary={`${patient.cityOfResidence} • ${patient.email}`}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
+          </Paper>
+        )}
+      </Box>
+    </ClickAwayListener>
   );
 };
