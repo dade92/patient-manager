@@ -3,17 +3,14 @@ import { Patient } from '../types/patient';
 import { Operation } from '../types/operation';
 
 interface CacheContextType {
-  // Patients cache
   cachedPatients: Record<string, Patient>;
   setCachedPatient: (patientId: string, patient: Patient) => void;
   getCachedPatient: (patientId: string) => Patient | undefined;
 
-  // Operations cache
   cachedOperationsByPatient: Record<string, Operation[]>;
   setCachedOperationsForPatient: (patientId: string, operations: Operation[]) => void;
   getCachedOperationsForPatient: (patientId: string) => Operation[] | undefined;
 
-  // Individual operation cache
   cachedOperations: Record<string, Operation>;
   setCachedOperation: (operationId: string, operation: Operation) => void;
   getCachedOperation: (operationId: string) => Operation | undefined;
@@ -43,7 +40,6 @@ export const CacheProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       [patientId]: operations
     }));
 
-    // Also cache individual operations
     operations.forEach(operation => {
       setCachedOperation(operation.id, operation);
     });

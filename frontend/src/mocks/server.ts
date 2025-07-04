@@ -96,6 +96,30 @@ export function makeServer({ environment = 'development' } = {}) {
 
         return new Response(201, {}, operation.attrs);
       });
+
+      // Upload asset to operation
+      this.post('/operations/:id/assets', (schema, request) => {
+        const operationId = request.params.id;
+        const operation = (schema.all('operation').models as any[])
+          .find(op => op.attrs.id === operationId);
+
+        if (!operation) {
+          return new Response(404, {}, { message: 'Operation not found' });
+        }
+
+        // Simulate file upload - in a real implementation, you'd handle the FormData
+        // For now, we'll just add a mock filename to the assets array
+        const mockFileName = `uploaded_file_${Date.now()}.pdf`;
+        const updatedAssets = [...(operation.attrs.assets || []), mockFileName];
+
+        // Update the operation with the new asset
+        operation.update({
+          assets: updatedAssets,
+          updatedAt: new Date().toISOString()
+        });
+
+        return new Response(200, {}, operation.attrs);
+      });
     },
   });
 }

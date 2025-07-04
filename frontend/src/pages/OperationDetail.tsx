@@ -1,25 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, {useEffect, useRef, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
 import {
+  Alert,
+  Box,
+  Button,
   Card,
   CardContent,
-  Typography,
-  Box,
-  Grid,
+  Chip,
   CircularProgress,
-  Button,
-  Alert,
+  Divider,
+  Grid,
+  IconButton,
+  Link,
   List,
   ListItem,
   ListItemText,
-  Divider,
-  Chip,
-  Link
+  Tooltip,
+  Typography
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { Operation } from '../types/operation';
-import { useCache } from '../context/CacheContext';
+import AddIcon from '@mui/icons-material/Add';
+import {Operation} from '../types/operation';
+import {useCache} from '../context/CacheContext';
 
 export const OperationDetail: React.FC = () => {
   const { operationId } = useParams();
@@ -27,8 +30,10 @@ export const OperationDetail: React.FC = () => {
   const [operation, setOperation] = useState<Operation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Use the cache context
   const { getCachedOperation, setCachedOperation } = useCache();
 
   useEffect(() => {
@@ -81,6 +86,45 @@ export const OperationDetail: React.FC = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0 || !operationId) return;
+
+    const file = files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+
+    setUploadLoading(true);
+    setUploadError(null);
+
+    try {
+      const response = await fetch(`/api/operations/${operationId}/assets`, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        const updatedOperation = await response.json();
+        setOperation(updatedOperation);
+
+        if (setCachedOperation) {
+          setCachedOperation(operationId, updatedOperation);
+        }
+      } else {
+        const errorData = await response.json();
+        setUploadError(errorData.message || 'Failed to upload file');
+      }
+    } catch (error) {
+      setUploadError('An error occurred while uploading the file');
+      console.error('Error uploading file:', error);
+    } finally {
+      setUploadLoading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
   };
 
   if (loading) {
@@ -176,6 +220,32 @@ export const OperationDetail: React.FC = () => {
                   </Box>
                 </Grid>
               )}
+
+              <Grid item xs={12}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Tooltip title="Upload File">
+                    <IconButton color="primary" onClick={() => {
+                      if (fileInputRef.current) {
+                        fileInputRef.current.click();
+                      }
+                    }}>
+                      <AddIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    onChange={handleFileUpload}
+                  />
+                  {uploadLoading && <CircularProgress size={24} />}
+                  {uploadError && (
+                    <Alert severity="error" sx={{ ml: 2 }}>
+                      {uploadError}
+                    </Alert>
+                  )}
+                </Box>
+              </Grid>
 
               {operation.additionalNotes && operation.additionalNotes.length > 0 && (
                 <Grid item xs={12}>

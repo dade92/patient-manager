@@ -38,18 +38,11 @@ export const mockOperations = [
         type: 'CONSULTATION',
         description: 'Initial consultation for back pain',
         executor: 'Dr. Smith',
-        assets: [
-            'report1.pdf',
-            'report2.pdf'
-        ],
+        assets: ['consultation_notes.pdf', 'patient_form.pdf'],
         additionalNotes: [
             {
-                content: 'Patient reports pain in lower back for the past 2 weeks.',
-                createdAt: '2025-06-01T10:15:00',
-            },
-            {
-                content: 'Recommended rest and prescribed anti-inflammatory medication.',
-                createdAt: '2025-06-01T10:20:00',
+                content: 'Patient reports lower back pain for 2 weeks',
+                createdAt: '2025-06-01T10:15:00'
             }
         ],
         createdAt: '2025-06-01T10:00:00',
@@ -61,8 +54,13 @@ export const mockOperations = [
         type: 'DIAGNOSTIC',
         description: 'X-Ray examination of lower back',
         executor: 'Dr. Johnson',
-        assets: [],
-        additionalNotes: [],
+        assets: ['xray_lumbar_spine.jpg', 'radiology_report.pdf'],
+        additionalNotes: [
+            {
+                content: 'X-ray shows normal bone structure',
+                createdAt: '2025-06-15T14:30:00'
+            }
+        ],
         createdAt: '2025-06-15T14:00:00',
         updatedAt: '2025-06-15T14:45:00'
     }
