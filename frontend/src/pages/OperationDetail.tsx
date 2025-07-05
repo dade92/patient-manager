@@ -6,7 +6,6 @@ import {
     Button,
     Card,
     CardContent,
-    Chip,
     CircularProgress,
     Divider,
     Grid,
@@ -23,22 +22,8 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AddIcon from '@mui/icons-material/Add';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
-import {styled} from '@mui/material/styles';
-import { formatDateTime } from '../utils/dateUtils';
-
-const ExpandableChip = styled(Chip)(({theme}) => ({
-    maxWidth: '150px',
-    transition: 'max-width 0.3s ease-in-out',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    '&:hover': {
-        maxWidth: '300px',
-    },
-    '& .MuiChip-label': {
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-    }
-}));
+import {formatDateTime} from '../utils/dateUtils';
+import {ExpandableChip} from '../components/ExpandableChip';
 
 export const OperationDetail: React.FC = () => {
     const {operationId} = useParams();
@@ -214,7 +199,7 @@ export const OperationDetail: React.FC = () => {
                                                 rel="noopener noreferrer"
                                                 underline="hover"
                                             >
-                                                <Chip
+                                                <ExpandableChip
                                                     icon={<AttachFileIcon/>}
                                                     label={asset}
                                                     variant="outlined"

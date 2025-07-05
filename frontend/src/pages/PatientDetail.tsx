@@ -8,6 +8,7 @@ import {CreateOperationDialog} from '../components/CreateOperationDialog';
 import {OperationsList} from '../components/OperationsList';
 import {useCache} from '../context/CacheContext';
 import {formatDate} from '../utils/dateUtils';
+import {ExpandableChip} from '../components/ExpandableChip';
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();
@@ -113,9 +114,16 @@ export const PatientDetail: React.FC = () => {
                 <>
                     <Card sx={{mb: 4}}>
                         <CardContent>
-                            <Typography variant="h5" gutterBottom>
-                                {patient.name}
-                            </Typography>
+                            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2}}>
+                                <Typography variant="h5" gutterBottom>
+                                    {patient.name}
+                                </Typography>
+                                <ExpandableChip
+                                    label={`Patient ID: ${patient.id}`}
+                                    color="primary"
+                                    title={`Patient ID: ${patient.id}`}
+                                />
+                            </Box>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>
                                     <Typography variant="subtitle2" color="textSecondary">Email</Typography>
