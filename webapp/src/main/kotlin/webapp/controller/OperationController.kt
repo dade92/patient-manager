@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
 
 @RestController
-@RequestMapping("/api/operations")
+@RequestMapping("/api/operation")
 class OperationController(
     private val operationService: OperationService
 ) {
