@@ -1,6 +1,6 @@
 export const mockPatients = [
     {
-        id: "1",
+        id: "11111111-1111-1111-1111",
         name: "John Doe",
         email: "john.doe@example.com",
         phoneNumber: "+1234567890",
@@ -10,7 +10,7 @@ export const mockPatients = [
         birthDate: "1990-05-15"
     },
     {
-        id: "2",
+        id: "22222222-2222-2222-2222",
         name: "Jane Smith",
         email: "jane.smith@example.com",
         phoneNumber: "+1987654321",
@@ -20,7 +20,7 @@ export const mockPatients = [
         birthDate: "1988-09-23"
     },
     {
-        id: "3",
+        id: "33333333-3333-3333-3333",
         name: "Alice Johnson",
         email: "alice.j@example.com",
         phoneNumber: "+1122334455",
@@ -34,7 +34,7 @@ export const mockPatients = [
 export const mockOperations = [
     {
         id: 'OP-1001',
-        patientId: '1',
+        patientId: '11111111-1111-1111-1111',
         type: 'CONSULTATION',
         description: 'Initial consultation for back pain',
         executor: 'Dr. Smith',
@@ -50,7 +50,7 @@ export const mockOperations = [
     },
     {
         id: 'OP-1002',
-        patientId: '1',
+        patientId: '11111111-1111-1111-1111',
         type: 'DIAGNOSTIC',
         description: 'X-Ray examination of lower back',
         executor: 'Dr. Johnson',

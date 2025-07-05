@@ -23,6 +23,21 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AddIcon from '@mui/icons-material/Add';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
+import { styled } from '@mui/material/styles';
+
+const ExpandableChip = styled(Chip)(({ theme }) => ({
+  maxWidth: '150px',
+  transition: 'max-width 0.3s ease-in-out',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  '&:hover': {
+    maxWidth: '300px',
+  },
+  '& .MuiChip-label': {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  }
+}));
 
 export const OperationDetail: React.FC = () => {
   const { operationId } = useParams();
@@ -54,7 +69,6 @@ export const OperationDetail: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setOperation(data);
-          // Store in cache
           setCachedOperation(operationId, data);
         } else if (response.status === 404) {
           setError(`Operation with ID ${operationId} was not found`);
@@ -164,11 +178,12 @@ export const OperationDetail: React.FC = () => {
               <Typography variant="h5" component="div">
                 {operation.type}
               </Typography>
-              <Chip
+              <ExpandableChip
                 label={`Patient ID: ${operation.patientId}`}
                 color="primary"
                 onClick={() => navigate(`/patient/${operation.patientId}`)}
                 clickable
+                title={`Patient ID: ${operation.patientId}`}
               />
             </Box>
 
