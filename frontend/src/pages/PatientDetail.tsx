@@ -7,6 +7,7 @@ import {Patient} from '../types/patient';
 import {CreateOperationDialog} from '../components/CreateOperationDialog';
 import {OperationsList} from '../components/OperationsList';
 import {useCache} from '../context/CacheContext';
+import { formatDateEuropean } from '../utils/dateUtils';
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();
@@ -133,7 +134,9 @@ export const PatientDetail: React.FC = () => {
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <Typography variant="subtitle2" color="textSecondary">Birth Date</Typography>
-                                    <Typography variant="body1" gutterBottom>{patient.birthDate}</Typography>
+                                    <Typography variant="body1" gutterBottom>
+                                        {formatDateEuropean(patient.birthDate)}
+                                    </Typography>
                                 </Grid>
                             </Grid>
                         </CardContent>

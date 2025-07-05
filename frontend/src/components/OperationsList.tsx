@@ -13,6 +13,7 @@ import {
     Divider
 } from '@mui/material';
 import { Operation } from '../types/operation';
+import { formatDateTimeEuropean } from '../utils/dateUtils';
 
 interface Props {
     patientId: string;
@@ -49,16 +50,6 @@ export const OperationsList: React.FC<Props> = ({ patientId }) => {
         fetchOperations();
     }, [patientId]);
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    };
-
     return (
         <Card>
             <CardContent>
@@ -94,7 +85,7 @@ export const OperationsList: React.FC<Props> = ({ patientId }) => {
                                                     {operation.description}
                                                 </Typography>
                                                 <Typography variant="caption" color="textSecondary">
-                                                    {formatDate(operation.createdAt)}
+                                                    {formatDateTimeEuropean(operation.createdAt)}
                                                 </Typography>
                                             </>
                                         }

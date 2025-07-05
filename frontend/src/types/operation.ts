@@ -19,6 +19,6 @@ export enum OperationType {
     CONSULTATION = 'CONSULTATION',
     DIAGNOSTIC = 'DIAGNOSTIC',
     SURGERY = 'SURGERY',
-    THERAPY = 'THERAPY',
+    TREATMENT = 'TREATMENT',
     FOLLOW_UP = 'FOLLOW_UP'
 }
