@@ -5,8 +5,11 @@ import {
     List,
     ListItem,
     ListItemText,
-    Divider
+    Divider,
+    Box,
+    Button
 } from '@mui/material';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import { formatDateTime } from '../utils/dateUtils';
 
 interface OperationNote {
@@ -16,18 +19,53 @@ interface OperationNote {
 
 interface OperationNotesProps {
     notes: OperationNote[];
+    onAddNote?: () => void; // Optional callback for adding notes
 }
 
-export const OperationNotes: React.FC<OperationNotesProps> = ({ notes }) => {
+/**
+ * Component to display operation notes
+ */
+export const OperationNotes: React.FC<OperationNotesProps> = ({ notes, onAddNote }) => {
     if (!notes || notes.length === 0) {
-        return null;
+        return onAddNote ? (
+            <Grid item xs={12}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                    <Typography variant="subtitle1" color="textSecondary">
+                        Notes
+                    </Typography>
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<NoteAddIcon />}
+                        onClick={onAddNote}
+                    >
+                        Add Note
+                    </Button>
+                </Box>
+                <Typography variant="body2" color="textSecondary" sx={{ fontStyle: 'italic' }}>
+                    No notes yet
+                </Typography>
+            </Grid>
+        ) : null;
     }
 
     return (
         <Grid item xs={12}>
-            <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                Notes
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Typography variant="subtitle1" color="textSecondary">
+                    Notes
+                </Typography>
+                {onAddNote && (
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<NoteAddIcon />}
+                        onClick={onAddNote}
+                    >
+                        Add Note
+                    </Button>
+                )}
+            </Box>
             <List>
                 {notes.map((note, index) => (
                     <React.Fragment key={index}>

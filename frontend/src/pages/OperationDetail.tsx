@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
 import {formatDateTime} from '../utils/dateUtils';
@@ -200,46 +199,32 @@ export const OperationDetail: React.FC = () => {
                             </Grid>
 
                             <Grid item xs={12}>
-                                <OperationAssets assets={operation.assets} />
+                                <OperationAssets
+                                    assets={operation.assets}
+                                    onAddAsset={() => {
+                                        if (fileInputRef.current) {
+                                            fileInputRef.current.click();
+                                        }
+                                    }}
+                                />
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    style={{display: 'none'}}
+                                    onChange={handleFileUpload}
+                                />
+                                {uploadLoading && <CircularProgress size={24} sx={{ ml: 2 }}/>}
+                                {uploadError && (
+                                    <Alert severity="error" sx={{ mt: 1 }}>
+                                        {uploadError}
+                                    </Alert>
+                                )}
                             </Grid>
 
-                            <Grid item xs={12}>
-                                <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                                    <Tooltip title="Upload File">
-                                        <IconButton color="primary" onClick={() => {
-                                            if (fileInputRef.current) {
-                                                fileInputRef.current.click();
-                                            }
-                                        }}>
-                                            <AddIcon/>
-                                        </IconButton>
-                                    </Tooltip>
-                                    <input
-                                        type="file"
-                                        ref={fileInputRef}
-                                        style={{display: 'none'}}
-                                        onChange={handleFileUpload}
-                                    />
-                                    {uploadLoading && <CircularProgress size={24}/>}
-                                    {uploadError && (
-                                        <Alert severity="error" sx={{ml: 2}}>
-                                            {uploadError}
-                                        </Alert>
-                                    )}
-                                </Box>
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <Button
-                                    variant="outlined"
-                                    startIcon={<NoteAddIcon/>}
-                                    onClick={handleOpenDialog}
-                                >
-                                    Add Note
-                                </Button>
-                            </Grid>
-
-                            <OperationNotes notes={operation.additionalNotes} />
+                            <OperationNotes
+                                notes={operation.additionalNotes}
+                                onAddNote={handleOpenDialog}
+                            />
                         </Grid>
                     </CardContent>
                 </Card>
