@@ -1,22 +1,23 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+  Alert,
+  Box,
   Button,
-  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControl,
   InputLabel,
-  Select,
   MenuItem,
-  Box,
-  Alert,
-  SelectChangeEvent
+  Select,
+  SelectChangeEvent,
+  TextField
 } from '@mui/material';
+import {OperationType} from '../types/operation';
 
 export interface CreateOperationFormData {
-  type: string;
+  type: OperationType;
   description: string;
   executor: string;
 }
@@ -28,13 +29,6 @@ interface Props {
   onOperationCreated: () => void;
 }
 
-const operationTypes = [
-  'CONSULTATION',
-  'DIAGNOSTIC',
-  'SURGERY',
-  'THERAPY',
-  'FOLLOW_UP'
-];
 
 export const CreateOperationDialog: React.FC<Props> = ({
   open,
@@ -43,7 +37,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
   onOperationCreated
 }) => {
   const [formData, setFormData] = useState<CreateOperationFormData>({
-    type: '',
+    type: '' as OperationType,
     description: '',
     executor: ''
   });
@@ -86,7 +80,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
       if (response.ok) {
         onOperationCreated();
         onClose();
-        setFormData({ type: '', description: '', executor: '' });
+        setFormData({ type: '' as OperationType, description: '', executor: '' });
       } else {
         const data = await response.json();
         setError(data.message || 'Failed to create operation');
@@ -118,7 +112,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
                 label="Operation Type"
                 onChange={handleSelectChange}
               >
-                {operationTypes.map(type => (
+                {Object.values(OperationType).map(type => (
                   <MenuItem key={type} value={type}>
                     {type}
                   </MenuItem>

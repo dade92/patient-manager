@@ -59,18 +59,6 @@ export const PatientDetail: React.FC = () => {
         navigate(-1);
     };
 
-    const handleCreateOperation = () => {
-        setIsCreateOperationOpen(true);
-    };
-
-    const handleOperationCreated = () => {
-        if (patientId) {
-            setCachedOperationsForPatient(patientId, []);
-        }
-
-        setRefreshKey(prev => prev + 1);
-    };
-
     if (loading) {
         return (
             <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
@@ -102,7 +90,9 @@ export const PatientDetail: React.FC = () => {
                         variant="contained"
                         color="primary"
                         startIcon={<AddIcon/>}
-                        onClick={handleCreateOperation}
+                        onClick={() => {
+                            setIsCreateOperationOpen(true);
+                        }}
                     >
                         New Operation
                     </Button>
@@ -160,7 +150,10 @@ export const PatientDetail: React.FC = () => {
                         open={isCreateOperationOpen}
                         onClose={() => setIsCreateOperationOpen(false)}
                         patientId={patient.id}
-                        onOperationCreated={handleOperationCreated}
+                        onOperationCreated={() => {
+                            setCachedOperationsForPatient(patientId!, []);
+                            setRefreshKey(prev => prev + 1);
+                        }}
                     />
                 </>
             ) : null}

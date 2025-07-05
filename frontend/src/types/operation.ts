@@ -15,9 +15,10 @@ export interface OperationNote {
     createdAt: string;
 }
 
-export type OperationType =
-    | 'CONSULTATION'
-    | 'DIAGNOSTIC'
-    | 'SURGERY'
-    | 'THERAPY'
-    | 'FOLLOW_UP';
+export enum OperationType {
+    CONSULTATION = 'CONSULTATION',
+    DIAGNOSTIC = 'DIAGNOSTIC',
+    SURGERY = 'SURGERY',
+    THERAPY = 'THERAPY',
+    FOLLOW_UP = 'FOLLOW_UP'
+}
