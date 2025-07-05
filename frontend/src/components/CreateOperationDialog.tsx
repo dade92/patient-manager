@@ -26,7 +26,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   patientId: string;
-  onOperationCreated: () => void;
+  onOperationCreated: (operation: any) => void;
 }
 
 
@@ -78,7 +78,8 @@ export const CreateOperationDialog: React.FC<Props> = ({
       });
 
       if (response.ok) {
-        onOperationCreated();
+        const newOperation = await response.json();
+        onOperationCreated(newOperation);
         onClose();
         setFormData({ type: '' as OperationType, description: '', executor: '' });
       } else {

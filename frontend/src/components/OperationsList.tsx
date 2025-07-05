@@ -14,20 +14,30 @@ import {
 } from '@mui/material';
 import { Operation } from '../types/operation';
 import { formatDateTimeEuropean } from '../utils/dateUtils';
+import { useCache } from '../context/CacheContext';
 
 interface Props {
     patientId: string;
+    refreshTrigger?: number; // Optional prop to trigger refresh
 }
 
-export const OperationsList: React.FC<Props> = ({ patientId }) => {
+export const OperationsList: React.FC<Props> = ({ patientId, refreshTrigger }) => {
     const navigate = useNavigate();
     const [operations, setOperations] = useState<Operation[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { getCachedOperationsForPatient, setCachedOperationsForPatient } = useCache();
 
     useEffect(() => {
         const fetchOperations = async () => {
             if (!patientId) return;
+
+            const cachedOperations = getCachedOperationsForPatient(patientId);
+            if (cachedOperations && cachedOperations.length > 0) {
+                setOperations(cachedOperations);
+                setLoading(false);
+                return;
+            }
 
             try {
                 setLoading(true);
@@ -35,7 +45,10 @@ export const OperationsList: React.FC<Props> = ({ patientId }) => {
                 const response = await fetch(`/api/operation/patient/${patientId}`);
                 if (response.ok) {
                     const data = await response.json();
-                    setOperations(data.operations);
+                    if (data.operations) {
+                        setCachedOperationsForPatient(patientId, data.operations);
+                        setOperations(data.operations);
+                    }
                 } else {
                     setError('Failed to load operations');
                 }
@@ -48,7 +61,7 @@ export const OperationsList: React.FC<Props> = ({ patientId }) => {
         };
 
         fetchOperations();
-    }, [patientId]);
+    }, [patientId, refreshTrigger]);
 
     return (
         <Card>

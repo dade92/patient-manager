@@ -7,7 +7,7 @@ import {Patient} from '../types/patient';
 import {CreateOperationDialog} from '../components/CreateOperationDialog';
 import {OperationsList} from '../components/OperationsList';
 import {useCache} from '../context/CacheContext';
-import { formatDateEuropean } from '../utils/dateUtils';
+import {formatDateEuropean} from '../utils/dateUtils';
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();
@@ -18,7 +18,7 @@ export const PatientDetail: React.FC = () => {
     const [isCreateOperationOpen, setIsCreateOperationOpen] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
 
-    const {getCachedPatient, setCachedPatient, setCachedOperationsForPatient} = useCache();
+    const {getCachedPatient, setCachedPatient, setCachedOperationsForPatient, getCachedOperationsForPatient} = useCache();
 
     useEffect(() => {
         const fetchPatient = async () => {
@@ -144,8 +144,8 @@ export const PatientDetail: React.FC = () => {
 
                     {patientId && (
                         <OperationsList
-                            key={refreshKey}
                             patientId={patientId}
+                            refreshTrigger={refreshKey}
                         />
                     )}
 
@@ -153,8 +153,9 @@ export const PatientDetail: React.FC = () => {
                         open={isCreateOperationOpen}
                         onClose={() => setIsCreateOperationOpen(false)}
                         patientId={patient.id}
-                        onOperationCreated={() => {
-                            setCachedOperationsForPatient(patientId!, []);
+                        onOperationCreated={(newOperation) => {
+                            const cachedOperations = getCachedOperationsForPatient(patientId!) || [];
+                            setCachedOperationsForPatient(patientId!, [...cachedOperations, newOperation]);
                             setRefreshKey(prev => prev + 1);
                         }}
                     />
