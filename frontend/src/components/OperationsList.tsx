@@ -13,12 +13,12 @@ import {
     Typography
 } from '@mui/material';
 import {Operation} from '../types/operation';
-import {formatDateTimeEuropean} from '../utils/dateUtils';
+import {formatDateTime} from '../utils/dateUtils';
 import {useCache} from '../context/CacheContext';
 
 interface Props {
     patientId: string;
-    refreshTrigger?: number; // Optional prop to trigger refresh
+    refreshTrigger?: number;
 }
 
 export const OperationsList: React.FC<Props> = ({patientId, refreshTrigger}) => {
@@ -98,7 +98,7 @@ export const OperationsList: React.FC<Props> = ({patientId, refreshTrigger}) => 
                                                     {operation.description}
                                                 </Typography>
                                                 <Typography variant="caption" color="textSecondary">
-                                                    {formatDateTimeEuropean(operation.createdAt)}
+                                                    {formatDateTime(operation.createdAt)}
                                                 </Typography>
                                             </>
                                         }

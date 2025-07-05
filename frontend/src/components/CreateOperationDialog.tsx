@@ -29,7 +29,6 @@ interface Props {
   onOperationCreated: (operation: any) => void;
 }
 
-
 export const CreateOperationDialog: React.FC<Props> = ({
   open,
   onClose,

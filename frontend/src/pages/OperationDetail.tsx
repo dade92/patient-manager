@@ -24,7 +24,7 @@ import AddIcon from '@mui/icons-material/Add';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
 import {styled} from '@mui/material/styles';
-import { formatDateTimeEuropean } from '../utils/dateUtils';
+import { formatDateTime } from '../utils/dateUtils';
 
 const ExpandableChip = styled(Chip)(({theme}) => ({
     maxWidth: '150px',
@@ -196,7 +196,7 @@ export const OperationDetail: React.FC = () => {
                             <Grid item xs={12} sm={6}>
                                 <Typography variant="subtitle1" color="textSecondary">Date</Typography>
                                 <Typography variant="body1" paragraph>
-                                    {formatDateTimeEuropean(operation.createdAt)}
+                                    {formatDateTime(operation.createdAt)}
                                 </Typography>
                             </Grid>
 
@@ -263,7 +263,7 @@ export const OperationDetail: React.FC = () => {
                                                 <ListItem alignItems="flex-start">
                                                     <ListItemText
                                                         primary={note.content}
-                                                        secondary={formatDateTimeEuropean(note.createdAt)}
+                                                        secondary={formatDateTime(note.createdAt)}
                                                     />
                                                 </ListItem>
                                                 {index < operation.additionalNotes.length - 1 &&
