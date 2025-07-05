@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {
+    Alert,
     Box,
     Card,
     CardContent,
-    Typography,
     CircularProgress,
-    Alert,
+    Divider,
     List,
     ListItemButton,
     ListItemText,
-    Divider
+    Typography
 } from '@mui/material';
-import { Operation } from '../types/operation';
-import { formatDateTimeEuropean } from '../utils/dateUtils';
-import { useCache } from '../context/CacheContext';
+import {Operation} from '../types/operation';
+import {formatDateTimeEuropean} from '../utils/dateUtils';
+import {useCache} from '../context/CacheContext';
 
 interface Props {
     patientId: string;
     refreshTrigger?: number; // Optional prop to trigger refresh
 }
 
-export const OperationsList: React.FC<Props> = ({ patientId, refreshTrigger }) => {
+export const OperationsList: React.FC<Props> = ({patientId, refreshTrigger}) => {
     const navigate = useNavigate();
     const [operations, setOperations] = useState<Operation[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const { getCachedOperationsForPatient, setCachedOperationsForPatient } = useCache();
+    const {getCachedOperationsForPatient, setCachedOperationsForPatient} = useCache();
 
     useEffect(() => {
         const fetchOperations = async () => {
