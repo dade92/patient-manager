@@ -14,4 +14,4 @@ bucket:
   port: 9000
   username: ${BLOB_DB_USERNAME}
   password: ${BLOB_DB_PASSWORD}
-  bucketName: my-bucket
+  bucketName: patient-manager-bucket
