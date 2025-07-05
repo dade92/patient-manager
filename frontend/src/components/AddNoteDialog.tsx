@@ -8,12 +8,13 @@ import {
   TextField,
   Alert
 } from '@mui/material';
+import {Operation} from "../types/operation";
 
 interface AddNoteDialogProps {
   open: boolean;
   onClose: () => void;
   operationId: string;
-  onNoteAdded: (updatedOperation: any) => void;
+  onNoteAdded: (updatedOperation: Operation) => void;
 }
 
 export const AddNoteDialog: React.FC<AddNoteDialogProps> = ({

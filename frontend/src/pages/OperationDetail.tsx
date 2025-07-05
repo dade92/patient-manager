@@ -1,19 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {
-    Alert,
-    Box,
-    Button,
-    Card,
-    CardContent,
-    CircularProgress,
-    Grid,
-    IconButton,
-    Tooltip,
-    Typography
-} from '@mui/material';
+import {Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Typography} from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import AddIcon from '@mui/icons-material/Add';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
 import {formatDateTime} from '../utils/dateUtils';
@@ -114,21 +102,6 @@ export const OperationDetail: React.FC = () => {
         }
     };
 
-    const handleOpenDialog = () => {
-        setDialogOpen(true);
-    };
-
-    const handleCloseDialog = () => {
-        setDialogOpen(false);
-    };
-
-    const handleNoteAdded = (updatedOperation: Operation) => {
-        if (!operationId) return;
-
-        setOperation(updatedOperation);
-        setCachedOperation(operationId, updatedOperation);
-    };
-
     if (loading) {
         return (
             <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
@@ -213,9 +186,9 @@ export const OperationDetail: React.FC = () => {
                                     style={{display: 'none'}}
                                     onChange={handleFileUpload}
                                 />
-                                {uploadLoading && <CircularProgress size={24} sx={{ ml: 2 }}/>}
+                                {uploadLoading && <CircularProgress size={24} sx={{ml: 2}}/>}
                                 {uploadError && (
-                                    <Alert severity="error" sx={{ mt: 1 }}>
+                                    <Alert severity="error" sx={{mt: 1}}>
                                         {uploadError}
                                     </Alert>
                                 )}
@@ -223,7 +196,7 @@ export const OperationDetail: React.FC = () => {
 
                             <OperationNotes
                                 notes={operation.additionalNotes}
-                                onAddNote={handleOpenDialog}
+                                onAddNote={() => setDialogOpen(true)}
                             />
                         </Grid>
                     </CardContent>
@@ -232,9 +205,14 @@ export const OperationDetail: React.FC = () => {
 
             <AddNoteDialog
                 open={dialogOpen}
-                onClose={handleCloseDialog}
+                onClose={() => setDialogOpen(false)}
                 operationId={operationId || ''}
-                onNoteAdded={handleNoteAdded}
+                onNoteAdded={(updatedOperation: Operation) => {
+                    if (!operationId) return;
+
+                    setOperation(updatedOperation);
+                    setCachedOperation(operationId, updatedOperation);
+                }}
             />
         </Box>
     );

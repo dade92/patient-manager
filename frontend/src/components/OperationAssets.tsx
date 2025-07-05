@@ -13,7 +13,7 @@ import { ExpandableChip } from './ExpandableChip';
 
 interface OperationAssetsProps {
     assets: string[];
-    onAddAsset?: () => void; // Optional callback for adding assets
+    onAddAsset: () => void;
 }
 
 export const OperationAssets: React.FC<OperationAssetsProps> = ({ assets, onAddAsset }) => {
