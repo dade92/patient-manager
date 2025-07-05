@@ -17,7 +17,6 @@ export const PatientDetail: React.FC = () => {
     const [isCreateOperationOpen, setIsCreateOperationOpen] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
 
-    // Use the cache context
     const {getCachedPatient, setCachedPatient, setCachedOperationsForPatient} = useCache();
 
     useEffect(() => {
@@ -65,12 +64,10 @@ export const PatientDetail: React.FC = () => {
     };
 
     const handleOperationCreated = () => {
-        // Clear the operations cache for this patient to force a refresh
         if (patientId) {
             setCachedOperationsForPatient(patientId, []);
         }
 
-        // Update the key to force the operations list component to re-render
         setRefreshKey(prev => prev + 1);
     };
 

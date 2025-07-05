@@ -40,7 +40,6 @@ export const OperationDetail: React.FC = () => {
     const fetchOperation = async () => {
       if (!operationId) return;
 
-      // Check if operation is in cache
       const cachedOperation = getCachedOperation(operationId);
       if (cachedOperation) {
         setOperation(cachedOperation);
