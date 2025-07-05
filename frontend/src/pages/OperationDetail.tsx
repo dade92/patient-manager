@@ -65,7 +65,7 @@ export const OperationDetail: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(`/api/operations/${operationId}`);
+        const response = await fetch(`/api/operation/${operationId}`);
         if (response.ok) {
           const data = await response.json();
           setOperation(data);
@@ -113,7 +113,7 @@ export const OperationDetail: React.FC = () => {
     setUploadError(null);
 
     try {
-      const response = await fetch(`/api/operations/${operationId}/assets`, {
+      const response = await fetch(`/api/operation/${operationId}/assets`, {
         method: 'POST',
         body: formData
       });

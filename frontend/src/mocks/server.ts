@@ -55,7 +55,7 @@ export function makeServer({ environment = 'development' } = {}) {
       });
 
       // Get operations by patient ID
-      this.get('/operations/patient/:patientId', (schema, request) => {
+      this.get('/operation/patient/:patientId', (schema, request) => {
         const allOperations = schema.all('operation');
         const operations = (allOperations.models as any[])
           .filter(operation => operation.attrs.patientId === request.params.patientId)
@@ -64,7 +64,7 @@ export function makeServer({ environment = 'development' } = {}) {
       });
 
       // Get operation by ID
-      this.get('/operations/:id', (schema, request) => {
+      this.get('/operation/:id', (schema, request) => {
         const operation = (schema.all('operation').models as any[])
           .find(op => op.attrs.id === request.params.id);
 
@@ -76,7 +76,7 @@ export function makeServer({ environment = 'development' } = {}) {
       });
 
       // Create new operation
-      this.post('/operations', (schema, request) => {
+      this.post('/operation', (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
 
         // Validate that patient exists
@@ -98,7 +98,7 @@ export function makeServer({ environment = 'development' } = {}) {
       });
 
       // Upload asset to operation
-      this.post('/operations/:id/assets', (schema, request) => {
+      this.post('/operation/:id/assets', (schema, request) => {
         const operationId = request.params.id;
         const operation = (schema.all('operation').models as any[])
           .find(op => op.attrs.id === operationId);

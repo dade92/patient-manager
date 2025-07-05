@@ -31,7 +31,7 @@ export const OperationsList: React.FC<Props> = ({ patientId }) => {
             try {
                 setLoading(true);
                 setError(null);
-                const response = await fetch(`/api/operations/patient/${patientId}`);
+                const response = await fetch(`/api/operation/patient/${patientId}`);
                 if (response.ok) {
                     const data = await response.json();
                     setOperations(data.operations);
@@ -81,7 +81,7 @@ export const OperationsList: React.FC<Props> = ({ patientId }) => {
                     <List>
                         {operations.map((operation, index) => (
                             <React.Fragment key={operation.id}>
-                                <ListItemButton onClick={() => navigate(`/operations/${operation.id}`)}>
+                                <ListItemButton onClick={() => navigate(`/operation/${operation.id}`)}>
                                     <ListItemText
                                         primary={
                                             <Typography variant="subtitle1">

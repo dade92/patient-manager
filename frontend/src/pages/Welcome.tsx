@@ -74,7 +74,7 @@ const Welcome: React.FC = () => {
                         }/>
                         <Route path="/patient/:patientId" element={<PatientDetail/>}/>
                         <Route path="/new-patient" element={<NewPatient/>}/>
-                        <Route path="/operations/:operationId" element={<OperationDetail/>}/>
+                        <Route path="/operation/:operationId" element={<OperationDetail/>}/>
                     </Routes>
                 </Container>
             </BrowserRouter>

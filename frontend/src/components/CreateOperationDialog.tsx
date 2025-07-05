@@ -66,7 +66,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/operations', {
+      const response = await fetch('/api/operation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
