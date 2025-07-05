@@ -7,23 +7,19 @@ import {
     Card,
     CardContent,
     CircularProgress,
-    Divider,
     Grid,
     IconButton,
-    Link,
-    List,
-    ListItem,
-    ListItemText,
     Tooltip,
     Typography
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AddIcon from '@mui/icons-material/Add';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
 import {formatDateTime} from '../utils/dateUtils';
 import {ExpandableChip} from '../components/ExpandableChip';
+import {OperationAssets} from '../components/OperationAssets';
+import {OperationNotes} from '../components/OperationNotes';
 
 export const OperationDetail: React.FC = () => {
     const {operationId} = useParams();
@@ -185,31 +181,9 @@ export const OperationDetail: React.FC = () => {
                                 </Typography>
                             </Grid>
 
-                            {operation.assets && operation.assets.length > 0 && (
-                                <Grid item xs={12}>
-                                    <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                                        Assets
-                                    </Typography>
-                                    <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 1}}>
-                                        {operation.assets.map((asset, index) => (
-                                            <Link
-                                                key={index}
-                                                href={`/files?filename=${asset}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                underline="hover"
-                                            >
-                                                <ExpandableChip
-                                                    icon={<AttachFileIcon/>}
-                                                    label={asset}
-                                                    variant="outlined"
-                                                    clickable
-                                                />
-                                            </Link>
-                                        ))}
-                                    </Box>
-                                </Grid>
-                            )}
+                            <Grid item xs={12}>
+                                <OperationAssets assets={operation.assets} />
+                            </Grid>
 
                             <Grid item xs={12}>
                                 <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
@@ -237,27 +211,7 @@ export const OperationDetail: React.FC = () => {
                                 </Box>
                             </Grid>
 
-                            {operation.additionalNotes && operation.additionalNotes.length > 0 && (
-                                <Grid item xs={12}>
-                                    <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                                        Notes
-                                    </Typography>
-                                    <List>
-                                        {operation.additionalNotes.map((note, index) => (
-                                            <React.Fragment key={index}>
-                                                <ListItem alignItems="flex-start">
-                                                    <ListItemText
-                                                        primary={note.content}
-                                                        secondary={formatDateTime(note.createdAt)}
-                                                    />
-                                                </ListItem>
-                                                {index < operation.additionalNotes.length - 1 &&
-                                                    <Divider component="li"/>}
-                                            </React.Fragment>
-                                        ))}
-                                    </List>
-                                </Grid>
-                            )}
+                            <OperationNotes notes={operation.additionalNotes} />
                         </Grid>
                     </CardContent>
                 </Card>

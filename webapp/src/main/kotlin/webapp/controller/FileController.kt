@@ -55,8 +55,6 @@ class FileController(
     ) {
         response.contentType = contentType
 
-        // Only set Content-Disposition to "attachment" for files that should be downloaded
-        // For files that can be displayed in browser, use "inline"
         val disposition = if (isDisplayableInBrowser(contentType)) "inline" else "attachment"
         response.setHeader("Content-Disposition", "$disposition; filename=\"$filename\"")
 
@@ -72,7 +70,6 @@ class FileController(
     }
 
     private fun isDisplayableInBrowser(contentType: String): Boolean {
-        // List of content types that most browsers can display natively
         val browserDisplayableTypes = listOf(
             "application/pdf",
             "image/jpeg", "image/png", "image/gif", "image/svg+xml",
