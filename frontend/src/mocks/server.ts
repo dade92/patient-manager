@@ -120,6 +120,41 @@ export function makeServer({ environment = 'development' } = {}) {
 
         return new Response(200, {}, operation.attrs);
       });
+
+      // Add note to operation
+      this.post('/operation/:id/notes', (schema, request) => {
+        const operationId = request.params.id;
+        const operation = (schema.all('operation').models as any[])
+          .find(op => op.attrs.id === operationId);
+
+        if (!operation) {
+          return new Response(404, {}, { message: 'Operation not found' });
+        }
+
+        // Parse the request body to get the note content
+        const attrs = JSON.parse(request.requestBody);
+
+        if (!attrs.content || attrs.content.trim() === '') {
+          return new Response(400, {}, { message: 'Note content cannot be empty' });
+        }
+
+        // Create a new note with the content and current timestamp
+        const newNote = {
+          content: attrs.content,
+          createdAt: new Date().toISOString()
+        };
+
+        // Add the new note to the operation's additionalNotes array
+        const updatedNotes = [...(operation.attrs.additionalNotes || []), newNote];
+
+        // Update the operation with the new note
+        operation.update({
+          additionalNotes: updatedNotes,
+          updatedAt: new Date().toISOString()
+        });
+
+        return new Response(200, {}, operation.attrs);
+      });
     },
   });
 }

@@ -14,12 +14,14 @@ import {
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
 import {formatDateTime} from '../utils/dateUtils';
 import {ExpandableChip} from '../components/ExpandableChip';
 import {OperationAssets} from '../components/OperationAssets';
 import {OperationNotes} from '../components/OperationNotes';
+import {AddNoteDialog} from '../components/AddNoteDialog';
 
 export const OperationDetail: React.FC = () => {
     const {operationId} = useParams();
@@ -29,6 +31,7 @@ export const OperationDetail: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [uploadLoading, setUploadLoading] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const {getCachedOperation, setCachedOperation} = useCache();
@@ -110,6 +113,21 @@ export const OperationDetail: React.FC = () => {
                 fileInputRef.current.value = '';
             }
         }
+    };
+
+    const handleOpenDialog = () => {
+        setDialogOpen(true);
+    };
+
+    const handleCloseDialog = () => {
+        setDialogOpen(false);
+    };
+
+    const handleNoteAdded = (updatedOperation: Operation) => {
+        if (!operationId) return;
+
+        setOperation(updatedOperation);
+        setCachedOperation(operationId, updatedOperation);
     };
 
     if (loading) {
@@ -211,11 +229,28 @@ export const OperationDetail: React.FC = () => {
                                 </Box>
                             </Grid>
 
+                            <Grid item xs={12}>
+                                <Button
+                                    variant="outlined"
+                                    startIcon={<NoteAddIcon/>}
+                                    onClick={handleOpenDialog}
+                                >
+                                    Add Note
+                                </Button>
+                            </Grid>
+
                             <OperationNotes notes={operation.additionalNotes} />
                         </Grid>
                     </CardContent>
                 </Card>
             ) : null}
+
+            <AddNoteDialog
+                open={dialogOpen}
+                onClose={handleCloseDialog}
+                operationId={operationId || ''}
+                onNoteAdded={handleNoteAdded}
+            />
         </Box>
     );
 };
