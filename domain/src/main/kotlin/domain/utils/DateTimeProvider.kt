@@ -9,5 +9,5 @@ interface DateTimeProvider {
 }
 
 class DefaultDateTimeProvider : DateTimeProvider {
-    override fun now(): LocalDateTime = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault())
+    override fun now(): LocalDateTime = LocalDateTime.ofInstant(Instant.now(), ZoneId.of("Europe/Rome"))
 }
