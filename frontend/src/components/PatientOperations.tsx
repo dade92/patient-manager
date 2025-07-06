@@ -32,8 +32,6 @@ export const PatientOperations: React.FC<Props> = ({patientId, refreshTrigger}) 
     const {getCachedOperationsForPatient, setCachedOperationsForPatient} = useCache();
 
     const fetchOperations = async () => {
-        if (!patientId) return;
-
         const cachedOperations = getCachedOperationsForPatient(patientId);
         if (cachedOperations && cachedOperations.length > 0) {
             setOperations(cachedOperations);

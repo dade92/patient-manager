@@ -21,9 +21,7 @@ export const OperationDetail: React.FC = () => {
     const {getCachedOperation, setCachedOperation} = useCache();
 
     const fetchOperation = async () => {
-        if (!operationId) return;
-
-        const cachedOperation = getCachedOperation(operationId);
+        const cachedOperation = getCachedOperation(operationId!);
         if (cachedOperation) {
             setOperation(cachedOperation);
             setLoading(false);
@@ -37,7 +35,7 @@ export const OperationDetail: React.FC = () => {
             if (response.ok) {
                 const data = await response.json();
                 setOperation(data);
-                setCachedOperation(operationId, data);
+                setCachedOperation(operationId!, data);
             } else if (response.status === 404) {
                 setError(`Operation with ID ${operationId} was not found`);
                 setOperation(null);
