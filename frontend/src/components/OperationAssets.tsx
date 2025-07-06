@@ -4,12 +4,12 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AddIcon from '@mui/icons-material/Add';
 import {ExpandableChip} from './ExpandableChip';
 
-interface OperationAssetsProps {
+interface Props {
     assets: string[];
     onAddAsset: (file: File) => Promise<void>;
 }
 
-export const OperationAssets: React.FC<OperationAssetsProps> = ({assets, onAddAsset}) => {
+export const OperationAssets: React.FC<Props> = ({assets, onAddAsset}) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [uploadLoading, setUploadLoading] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);

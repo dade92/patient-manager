@@ -4,12 +4,12 @@ import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import {formatDateTime} from '../utils/dateUtils';
 import {OperationNote} from "../types/operation";
 
-interface OperationNotesProps {
+interface Props {
     notes: OperationNote[];
     onAddNote: () => void;
 }
 
-export const OperationNotes: React.FC<OperationNotesProps> = ({notes, onAddNote}) => {
+export const OperationNotes: React.FC<Props> = ({notes, onAddNote}) => {
     if (notes.length === 0) {
         return onAddNote ? (
             <Grid item xs={12}>
