@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Typography} from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import {Patient} from '../types/patient';
 import {CreateOperationDialog} from '../components/CreateOperationDialog';
@@ -9,6 +8,7 @@ import {PatientOperations} from '../components/PatientOperations';
 import {useCache} from '../context/CacheContext';
 import {formatDate} from '../utils/dateUtils';
 import {ExpandableChip} from '../components/ExpandableChip';
+import {BackButton} from '../components/BackButton';
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();
@@ -67,13 +67,7 @@ export const PatientDetail: React.FC = () => {
     if (loading) {
         return (
             <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
-                <Button
-                    startIcon={<ArrowBackIcon/>}
-                    onClick={handleBack}
-                    sx={{mb: 2}}
-                >
-                    Back
-                </Button>
+                <BackButton onClick={handleBack} sx={{mb: 2}} />
                 <Box display="flex" justifyContent="center">
                     <CircularProgress/>
                 </Box>
@@ -84,12 +78,7 @@ export const PatientDetail: React.FC = () => {
     return (
         <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
-                <Button
-                    startIcon={<ArrowBackIcon/>}
-                    onClick={handleBack}
-                >
-                    Back
-                </Button>
+                <BackButton onClick={handleBack} />
                 {patient && (
                     <Button
                         variant="contained"

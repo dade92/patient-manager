@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Typography} from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import {Alert, Box, Card, CardContent, CircularProgress, Grid, Typography} from '@mui/material';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
 import {formatDateTime} from '../utils/dateUtils';
@@ -9,6 +8,7 @@ import {ExpandableChip} from '../components/ExpandableChip';
 import {OperationAssets} from '../components/OperationAssets';
 import {OperationNotes} from '../components/OperationNotes';
 import {AddNoteDialog} from '../components/AddNoteDialog';
+import {BackButton} from '../components/BackButton';
 
 export const OperationDetail: React.FC = () => {
     const {operationId} = useParams();
@@ -90,13 +90,7 @@ export const OperationDetail: React.FC = () => {
     if (loading) {
         return (
             <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
-                <Button
-                    startIcon={<ArrowBackIcon/>}
-                    onClick={handleBack}
-                    sx={{mb: 2}}
-                >
-                    Back
-                </Button>
+                <BackButton onClick={handleBack} sx={{mb: 2}}/>
                 <Box display="flex" justifyContent="center">
                     <CircularProgress/>
                 </Box>
@@ -106,13 +100,7 @@ export const OperationDetail: React.FC = () => {
 
     return (
         <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
-            <Button
-                startIcon={<ArrowBackIcon/>}
-                onClick={handleBack}
-                sx={{mb: 2}}
-            >
-                Back
-            </Button>
+            <BackButton onClick={handleBack} sx={{mb: 2}}/>
 
             {error ? (
                 <Alert severity="error" sx={{mb: 2}}>
