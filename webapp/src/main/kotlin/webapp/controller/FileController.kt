@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import webapp.utils.ContentTypeResolver
 import java.io.InputStream
 
 @RestController
 @RequestMapping("/files")
 class FileController(
-    private val storageService: StorageService
+    private val storageService: StorageService,
+    private val contentTypeResolver: ContentTypeResolver
 ) {
 
     @PostMapping("/upload")
@@ -40,16 +42,21 @@ class FileController(
     ) {
         val fileStream = storageService.getFile(filename)
 
-        retrieve(response, filename, fileStream)
+        val contentType = contentTypeResolver.getContentType(filename)
+
+        retrieve(response, filename, fileStream, contentType)
     }
 
     private fun retrieve(
         response: HttpServletResponse,
         filename: String,
-        fileStream: InputStream
+        fileStream: InputStream,
+        contentType: String
     ) {
-        response.contentType = "application/octet-stream"
-        response.setHeader("Content-Disposition", "inline; filename=\"$filename\"")
+        response.contentType = contentType
+
+        val disposition = if (isDisplayableInBrowser(contentType)) "inline" else "attachment"
+        response.setHeader("Content-Disposition", "$disposition; filename=\"$filename\"")
 
         fileStream.use { input ->
             response.outputStream.use { output ->
@@ -60,6 +67,17 @@ class FileController(
                 }
             }
         }
+    }
+
+    private fun isDisplayableInBrowser(contentType: String): Boolean {
+        val browserDisplayableTypes = listOf(
+            "application/pdf",
+            "image/jpeg", "image/png", "image/gif", "image/svg+xml",
+            "text/plain", "text/html",
+            "video/mp4",
+            "audio/mpeg"
+        )
+        return browserDisplayableTypes.contains(contentType)
     }
 
     companion object {

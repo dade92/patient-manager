@@ -224,7 +224,7 @@ class JdbcOperationRepository(
     private fun getOperationNotes(operationId: OperationId, connection: Connection): List<OperationNote> {
         val notes = mutableListOf<OperationNote>()
         connection.prepareStatement(
-            "SELECT content, created_at FROM OPERATION_NOTE WHERE operation_id = ? ORDER BY created_at"
+            "SELECT content, created_at FROM OPERATION_NOTE WHERE operation_id = ? ORDER BY created_at DESC"
         ).use { statement ->
             statement.setString(1, operationId.value)
             statement.executeQuery().use { resultSet ->

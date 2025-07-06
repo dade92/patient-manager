@@ -1,6 +1,6 @@
 ### Create a new operation
 
-POST {{host}}/api/operations
+POST {{host}}/api/operation
 Content-Type: application/json
 
 {
@@ -12,15 +12,15 @@ Content-Type: application/json
 
 ### Get a specific operation by ID
 
-GET {{host}}/api/operations/55555555-5555-5555-5555-555555555555
+GET {{host}}/api/operation/33333333-3333-3333-3333-333333333333
 
 ### Get all operations for a specific patient
 
-GET {{host}}/api/operations/patient/22222222-2222-2222-2222-222222222222
+GET {{host}}/api/operation/patient/22222222-2222-2222-2222-222222222222
 
 ### Add a note to an existing operation
 
-POST {{host}}/api/operations/55555555-5555-5555-5555-555555555555/notes
+POST {{host}}/api/operation/55555555-5555-5555-5555-555555555555/notes
 Content-Type: application/json
 
 {

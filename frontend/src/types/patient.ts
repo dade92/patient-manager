@@ -8,7 +8,3 @@ export interface Patient {
     nationality: string;
     birthDate: string;
 }
-
-export interface SearchPatientsResponse {
-    patients: Patient[];
-}
