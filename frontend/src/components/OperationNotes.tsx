@@ -19,12 +19,9 @@ interface OperationNote {
 
 interface OperationNotesProps {
     notes: OperationNote[];
-    onAddNote?: () => void; // Optional callback for adding notes
+    onAddNote: () => void;
 }
 
-/**
- * Component to display operation notes
- */
 export const OperationNotes: React.FC<OperationNotesProps> = ({ notes, onAddNote }) => {
     if (!notes || notes.length === 0) {
         return onAddNote ? (

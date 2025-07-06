@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Typography} from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -16,10 +16,7 @@ export const OperationDetail: React.FC = () => {
     const [operation, setOperation] = useState<Operation | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [uploadLoading, setUploadLoading] = useState(false);
-    const [uploadError, setUploadError] = useState<string | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const {getCachedOperation, setCachedOperation} = useCache();
 
@@ -63,16 +60,11 @@ export const OperationDetail: React.FC = () => {
         navigate(-1);
     };
 
-    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files;
-        if (!files || files.length === 0 || !operationId) return;
+    const handleFileUpload = async (file: File) => {
+        if (!operationId) return;
 
-        const file = files[0];
         const formData = new FormData();
         formData.append('file', file);
-
-        setUploadLoading(true);
-        setUploadError(null);
 
         try {
             const response = await fetch(`/api/operation/${operationId}/assets`, {
@@ -89,16 +81,11 @@ export const OperationDetail: React.FC = () => {
                 }
             } else {
                 const errorData = await response.json();
-                setUploadError(errorData.message || 'Failed to upload file');
+                throw new Error(errorData.message || 'Failed to upload file');
             }
         } catch (error) {
-            setUploadError('An error occurred while uploading the file');
             console.error('Error uploading file:', error);
-        } finally {
-            setUploadLoading(false);
-            if (fileInputRef.current) {
-                fileInputRef.current.value = '';
-            }
+            throw error;
         }
     };
 
@@ -174,24 +161,8 @@ export const OperationDetail: React.FC = () => {
                             <Grid item xs={12}>
                                 <OperationAssets
                                     assets={operation.assets}
-                                    onAddAsset={() => {
-                                        if (fileInputRef.current) {
-                                            fileInputRef.current.click();
-                                        }
-                                    }}
+                                    onAddAsset={handleFileUpload}
                                 />
-                                <input
-                                    type="file"
-                                    ref={fileInputRef}
-                                    style={{display: 'none'}}
-                                    onChange={handleFileUpload}
-                                />
-                                {uploadLoading && <CircularProgress size={24} sx={{ml: 2}}/>}
-                                {uploadError && (
-                                    <Alert severity="error" sx={{mt: 1}}>
-                                        {uploadError}
-                                    </Alert>
-                                )}
                             </Grid>
 
                             <OperationNotes
