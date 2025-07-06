@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {Box, Grid, IconButton, Link, Tooltip, Typography, CircularProgress, Alert} from '@mui/material';
+import {Alert, Box, CircularProgress, Grid, IconButton, Link, Tooltip, Typography} from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AddIcon from '@mui/icons-material/Add';
 import {ExpandableChip} from './ExpandableChip';
@@ -27,7 +27,6 @@ export const OperationAssets: React.FC<OperationAssetsProps> = ({assets, onAddAs
             setUploadError(error instanceof Error ? error.message : 'Failed to upload file');
         } finally {
             setUploadLoading(false);
-            // Reset the file input
             if (event.target) {
                 event.target.value = '';
             }
@@ -51,7 +50,7 @@ export const OperationAssets: React.FC<OperationAssetsProps> = ({assets, onAddAs
                         }}
                         disabled={uploadLoading}
                     >
-                        {uploadLoading ? <CircularProgress size={24} /> : <AddIcon />}
+                        {uploadLoading ? <CircularProgress size={24}/> : <AddIcon/>}
                     </IconButton>
                 </Tooltip>
             </Box>
@@ -69,7 +68,7 @@ export const OperationAssets: React.FC<OperationAssetsProps> = ({assets, onAddAs
                 </Alert>
             )}
 
-            {(!assets || assets.length === 0) ? (
+            {assets.length === 0 ? (
                 <Typography variant="body2" color="textSecondary" sx={{fontStyle: 'italic'}}>
                     No assets attached
                 </Typography>

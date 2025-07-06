@@ -5,7 +5,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import {Patient} from '../types/patient';
 import {CreateOperationDialog} from '../components/CreateOperationDialog';
-import {OperationsList} from '../components/OperationsList';
+import {PatientOperations} from '../components/PatientOperations';
 import {useCache} from '../context/CacheContext';
 import {formatDate} from '../utils/dateUtils';
 import {ExpandableChip} from '../components/ExpandableChip';
@@ -157,7 +157,7 @@ export const PatientDetail: React.FC = () => {
                             </Grid>
                         </CardContent>
                     </Card>
-                    <OperationsList
+                    <PatientOperations
                         patientId={patientId!}
                         refreshTrigger={refreshKey}
                     />

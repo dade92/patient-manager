@@ -24,7 +24,7 @@ interface Props {
     refreshTrigger: number;
 }
 
-export const OperationsList: React.FC<Props> = ({patientId, refreshTrigger}) => {
+export const PatientOperations: React.FC<Props> = ({patientId, refreshTrigger}) => {
     const navigate = useNavigate();
     const [operations, setOperations] = useState<Operation[]>([]);
     const [loading, setLoading] = useState(true);
