@@ -5,6 +5,7 @@ import {
     Box,
     Card,
     CardContent,
+    Chip,
     CircularProgress,
     Divider,
     List,
@@ -12,6 +13,8 @@ import {
     ListItemText,
     Typography
 } from '@mui/material';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import NoteIcon from '@mui/icons-material/Note';
 import {Operation} from '../types/operation';
 import {formatDateTime} from '../utils/dateUtils';
 import {useCache} from '../context/CacheContext';
@@ -88,9 +91,27 @@ export const OperationsList: React.FC<Props> = ({patientId, refreshTrigger}) => 
                                 <ListItemButton onClick={() => navigate(`/operation/${operation.id}`)}>
                                     <ListItemText
                                         primary={
-                                            <Typography variant="subtitle1">
-                                                {operation.type} - {operation.executor}
-                                            </Typography>
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <Typography variant="subtitle1">
+                                                    {operation.type} - {operation.executor}
+                                                </Typography>
+                                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                                    <Chip
+                                                        icon={<AttachFileIcon />}
+                                                        label={operation.assets ? operation.assets.length : 0}
+                                                        size="small"
+                                                        color="primary"
+                                                        variant="outlined"
+                                                    />
+                                                    <Chip
+                                                        icon={<NoteIcon />}
+                                                        label={operation.additionalNotes ? operation.additionalNotes.length : 0}
+                                                        size="small"
+                                                        color="secondary"
+                                                        variant="outlined"
+                                                    />
+                                                </Box>
+                                            </Box>
                                         }
                                         secondary={
                                             <>

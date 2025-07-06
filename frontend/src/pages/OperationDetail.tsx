@@ -158,12 +158,10 @@ export const OperationDetail: React.FC = () => {
                                 </Typography>
                             </Grid>
 
-                            <Grid item xs={12}>
-                                <OperationAssets
-                                    assets={operation.assets}
-                                    onAddAsset={handleFileUpload}
-                                />
-                            </Grid>
+                            <OperationAssets
+                                assets={operation.assets}
+                                onAddAsset={handleFileUpload}
+                            />
 
                             <OperationNotes
                                 notes={operation.additionalNotes}
