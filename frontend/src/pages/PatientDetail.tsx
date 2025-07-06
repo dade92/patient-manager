@@ -26,39 +26,37 @@ export const PatientDetail: React.FC = () => {
         getCachedOperationsForPatient
     } = useCache();
 
-    useEffect(() => {
-        const fetchPatient = async () => {
-            if (!patientId) return;
+    const fetchPatient = async () => {
+        const cachedPatient = getCachedPatient(patientId!);
+        if (cachedPatient) {
+            setPatient(cachedPatient);
+            setLoading(false);
+            return;
+        }
 
-            const cachedPatient = getCachedPatient(patientId);
-            if (cachedPatient) {
-                setPatient(cachedPatient);
-                setLoading(false);
-                return;
-            }
-
-            try {
-                setLoading(true);
-                setError(null);
-                const response = await fetch(`/api/patient/${patientId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setPatient(data);
-                    setCachedPatient(patientId, data);
-                } else if (response.status === 404) {
-                    setError(`Patient with ID ${patientId} was not found`);
-                    setPatient(null);
-                } else {
-                    setError('An error occurred while fetching the patient data');
-                }
-            } catch (error) {
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await fetch(`/api/patient/${patientId}`);
+            if (response.ok) {
+                const data = await response.json();
+                setPatient(data);
+                setCachedPatient(patientId!, data);
+            } else if (response.status === 404) {
+                setError(`Patient with ID ${patientId} was not found`);
+                setPatient(null);
+            } else {
                 setError('An error occurred while fetching the patient data');
-                console.error('Error fetching patient:', error);
-            } finally {
-                setLoading(false);
             }
-        };
+        } catch (error) {
+            setError('An error occurred while fetching the patient data');
+            console.error('Error fetching patient:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchPatient();
     }, [patientId, getCachedPatient, setCachedPatient]);
 
@@ -114,7 +112,12 @@ export const PatientDetail: React.FC = () => {
                 <>
                     <Card sx={{mb: 4}}>
                         <CardContent>
-                            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2}}>
+                            <Box sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'flex-start',
+                                mb: 2
+                            }}>
                                 <Typography variant="h5" gutterBottom>
                                     {patient.name}
                                 </Typography>

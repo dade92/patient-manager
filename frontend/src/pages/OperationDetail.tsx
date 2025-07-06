@@ -20,39 +20,39 @@ export const OperationDetail: React.FC = () => {
 
     const {getCachedOperation, setCachedOperation} = useCache();
 
-    useEffect(() => {
-        const fetchOperation = async () => {
-            if (!operationId) return;
+    const fetchOperation = async () => {
+        if (!operationId) return;
 
-            const cachedOperation = getCachedOperation(operationId);
-            if (cachedOperation) {
-                setOperation(cachedOperation);
-                setLoading(false);
-                return;
-            }
+        const cachedOperation = getCachedOperation(operationId);
+        if (cachedOperation) {
+            setOperation(cachedOperation);
+            setLoading(false);
+            return;
+        }
 
-            try {
-                setLoading(true);
-                setError(null);
-                const response = await fetch(`/api/operation/${operationId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setOperation(data);
-                    setCachedOperation(operationId, data);
-                } else if (response.status === 404) {
-                    setError(`Operation with ID ${operationId} was not found`);
-                    setOperation(null);
-                } else {
-                    setError('An error occurred while fetching the operation data');
-                }
-            } catch (error) {
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await fetch(`/api/operation/${operationId}`);
+            if (response.ok) {
+                const data = await response.json();
+                setOperation(data);
+                setCachedOperation(operationId, data);
+            } else if (response.status === 404) {
+                setError(`Operation with ID ${operationId} was not found`);
+                setOperation(null);
+            } else {
                 setError('An error occurred while fetching the operation data');
-                console.error('Error fetching operation:', error);
-            } finally {
-                setLoading(false);
             }
-        };
+        } catch (error) {
+            setError('An error occurred while fetching the operation data');
+            console.error('Error fetching operation:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchOperation();
     }, [operationId, getCachedOperation, setCachedOperation]);
 

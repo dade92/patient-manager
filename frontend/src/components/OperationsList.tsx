@@ -21,7 +21,7 @@ import {useCache} from '../context/CacheContext';
 
 interface Props {
     patientId: string;
-    refreshTrigger?: number;
+    refreshTrigger: number;
 }
 
 export const OperationsList: React.FC<Props> = ({patientId, refreshTrigger}) => {
@@ -31,38 +31,38 @@ export const OperationsList: React.FC<Props> = ({patientId, refreshTrigger}) => 
     const [error, setError] = useState<string | null>(null);
     const {getCachedOperationsForPatient, setCachedOperationsForPatient} = useCache();
 
-    useEffect(() => {
-        const fetchOperations = async () => {
-            if (!patientId) return;
+    const fetchOperations = async () => {
+        if (!patientId) return;
 
-            const cachedOperations = getCachedOperationsForPatient(patientId);
-            if (cachedOperations && cachedOperations.length > 0) {
-                setOperations(cachedOperations);
-                setLoading(false);
-                return;
-            }
+        const cachedOperations = getCachedOperationsForPatient(patientId);
+        if (cachedOperations && cachedOperations.length > 0) {
+            setOperations(cachedOperations);
+            setLoading(false);
+            return;
+        }
 
-            try {
-                setLoading(true);
-                setError(null);
-                const response = await fetch(`/api/operation/patient/${patientId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.operations) {
-                        setCachedOperationsForPatient(patientId, data.operations);
-                        setOperations(data.operations);
-                    }
-                } else {
-                    setError('Failed to load operations');
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await fetch(`/api/operation/patient/${patientId}`);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.operations) {
+                    setCachedOperationsForPatient(patientId, data.operations);
+                    setOperations(data.operations);
                 }
-            } catch (error) {
-                setError('An error occurred while fetching operations');
-                console.error('Error fetching operations:', error);
-            } finally {
-                setLoading(false);
+            } else {
+                setError('Failed to load operations');
             }
-        };
+        } catch (error) {
+            setError('An error occurred while fetching operations');
+            console.error('Error fetching operations:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchOperations();
     }, [patientId, refreshTrigger]);
 
@@ -91,20 +91,24 @@ export const OperationsList: React.FC<Props> = ({patientId, refreshTrigger}) => 
                                 <ListItemButton onClick={() => navigate(`/operation/${operation.id}`)}>
                                     <ListItemText
                                         primary={
-                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <Box sx={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center'
+                                            }}>
                                                 <Typography variant="subtitle1">
                                                     {operation.type} - {operation.executor}
                                                 </Typography>
-                                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                                <Box sx={{display: 'flex', gap: 1}}>
                                                     <Chip
-                                                        icon={<AttachFileIcon />}
+                                                        icon={<AttachFileIcon/>}
                                                         label={operation.assets ? operation.assets.length : 0}
                                                         size="small"
                                                         color="primary"
                                                         variant="outlined"
                                                     />
                                                     <Chip
-                                                        icon={<NoteIcon />}
+                                                        icon={<NoteIcon/>}
                                                         label={operation.additionalNotes ? operation.additionalNotes.length : 0}
                                                         size="small"
                                                         color="secondary"
