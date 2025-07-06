@@ -157,7 +157,7 @@ export const PatientDetail: React.FC = () => {
                         patientId={patient.id}
                         onOperationCreated={(newOperation) => {
                             const cachedOperations = getCachedOperationsForPatient(patientId!) || [];
-                            setCachedOperationsForPatient(patientId!, [...cachedOperations, newOperation]);
+                            setCachedOperationsForPatient(patientId!, [newOperation, ...cachedOperations]);
                             setRefreshKey(prev => prev + 1);
                         }}
                     />
