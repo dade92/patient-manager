@@ -7,7 +7,8 @@ export const mockPatients = [
         address: "123 Main St",
         cityOfResidence: "New York",
         nationality: "American",
-        birthDate: "1990-05-15"
+        birthDate: "1990-05-15",
+        taxCode: "TAX1234567890"
     },
     {
         id: "22222222-2222-2222-2222",
@@ -17,7 +18,8 @@ export const mockPatients = [
         address: "456 Oak Avenue",
         cityOfResidence: "Boston",
         nationality: "Canadian",
-        birthDate: "1988-09-23"
+        birthDate: "1988-09-23",
+        taxCode: "TAX0987654321"
     },
     {
         id: "33333333-3333-3333-3333",
@@ -27,7 +29,8 @@ export const mockPatients = [
         address: "789 Pine Road",
         cityOfResidence: "Chicago",
         nationality: "British",
-        birthDate: "1995-12-10"
+        birthDate: "1995-12-10",
+        taxCode: "TAX1122334455"
     }
 ];
 

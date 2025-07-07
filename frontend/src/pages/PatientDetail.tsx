@@ -122,15 +122,19 @@ export const PatientDetail: React.FC = () => {
                                     <Typography variant="body1" gutterBottom>{patient.email}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="subtitle2" color="textSecondary">Phone</Typography>
+                                    <Typography variant="subtitle2" color="textSecondary">Tax Code</Typography>
+                                    <Typography variant="body1" gutterBottom>{patient.taxCode}</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography variant="subtitle2" color="textSecondary">Phone Number</Typography>
                                     <Typography variant="body1" gutterBottom>{patient.phoneNumber}</Typography>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={12} sm={6}>
                                     <Typography variant="subtitle2" color="textSecondary">Address</Typography>
                                     <Typography variant="body1" gutterBottom>{patient.address}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="subtitle2" color="textSecondary">City</Typography>
+                                    <Typography variant="subtitle2" color="textSecondary">City of Residence</Typography>
                                     <Typography variant="body1" gutterBottom>{patient.cityOfResidence}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -139,9 +143,7 @@ export const PatientDetail: React.FC = () => {
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <Typography variant="subtitle2" color="textSecondary">Birth Date</Typography>
-                                    <Typography variant="body1" gutterBottom>
-                                        {formatDate(patient.birthDate)}
-                                    </Typography>
+                                    <Typography variant="body1" gutterBottom>{formatDate(patient.birthDate)}</Typography>
                                 </Grid>
                             </Grid>
                         </CardContent>

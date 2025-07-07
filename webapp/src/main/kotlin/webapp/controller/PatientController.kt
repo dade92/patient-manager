@@ -2,7 +2,6 @@ package webapp.controller
 
 import domain.model.Patient
 import domain.model.PatientId
-import domain.patient.CreatePatientRequest as DomainCreatePatientRequest
 import domain.patient.PatientService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
+import domain.patient.CreatePatientRequest as DomainCreatePatientRequest
 
 @RestController
 @RequestMapping("/api/patient")
@@ -46,7 +46,8 @@ class PatientController(
             address = request.address,
             cityOfResidence = request.cityOfResidence,
             nationality = request.nationality,
-            birthDate = request.birthDate
+            birthDate = request.birthDate,
+            taxCode = request.taxCode
         )
 
         val patient = patientService.createPatient(domainRequest)
@@ -60,7 +61,8 @@ class PatientController(
         val address: String? = null,
         val cityOfResidence: String? = null,
         val nationality: String? = null,
-        val birthDate: LocalDate
+        val birthDate: LocalDate,
+        val taxCode: String
     )
 
     data class SearchPatientsResponse(

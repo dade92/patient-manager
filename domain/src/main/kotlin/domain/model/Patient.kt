@@ -15,5 +15,6 @@ data class Patient(
     val address: String? = null,
     val cityOfResidence: String? = null,
     val nationality: String? = null,
-    val birthDate: LocalDate
+    val birthDate: LocalDate,
+    val taxCode: String
 )

@@ -14,7 +14,8 @@ class JdbcPatientRepository(
 ) : PatientRepository {
 
     override fun retrieve(patientId: PatientId): Patient? {
-        val sql = "SELECT patient_id, name, email, phone_number, address, city_of_residence, nationality, birth_date FROM `PATIENT` WHERE patient_id = ?"
+        val sql =
+            "SELECT patient_id, name, email, phone_number, address, city_of_residence, nationality, birth_date, tax_code FROM `PATIENT` WHERE patient_id = ?"
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -41,7 +42,8 @@ class JdbcPatientRepository(
     }
 
     override fun searchByName(name: String): List<Patient> {
-        val sql = "SELECT patient_id, name, email, phone_number, address, city_of_residence, nationality, birth_date FROM `PATIENT` WHERE name LIKE ?"
+        val sql =
+            "SELECT patient_id, name, email, phone_number, address, city_of_residence, nationality, birth_date, tax_code FROM `PATIENT` WHERE name LIKE ?"
         val patients = mutableListOf<Patient>()
 
         dataSource.connection.use { connection ->
@@ -60,8 +62,8 @@ class JdbcPatientRepository(
 
     private fun insertPatient(patient: Patient): Patient {
         val sql = """
-            INSERT INTO `PATIENT` (patient_id, name, email, phone_number, address, city_of_residence, nationality, birth_date, creation_date) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO `PATIENT` (patient_id, name, email, phone_number, address, city_of_residence, nationality, birth_date, tax_code, creation_date) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """.trimIndent()
 
         val now = LocalDateTime.now()
@@ -76,7 +78,8 @@ class JdbcPatientRepository(
                 statement.setString(6, patient.cityOfResidence)
                 statement.setString(7, patient.nationality)
                 statement.setDate(8, Date.valueOf(patient.birthDate))
-                statement.setTimestamp(9, Timestamp.valueOf(now))
+                statement.setString(9, patient.taxCode)
+                statement.setTimestamp(10, Timestamp.valueOf(now))
 
                 statement.executeUpdate()
             }
@@ -88,7 +91,7 @@ class JdbcPatientRepository(
     private fun updatePatient(patient: Patient): Patient {
         val sql = """
             UPDATE `PATIENT` 
-            SET name = ?, email = ?, phone_number = ?, address = ?, city_of_residence = ?, nationality = ?, birth_date = ? 
+            SET name = ?, email = ?, phone_number = ?, address = ?, city_of_residence = ?, nationality = ?, birth_date = ?, tax_code = ? 
             WHERE patient_id = ?
         """.trimIndent()
 
@@ -101,7 +104,8 @@ class JdbcPatientRepository(
                 statement.setString(5, patient.cityOfResidence)
                 statement.setString(6, patient.nationality)
                 statement.setDate(7, Date.valueOf(patient.birthDate))
-                statement.setString(8, patient.id.value)
+                statement.setString(8, patient.taxCode)
+                statement.setString(9, patient.id.value)
 
                 statement.executeUpdate()
             }
@@ -119,6 +123,9 @@ class JdbcPatientRepository(
             address = resultSet.getString("address"),
             cityOfResidence = resultSet.getString("city_of_residence"),
             nationality = resultSet.getString("nationality"),
-            birthDate = resultSet.getDate("birth_date").toLocalDate()
+            birthDate = resultSet.getDate("birth_date").toLocalDate(),
+            taxCode = resultSet.getString("tax_code")
         )
 }
+
+
