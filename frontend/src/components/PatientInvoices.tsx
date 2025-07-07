@@ -3,6 +3,7 @@ import {
     Alert,
     Badge,
     Box,
+    Button,
     Card,
     CardContent,
     Chip,
@@ -13,14 +14,13 @@ import {
     List,
     ListItem,
     ListItemText,
-    Typography,
-    Button
+    Typography
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import PaymentIcon from '@mui/icons-material/Payment';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import {Invoice} from '../types/invoice';
+import {Invoice, InvoiceStatus} from '../types/invoice';
 import {formatAmount} from '../utils/currencyUtils';
 import {getInvoiceStatusColor} from '../utils/invoiceUtils';
 
@@ -81,7 +81,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                         invoice.id === invoiceId
                             ? {
                                 ...invoice,
-                                status: 'PAID',
+                                status: InvoiceStatus.PAID,
                             }
                             : invoice
                     )
@@ -102,7 +102,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         }
     };
 
-    const pendingInvoicesCount = invoices.filter(invoice => invoice.status === 'PENDING').length;
+    const pendingInvoicesCount = invoices.filter(invoice => invoice.status === InvoiceStatus.PENDING).length;
     const hasPendingInvoices = pendingInvoicesCount > 0;
 
     return (
@@ -171,28 +171,32 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                         <ListItem>
                                             <ListItemText
                                                 primary={
-                                                    <Box sx={{
-                                                        display: 'flex',
-                                                        justifyContent: 'space-between',
-                                                        alignItems: 'center'
-                                                    }}>
-                                                        <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                                                            <PaymentIcon color="action"/>
-                                                            <Typography variant="subtitle1">
-                                                                {invoice.id}
-                                                            </Typography>
+                                                    <Box>
+                                                        <Box sx={{
+                                                            display: 'flex',
+                                                            justifyContent: 'space-between',
+                                                            alignItems: 'center'
+                                                        }}>
+                                                            <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                                                                <PaymentIcon color="action"/>
+                                                                <Typography variant="subtitle1">
+                                                                    {invoice.id}
+                                                                </Typography>
+                                                            </Box>
+                                                            <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
+                                                                <Typography variant="h6" color="primary">
+                                                                    {formatAmount(invoice.amount.amount, invoice.amount.currency)}
+                                                                </Typography>
+                                                                <Chip
+                                                                    label={invoice.status}
+                                                                    size="small"
+                                                                    color={getInvoiceStatusColor(invoice.status) as any}
+                                                                    variant="outlined"
+                                                                />
+                                                            </Box>
                                                         </Box>
-                                                        <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
-                                                            <Typography variant="h6" color="primary">
-                                                                {formatAmount(invoice.amount.amount, invoice.amount.currency)}
-                                                            </Typography>
-                                                            <Chip
-                                                                label={invoice.status}
-                                                                size="small"
-                                                                color={getInvoiceStatusColor(invoice.status) as any}
-                                                                variant="outlined"
-                                                            />
-                                                            {invoice.status === 'PENDING' && (
+                                                        {invoice.status === InvoiceStatus.PENDING && (
+                                                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
                                                                 <Button
                                                                     variant="contained"
                                                                     size="small"
@@ -200,12 +204,11 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                                                     startIcon={<CheckCircleIcon/>}
                                                                     onClick={() => markAsPaid(invoice.id)}
                                                                     disabled={updatingInvoices.has(invoice.id)}
-                                                                    sx={{ml: 1}}
                                                                 >
                                                                     {updatingInvoices.has(invoice.id) ? 'Updating...' : 'Mark as Paid'}
                                                                 </Button>
-                                                            )}
-                                                        </Box>
+                                                            </Box>
+                                                        )}
                                                     </Box>
                                                 }
                                                 secondary={
@@ -216,11 +219,6 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                                         <Typography variant="caption" color="textSecondary">
                                                             Created: {invoice.createdAt}
                                                         </Typography>
-                                                        {invoice.updatedAt !== invoice.createdAt && (
-                                                            <Typography variant="caption" color="textSecondary" sx={{ml: 2}}>
-                                                                Updated: {invoice.updatedAt}
-                                                            </Typography>
-                                                        )}
                                                     </Box>
                                                 }
                                             />
