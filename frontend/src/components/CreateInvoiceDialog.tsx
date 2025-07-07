@@ -9,8 +9,10 @@ import {
     Box,
     MenuItem,
     Alert,
-    CircularProgress
+    CircularProgress,
+    IconButton
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface CreateInvoiceDialogProps {
     open: boolean;
@@ -87,7 +89,12 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-            <DialogTitle>Create Invoice</DialogTitle>
+            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                Create Invoice
+                <IconButton onClick={handleClose} disabled={loading}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
             <DialogContent>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
                     {error && (
@@ -123,9 +130,6 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} disabled={loading}>
-                    Cancel
-                </Button>
                 <Button
                     onClick={handleSubmit}
                     variant="contained"

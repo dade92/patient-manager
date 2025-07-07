@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
+import {Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import {Operation} from "../types/operation";
 
 interface Props {
@@ -66,7 +67,12 @@ export const AddNoteDialog: React.FC<Props> = ({
 
     return (
         <Dialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
-            <DialogTitle>Add Note</DialogTitle>
+            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                Add Note
+                <IconButton onClick={handleCancel}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
             <form onSubmit={handleSubmit}>
                 <DialogContent>
                     {error && (
@@ -86,7 +92,6 @@ export const AddNoteDialog: React.FC<Props> = ({
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCancel}>Cancel</Button>
                     <Button
                         type="submit"
                         variant="contained"

@@ -12,8 +12,10 @@ import {
     MenuItem,
     Select,
     SelectChangeEvent,
-    TextField
+    TextField,
+    IconButton
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import {OperationType} from '../types/operation';
 
 export interface CreateOperationFormData {
@@ -92,9 +94,20 @@ export const CreateOperationDialog: React.FC<Props> = ({
         }
     };
 
+    const handleClose = () => {
+        setFormData({type: '' as OperationType, description: '', executor: ''});
+        setError(null);
+        onClose();
+    };
+
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-            <DialogTitle>Create New Operation</DialogTitle>
+        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                Create New Operation
+                <IconButton onClick={handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
             <form onSubmit={handleSubmit}>
                 <DialogContent>
                     {error && (
@@ -142,7 +155,6 @@ export const CreateOperationDialog: React.FC<Props> = ({
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={onClose}>Cancel</Button>
                     <Button
                         type="submit"
                         variant="contained"
