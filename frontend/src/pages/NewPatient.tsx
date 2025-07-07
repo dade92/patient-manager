@@ -164,7 +164,7 @@ export const NewPatient: React.FC = () => {
                                 <Box sx={{display: 'flex', gap: 2, justifyContent: 'flex-end'}}>
                                     <Button
                                         variant="outlined"
-                                        onClick={() => navigate('/')}
+                                        onClick={() => navigate(-1)}
                                     >
                                         Cancel
                                     </Button>

@@ -67,7 +67,7 @@ export const PatientDetail: React.FC = () => {
     if (loading) {
         return (
             <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
-                <BackButton onClick={handleBack} sx={{mb: 2}} />
+                <BackButton onClick={handleBack} sx={{mb: 2}}/>
                 <Box display="flex" justifyContent="center">
                     <CircularProgress/>
                 </Box>
@@ -78,19 +78,17 @@ export const PatientDetail: React.FC = () => {
     return (
         <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
-                <BackButton onClick={handleBack} />
-                {patient && (
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<AddIcon/>}
-                        onClick={() => {
-                            setIsCreateOperationOpen(true);
-                        }}
-                    >
-                        New Operation
-                    </Button>
-                )}
+                <BackButton onClick={handleBack}/>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<AddIcon/>}
+                    onClick={() => {
+                        setIsCreateOperationOpen(true);
+                    }}
+                >
+                    New Operation
+                </Button>
             </Box>
 
             {error ? (
@@ -143,7 +141,8 @@ export const PatientDetail: React.FC = () => {
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <Typography variant="subtitle2" color="textSecondary">Birth Date</Typography>
-                                    <Typography variant="body1" gutterBottom>{formatDate(patient.birthDate)}</Typography>
+                                    <Typography variant="body1"
+                                                gutterBottom>{formatDate(patient.birthDate)}</Typography>
                                 </Grid>
                             </Grid>
                         </CardContent>
