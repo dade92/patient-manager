@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Alert, Box, Card, CardContent, CircularProgress, Grid, Typography} from '@mui/material';
+import {Alert, Box, Card, CardContent, CircularProgress, Grid, Typography, Button} from '@mui/material';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
 import {formatDateTime} from '../utils/dateUtils';
@@ -8,6 +8,7 @@ import {ExpandableChip} from '../components/ExpandableChip';
 import {OperationAssets} from '../components/OperationAssets';
 import {OperationNotes} from '../components/OperationNotes';
 import {AddNoteDialog} from '../components/AddNoteDialog';
+import {CreateInvoiceDialog} from '../components/CreateInvoiceDialog';
 import {BackButton} from '../components/BackButton';
 
 export const OperationDetail: React.FC = () => {
@@ -17,6 +18,7 @@ export const OperationDetail: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
 
     const {getCachedOperation, setCachedOperation} = useCache();
 
@@ -149,6 +151,23 @@ export const OperationDetail: React.FC = () => {
                                 notes={operation.additionalNotes}
                                 onAddNote={() => setDialogOpen(true)}
                             />
+
+                            <Grid item xs={12}>
+                                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => setInvoiceDialogOpen(true)}
+                                        sx={{
+                                            backgroundColor: '#ff6b35',
+                                            '&:hover': { backgroundColor: '#e55a2b' },
+                                            fontWeight: 'bold'
+                                        }}
+                                    >
+                                        Create Invoice
+                                    </Button>
+                                </Box>
+                            </Grid>
                         </Grid>
                     </CardContent>
                 </Card>
@@ -163,6 +182,17 @@ export const OperationDetail: React.FC = () => {
 
                     setOperation(updatedOperation);
                     setCachedOperation(operationId, updatedOperation);
+                }}
+            />
+
+            <CreateInvoiceDialog
+                open={invoiceDialogOpen}
+                onClose={() => setInvoiceDialogOpen(false)}
+                operationId={operationId || ''}
+                patientId={operation?.patientId || ''}
+                onInvoiceCreated={() => {
+                    // Optionally refresh the operation data or show a success message
+                    console.log('Invoice created successfully');
                 }}
             />
         </Box>

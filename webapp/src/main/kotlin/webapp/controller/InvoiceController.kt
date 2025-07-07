@@ -19,7 +19,7 @@ import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 
 @RestController
-@RequestMapping("/api/invoices")
+@RequestMapping("/api/invoice")
 class InvoiceController(
     private val invoiceService: InvoiceService
 ) {

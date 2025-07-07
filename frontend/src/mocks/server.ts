@@ -155,6 +155,50 @@ export function makeServer({ environment = 'development' } = {}) {
 
         return new Response(200, {}, operation.attrs);
       });
+
+      // Create invoice
+      this.post('/invoice', (schema, request) => {
+        const attrs = JSON.parse(request.requestBody);
+
+        // Validate required fields
+        if (!attrs.operationId || !attrs.patientId || !attrs.amount) {
+          return new Response(400, {}, { message: 'Missing required fields' });
+        }
+
+        // Validate amount
+        if (!attrs.amount.amount || attrs.amount.amount <= 0) {
+          return new Response(400, {}, { message: 'Invalid amount' });
+        }
+
+        // Validate that operation exists
+        const operation = (schema.all('operation').models as any[])
+          .find(op => op.attrs.id === attrs.operationId);
+
+        if (!operation) {
+          return new Response(404, {}, { message: 'Operation not found' });
+        }
+
+        // Validate that patient exists
+        const patient = schema.findBy('patient', { id: attrs.patientId });
+        if (!patient) {
+          return new Response(404, {}, { message: 'Patient not found' });
+        }
+
+        // Create mock invoice
+        const invoice = {
+          id: `INV-${Math.floor(Math.random() * 10000)}-${new Date().getFullYear()}`,
+          operationId: attrs.operationId,
+          amount: {
+            amount: attrs.amount.amount,
+            currency: attrs.amount.currency || 'EUR'
+          },
+          status: 'PENDING',
+          createdAt: new Date().toLocaleDateString('en-GB') + ' ' + new Date().toLocaleTimeString('en-GB'),
+          updatedAt: new Date().toLocaleDateString('en-GB') + ' ' + new Date().toLocaleTimeString('en-GB')
+        };
+
+        return new Response(201, {}, invoice);
+      });
     },
   });
 }
