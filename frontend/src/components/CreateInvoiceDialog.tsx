@@ -7,7 +7,6 @@ import {
     TextField,
     Button,
     Box,
-    MenuItem,
     Alert,
     CircularProgress,
     IconButton
@@ -30,15 +29,8 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
     onInvoiceCreated
 }) => {
     const [amount, setAmount] = useState('');
-    const [currency, setCurrency] = useState('EUR');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
-    const currencies = [
-        { value: 'EUR', label: 'EUR' },
-        { value: 'USD', label: 'USD' },
-        { value: 'GBP', label: 'GBP' }
-    ];
 
     const handleSubmit = async () => {
         if (!amount || parseFloat(amount) <= 0) {
@@ -60,7 +52,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
                     patientId,
                     amount: {
                         amount: parseFloat(amount),
-                        currency
+                        currency: 'EUR'
                     }
                 })
             });
@@ -82,7 +74,6 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
 
     const handleClose = () => {
         setAmount('');
-        setCurrency('EUR');
         setError(null);
         onClose();
     };
@@ -104,29 +95,15 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
                     )}
 
                     <TextField
-                        label="Amount"
+                        label="Amount (EUR)"
                         type="number"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         fullWidth
                         inputProps={{ min: 0, step: 0.01 }}
                         disabled={loading}
+                        placeholder="0.00"
                     />
-
-                    <TextField
-                        select
-                        label="Currency"
-                        value={currency}
-                        onChange={(e) => setCurrency(e.target.value)}
-                        fullWidth
-                        disabled={loading}
-                    >
-                        {currencies.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
                 </Box>
             </DialogContent>
             <DialogActions>

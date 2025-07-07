@@ -1,13 +1,13 @@
-export const getInvoiceStatusColor = (status: string) => {
+import {InvoiceStatus} from "../types/invoice";
+
+export const getInvoiceStatusColor = (status: InvoiceStatus) => {
     switch (status) {
-        case 'PAID':
+        case InvoiceStatus.PAID:
             return 'success';
-        case 'PENDING':
+        case InvoiceStatus.PENDING:
             return 'warning';
-        case 'CANCELLED':
+        case InvoiceStatus.CANCELLED:
             return 'error';
-        default:
-            return 'default';
     }
 };
 
