@@ -130,10 +130,6 @@ export const PatientDetail: React.FC = () => {
                                     <Typography variant="body1" gutterBottom>{patient.phoneNumber}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="subtitle2" color="textSecondary">Birth Date</Typography>
-                                    <Typography variant="body1" gutterBottom>{formatDate(patient.birthDate)}</Typography>
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
                                     <Typography variant="subtitle2" color="textSecondary">Address</Typography>
                                     <Typography variant="body1" gutterBottom>{patient.address}</Typography>
                                 </Grid>
@@ -144,6 +140,10 @@ export const PatientDetail: React.FC = () => {
                                 <Grid item xs={12} sm={6}>
                                     <Typography variant="subtitle2" color="textSecondary">Nationality</Typography>
                                     <Typography variant="body1" gutterBottom>{patient.nationality}</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography variant="subtitle2" color="textSecondary">Birth Date</Typography>
+                                    <Typography variant="body1" gutterBottom>{formatDate(patient.birthDate)}</Typography>
                                 </Grid>
                             </Grid>
                         </CardContent>
