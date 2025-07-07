@@ -54,7 +54,7 @@ export const PatientSearch: React.FC = () => {
                                 >
                                     <ListItemText
                                         primary={patient.name}
-                                        secondary={`${patient.cityOfResidence} • ${patient.email}`}
+                                        secondary={`${patient.taxCode} • ${patient.email}`}
                                     />
                                 </ListItemButton>
                             ))}
