@@ -7,7 +7,9 @@ import {
     CardContent,
     Chip,
     CircularProgress,
+    Collapse,
     Divider,
+    IconButton,
     List,
     ListItemButton,
     ListItemText,
@@ -15,6 +17,8 @@ import {
 } from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import NoteIcon from '@mui/icons-material/Note';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import {Operation} from '../types/operation';
 import {formatDateTime} from '../utils/dateUtils';
 import {useCache} from '../context/CacheContext';
@@ -29,6 +33,7 @@ export const PatientOperations: React.FC<Props> = ({patientId, refreshTrigger}) 
     const [operations, setOperations] = useState<Operation[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [expanded, setExpanded] = useState(false);
     const {getCachedOperationsForPatient, setCachedOperationsForPatient} = useCache();
 
     const fetchOperations = async () => {
@@ -67,73 +72,96 @@ export const PatientOperations: React.FC<Props> = ({patientId, refreshTrigger}) 
     return (
         <Card>
             <CardContent>
-                <Typography variant="h6" gutterBottom>
-                    Operations History
-                </Typography>
-                {loading ? (
-                    <Box display="flex" justifyContent="center" my={2}>
-                        <CircularProgress/>
-                    </Box>
-                ) : error ? (
-                    <Alert severity="error" sx={{mb: 2}}>
-                        {error}
-                    </Alert>
-                ) : operations.length === 0 ? (
-                    <Typography color="textSecondary">
-                        No operations found for this patient.
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        '&:hover': {
+                            backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                        },
+                        borderRadius: 1,
+                        p: 1,
+                        mx: -1
+                    }}
+                    onClick={() => setExpanded(!expanded)}
+                >
+                    <Typography variant="h6">
+                        Operations History
                     </Typography>
-                ) : (
-                    <List>
-                        {operations.map((operation, index) => (
-                            <React.Fragment key={operation.id}>
-                                <ListItemButton onClick={() => navigate(`/operation/${operation.id}`)}>
-                                    <ListItemText
-                                        primary={
-                                            <Box sx={{
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center'
-                                            }}>
-                                                <Typography variant="subtitle1">
-                                                    {operation.type} - {operation.executor}
-                                                </Typography>
-                                                <Box sx={{display: 'flex', gap: 1}}>
-                                                    <Chip
-                                                        icon={<AttachFileIcon/>}
-                                                        label={operation.assets ? operation.assets.length : 0}
-                                                        size="small"
-                                                        color="primary"
-                                                        variant="outlined"
-                                                    />
-                                                    <Chip
-                                                        icon={<NoteIcon/>}
-                                                        label={operation.additionalNotes ? operation.additionalNotes.length : 0}
-                                                        size="small"
-                                                        color="secondary"
-                                                        variant="outlined"
-                                                    />
-                                                </Box>
-                                            </Box>
-                                        }
-                                        secondary={
-                                            <>
-                                                <Typography variant="body2" color="textSecondary">
-                                                    {operation.description}
-                                                </Typography>
-                                                <Typography variant="caption" color="textSecondary">
-                                                    {formatDateTime(operation.createdAt)}
-                                                </Typography>
-                                            </>
-                                        }
-                                    />
-                                </ListItemButton>
-                                {index < operations.length - 1 && <Divider/>}
-                            </React.Fragment>
-                        ))}
-                    </List>
-                )}
+                    <IconButton size="small">
+                        {expanded ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+                    </IconButton>
+                </Box>
+
+                <Collapse in={expanded}>
+                    <Box sx={{mt: 2}}>
+                        {loading ? (
+                            <Box display="flex" justifyContent="center" my={2}>
+                                <CircularProgress/>
+                            </Box>
+                        ) : error ? (
+                            <Alert severity="error" sx={{mb: 2}}>
+                                {error}
+                            </Alert>
+                        ) : operations.length === 0 ? (
+                            <Typography color="textSecondary">
+                                No operations found for this patient.
+                            </Typography>
+                        ) : (
+                            <List>
+                                {operations.map((operation, index) => (
+                                    <React.Fragment key={operation.id}>
+                                        <ListItemButton onClick={() => navigate(`/operation/${operation.id}`)}>
+                                            <ListItemText
+                                                primary={
+                                                    <Box sx={{
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <Typography variant="subtitle1">
+                                                            {operation.type} - {operation.executor}
+                                                        </Typography>
+                                                        <Box sx={{display: 'flex', gap: 1}}>
+                                                            <Chip
+                                                                icon={<AttachFileIcon/>}
+                                                                label={operation.assets ? operation.assets.length : 0}
+                                                                size="small"
+                                                                color="primary"
+                                                                variant="outlined"
+                                                            />
+                                                            <Chip
+                                                                icon={<NoteIcon/>}
+                                                                label={operation.additionalNotes ? operation.additionalNotes.length : 0}
+                                                                size="small"
+                                                                color="secondary"
+                                                                variant="outlined"
+                                                            />
+                                                        </Box>
+                                                    </Box>
+                                                }
+                                                secondary={
+                                                    <>
+                                                        <Typography variant="body2" color="textSecondary">
+                                                            {operation.description}
+                                                        </Typography>
+                                                        <Typography variant="caption" color="textSecondary">
+                                                            {formatDateTime(operation.createdAt)}
+                                                        </Typography>
+                                                    </>
+                                                }
+                                            />
+                                        </ListItemButton>
+                                        {index < operations.length - 1 && <Divider/>}
+                                    </React.Fragment>
+                                ))}
+                            </List>
+                        )}
+                    </Box>
+                </Collapse>
             </CardContent>
         </Card>
     );
-
-}
+};
