@@ -12,7 +12,8 @@ import {
     ListItemText,
     Typography,
     Collapse,
-    IconButton
+    IconButton,
+    Badge
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -86,6 +87,9 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         }).format(amount);
     };
 
+    const pendingInvoicesCount = invoices.filter(invoice => invoice.status === 'PENDING').length;
+    const hasPendingInvoices = pendingInvoicesCount > 0;
+
     return (
         <Card>
             <CardContent>
@@ -104,9 +108,28 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                     }}
                     onClick={() => setExpanded(!expanded)}
                 >
-                    <Typography variant="h6">
-                        Invoices {invoices.length > 0 && `(${invoices.length})`}
-                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        {hasPendingInvoices ? (
+                            <Badge
+                                badgeContent={pendingInvoicesCount}
+                                color="warning"
+                                sx={{
+                                    '& .MuiBadge-badge': {
+                                        backgroundColor: '#ff9800',
+                                        color: 'white'
+                                    }
+                                }}
+                            >
+                                <Typography variant="h6">
+                                    Invoices {invoices.length > 0 && `(${invoices.length})`}
+                                </Typography>
+                            </Badge>
+                        ) : (
+                            <Typography variant="h6">
+                                Invoices {invoices.length > 0 && `(${invoices.length})`}
+                            </Typography>
+                        )}
+                    </Box>
                     <IconButton size="small">
                         {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </IconButton>
@@ -114,6 +137,15 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
 
                 <Collapse in={expanded}>
                     <Box sx={{ mt: 2 }}>
+                        {hasPendingInvoices && (
+                            <Alert severity="warning" sx={{ mb: 2 }}>
+                                {pendingInvoicesCount === 1
+                                    ? 'There is 1 pending invoice that requires attention.'
+                                    : `There are ${pendingInvoicesCount} pending invoices that require attention.`
+                                }
+                            </Alert>
+                        )}
+
                         {loading ? (
                             <Box display="flex" justifyContent="center" my={2}>
                                 <CircularProgress/>
