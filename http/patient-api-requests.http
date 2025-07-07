@@ -10,7 +10,8 @@ Content-Type: application/json
   "address": "789 Elm St, Chicago, IL 60601",
   "cityOfResidence": "Chicago",
   "nationality": "USA",
-  "birthDate": "1990-07-15"
+  "birthDate": "1990-07-15",
+  "taxCode": "ALJHN90L15H501C"
 }
 
 ### Get a specific patient by ID (using the first sample ID)
