@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Alert, Box, Card, CardContent, CircularProgress, Grid, Typography, Button} from '@mui/material';
+import {Alert, Box, Card, CardContent, CircularProgress, Grid, Typography, Button, Snackbar} from '@mui/material';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
 import {formatDateTime} from '../utils/dateUtils';
@@ -19,6 +19,7 @@ export const OperationDetail: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
     const {getCachedOperation, setCachedOperation} = useCache();
 
@@ -191,10 +192,24 @@ export const OperationDetail: React.FC = () => {
                 operationId={operationId || ''}
                 patientId={operation?.patientId || ''}
                 onInvoiceCreated={() => {
-                    // Optionally refresh the operation data or show a success message
-                    console.log('Invoice created successfully');
+                    setShowSuccessMessage(true);
                 }}
             />
+
+            <Snackbar
+                open={showSuccessMessage}
+                autoHideDuration={4000}
+                onClose={() => setShowSuccessMessage(false)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={() => setShowSuccessMessage(false)}
+                    severity="success"
+                    sx={{ width: '100%' }}
+                >
+                    Invoice created successfully!
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };
