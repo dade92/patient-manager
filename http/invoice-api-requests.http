@@ -17,6 +17,9 @@ GET {{host}}/api/invoices/INV-001-2025
 ### Get all invoices for a specific operation
 GET {{host}}/api/invoices/operation/33333333-3333-3333-3333-333333333333
 
+### Get all invoices for a specific patient
+GET {{host}}/api/invoices/patient/22222222-2222-2222-2222-222222222222
+
 ### Update invoice status
 POST {{host}}/api/invoices/INV-12345/status
 Content-Type: application/json

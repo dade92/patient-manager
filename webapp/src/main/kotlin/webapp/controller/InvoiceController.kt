@@ -62,6 +62,16 @@ class InvoiceController(
         )
     }
 
+    @GetMapping("/patient/{patientId}")
+    fun getInvoicesForPatient(@PathVariable patientId: String): ResponseEntity<InvoicesPerPatientResponse> {
+        val invoices = invoiceService.getInvoicesForPatient(PatientId(patientId))
+
+        return ResponseEntity(
+            InvoicesPerPatientResponse(invoices = invoices.map { mapToResponse(it) }),
+            HttpStatus.OK
+        )
+    }
+
     @PostMapping("/{invoiceId}/status")
     fun updateInvoiceStatus(
         @PathVariable invoiceId: String,
@@ -92,6 +102,10 @@ class InvoiceController(
         )
 
     data class InvoicesPerOperationResponse(
+        val invoices: List<InvoiceResponse>
+    )
+
+    data class InvoicesPerPatientResponse(
         val invoices: List<InvoiceResponse>
     )
 
