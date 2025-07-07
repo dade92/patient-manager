@@ -1,35 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import {
     Alert,
+    Badge,
     Box,
     Card,
     CardContent,
     Chip,
     CircularProgress,
+    Collapse,
     Divider,
+    IconButton,
     List,
     ListItem,
     ListItemText,
-    Typography,
-    Collapse,
-    IconButton,
-    Badge
+    Typography
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import PaymentIcon from '@mui/icons-material/Payment';
-
-interface Invoice {
-    id: string;
-    operationId: string;
-    amount: {
-        amount: number;
-        currency: string;
-    };
-    status: string;
-    createdAt: string;
-    updatedAt: string;
-}
+import {Invoice} from '../types/invoice';
+import {formatAmount} from '../utils/currencyUtils';
+import {getInvoiceStatusColor} from '../utils/invoiceUtils';
 
 interface Props {
     patientId: string;
@@ -67,26 +58,6 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         fetchInvoices();
     }, [patientId, refreshTrigger]);
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'PAID':
-                return 'success';
-            case 'PENDING':
-                return 'warning';
-            case 'CANCELLED':
-                return 'error';
-            default:
-                return 'default';
-        }
-    };
-
-    const formatAmount = (amount: number, currency: string) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: currency,
-        }).format(amount);
-    };
-
     const pendingInvoicesCount = invoices.filter(invoice => invoice.status === 'PENDING').length;
     const hasPendingInvoices = pendingInvoicesCount > 0;
 
@@ -108,7 +79,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                     }}
                     onClick={() => setExpanded(!expanded)}
                 >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
                         {hasPendingInvoices ? (
                             <Badge
                                 badgeContent={pendingInvoicesCount}
@@ -131,21 +102,12 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                         )}
                     </Box>
                     <IconButton size="small">
-                        {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                        {expanded ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
                     </IconButton>
                 </Box>
 
                 <Collapse in={expanded}>
-                    <Box sx={{ mt: 2 }}>
-                        {hasPendingInvoices && (
-                            <Alert severity="warning" sx={{ mb: 2 }}>
-                                {pendingInvoicesCount === 1
-                                    ? 'There is 1 pending invoice that requires attention.'
-                                    : `There are ${pendingInvoicesCount} pending invoices that require attention.`
-                                }
-                            </Alert>
-                        )}
-
+                    <Box sx={{mt: 2}}>
                         {loading ? (
                             <Box display="flex" justifyContent="center" my={2}>
                                 <CircularProgress/>
@@ -170,8 +132,8 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                                         justifyContent: 'space-between',
                                                         alignItems: 'center'
                                                     }}>
-                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                            <PaymentIcon color="action" />
+                                                        <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                                                            <PaymentIcon color="action"/>
                                                             <Typography variant="subtitle1">
                                                                 {invoice.id}
                                                             </Typography>
@@ -183,25 +145,20 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                                             <Chip
                                                                 label={invoice.status}
                                                                 size="small"
-                                                                color={getStatusColor(invoice.status) as any}
+                                                                color={getInvoiceStatusColor(invoice.status) as any}
                                                                 variant="outlined"
                                                             />
                                                         </Box>
                                                     </Box>
                                                 }
                                                 secondary={
-                                                    <Box sx={{ mt: 1 }}>
+                                                    <Box sx={{mt: 1}}>
                                                         <Typography variant="body2" color="textSecondary">
                                                             Operation ID: {invoice.operationId}
                                                         </Typography>
                                                         <Typography variant="caption" color="textSecondary">
                                                             Created: {invoice.createdAt}
                                                         </Typography>
-                                                        {invoice.updatedAt !== invoice.createdAt && (
-                                                            <Typography variant="caption" color="textSecondary" sx={{ ml: 2 }}>
-                                                                Updated: {invoice.updatedAt}
-                                                            </Typography>
-                                                        )}
                                                     </Box>
                                                 }
                                             />
