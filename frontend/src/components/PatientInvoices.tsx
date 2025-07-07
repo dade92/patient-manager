@@ -131,17 +131,20 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                 sx={{
                                     '& .MuiBadge-badge': {
                                         backgroundColor: '#ff9800',
-                                        color: 'white'
+                                        color: 'white',
+                                        fontSize: '0.65rem',
+                                        minWidth: '16px',
+                                        height: '16px'
                                     }
                                 }}
                             >
                                 <Typography variant="h6">
-                                    Invoices {invoices.length > 0 && `(${invoices.length})`}
+                                    Invoices
                                 </Typography>
                             </Badge>
                         ) : (
                             <Typography variant="h6">
-                                Invoices {invoices.length > 0 && `(${invoices.length})`}
+                                Invoices
                             </Typography>
                         )}
                     </Box>
@@ -190,13 +193,17 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                                                 <Chip
                                                                     label={invoice.status}
                                                                     size="small"
-                                                                    color={getInvoiceStatusColor(invoice.status) as any}
+                                                                    color={getInvoiceStatusColor(invoice.status)}
                                                                     variant="outlined"
                                                                 />
                                                             </Box>
                                                         </Box>
                                                         {invoice.status === InvoiceStatus.PENDING && (
-                                                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                                                            <Box sx={{
+                                                                display: 'flex',
+                                                                justifyContent: 'flex-end',
+                                                                mt: 1
+                                                            }}>
                                                                 <Button
                                                                     variant="contained"
                                                                     size="small"
@@ -217,7 +224,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                                             Operation ID: {invoice.operationId}
                                                         </Typography>
                                                         <Typography variant="caption" color="textSecondary">
-                                                            Created: {invoice.createdAt}
+                                                            {invoice.createdAt}
                                                         </Typography>
                                                     </Box>
                                                 }
