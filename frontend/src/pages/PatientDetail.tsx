@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import {Patient} from '../types/patient';
 import {CreateOperationDialog} from '../components/CreateOperationDialog';
 import {PatientOperations} from '../components/PatientOperations';
+import {PatientInvoices} from '../components/PatientInvoices';
 import {useCache} from '../context/CacheContext';
 import {formatDate} from '../utils/dateUtils';
 import {ExpandableChip} from '../components/ExpandableChip';
@@ -151,6 +152,13 @@ export const PatientDetail: React.FC = () => {
                         patientId={patientId!}
                         refreshTrigger={refreshKey}
                     />
+
+                    <Box sx={{ mt: 3 }}>
+                        <PatientInvoices
+                            patientId={patientId!}
+                            refreshTrigger={refreshKey}
+                        />
+                    </Box>
 
                     <CreateOperationDialog
                         open={isCreateOperationOpen}

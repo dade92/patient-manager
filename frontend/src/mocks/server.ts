@@ -199,6 +199,61 @@ export function makeServer({ environment = 'development' } = {}) {
 
         return new Response(201, {}, invoice);
       });
+
+      // Get invoices by patient ID
+      this.get('/invoice/patient/:patientId', (schema, request) => {
+        const patientId = request.params.patientId;
+
+        // Validate that patient exists
+        const patient = schema.findBy('patient', { id: patientId });
+        if (!patient) {
+          return new Response(404, {}, { message: 'Patient not found' });
+        }
+
+        // Get all operations for this patient first
+        const patientOperations = (schema.all('operation').models as any[])
+          .filter(operation => operation.attrs.patientId === patientId)
+          .map(op => op.attrs.id);
+
+        // Create mock invoices for this patient
+        const mockInvoices = [
+          {
+            id: `INV-001-2025`,
+            operationId: patientOperations[0] || 'OP-1001',
+            amount: {
+              amount: 150.00,
+              currency: 'USD'
+            },
+            status: 'PAID',
+            createdAt: '15/06/2025 10:00:00',
+            updatedAt: '16/06/2025 09:15:00'
+          },
+          {
+            id: `INV-002-2025`,
+            operationId: patientOperations[1] || 'OP-1002',
+            amount: {
+              amount: 85.00,
+              currency: 'EUR'
+            },
+            status: 'PENDING',
+            createdAt: '18/06/2025 15:00:00',
+            updatedAt: '18/06/2025 15:00:00'
+          },
+          {
+            id: `INV-003-2025`,
+            operationId: patientOperations[0] || 'OP-1001',
+            amount: {
+              amount: 320.50,
+              currency: 'USD'
+            },
+            status: 'CANCELLED',
+            createdAt: '20/06/2025 09:30:00',
+            updatedAt: '21/06/2025 14:45:00'
+          }
+        ].filter((_, index) => index < patientOperations.length + 1); // Adjust number of invoices based on operations
+
+        return { invoices: mockInvoices };
+      });
     },
   });
 }
