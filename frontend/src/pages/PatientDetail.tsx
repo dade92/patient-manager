@@ -122,6 +122,10 @@ export const PatientDetail: React.FC = () => {
                                     <Typography variant="body1" gutterBottom>{patient.email}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
+                                    <Typography variant="subtitle2" color="textSecondary">Tax code</Typography>
+                                    <Typography variant="body1" gutterBottom>{patient.taxCode}</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
                                     <Typography variant="subtitle2" color="textSecondary">Phone</Typography>
                                     <Typography variant="body1" gutterBottom>{patient.phoneNumber}</Typography>
                                 </Grid>

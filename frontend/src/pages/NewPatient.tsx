@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Alert, Box, Button, Card, CardContent, Grid, TextField, Typography,} from '@mui/material';
+import {Alert, Box, Button, Card, CardContent, Grid, TextField, Typography} from '@mui/material';
 
 interface NewPatientForm {
     name: string;
@@ -10,6 +10,7 @@ interface NewPatientForm {
     cityOfResidence: string;
     nationality: string;
     birthDate: string;
+    taxCode: string;
 }
 
 const initialForm: NewPatientForm = {
@@ -20,6 +21,7 @@ const initialForm: NewPatientForm = {
     cityOfResidence: '',
     nationality: '',
     birthDate: '',
+    taxCode: ''
 };
 
 export const NewPatient: React.FC = () => {
@@ -91,6 +93,16 @@ export const NewPatient: React.FC = () => {
                                     name="email"
                                     type="email"
                                     value={form.email}
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    label="taxCode"
+                                    name="taxCode"
+                                    value={form.taxCode}
                                     onChange={handleChange}
                                 />
                             </Grid>
@@ -172,3 +184,5 @@ export const NewPatient: React.FC = () => {
         </Box>
     );
 };
+
+

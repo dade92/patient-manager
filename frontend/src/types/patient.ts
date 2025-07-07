@@ -7,4 +7,6 @@ export interface Patient {
     cityOfResidence: string;
     nationality: string;
     birthDate: string;
+    taxCode: string;
 }
+
