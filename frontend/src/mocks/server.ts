@@ -254,6 +254,39 @@ export function makeServer({ environment = 'development' } = {}) {
 
         return { invoices: mockInvoices };
       });
+
+      // Update invoice status
+      this.post('/invoice/:invoiceId/status', (schema, request) => {
+        const invoiceId = request.params.invoiceId;
+        const attrs = JSON.parse(request.requestBody);
+
+        // Validate required fields
+        if (!attrs.status) {
+          return new Response(400, {}, { message: 'Status is required' });
+        }
+
+        // Validate status value
+        const validStatuses = ['PENDING', 'PAID', 'CANCELLED'];
+        if (!validStatuses.includes(attrs.status)) {
+          return new Response(400, {}, { message: 'Invalid status value' });
+        }
+
+        // For mock purposes, we'll create a mock updated invoice
+        // In a real implementation, you'd find and update the actual invoice
+        const updatedInvoice = {
+          id: invoiceId,
+          operationId: 'OP-1001', // Mock operation ID
+          amount: {
+            amount: 150.00,
+            currency: 'EUR'
+          },
+          status: attrs.status,
+          createdAt: '15/06/2025 10:00:00',
+          updatedAt: new Date().toLocaleDateString('en-GB') + ' ' + new Date().toLocaleTimeString('en-GB')
+        };
+
+        return new Response(200, {}, updatedInvoice);
+      });
     },
   });
 }

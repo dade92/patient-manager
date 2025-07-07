@@ -13,11 +13,13 @@ import {
     List,
     ListItem,
     ListItemText,
-    Typography
+    Typography,
+    Button
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import PaymentIcon from '@mui/icons-material/Payment';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import {Invoice} from '../types/invoice';
 import {formatAmount} from '../utils/currencyUtils';
 import {getInvoiceStatusColor} from '../utils/invoiceUtils';
@@ -32,6 +34,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [expanded, setExpanded] = useState(false);
+    const [updatingInvoices, setUpdatingInvoices] = useState<Set<string>>(new Set());
 
     const fetchInvoices = async () => {
         try {
@@ -57,6 +60,47 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
     useEffect(() => {
         fetchInvoices();
     }, [patientId, refreshTrigger]);
+
+    const markAsPaid = async (invoiceId: string) => {
+        setUpdatingInvoices(prev => new Set(prev).add(invoiceId));
+
+        try {
+            const response = await fetch(`/api/invoice/${invoiceId}/status`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    status: 'PAID'
+                })
+            });
+
+            if (response.ok) {
+                setInvoices(prevInvoices =>
+                    prevInvoices.map(invoice =>
+                        invoice.id === invoiceId
+                            ? {
+                                ...invoice,
+                                status: 'PAID',
+                            }
+                            : invoice
+                    )
+                );
+            } else {
+                const errorData = await response.json();
+                setError(errorData.message || 'Failed to update invoice status');
+            }
+        } catch (error) {
+            setError('An error occurred while updating the invoice');
+            console.error('Error updating invoice:', error);
+        } finally {
+            setUpdatingInvoices(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(invoiceId);
+                return newSet;
+            });
+        }
+    };
 
     const pendingInvoicesCount = invoices.filter(invoice => invoice.status === 'PENDING').length;
     const hasPendingInvoices = pendingInvoicesCount > 0;
@@ -148,6 +192,19 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                                                 color={getInvoiceStatusColor(invoice.status) as any}
                                                                 variant="outlined"
                                                             />
+                                                            {invoice.status === 'PENDING' && (
+                                                                <Button
+                                                                    variant="contained"
+                                                                    size="small"
+                                                                    color="success"
+                                                                    startIcon={<CheckCircleIcon/>}
+                                                                    onClick={() => markAsPaid(invoice.id)}
+                                                                    disabled={updatingInvoices.has(invoice.id)}
+                                                                    sx={{ml: 1}}
+                                                                >
+                                                                    {updatingInvoices.has(invoice.id) ? 'Updating...' : 'Mark as Paid'}
+                                                                </Button>
+                                                            )}
                                                         </Box>
                                                     </Box>
                                                 }
@@ -159,6 +216,11 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                                         <Typography variant="caption" color="textSecondary">
                                                             Created: {invoice.createdAt}
                                                         </Typography>
+                                                        {invoice.updatedAt !== invoice.createdAt && (
+                                                            <Typography variant="caption" color="textSecondary" sx={{ml: 2}}>
+                                                                Updated: {invoice.updatedAt}
+                                                            </Typography>
+                                                        )}
                                                     </Box>
                                                 }
                                             />
