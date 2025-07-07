@@ -6,6 +6,7 @@ import domain.model.InvoiceId
 import domain.model.InvoiceStatus
 import domain.model.Money
 import domain.model.OperationId
+import domain.model.PatientId
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -31,6 +32,7 @@ class InvoiceController(
     ): ResponseEntity<InvoiceResponse> {
         val request = CreateInvoiceRequest(
             operationId = OperationId(requestDto.operationId),
+            patientId = PatientId(requestDto.patientId),
             amount = Money(
                 amount = requestDto.amount.amount,
                 currency = requestDto.amount.currency
@@ -95,6 +97,7 @@ class InvoiceController(
 
     data class CreateInvoiceJsonRequest(
         val operationId: String,
+        val patientId: String,
         val amount: MoneyDto,
     )
 
@@ -116,3 +119,4 @@ class InvoiceController(
         val updatedAt: String
     )
 }
+
