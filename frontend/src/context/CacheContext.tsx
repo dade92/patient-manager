@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Patient } from '../types/patient';
 import { Operation } from '../types/operation';
+import { Invoice } from '../types/invoice';
 
 interface CacheContextType {
   cachedPatients: Record<string, Patient>;
@@ -14,6 +15,11 @@ interface CacheContextType {
   cachedOperations: Record<string, Operation>;
   setCachedOperation: (operationId: string, operation: Operation) => void;
   getCachedOperation: (operationId: string) => Operation | undefined;
+
+  cachedInvoicesByPatient: Record<string, Invoice[]>;
+  setCachedInvoicesForPatient: (patientId: string, invoices: Invoice[]) => void;
+  getCachedInvoicesForPatient: (patientId: string) => Invoice[] | undefined;
+  addCachedInvoiceForPatient: (patientId: string, invoice: Invoice) => void;
 }
 
 const CacheContext = createContext<CacheContextType | undefined>(undefined);
@@ -22,6 +28,7 @@ export const CacheProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [cachedPatients, setCachedPatients] = useState<Record<string, Patient>>({});
   const [cachedOperationsByPatient, setCachedOperationsByPatient] = useState<Record<string, Operation[]>>({});
   const [cachedOperations, setCachedOperations] = useState<Record<string, Operation>>({});
+  const [cachedInvoicesByPatient, setCachedInvoicesByPatient] = useState<Record<string, Invoice[]>>({});
 
   const setCachedPatient = (patientId: string, patient: Patient) => {
     setCachedPatients(prev => ({
@@ -60,6 +67,27 @@ export const CacheProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     return cachedOperations[operationId];
   };
 
+  const setCachedInvoicesForPatient = (patientId: string, invoices: Invoice[]) => {
+    setCachedInvoicesByPatient(prev => ({
+      ...prev,
+      [patientId]: invoices
+    }));
+  };
+
+  const getCachedInvoicesForPatient = (patientId: string) => {
+    return cachedInvoicesByPatient[patientId];
+  };
+
+  const addCachedInvoiceForPatient = (patientId: string, invoice: Invoice) => {
+    setCachedInvoicesByPatient(prev => {
+      const existingInvoices = prev[patientId] || [];
+      return {
+        ...prev,
+        [patientId]: [invoice, ...existingInvoices]
+      };
+    });
+  };
+
   return (
     <CacheContext.Provider value={{
       cachedPatients,
@@ -70,7 +98,11 @@ export const CacheProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       getCachedOperationsForPatient,
       cachedOperations,
       setCachedOperation,
-      getCachedOperation
+      getCachedOperation,
+      cachedInvoicesByPatient,
+      setCachedInvoicesForPatient,
+      getCachedInvoicesForPatient,
+      addCachedInvoiceForPatient
     }}>
       {children}
     </CacheContext.Provider>

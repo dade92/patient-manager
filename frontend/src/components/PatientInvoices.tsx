@@ -3,6 +3,7 @@ import {Alert, Box, Card, CardContent, CircularProgress, Collapse, List, Typogra
 import {Invoice, InvoiceStatus} from '../types/invoice';
 import {InvoiceListItem} from './InvoiceListItem';
 import {PatientInvoicesHeader} from './PatientInvoicesHeader';
+import {useCache} from '../context/CacheContext';
 
 interface Props {
     patientId: string;
@@ -15,12 +16,23 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
     const [error, setError] = useState<string | null>(null);
     const [expanded, setExpanded] = useState(false);
     const [updatingInvoices, setUpdatingInvoices] = useState<Set<string>>(new Set());
+
+    const { getCachedInvoicesForPatient, setCachedInvoicesForPatient } = useCache();
+
     const pendingInvoicesCount =
         invoices
             .filter(invoice => invoice.status === InvoiceStatus.PENDING)
             .length;
 
     const fetchInvoices = async () => {
+        // First check the cache
+        const cachedInvoices = getCachedInvoicesForPatient(patientId);
+        if (cachedInvoices && cachedInvoices.length > 0) {
+            setInvoices(cachedInvoices);
+            setLoading(false);
+            return;
+        }
+
         try {
             setLoading(true);
             setError(null);
@@ -29,6 +41,8 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                 const data = await response.json();
                 if (data.invoices) {
                     setInvoices(data.invoices);
+                    // Cache the invoices
+                    setCachedInvoicesForPatient(patientId, data.invoices);
                 }
             } else {
                 setError('Failed to load invoices');
@@ -60,16 +74,17 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
             });
 
             if (response.ok) {
-                setInvoices(prevInvoices =>
-                    prevInvoices.map(invoice =>
-                        invoice.id === invoiceId
-                            ? {
-                                ...invoice,
-                                status: InvoiceStatus.PAID,
-                            }
-                            : invoice
-                    )
+                const updatedInvoices = invoices.map(invoice =>
+                    invoice.id === invoiceId
+                        ? {
+                            ...invoice,
+                            status: InvoiceStatus.PAID,
+                          }
+                        : invoice
                 );
+
+                setInvoices(updatedInvoices);
+                setCachedInvoicesForPatient(patientId, updatedInvoices);
             } else {
                 const errorData = await response.json();
                 setError(errorData.message || 'Failed to update invoice status');

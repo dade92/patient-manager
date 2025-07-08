@@ -12,13 +12,14 @@ import {
     IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { Invoice } from '../types/invoice';
 
 interface CreateInvoiceDialogProps {
     open: boolean;
     onClose: () => void;
     operationId: string;
     patientId: string;
-    onInvoiceCreated: () => void;
+    onInvoiceCreated: (invoice: Invoice) => void;
 }
 
 export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
@@ -58,7 +59,8 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
             });
 
             if (response.ok) {
-                onInvoiceCreated();
+                const createdInvoice = await response.json();
+                onInvoiceCreated(createdInvoice);
                 handleClose();
             } else {
                 const errorData = await response.json();

@@ -18,7 +18,13 @@ export const OperationDetail: React.FC = () => {
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-    const {getCachedOperation, setCachedOperation} = useCache();
+    const {
+        getCachedOperation,
+        setCachedOperation,
+        getCachedOperationsForPatient,
+        setCachedOperationsForPatient,
+        addCachedInvoiceForPatient
+    } = useCache();
 
     const fetchOperation = async () => {
         const cachedOperation = getCachedOperation(operationId!);
@@ -55,7 +61,7 @@ export const OperationDetail: React.FC = () => {
     }, [operationId, getCachedOperation, setCachedOperation]);
 
     const handleFileUpload = async (file: File) => {
-        if (!operationId) return;
+        if (!operationId || !operation) return;
 
         const formData = new FormData();
         formData.append('file', file);
@@ -70,9 +76,9 @@ export const OperationDetail: React.FC = () => {
                 const updatedOperation = await response.json();
                 setOperation(updatedOperation);
 
-                if (setCachedOperation) {
-                    setCachedOperation(operationId, updatedOperation);
-                }
+                setCachedOperation(operationId, updatedOperation);
+
+                updateOperationInPatientCache(updatedOperation);
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to upload file');
@@ -80,6 +86,21 @@ export const OperationDetail: React.FC = () => {
         } catch (error) {
             console.error('Error uploading file:', error);
             throw error;
+        }
+    };
+
+    const updateOperationInPatientCache = (updatedOperation: Operation) => {
+        if (!operation?.patientId) return;
+
+        const patientId = operation.patientId;
+        const cachedOperations = getCachedOperationsForPatient(patientId);
+
+        if (cachedOperations && cachedOperations.length > 0) {
+            const updatedOperations = cachedOperations.map(op =>
+                op.id === updatedOperation.id ? updatedOperation : op
+            );
+
+            setCachedOperationsForPatient(patientId, updatedOperations);
         }
     };
 
@@ -117,9 +138,9 @@ export const OperationDetail: React.FC = () => {
                 operationId={operationId || ''}
                 onNoteAdded={(updatedOperation: Operation) => {
                     if (!operationId) return;
-
                     setOperation(updatedOperation);
                     setCachedOperation(operationId, updatedOperation);
+                    updateOperationInPatientCache(updatedOperation);
                 }}
             />
 
@@ -128,8 +149,12 @@ export const OperationDetail: React.FC = () => {
                 onClose={() => setInvoiceDialogOpen(false)}
                 operationId={operationId || ''}
                 patientId={operation?.patientId || ''}
-                onInvoiceCreated={() => {
+                onInvoiceCreated={(createdInvoice) => {
                     setShowSuccessMessage(true);
+
+                    if (operation?.patientId) {
+                        addCachedInvoiceForPatient(operation.patientId, createdInvoice);
+                    }
                 }}
             />
 
