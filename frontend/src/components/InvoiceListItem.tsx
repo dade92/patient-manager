@@ -15,14 +15,14 @@ import { Invoice, InvoiceStatus } from '../types/invoice';
 import { formatAmount } from '../utils/currencyUtils';
 import { getInvoiceStatusColor } from '../utils/invoiceUtils';
 
-interface InvoiceListItemProps {
+interface Props {
     invoice: Invoice;
     isLast: boolean;
     isUpdating: boolean;
     onMarkAsPaid: (invoiceId: string) => void;
 }
 
-export const InvoiceListItem: React.FC<InvoiceListItemProps> = ({
+export const InvoiceListItem: React.FC<Props> = ({
     invoice,
     isLast,
     isUpdating,
