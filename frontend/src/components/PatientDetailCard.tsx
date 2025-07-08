@@ -1,24 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-    Box,
-    Card,
-    CardContent,
-    Grid,
-    Typography
-} from '@mui/material';
-import { Patient } from '../types/patient';
-import { formatDate } from '../utils/dateUtils';
-import { ExpandableChip } from './ExpandableChip';
+import {Box, Card, CardContent, Grid, Typography} from '@mui/material';
+import {Patient} from '../types/patient';
+import {formatDate} from '../utils/dateUtils';
+import {ExpandableChip} from './ExpandableChip';
 
-interface PatientDetailCardProps {
+interface Props {
     patient: Patient;
 }
 
-export const PatientDetailCard: React.FC<PatientDetailCardProps> = ({ patient }) => {
-    const navigate = useNavigate();
-
-    return (
+export const PatientDetailCard: React.FC<Props> = ({patient}) =>
+    (
         <Card sx={{mb: 4}}>
             <CardContent>
                 <Box sx={{
@@ -69,4 +60,3 @@ export const PatientDetailCard: React.FC<PatientDetailCardProps> = ({ patient })
             </CardContent>
         </Card>
     );
-};

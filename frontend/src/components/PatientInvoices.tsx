@@ -15,6 +15,10 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
     const [error, setError] = useState<string | null>(null);
     const [expanded, setExpanded] = useState(false);
     const [updatingInvoices, setUpdatingInvoices] = useState<Set<string>>(new Set());
+    const pendingInvoicesCount =
+        invoices
+            .filter(invoice => invoice.status === InvoiceStatus.PENDING)
+            .length;
 
     const fetchInvoices = async () => {
         try {
@@ -81,8 +85,6 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
             });
         }
     };
-
-    const pendingInvoicesCount = invoices.filter(invoice => invoice.status === InvoiceStatus.PENDING).length;
 
     return (
         <Card>
