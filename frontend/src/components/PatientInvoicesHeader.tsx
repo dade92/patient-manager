@@ -8,14 +8,14 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
-interface PatientInvoicesHeaderProps {
+interface Props {
     expanded: boolean;
     hasPendingInvoices: boolean;
     pendingInvoicesCount: number;
     onToggleExpanded: () => void;
 }
 
-export const PatientInvoicesHeader: React.FC<PatientInvoicesHeaderProps> = ({
+export const PatientInvoicesHeader: React.FC<Props> = ({
     expanded,
     hasPendingInvoices,
     pendingInvoicesCount,
