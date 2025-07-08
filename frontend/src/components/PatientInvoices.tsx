@@ -1,20 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {
-    Alert,
-    Badge,
-    Box,
-    Card,
-    CardContent,
-    CircularProgress,
-    Collapse,
-    IconButton,
-    List,
-    Typography
-} from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import {Alert, Box, Card, CardContent, CircularProgress, Collapse, List, Typography} from '@mui/material';
 import {Invoice, InvoiceStatus} from '../types/invoice';
 import {InvoiceListItem} from './InvoiceListItem';
+import {PatientInvoicesHeader} from './PatientInvoicesHeader';
 
 interface Props {
     patientId: string;
@@ -95,55 +83,16 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
     };
 
     const pendingInvoicesCount = invoices.filter(invoice => invoice.status === InvoiceStatus.PENDING).length;
-    const hasPendingInvoices = pendingInvoicesCount > 0;
 
     return (
         <Card>
             <CardContent>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        cursor: 'pointer',
-                        '&:hover': {
-                            backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                        },
-                        borderRadius: 1,
-                        p: 1,
-                        mx: -1
-                    }}
-                    onClick={() => setExpanded(!expanded)}
-                >
-                    <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                        {hasPendingInvoices ? (
-                            <Badge
-                                badgeContent={pendingInvoicesCount}
-                                color="warning"
-                                sx={{
-                                    '& .MuiBadge-badge': {
-                                        backgroundColor: '#ff9800',
-                                        color: 'white',
-                                        fontSize: '0.65rem',
-                                        minWidth: '16px',
-                                        height: '16px'
-                                    }
-                                }}
-                            >
-                                <Typography variant="h6">
-                                    Invoices
-                                </Typography>
-                            </Badge>
-                        ) : (
-                            <Typography variant="h6">
-                                Invoices
-                            </Typography>
-                        )}
-                    </Box>
-                    <IconButton size="small">
-                        {expanded ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
-                    </IconButton>
-                </Box>
+                <PatientInvoicesHeader
+                    expanded={expanded}
+                    hasPendingInvoices={pendingInvoicesCount > 0}
+                    pendingInvoicesCount={pendingInvoicesCount}
+                    onToggleExpanded={() => setExpanded(!expanded)}
+                />
 
                 <Collapse in={expanded}>
                     <Box sx={{mt: 2}}>
