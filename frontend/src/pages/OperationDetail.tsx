@@ -1,14 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Alert, Box, Card, CardContent, CircularProgress, Grid, Typography, Button, Snackbar} from '@mui/material';
+import {Alert, Box, CircularProgress, Snackbar} from '@mui/material';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
-import {formatDateTime} from '../utils/dateUtils';
-import {ExpandableChip} from '../components/ExpandableChip';
-import {OperationAssets} from '../components/OperationAssets';
-import {OperationNotes} from '../components/OperationNotes';
 import {AddNoteDialog} from '../components/AddNoteDialog';
 import {CreateInvoiceDialog} from '../components/CreateInvoiceDialog';
+import {OperationDetailCard} from '../components/OperationDetailCard';
 import {BackButton} from '../components/BackButton';
 
 export const OperationDetail: React.FC = () => {
@@ -106,72 +103,12 @@ export const OperationDetail: React.FC = () => {
                     {error}
                 </Alert>
             ) : operation ? (
-                <Card>
-                    <CardContent>
-                        <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2}}>
-                            <Typography variant="h5" component="div">
-                                {operation.type}
-                            </Typography>
-                            <ExpandableChip
-                                label={`Patient ID: ${operation.patientId}`}
-                                color="primary"
-                                onClick={() => navigate(`/patient/${operation.patientId}`)}
-                                clickable
-                                title={`Patient ID: ${operation.patientId}`}
-                            />
-                        </Box>
-
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <Typography variant="subtitle1" color="textSecondary">Description</Typography>
-                                <Typography variant="body1" paragraph>
-                                    {operation.description}
-                                </Typography>
-                            </Grid>
-
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle1" color="textSecondary">Executor</Typography>
-                                <Typography variant="body1" paragraph>
-                                    {operation.executor}
-                                </Typography>
-                            </Grid>
-
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle1" color="textSecondary">Date</Typography>
-                                <Typography variant="body1" paragraph>
-                                    {formatDateTime(operation.createdAt)}
-                                </Typography>
-                            </Grid>
-
-                            <OperationAssets
-                                assets={operation.assets}
-                                onAddAsset={handleFileUpload}
-                            />
-
-                            <OperationNotes
-                                notes={operation.additionalNotes}
-                                onAddNote={() => setDialogOpen(true)}
-                            />
-
-                            <Grid item xs={12}>
-                                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={() => setInvoiceDialogOpen(true)}
-                                        sx={{
-                                            backgroundColor: '#ff6b35',
-                                            '&:hover': { backgroundColor: '#e55a2b' },
-                                            fontWeight: 'bold'
-                                        }}
-                                    >
-                                        Create Invoice
-                                    </Button>
-                                </Box>
-                            </Grid>
-                        </Grid>
-                    </CardContent>
-                </Card>
+                <OperationDetailCard
+                    operation={operation}
+                    onAddAsset={handleFileUpload}
+                    onAddNote={() => setDialogOpen(true)}
+                    onCreateInvoice={() => setInvoiceDialogOpen(true)}
+                />
             ) : null}
 
             <AddNoteDialog
