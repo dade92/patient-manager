@@ -4,11 +4,11 @@ import {Alert, Box, Button, CircularProgress} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import {Patient} from '../types/patient';
 import {CreateOperationDialog} from '../components/dialogs/CreateOperationDialog';
-import {PatientOperations} from '../components/PatientOperations';
-import {PatientInvoices} from '../components/PatientInvoices';
+import {PatientOperations} from '../components/lists/PatientOperations';
+import {PatientInvoices} from '../components/lists/PatientInvoices';
 import {PatientDetailCard} from '../components/cards/PatientDetailCard';
 import {useCache} from '../context/CacheContext';
-import {BackButton} from '../components/BackButton';
+import {BackButton} from '../components/atoms/BackButton';
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();

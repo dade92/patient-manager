@@ -1,8 +1,8 @@
 import React from 'react';
 import {Box, Button, Divider, Grid, List, ListItem, ListItemText, Typography} from '@mui/material';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import {formatDateTime} from '../utils/dateUtils';
-import {OperationNote} from "../types/operation";
+import {formatDateTime} from '../../utils/dateUtils';
+import {OperationNote} from "../../types/operation";
 
 interface AddNoteButtonProps {
     onClick: () => void;

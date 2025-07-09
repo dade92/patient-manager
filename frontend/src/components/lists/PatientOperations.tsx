@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Alert, Box, Card, CardContent, CircularProgress, Collapse, List, Typography} from '@mui/material';
-import {Operation} from '../types/operation';
-import {useCache} from '../context/CacheContext';
+import {Operation} from '../../types/operation';
+import {useCache} from '../../context/CacheContext';
 import {OperationListItem} from './OperationListItem';
-import {PatientOperationsHeader} from './PatientOperationsHeader';
+import {PatientOperationsHeader} from '../headers/PatientOperationsHeader';
 
 interface Props {
     patientId: string;

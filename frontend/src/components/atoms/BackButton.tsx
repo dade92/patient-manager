@@ -7,8 +7,8 @@ interface BackButtonProps {
     sx?: React.CSSProperties | any;
 }
 
-export const BackButton: React.FC<BackButtonProps> = ({onClick, sx}) => {
-    return (
+export const BackButton: React.FC<BackButtonProps> = ({onClick, sx}) =>
+    (
         <Tooltip title="Go back">
             <Button
                 startIcon={<ArrowBackIcon/>}
@@ -18,4 +18,3 @@ export const BackButton: React.FC<BackButtonProps> = ({onClick, sx}) => {
             />
         </Tooltip>
     );
-};

@@ -6,7 +6,7 @@ import {useCache} from '../context/CacheContext';
 import {AddNoteDialog} from '../components/dialogs/AddNoteDialog';
 import {CreateInvoiceDialog} from '../components/dialogs/CreateInvoiceDialog';
 import {OperationDetailCard} from '../components/cards/OperationDetailCard';
-import {BackButton} from '../components/BackButton';
+import {BackButton} from '../components/atoms/BackButton';
 
 export const OperationDetail: React.FC = () => {
     const {operationId} = useParams();

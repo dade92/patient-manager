@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Alert, Box, Card, CardContent, CircularProgress, Collapse, List, Typography} from '@mui/material';
-import {Invoice, InvoiceStatus} from '../types/invoice';
+import {Invoice, InvoiceStatus} from '../../types/invoice';
 import {InvoiceListItem} from './InvoiceListItem';
-import {PatientInvoicesHeader} from './PatientInvoicesHeader';
-import {useCache} from '../context/CacheContext';
+import {PatientInvoicesHeader} from '../headers/PatientInvoicesHeader';
+import {useCache} from '../../context/CacheContext';
 
 interface Props {
     patientId: string;

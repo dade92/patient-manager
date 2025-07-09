@@ -2,7 +2,7 @@ import React from 'react';
 import {Box, Card, CardContent, Grid, Typography} from '@mui/material';
 import {Patient} from '../../types/patient';
 import {formatDate} from '../../utils/dateUtils';
-import {ExpandableChip} from '../ExpandableChip';
+import {ExpandableChip} from '../atoms/ExpandableChip';
 
 interface Props {
     patient: Patient;

@@ -10,9 +10,9 @@ import {
 } from '@mui/material';
 import { Operation } from '../../types/operation';
 import { formatDateTime } from '../../utils/dateUtils';
-import { ExpandableChip } from '../ExpandableChip';
-import { OperationAssets } from '../OperationAssets';
-import { OperationNotes } from '../OperationNotes';
+import { ExpandableChip } from '../atoms/ExpandableChip';
+import { OperationAssets } from '../lists/OperationAssets';
+import { OperationNotes } from '../lists/OperationNotes';
 
 interface Props {
     operation: Operation;

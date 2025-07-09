@@ -11,9 +11,9 @@ import {
 } from '@mui/material';
 import PaymentIcon from '@mui/icons-material/Payment';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { Invoice, InvoiceStatus } from '../types/invoice';
-import { formatAmount } from '../utils/currencyUtils';
-import { getInvoiceStatusColor } from '../utils/invoiceUtils';
+import { Invoice, InvoiceStatus } from '../../types/invoice';
+import { formatAmount } from '../../utils/currencyUtils';
+import { getInvoiceStatusColor } from '../../utils/invoiceUtils';
 
 interface Props {
     invoice: Invoice;
