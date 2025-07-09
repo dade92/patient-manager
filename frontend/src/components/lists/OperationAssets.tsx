@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react';
 import {Alert, Box, CircularProgress, Grid, IconButton, Link, Tooltip, Typography} from '@mui/material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AddIcon from '@mui/icons-material/Add';
-import {ExpandableChip} from './ExpandableChip';
+import {ExpandableChip} from '../atoms/ExpandableChip';
 
 interface Props {
     assets: string[];

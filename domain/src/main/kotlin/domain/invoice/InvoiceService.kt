@@ -7,6 +7,7 @@ import domain.model.InvoiceId
 import domain.model.InvoiceStatus
 import domain.model.InvoiceStatus.PENDING
 import domain.model.OperationId
+import domain.model.PatientId
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
 
@@ -30,7 +31,7 @@ class InvoiceService(
             lastUpdate = now
         )
 
-        return invoiceRepository.save(invoice)
+        return invoiceRepository.save(invoice, request.patientId)
     }
 
     fun getInvoice(invoiceId: InvoiceId): Invoice? =
@@ -38,6 +39,9 @@ class InvoiceService(
 
     fun getInvoicesForOperation(operationId: OperationId): List<Invoice> =
         invoiceRepository.findByOperationId(operationId)
+
+    fun getInvoicesForPatient(patientId: PatientId): List<Invoice> =
+        invoiceRepository.findByPatientId(patientId)
 
     fun updateInvoiceStatus(invoiceId: InvoiceId, newStatus: InvoiceStatus): Invoice? =
         invoiceRepository.updateStatus(invoiceId, newStatus)

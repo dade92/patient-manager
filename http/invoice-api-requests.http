@@ -1,9 +1,10 @@
 ### Create an invoice
-POST {{host}}/api/invoices
+POST {{host}}/api/invoice
 Content-Type: application/json
 
 {
   "operationId": "33333333-3333-3333-3333-333333333333",
+  "patientId": "22222222-2222-2222-2222-222222222222",
   "amount": {
     "amount": 120.50,
     "currency": "EUR"
@@ -11,13 +12,16 @@ Content-Type: application/json
 }
 
 ### Get invoice by ID
-GET {{host}}/api/invoices/INV-001-2025
+GET {{host}}/api/invoice/INV-001-2025
 
 ### Get all invoices for a specific operation
-GET {{host}}/api/invoices/operation/33333333-3333-3333-3333-333333333333
+GET {{host}}/api/invoice/operation/33333333-3333-3333-3333-333333333333
+
+### Get all invoices for a specific patient
+GET {{host}}/api/invoice/patient/22222222-2222-2222-2222-222222222222
 
 ### Update invoice status
-POST {{host}}/api/invoices/INV-12345/status
+POST {{host}}/api/invoice/INV-12345/status
 Content-Type: application/json
 
 {

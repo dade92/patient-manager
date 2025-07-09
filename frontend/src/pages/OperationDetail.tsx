@@ -1,14 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Alert, Box, Card, CardContent, CircularProgress, Grid, Typography} from '@mui/material';
+import {Alert, Box, CircularProgress, Snackbar} from '@mui/material';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
-import {formatDateTime} from '../utils/dateUtils';
-import {ExpandableChip} from '../components/ExpandableChip';
-import {OperationAssets} from '../components/OperationAssets';
-import {OperationNotes} from '../components/OperationNotes';
-import {AddNoteDialog} from '../components/AddNoteDialog';
-import {BackButton} from '../components/BackButton';
+import {AddNoteDialog} from '../components/dialogs/AddNoteDialog';
+import {CreateInvoiceDialog} from '../components/dialogs/CreateInvoiceDialog';
+import {OperationDetailCard} from '../components/cards/OperationDetailCard';
+import {BackButton} from '../components/atoms/BackButton';
 
 export const OperationDetail: React.FC = () => {
     const {operationId} = useParams();
@@ -17,8 +15,16 @@ export const OperationDetail: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-    const {getCachedOperation, setCachedOperation} = useCache();
+    const {
+        getCachedOperation,
+        setCachedOperation,
+        getCachedOperationsForPatient,
+        setCachedOperationsForPatient,
+        addCachedInvoiceForPatient
+    } = useCache();
 
     const fetchOperation = async () => {
         const cachedOperation = getCachedOperation(operationId!);
@@ -50,12 +56,8 @@ export const OperationDetail: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        fetchOperation();
-    }, [operationId, getCachedOperation, setCachedOperation]);
-
     const handleFileUpload = async (file: File) => {
-        if (!operationId) return;
+        if (!operationId || !operation) return;
 
         const formData = new FormData();
         formData.append('file', file);
@@ -69,10 +71,8 @@ export const OperationDetail: React.FC = () => {
             if (response.ok) {
                 const updatedOperation = await response.json();
                 setOperation(updatedOperation);
-
-                if (setCachedOperation) {
-                    setCachedOperation(operationId, updatedOperation);
-                }
+                setCachedOperation(operationId, updatedOperation);
+                updateOperationInPatientCache(updatedOperation);
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to upload file');
@@ -82,6 +82,22 @@ export const OperationDetail: React.FC = () => {
             throw error;
         }
     };
+
+    const updateOperationInPatientCache = (updatedOperation: Operation) => {
+        const patientId = operation!.patientId;
+        const cachedOperations = getCachedOperationsForPatient(patientId);
+
+        if (cachedOperations && cachedOperations.length > 0) {
+            const updatedOperations = cachedOperations.map(op =>
+                op.id === updatedOperation.id ? updatedOperation : op
+            );
+            setCachedOperationsForPatient(patientId, updatedOperations);
+        }
+    };
+
+    useEffect(() => {
+        fetchOperation();
+    }, [operationId, getCachedOperation, setCachedOperation]);
 
     if (loading) {
         return (
@@ -103,55 +119,12 @@ export const OperationDetail: React.FC = () => {
                     {error}
                 </Alert>
             ) : operation ? (
-                <Card>
-                    <CardContent>
-                        <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2}}>
-                            <Typography variant="h5" component="div">
-                                {operation.type}
-                            </Typography>
-                            <ExpandableChip
-                                label={`Patient ID: ${operation.patientId}`}
-                                color="primary"
-                                onClick={() => navigate(`/patient/${operation.patientId}`)}
-                                clickable
-                                title={`Patient ID: ${operation.patientId}`}
-                            />
-                        </Box>
-
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <Typography variant="subtitle1" color="textSecondary">Description</Typography>
-                                <Typography variant="body1" paragraph>
-                                    {operation.description}
-                                </Typography>
-                            </Grid>
-
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle1" color="textSecondary">Executor</Typography>
-                                <Typography variant="body1" paragraph>
-                                    {operation.executor}
-                                </Typography>
-                            </Grid>
-
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle1" color="textSecondary">Date</Typography>
-                                <Typography variant="body1" paragraph>
-                                    {formatDateTime(operation.createdAt)}
-                                </Typography>
-                            </Grid>
-
-                            <OperationAssets
-                                assets={operation.assets}
-                                onAddAsset={handleFileUpload}
-                            />
-
-                            <OperationNotes
-                                notes={operation.additionalNotes}
-                                onAddNote={() => setDialogOpen(true)}
-                            />
-                        </Grid>
-                    </CardContent>
-                </Card>
+                <OperationDetailCard
+                    operation={operation}
+                    onAddAsset={handleFileUpload}
+                    onAddNote={() => setDialogOpen(true)}
+                    onCreateInvoice={() => setInvoiceDialogOpen(true)}
+                />
             ) : null}
 
             <AddNoteDialog
@@ -160,11 +133,40 @@ export const OperationDetail: React.FC = () => {
                 operationId={operationId || ''}
                 onNoteAdded={(updatedOperation: Operation) => {
                     if (!operationId) return;
-
                     setOperation(updatedOperation);
                     setCachedOperation(operationId, updatedOperation);
+                    updateOperationInPatientCache(updatedOperation);
                 }}
             />
+
+            <CreateInvoiceDialog
+                open={invoiceDialogOpen}
+                onClose={() => setInvoiceDialogOpen(false)}
+                operationId={operationId || ''}
+                patientId={operation?.patientId || ''}
+                onInvoiceCreated={(createdInvoice) => {
+                    setShowSuccessMessage(true);
+
+                    if (operation?.patientId) {
+                        addCachedInvoiceForPatient(operation.patientId, createdInvoice);
+                    }
+                }}
+            />
+
+            <Snackbar
+                open={showSuccessMessage}
+                autoHideDuration={4000}
+                onClose={() => setShowSuccessMessage(false)}
+                anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+            >
+                <Alert
+                    onClose={() => setShowSuccessMessage(false)}
+                    severity="success"
+                    sx={{width: '100%'}}
+                >
+                    Invoice created successfully!
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };

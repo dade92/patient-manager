@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Box, List, ListItemButton, ListItemText, Paper, TextField} from '@mui/material';
+import {Box, List, Paper, TextField} from '@mui/material';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import {useNavigate} from 'react-router-dom';
 import {Patient} from '../types/patient';
+import {PatientListItem} from './lists/PatientListItem';
 
 const SEARCH_TIMEOUT = 400;
 
@@ -48,15 +49,11 @@ export const PatientSearch: React.FC = () => {
                     <Paper elevation={2}>
                         <List>
                             {patients.map((patient) => (
-                                <ListItemButton
+                                <PatientListItem
                                     key={patient.id}
-                                    onClick={() => navigate(`/patient/${(patient.id)}`)}
-                                >
-                                    <ListItemText
-                                        primary={patient.name}
-                                        secondary={`${patient.taxCode} • ${patient.email}`}
-                                    />
-                                </ListItemButton>
+                                    patient={patient}
+                                    onPatientClick={(patientId) => navigate(`/patient/${patientId}`)}
+                                />
                             ))}
                         </List>
                     </Paper>
