@@ -56,10 +56,6 @@ export const OperationDetail: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        fetchOperation();
-    }, [operationId, getCachedOperation, setCachedOperation]);
-
     const handleFileUpload = async (file: File) => {
         if (!operationId || !operation) return;
 
@@ -75,9 +71,7 @@ export const OperationDetail: React.FC = () => {
             if (response.ok) {
                 const updatedOperation = await response.json();
                 setOperation(updatedOperation);
-
                 setCachedOperation(operationId, updatedOperation);
-
                 updateOperationInPatientCache(updatedOperation);
             } else {
                 const errorData = await response.json();
@@ -90,19 +84,20 @@ export const OperationDetail: React.FC = () => {
     };
 
     const updateOperationInPatientCache = (updatedOperation: Operation) => {
-        if (!operation?.patientId) return;
-
-        const patientId = operation.patientId;
+        const patientId = operation!.patientId;
         const cachedOperations = getCachedOperationsForPatient(patientId);
 
         if (cachedOperations && cachedOperations.length > 0) {
             const updatedOperations = cachedOperations.map(op =>
                 op.id === updatedOperation.id ? updatedOperation : op
             );
-
             setCachedOperationsForPatient(patientId, updatedOperations);
         }
     };
+
+    useEffect(() => {
+        fetchOperation();
+    }, [operationId, getCachedOperation, setCachedOperation]);
 
     if (loading) {
         return (
@@ -162,12 +157,12 @@ export const OperationDetail: React.FC = () => {
                 open={showSuccessMessage}
                 autoHideDuration={4000}
                 onClose={() => setShowSuccessMessage(false)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
             >
                 <Alert
                     onClose={() => setShowSuccessMessage(false)}
                     severity="success"
-                    sx={{ width: '100%' }}
+                    sx={{width: '100%'}}
                 >
                     Invoice created successfully!
                 </Alert>

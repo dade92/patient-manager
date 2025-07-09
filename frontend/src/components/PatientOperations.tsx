@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Alert, Box, Card, CardContent, CircularProgress, Collapse, IconButton, List, Typography} from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import {Alert, Box, Card, CardContent, CircularProgress, Collapse, List, Typography} from '@mui/material';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
 import {OperationListItem} from './OperationListItem';
+import {PatientOperationsHeader} from './PatientOperationsHeader';
 
 interface Props {
     patientId: string;
@@ -56,28 +55,10 @@ export const PatientOperations: React.FC<Props> = ({patientId, refreshTrigger}) 
     return (
         <Card>
             <CardContent>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        cursor: 'pointer',
-                        '&:hover': {
-                            backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                        },
-                        borderRadius: 1,
-                        p: 1,
-                        mx: -1
-                    }}
-                    onClick={() => setExpanded(!expanded)}
-                >
-                    <Typography variant="h6">
-                        Operations History
-                    </Typography>
-                    <IconButton size="small">
-                        {expanded ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
-                    </IconButton>
-                </Box>
+                <PatientOperationsHeader
+                    expanded={expanded}
+                    onToggle={() => setExpanded(!expanded)}
+                />
 
                 <Collapse in={expanded}>
                     <Box sx={{ mt: 2 }}>
