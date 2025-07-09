@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import {Operation} from "../types/operation";
+import {Operation} from "../../types/operation";
 
 interface Props {
     open: boolean;

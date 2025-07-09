@@ -3,9 +3,9 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {Alert, Box, CircularProgress, Snackbar} from '@mui/material';
 import {Operation} from '../types/operation';
 import {useCache} from '../context/CacheContext';
-import {AddNoteDialog} from '../components/AddNoteDialog';
-import {CreateInvoiceDialog} from '../components/CreateInvoiceDialog';
-import {OperationDetailCard} from '../components/OperationDetailCard';
+import {AddNoteDialog} from '../components/dialogs/AddNoteDialog';
+import {CreateInvoiceDialog} from '../components/dialogs/CreateInvoiceDialog';
+import {OperationDetailCard} from '../components/cards/OperationDetailCard';
 import {BackButton} from '../components/BackButton';
 
 export const OperationDetail: React.FC = () => {

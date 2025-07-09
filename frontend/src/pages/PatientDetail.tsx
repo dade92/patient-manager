@@ -3,10 +3,10 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {Alert, Box, Button, CircularProgress} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import {Patient} from '../types/patient';
-import {CreateOperationDialog} from '../components/CreateOperationDialog';
+import {CreateOperationDialog} from '../components/dialogs/CreateOperationDialog';
 import {PatientOperations} from '../components/PatientOperations';
 import {PatientInvoices} from '../components/PatientInvoices';
-import {PatientDetailCard} from '../components/PatientDetailCard';
+import {PatientDetailCard} from '../components/cards/PatientDetailCard';
 import {useCache} from '../context/CacheContext';
 import {BackButton} from '../components/BackButton';
 

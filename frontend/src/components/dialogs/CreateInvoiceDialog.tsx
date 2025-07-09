@@ -12,7 +12,7 @@ import {
     IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { Invoice } from '../types/invoice';
+import { Invoice } from '../../types/invoice';
 
 interface CreateInvoiceDialogProps {
     open: boolean;

@@ -16,7 +16,7 @@ import {
     IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import {OperationType} from '../types/operation';
+import {OperationType} from '../../types/operation';
 
 export interface CreateOperationFormData {
     type: OperationType;
