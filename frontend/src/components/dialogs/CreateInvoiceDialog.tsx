@@ -14,7 +14,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { Invoice } from '../../types/invoice';
 
-interface CreateInvoiceDialogProps {
+interface Props {
     open: boolean;
     onClose: () => void;
     operationId: string;
@@ -22,7 +22,7 @@ interface CreateInvoiceDialogProps {
     onInvoiceCreated: (invoice: Invoice) => void;
 }
 
-export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
+export const CreateInvoiceDialog: React.FC<Props> = ({
     open,
     onClose,
     operationId,
