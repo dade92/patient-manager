@@ -56,13 +56,13 @@ export const PatientDetail: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        fetchPatient();
-    }, [patientId, getCachedPatient, setCachedPatient]);
-
     const handleBack = () => {
         navigate(-1);
     };
+
+    useEffect(() => {
+        fetchPatient();
+    }, [patientId, getCachedPatient, setCachedPatient]);
 
     if (loading) {
         return (

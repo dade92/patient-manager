@@ -10,14 +10,12 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 interface Props {
     expanded: boolean;
-    hasPendingInvoices: boolean;
     pendingInvoicesCount: number;
     onToggleExpanded: () => void;
 }
 
 export const PatientInvoicesHeader: React.FC<Props> = ({
     expanded,
-    hasPendingInvoices,
     pendingInvoicesCount,
     onToggleExpanded
 }) =>
@@ -38,7 +36,7 @@ export const PatientInvoicesHeader: React.FC<Props> = ({
             onClick={onToggleExpanded}
         >
             <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                {hasPendingInvoices ? (
+                {pendingInvoicesCount > 0 ? (
                     <Badge
                         badgeContent={pendingInvoicesCount}
                         color="warning"

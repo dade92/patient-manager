@@ -17,7 +17,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
     const [expanded, setExpanded] = useState(false);
     const [updatingInvoices, setUpdatingInvoices] = useState<Set<string>>(new Set());
 
-    const { getCachedInvoicesForPatient, setCachedInvoicesForPatient } = useCache();
+    const {getCachedInvoicesForPatient, setCachedInvoicesForPatient} = useCache();
 
     const pendingInvoicesCount =
         invoices
@@ -53,10 +53,6 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         }
     };
 
-    useEffect(() => {
-        fetchInvoices();
-    }, [patientId, refreshTrigger]);
-
     const markAsPaid = async (invoiceId: string) => {
         setUpdatingInvoices(prev => new Set(prev).add(invoiceId));
 
@@ -77,7 +73,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                         ? {
                             ...invoice,
                             status: InvoiceStatus.PAID,
-                          }
+                        }
                         : invoice
                 );
 
@@ -99,12 +95,15 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         }
     };
 
+    useEffect(() => {
+        fetchInvoices();
+    }, [patientId, refreshTrigger]);
+
     return (
         <Card>
             <CardContent>
                 <PatientInvoicesHeader
                     expanded={expanded}
-                    hasPendingInvoices={pendingInvoicesCount > 0}
                     pendingInvoicesCount={pendingInvoicesCount}
                     onToggleExpanded={() => setExpanded(!expanded)}
                 />

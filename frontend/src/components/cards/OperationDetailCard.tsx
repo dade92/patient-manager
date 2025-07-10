@@ -19,17 +19,17 @@ interface Props {
     onAddAsset: (file: File) => Promise<void>;
     onAddNote: () => void;
     onCreateInvoice: () => void;
+    onPatientIdClick: (patientId: string) => void;
 }
 
 export const OperationDetailCard: React.FC<Props> = ({
     operation,
     onAddAsset,
     onAddNote,
-    onCreateInvoice
-}) => {
-    const navigate = useNavigate();
-
-    return (
+    onCreateInvoice,
+    onPatientIdClick
+}) =>
+    (
         <Card>
             <CardContent>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2}}>
@@ -39,7 +39,7 @@ export const OperationDetailCard: React.FC<Props> = ({
                     <ExpandableChip
                         label={`Patient ID: ${operation.patientId}`}
                         color="primary"
-                        onClick={() => navigate(`/patient/${operation.patientId}`)}
+                        onClick={() => onPatientIdClick(operation.patientId)}
                         clickable
                         title={`Patient ID: ${operation.patientId}`}
                     />
@@ -78,14 +78,14 @@ export const OperationDetailCard: React.FC<Props> = ({
                     />
 
                     <Grid item xs={12}>
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                        <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 2}}>
                             <Button
                                 variant="contained"
                                 color="secondary"
                                 onClick={onCreateInvoice}
                                 sx={{
                                     backgroundColor: '#ff6b35',
-                                    '&:hover': { backgroundColor: '#e55a2b' },
+                                    '&:hover': {backgroundColor: '#e55a2b'},
                                     fontWeight: 'bold'
                                 }}
                             >
@@ -97,4 +97,3 @@ export const OperationDetailCard: React.FC<Props> = ({
             </CardContent>
         </Card>
     );
-};

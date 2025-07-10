@@ -124,6 +124,7 @@ export const OperationDetail: React.FC = () => {
                     onAddAsset={handleFileUpload}
                     onAddNote={() => setDialogOpen(true)}
                     onCreateInvoice={() => setInvoiceDialogOpen(true)}
+                    onPatientIdClick={(patientId: string) => navigate(`/patient/${patientId}`)}
                 />
             ) : null}
 
