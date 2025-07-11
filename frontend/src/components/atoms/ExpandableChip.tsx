@@ -16,11 +16,11 @@ const StyledChip = styled(Chip)(() => ({
   }
 }));
 
-export interface ExpandableChipProps extends ChipProps {
+export interface Props extends ChipProps {
   fullLabel?: string;
 }
 
-export const ExpandableChip: React.FC<ExpandableChipProps> = ({
+export const ExpandableChip: React.FC<Props> = ({
   fullLabel,
   label,
   ...chipProps

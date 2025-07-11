@@ -2,12 +2,12 @@ import React from 'react';
 import {Button, Tooltip} from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-interface BackButtonProps {
+interface Props {
     onClick: () => void;
     sx?: React.CSSProperties | any;
 }
 
-export const BackButton: React.FC<BackButtonProps> = ({onClick, sx}) =>
+export const BackButton: React.FC<Props> = ({onClick, sx}) =>
     (
         <Tooltip title="Go back">
             <Button
