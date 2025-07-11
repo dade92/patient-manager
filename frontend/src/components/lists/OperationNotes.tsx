@@ -1,8 +1,8 @@
 import React from 'react';
-import {Box, Button, Divider, Grid, List, ListItem, ListItemText, Typography} from '@mui/material';
+import {Box, Button, Grid, List, Typography} from '@mui/material';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import {formatDateTime} from '../../utils/dateUtils';
 import {OperationNote} from "../../types/operation";
+import {NoteListItem} from './NoteListItem';
 
 interface AddNoteButtonProps {
     onClick: () => void;
@@ -12,6 +12,7 @@ interface Props {
     notes: OperationNote[];
     onAddNote: () => void;
 }
+
 
 export const OperationNotes: React.FC<Props> = ({notes, onAddNote}) => {
     if (notes.length === 0) {
@@ -38,15 +39,11 @@ export const OperationNotes: React.FC<Props> = ({notes, onAddNote}) => {
             </Box>
             <List>
                 {notes.map((note, index) => (
-                    <React.Fragment key={index}>
-                        <ListItem alignItems="flex-start">
-                            <ListItemText
-                                primary={note.content}
-                                secondary={formatDateTime(note.createdAt)}
-                            />
-                        </ListItem>
-                        {index < notes.length - 1 && <Divider component="li"/>}
-                    </React.Fragment>
+                    <NoteListItem
+                        key={index}
+                        note={note}
+                        isLast={index === notes.length - 1}
+                    />
                 ))}
             </List>
         </Grid>

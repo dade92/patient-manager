@@ -1,8 +1,7 @@
 import React, {useRef, useState} from 'react';
-import {Alert, Box, CircularProgress, Grid, IconButton, Link, Tooltip, Typography} from '@mui/material';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+import {Alert, Box, CircularProgress, Grid, IconButton, Tooltip, Typography} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import {ExpandableChip} from '../atoms/ExpandableChip';
+import {AssetListItem} from './AssetListItem';
 
 interface Props {
     assets: string[];
@@ -75,20 +74,10 @@ export const OperationAssets: React.FC<Props> = ({assets, onAddAsset}) => {
             ) : (
                 <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 1}}>
                     {assets.map((asset, index) => (
-                        <Link
+                        <AssetListItem
                             key={index}
-                            href={`/files?filename=${asset}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            underline="hover"
-                        >
-                            <ExpandableChip
-                                icon={<AttachFileIcon/>}
-                                label={asset}
-                                variant="outlined"
-                                clickable
-                            />
-                        </Link>
+                            asset={asset}
+                        />
                     ))}
                 </Box>
             )}
