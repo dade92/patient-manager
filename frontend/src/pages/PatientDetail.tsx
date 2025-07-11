@@ -9,6 +9,7 @@ import {PatientInvoices} from '../components/lists/PatientInvoices';
 import {PatientDetailCard} from '../components/cards/PatientDetailCard';
 import {useCache} from '../context/CacheContext';
 import {BackButton} from '../components/atoms/BackButton';
+import {Operation} from "../types/operation";
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();
@@ -115,7 +116,7 @@ export const PatientDetail: React.FC = () => {
                         open={isCreateOperationOpen}
                         onClose={() => setIsCreateOperationOpen(false)}
                         patientId={patient.id}
-                        onOperationCreated={(newOperation) => {
+                        onOperationCreated={(newOperation: Operation) => {
                             const cachedOperations = getCachedOperationsForPatient(patientId!) || [];
                             setCachedOperationsForPatient(patientId!, [newOperation, ...cachedOperations]);
                             setRefreshKey(prev => prev + 1);

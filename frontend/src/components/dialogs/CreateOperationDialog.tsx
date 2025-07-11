@@ -16,7 +16,7 @@ import {
     IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import {OperationType} from '../../types/operation';
+import {Operation, OperationType} from '../../types/operation';
 
 export interface CreateOperationFormData {
     type: OperationType;
@@ -28,7 +28,7 @@ interface Props {
     open: boolean;
     onClose: () => void;
     patientId: string;
-    onOperationCreated: (operation: any) => void;
+    onOperationCreated: (operation: Operation) => void;
 }
 
 export const CreateOperationDialog: React.FC<Props> = ({
