@@ -11,7 +11,7 @@ import {useCache} from '../context/CacheContext';
 import {BackButton} from '../components/atoms/BackButton';
 import {Operation} from "../types/operation";
 import { RestClient } from '../utils/restClient';
-import { ApiError } from '../types/api';
+import { ApiError } from '../types/error';
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();
