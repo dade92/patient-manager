@@ -10,6 +10,8 @@ import {PatientDetailCard} from '../components/cards/PatientDetailCard';
 import {useCache} from '../context/CacheContext';
 import {BackButton} from '../components/atoms/BackButton';
 import {Operation} from "../types/operation";
+import { RestClient } from '../utils/restClient';
+import { ApiError } from '../types/api';
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();
@@ -38,19 +40,16 @@ export const PatientDetail: React.FC = () => {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(`/api/patient/${patientId}`);
-            if (response.ok) {
-                const data = await response.json();
-                setPatient(data);
-                setCachedPatient(patientId!, data);
-            } else if (response.status === 404) {
+            const data = await RestClient.get<Patient>(`/api/patient/${patientId}`);
+            setPatient(data);
+            setCachedPatient(patientId!, data);
+        } catch (error: any) {
+            if (error && error.status === 404) {
                 setError(`Patient with ID ${patientId} was not found`);
                 setPatient(null);
             } else {
                 setError('An error occurred while fetching the patient data');
             }
-        } catch (error) {
-            setError('An error occurred while fetching the patient data');
             console.error('Error fetching patient:', error);
         } finally {
             setLoading(false);
