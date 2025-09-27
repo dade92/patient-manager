@@ -4,6 +4,7 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 import {useNavigate} from 'react-router-dom';
 import {Patient} from '../types/patient';
 import {PatientListItem} from './lists/PatientListItem';
+import { RestClient } from '../utils/restClient';
 
 const SEARCH_TIMEOUT = 400;
 
@@ -20,11 +21,14 @@ export const PatientSearch: React.FC = () => {
         }
 
         try {
-            const response = await fetch(`/api/patient/search?name=${encodeURIComponent(searchInput)}`);
-            const data = await response.json();
+            const data = await RestClient.get<{ patients: Patient[] }>(`/api/patient/search?name=${encodeURIComponent(searchInput)}`);
             setPatients(data.patients);
-        } catch (error) {
-            console.error('Error searching patients:', error);
+        } catch (error: any) {
+            if (error && error.status === 404) {
+                setPatients([]);
+            } else {
+                console.error('Error searching patients:', error);
+            }
         }
     };
 

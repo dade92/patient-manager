@@ -8,15 +8,16 @@ import {
     DialogContent,
     DialogTitle,
     FormControl,
+    IconButton,
     InputLabel,
     MenuItem,
     Select,
     SelectChangeEvent,
-    TextField,
-    IconButton
+    TextField
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import {Operation, OperationType} from '../../types/operation';
+import {RestClient} from '../../utils/restClient';
 
 export interface CreateOperationFormData {
     type: OperationType;
@@ -32,11 +33,11 @@ interface Props {
 }
 
 export const CreateOperationDialog: React.FC<Props> = ({
-    open,
-    onClose,
-    patientId,
-    onOperationCreated
-}) => {
+                                                           open,
+                                                           onClose,
+                                                           patientId,
+                                                           onOperationCreated
+                                                       }) => {
     const [formData, setFormData] = useState<CreateOperationFormData>({
         type: '' as OperationType,
         description: '',
@@ -67,27 +68,17 @@ export const CreateOperationDialog: React.FC<Props> = ({
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('/api/operation', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            const newOperation = await RestClient.post<Operation>(
+                '/api/operation',
+                {
                     patientId,
                     ...formData
-                }),
-            });
-
-            if (response.ok) {
-                const newOperation = await response.json();
-                onOperationCreated(newOperation);
-                onClose();
-                setFormData({type: '' as OperationType, description: '', executor: ''});
-            } else {
-                const data = await response.json();
-                setError(data.message || 'Failed to create operation');
-            }
-        } catch (err) {
+                }
+            );
+            onOperationCreated(newOperation);
+            onClose();
+            setFormData({type: '' as OperationType, description: '', executor: ''});
+        } catch (err: any) {
             setError('An error occurred while creating the operation');
         } finally {
             setIsSubmitting(false);
@@ -102,10 +93,10 @@ export const CreateOperationDialog: React.FC<Props> = ({
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <DialogTitle sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 Create New Operation
                 <IconButton onClick={handleClose}>
-                    <CloseIcon />
+                    <CloseIcon/>
                 </IconButton>
             </DialogTitle>
             <form onSubmit={handleSubmit}>

@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Invoice } from '../../types/invoice';
+import { RestClient } from '../../utils/restClient';
 
 interface Props {
     open: boolean;
@@ -43,32 +44,23 @@ export const CreateInvoiceDialog: React.FC<Props> = ({
         setError(null);
 
         try {
-            const response = await fetch('/api/invoice', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    operationId,
-                    patientId,
-                    amount: {
-                        amount: parseFloat(amount),
-                        currency: 'EUR'
-                    }
-                })
+            const createdInvoice = await RestClient.post<Invoice>('/api/invoice', {
+                operationId,
+                patientId,
+                amount: {
+                    amount: parseFloat(amount),
+                    currency: 'EUR'
+                }
             });
-
-            if (response.ok) {
-                const createdInvoice = await response.json();
-                onInvoiceCreated(createdInvoice);
-                handleClose();
+            onInvoiceCreated(createdInvoice);
+            handleClose();
+        } catch (err: any) {
+            if (err && err.body && err.body.message) {
+                setError(err.body.message);
             } else {
-                const errorData = await response.json();
-                setError(errorData.message || 'Failed to create invoice');
+                setError('An error occurred while creating the invoice');
             }
-        } catch (error) {
-            setError('An error occurred while creating the invoice');
-            console.error('Error creating invoice:', error);
+            console.error('Error creating invoice:', err);
         } finally {
             setLoading(false);
         }
