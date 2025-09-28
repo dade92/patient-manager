@@ -45,7 +45,6 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
             }
         } catch (error: any) {
             setError('An error occurred while fetching invoices');
-            console.error('Error fetching invoices:', error);
         } finally {
             setLoading(false);
         }
@@ -69,7 +68,6 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
             } else {
                 setError('An error occurred while updating the invoice');
             }
-            console.error('Error updating invoice:', err);
         } finally {
             setUpdatingInvoices(prev => {
                 const newSet = new Set(prev);

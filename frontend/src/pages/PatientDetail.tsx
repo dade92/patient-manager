@@ -50,7 +50,6 @@ export const PatientDetail: React.FC = () => {
             } else {
                 setError('An error occurred while fetching the patient data');
             }
-            console.error('Error fetching patient:', error);
         } finally {
             setLoading(false);
         }

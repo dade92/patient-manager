@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    TextField,
-    Button,
-    Box,
     Alert,
+    Box,
+    Button,
     CircularProgress,
-    IconButton
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    TextField
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { Invoice } from '../../types/invoice';
-import { RestClient } from '../../utils/restClient';
+import {Invoice} from '../../types/invoice';
+import {RestClient} from '../../utils/restClient';
 
 interface Props {
     open: boolean;
@@ -24,12 +24,12 @@ interface Props {
 }
 
 export const CreateInvoiceDialog: React.FC<Props> = ({
-    open,
-    onClose,
-    operationId,
-    patientId,
-    onInvoiceCreated
-}) => {
+                                                         open,
+                                                         onClose,
+                                                         operationId,
+                                                         patientId,
+                                                         onInvoiceCreated
+                                                     }) => {
     const [amount, setAmount] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -55,12 +55,7 @@ export const CreateInvoiceDialog: React.FC<Props> = ({
             onInvoiceCreated(createdInvoice);
             handleClose();
         } catch (err: any) {
-            if (err && err.body && err.body.message) {
-                setError(err.body.message);
-            } else {
-                setError('An error occurred while creating the invoice');
-            }
-            console.error('Error creating invoice:', err);
+            setError('An error occurred while creating the invoice');
         } finally {
             setLoading(false);
         }
@@ -74,16 +69,16 @@ export const CreateInvoiceDialog: React.FC<Props> = ({
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <DialogTitle sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 Create Invoice
                 <IconButton onClick={handleClose} disabled={loading}>
-                    <CloseIcon />
+                    <CloseIcon/>
                 </IconButton>
             </DialogTitle>
             <DialogContent>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+                <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, mt: 1}}>
                     {error && (
-                        <Alert severity="error" sx={{ mb: 2 }}>
+                        <Alert severity="error" sx={{mb: 2}}>
                             {error}
                         </Alert>
                     )}
@@ -94,7 +89,7 @@ export const CreateInvoiceDialog: React.FC<Props> = ({
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         fullWidth
-                        inputProps={{ min: 0, step: 0.01 }}
+                        inputProps={{min: 0, step: 0.01}}
                         disabled={loading}
                         placeholder="0.00"
                     />
@@ -106,7 +101,7 @@ export const CreateInvoiceDialog: React.FC<Props> = ({
                     variant="contained"
                     disabled={loading || !amount}
                 >
-                    {loading ? <CircularProgress size={20} /> : 'Create Invoice'}
+                    {loading ? <CircularProgress size={20}/> : 'Create Invoice'}
                 </Button>
             </DialogActions>
         </Dialog>

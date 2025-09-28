@@ -12,22 +12,25 @@ export const PatientSearch: React.FC = () => {
     const [searchInput, setSearchInput] = useState('');
     const [patients, setPatients] = useState<Patient[]>([]);
     const [showResults, setShowResults] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const navigate = useNavigate();
 
     const searchPatients = async () => {
         if (searchInput.length < 2) {
             setPatients([]);
+            setErrorMessage(null);
             return;
         }
 
         try {
             const data = await RestClient.get<{ patients: Patient[] }>(`/api/patient/search?name=${encodeURIComponent(searchInput)}`);
             setPatients(data.patients);
+            setErrorMessage(null);
         } catch (error: any) {
             if (error && error.status === 404) {
                 setPatients([]);
             } else {
-                console.error('Error searching patients:', error);
+                setErrorMessage('An error occurred while searching for patients.');
             }
         }
     };
@@ -49,6 +52,11 @@ export const PatientSearch: React.FC = () => {
                     onFocus={() => setShowResults(true)}
                     sx={{mb: 2}}
                 />
+                {errorMessage && (
+                    <Box sx={{ color: 'error.main', mb: 1 }}>
+                        {errorMessage}
+                    </Box>
+                )}
                 {showResults && patients.length > 0 && (
                     <Paper elevation={2}>
                         <List>

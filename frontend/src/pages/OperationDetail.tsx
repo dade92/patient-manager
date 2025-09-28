@@ -48,7 +48,6 @@ export const OperationDetail: React.FC = () => {
             } else {
                 setError('An error occurred while fetching the operation data');
             }
-            console.error('Error fetching operation:', error);
         } finally {
             setLoading(false);
         }
@@ -76,7 +75,6 @@ export const OperationDetail: React.FC = () => {
                 throw new Error(errorData.message || 'Failed to upload file');
             }
         } catch (error) {
-            console.error('Error uploading file:', error);
             throw error;
         }
     };
