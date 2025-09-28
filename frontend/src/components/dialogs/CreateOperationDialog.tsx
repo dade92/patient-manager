@@ -33,11 +33,11 @@ interface Props {
 }
 
 export const CreateOperationDialog: React.FC<Props> = ({
-                                                           open,
-                                                           onClose,
-                                                           patientId,
-                                                           onOperationCreated
-                                                       }) => {
+    open,
+    onClose,
+    patientId,
+    onOperationCreated
+}) => {
     const [formData, setFormData] = useState<CreateOperationFormData>({
         type: '' as OperationType,
         description: '',

@@ -12,11 +12,11 @@ interface Props {
 }
 
 export const AddNoteDialog: React.FC<Props> = ({
-                                                   open,
-                                                   onClose,
-                                                   operationId,
-                                                   onNoteAdded
-                                               }) => {
+    open,
+    onClose,
+    operationId,
+    onNoteAdded
+}) => {
     const [noteContent, setNoteContent] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);

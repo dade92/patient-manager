@@ -24,12 +24,12 @@ interface Props {
 }
 
 export const CreateInvoiceDialog: React.FC<Props> = ({
-                                                         open,
-                                                         onClose,
-                                                         operationId,
-                                                         patientId,
-                                                         onInvoiceCreated
-                                                     }) => {
+     open,
+     onClose,
+     operationId,
+     patientId,
+     onInvoiceCreated
+ }) => {
     const [amount, setAmount] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
