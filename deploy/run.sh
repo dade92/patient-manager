@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Check required environment variables before starting
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/check_env.sh"
+
 docker compose up -d minio
 docker compose up -d mysql
 sleep 2
