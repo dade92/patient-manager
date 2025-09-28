@@ -5,6 +5,7 @@ import {Operation} from '../../types/operation';
 import {useCache} from '../../context/CacheContext';
 import {OperationListItem} from './OperationListItem';
 import {PatientOperationsHeader} from '../headers/PatientOperationsHeader';
+import {RestClient} from '../../utils/restClient';
 
 interface Props {
     patientId: string;
@@ -30,19 +31,19 @@ export const PatientOperations: React.FC<Props> = ({patientId, refreshTrigger}) 
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(`/api/operation/patient/${patientId}`);
-            if (response.ok) {
-                const data = await response.json();
-                if (data.operations) {
-                    setCachedOperationsForPatient(patientId, data.operations);
-                    setOperations(data.operations);
-                }
+            const data = await RestClient.get<{ operations: Operation[] }>(`/api/operation/patient/${patientId}`);
+            if (data.operations) {
+                setCachedOperationsForPatient(patientId, data.operations);
+                setOperations(data.operations);
             } else {
-                setError('Failed to load operations');
+                setOperations([]);
             }
-        } catch (error) {
-            setError('An error occurred while fetching operations');
-            console.error('Error fetching operations:', error);
+        } catch (error: any) {
+            if (error && error.status === 404) {
+                setOperations([]);
+            } else {
+                setError('An error occurred while fetching operations');
+            }
         } finally {
             setLoading(false);
         }
@@ -61,7 +62,7 @@ export const PatientOperations: React.FC<Props> = ({patientId, refreshTrigger}) 
                 />
 
                 <Collapse in={expanded}>
-                    <Box sx={{ mt: 2 }}>
+                    <Box sx={{mt: 2}}>
                         {loading ? (
                             <Box display="flex" justifyContent="center" my={2}>
                                 <CircularProgress/>

@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton} from '@mui/material';
+import {Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import {Operation} from "../../types/operation";
+import {RestClient} from '../../utils/restClient';
 
 interface Props {
     open: boolean;
@@ -32,28 +33,15 @@ export const AddNoteDialog: React.FC<Props> = ({
         setError(null);
 
         try {
-            const response = await fetch(`/api/operation/${operationId}/notes`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    content: noteContent
-                }),
-            });
-
-            if (response.ok) {
-                const updatedOperation = await response.json();
-                onNoteAdded(updatedOperation);
-                setNoteContent('');
-                onClose();
-            } else {
-                const data = await response.json();
-                setError(data.message || 'Failed to add note');
-            }
-        } catch (err) {
+            const updatedOperation = await RestClient.post<Operation>(
+                `/api/operation/${operationId}/notes`,
+                {content: noteContent}
+            );
+            onNoteAdded(updatedOperation);
+            setNoteContent('');
+            onClose();
+        } catch (err: any) {
             setError('An error occurred while adding the note');
-            console.error('Error adding note:', err);
         } finally {
             setIsSubmitting(false);
         }
@@ -67,10 +55,10 @@ export const AddNoteDialog: React.FC<Props> = ({
 
     return (
         <Dialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
-            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <DialogTitle sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 Add Note
                 <IconButton onClick={handleCancel}>
-                    <CloseIcon />
+                    <CloseIcon/>
                 </IconButton>
             </DialogTitle>
             <form onSubmit={handleSubmit}>

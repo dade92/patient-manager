@@ -7,6 +7,7 @@ import {AddNoteDialog} from '../components/dialogs/AddNoteDialog';
 import {CreateInvoiceDialog} from '../components/dialogs/CreateInvoiceDialog';
 import {OperationDetailCard} from '../components/cards/OperationDetailCard';
 import {BackButton} from '../components/atoms/BackButton';
+import { RestClient } from '../utils/restClient';
 
 export const OperationDetail: React.FC = () => {
     const {operationId} = useParams();
@@ -37,20 +38,16 @@ export const OperationDetail: React.FC = () => {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(`/api/operation/${operationId}`);
-            if (response.ok) {
-                const data = await response.json();
-                setOperation(data);
-                setCachedOperation(operationId!, data);
-            } else if (response.status === 404) {
+            const data = await RestClient.get<Operation>(`/api/operation/${operationId}`);
+            setOperation(data);
+            setCachedOperation(operationId!, data);
+        } catch (error: any) {
+            if (error && error.status === 404) {
                 setError(`Operation with ID ${operationId} was not found`);
                 setOperation(null);
             } else {
                 setError('An error occurred while fetching the operation data');
             }
-        } catch (error) {
-            setError('An error occurred while fetching the operation data');
-            console.error('Error fetching operation:', error);
         } finally {
             setLoading(false);
         }
@@ -78,7 +75,6 @@ export const OperationDetail: React.FC = () => {
                 throw new Error(errorData.message || 'Failed to upload file');
             }
         } catch (error) {
-            console.error('Error uploading file:', error);
             throw error;
         }
     };

@@ -23,6 +23,7 @@ minIO locally and a fresh mysql instance with all the tables initialized with sa
 ### Local testing with UI
 
 To see the UI, you can:
-- run `npm start` to see it with mocked data.
+- run `npm start`, running only the UI application, to see it with mocked data.
 - run first a `mvn clean install` to build the spring boot app with inside the real UI, 
 then run the BE application as usual.
+  - In this case you can compile the UI only, running the `mvn clean install` inside the `frontend` folder.

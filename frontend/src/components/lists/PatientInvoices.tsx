@@ -4,6 +4,7 @@ import {Invoice, InvoiceStatus} from '../../types/invoice';
 import {InvoiceListItem} from './InvoiceListItem';
 import {PatientInvoicesHeader} from '../headers/PatientInvoicesHeader';
 import {useCache} from '../../context/CacheContext';
+import { RestClient } from '../../utils/restClient';
 
 interface Props {
     patientId: string;
@@ -35,19 +36,15 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(`/api/invoice/patient/${patientId}`);
-            if (response.ok) {
-                const data = await response.json();
-                if (data.invoices) {
-                    setInvoices(data.invoices);
-                    setCachedInvoicesForPatient(patientId, data.invoices);
-                }
+            const data = await RestClient.get<{ invoices: Invoice[] }>(`/api/invoice/patient/${patientId}`);
+            if (data.invoices) {
+                setInvoices(data.invoices);
+                setCachedInvoicesForPatient(patientId, data.invoices);
             } else {
-                setError('Failed to load invoices');
+                setInvoices([]);
             }
-        } catch (error) {
+        } catch (error: any) {
             setError('An error occurred while fetching invoices');
-            console.error('Error fetching invoices:', error);
         } finally {
             setLoading(false);
         }
@@ -57,35 +54,20 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         setUpdatingInvoices(prev => new Set(prev).add(invoiceId));
 
         try {
-            const response = await fetch(`/api/invoice/${invoiceId}/status`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    status: 'PAID'
-                })
-            });
-
-            if (response.ok) {
-                const updatedInvoices = invoices.map(invoice =>
-                    invoice.id === invoiceId
-                        ? {
-                            ...invoice,
-                            status: InvoiceStatus.PAID,
-                        }
-                        : invoice
-                );
-
-                setInvoices(updatedInvoices);
-                setCachedInvoicesForPatient(patientId, updatedInvoices);
+            await RestClient.post(`/api/invoice/${invoiceId}/status`, { status: 'PAID' });
+            const updatedInvoices = invoices.map(invoice =>
+                invoice.id === invoiceId
+                    ? { ...invoice, status: InvoiceStatus.PAID }
+                    : invoice
+            );
+            setInvoices(updatedInvoices);
+            setCachedInvoicesForPatient(patientId, updatedInvoices);
+        } catch (err: any) {
+            if (err && err.body && err.body.message) {
+                setError(err.body.message);
             } else {
-                const errorData = await response.json();
-                setError(errorData.message || 'Failed to update invoice status');
+                setError('An error occurred while updating the invoice');
             }
-        } catch (error) {
-            setError('An error occurred while updating the invoice');
-            console.error('Error updating invoice:', error);
         } finally {
             setUpdatingInvoices(prev => {
                 const newSet = new Set(prev);

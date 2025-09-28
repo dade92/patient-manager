@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Alert, Box, Button, Card, CardContent, Grid, TextField, Typography} from '@mui/material';
+import {RestClient} from '../utils/restClient';
 
 interface NewPatientForm {
     name: string;
@@ -42,22 +43,10 @@ export const NewPatient: React.FC = () => {
         setError(null);
 
         try {
-            const response = await fetch('/api/patient', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(form),
-            });
-
-            if (response.ok) {
-                const patient = await response.json();
-                navigate(`/patient/${patient.id}`);
-            } else {
-                setError('Failed to create patient. Please try again.');
-            }
-        } catch (err) {
-            setError('An error occurred. Please try again.');
+            const patient = await RestClient.post<any>('/api/patient', form);
+            navigate(`/patient/${patient.id}`);
+        } catch (err: any) {
+            setError('Failed to create patient. Please try again.');
         }
     };
 
@@ -184,5 +173,3 @@ export const NewPatient: React.FC = () => {
         </Box>
     );
 };
-
-

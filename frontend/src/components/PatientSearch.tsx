@@ -4,6 +4,7 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 import {useNavigate} from 'react-router-dom';
 import {Patient} from '../types/patient';
 import {PatientListItem} from './lists/PatientListItem';
+import { RestClient } from '../utils/restClient';
 
 const SEARCH_TIMEOUT = 400;
 
@@ -11,20 +12,26 @@ export const PatientSearch: React.FC = () => {
     const [searchInput, setSearchInput] = useState('');
     const [patients, setPatients] = useState<Patient[]>([]);
     const [showResults, setShowResults] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const navigate = useNavigate();
 
     const searchPatients = async () => {
         if (searchInput.length < 2) {
             setPatients([]);
+            setErrorMessage(null);
             return;
         }
 
         try {
-            const response = await fetch(`/api/patient/search?name=${encodeURIComponent(searchInput)}`);
-            const data = await response.json();
+            const data = await RestClient.get<{ patients: Patient[] }>(`/api/patient/search?name=${encodeURIComponent(searchInput)}`);
             setPatients(data.patients);
-        } catch (error) {
-            console.error('Error searching patients:', error);
+            setErrorMessage(null);
+        } catch (error: any) {
+            if (error && error.status === 404) {
+                setPatients([]);
+            } else {
+                setErrorMessage('An error occurred while searching for patients.');
+            }
         }
     };
 
@@ -45,6 +52,11 @@ export const PatientSearch: React.FC = () => {
                     onFocus={() => setShowResults(true)}
                     sx={{mb: 2}}
                 />
+                {errorMessage && (
+                    <Box sx={{ color: 'error.main', mb: 1 }}>
+                        {errorMessage}
+                    </Box>
+                )}
                 {showResults && patients.length > 0 && (
                     <Paper elevation={2}>
                         <List>
