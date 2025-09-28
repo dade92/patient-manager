@@ -14,6 +14,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Invoice, InvoiceStatus } from '../../types/invoice';
 import { formatAmount } from '../../utils/currencyUtils';
 import { getInvoiceStatusColor } from '../../utils/invoiceUtils';
+import { idFormatter } from '../../utils/idFormatter';
 
 interface Props {
     invoice: Invoice;
@@ -42,7 +43,7 @@ export const InvoiceListItem: React.FC<Props> = ({
                                 <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
                                     <PaymentIcon color="action"/>
                                     <Typography variant="subtitle1">
-                                        {invoice.id}
+                                        {idFormatter(invoice.id)}
                                     </Typography>
                                 </Box>
                                 <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
@@ -79,7 +80,7 @@ export const InvoiceListItem: React.FC<Props> = ({
                     secondary={
                         <Box sx={{mt: 1}}>
                             <Typography variant="body2" color="textSecondary">
-                                Operation ID: {invoice.operationId}
+                                Operation ID: {idFormatter(invoice.operationId)}
                             </Typography>
                             <Typography variant="caption" color="textSecondary">
                                 {invoice.createdAt}
