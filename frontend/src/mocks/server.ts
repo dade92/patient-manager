@@ -33,7 +33,15 @@ export function makeServer({ environment = 'development' } = {}) {
       });
 
       this.get('/patient/search', (schema, request) => {
-        return new Response(500, {});
+        const nameParam = request.queryParams.name;
+        const searchTerm = Array.isArray(nameParam) ? nameParam[0] : nameParam;
+        const name = (searchTerm || '').toLowerCase();
+
+        const patients = (schema.all('patient').models as any[])
+          .filter(patient => patient.attrs.name.toLowerCase().includes(name))
+          .map(patient => patient.attrs as Patient);
+
+        return { patients };
       });
 
       this.post('/patient', (schema, request) => {
