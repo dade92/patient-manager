@@ -73,6 +73,29 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         }
     };
 
+    const cancel = async (invoiceId: string) => {
+        setUpdatingInvoices(prev => new Set(prev).add(invoiceId));
+
+        try {
+            await RestClient.post(`/api/invoice/${invoiceId}/status`, {status: 'CANCELLED'});
+            const updatedInvoices = invoices.map(invoice =>
+                invoice.id === invoiceId
+                    ? {...invoice, status: InvoiceStatus.CANCELLED}
+                    : invoice
+            );
+            setInvoices(updatedInvoices);
+            setCachedInvoicesForPatient(patientId, updatedInvoices);
+        } catch (err: any) {
+            setError('An error occurred while updating the invoice');
+        } finally {
+            setUpdatingInvoices(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(invoiceId);
+                return newSet;
+            });
+        }
+    };
+
     useEffect(() => {
         fetchInvoices();
     }, [patientId, refreshTrigger]);
@@ -109,6 +132,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                         isLast={index === invoices.length - 1}
                                         isUpdating={updatingInvoices.has(invoice.id)}
                                         onMarkAsPaid={markAsPaid}
+                                        onCancel={cancel}
                                     />
                                 ))}
                             </List>

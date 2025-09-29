@@ -14,14 +14,15 @@ interface Props {
     isLast: boolean;
     isUpdating: boolean;
     onMarkAsPaid: (invoiceId: string) => void;
+    onCancel: (invoiceId: string) => void;
 }
 
-export const InvoiceListItem: React.FC<Props> = ({invoice, isLast, isUpdating, onMarkAsPaid}) => (
+export const InvoiceListItem: React.FC<Props> = ({invoice, isLast, isUpdating, onMarkAsPaid, onCancel}) => (
     <React.Fragment key={invoice.id}>
         <ListItem alignItems="flex-start" disableGutters sx={{ height: 140 }}>
             <Box sx={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'flex-start'}}>
                 <InvoiceItemDetail invoice={invoice}/>
-                <InvoiceItemPayment invoice={invoice} onMarkAsPaid={onMarkAsPaid} isUpdating={isUpdating}/>
+                <InvoiceItemPayment invoice={invoice} onMarkAsPaid={onMarkAsPaid} isUpdating={isUpdating} onCancel={onCancel}/>
             </Box>
         </ListItem>
         {!isLast && <Divider/>}
