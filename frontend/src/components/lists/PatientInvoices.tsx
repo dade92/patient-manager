@@ -16,7 +16,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [expanded, setExpanded] = useState(false);
-    const [updatingInvoices, setUpdatingInvoices] = useState<Set<string>>(new Set());
+    const [updatingPaidInvoice, setUpdatingPaidInvoice] = useState<string>('');
 
     const {getCachedInvoicesForPatient, setCachedInvoicesForPatient} = useCache();
 
@@ -51,7 +51,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
     };
 
     const markAsPaid = async (invoiceId: string) => {
-        setUpdatingInvoices(prev => new Set(prev).add(invoiceId));
+        setUpdatingPaidInvoice(invoiceId);
 
         try {
             await RestClient.post(`/api/invoice/${invoiceId}/status`, {status: 'PAID'});
@@ -65,16 +65,12 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         } catch (err: any) {
             setError('An error occurred while updating the invoice');
         } finally {
-            setUpdatingInvoices(prev => {
-                const newSet = new Set(prev);
-                newSet.delete(invoiceId);
-                return newSet;
-            });
+            setUpdatingPaidInvoice('');
         }
     };
 
     const cancel = async (invoiceId: string) => {
-        setUpdatingInvoices(prev => new Set(prev).add(invoiceId));
+        setUpdatingPaidInvoice(invoiceId);
 
         try {
             await RestClient.post(`/api/invoice/${invoiceId}/status`, {status: 'CANCELLED'});
@@ -88,11 +84,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         } catch (err: any) {
             setError('An error occurred while updating the invoice');
         } finally {
-            setUpdatingInvoices(prev => {
-                const newSet = new Set(prev);
-                newSet.delete(invoiceId);
-                return newSet;
-            });
+            setUpdatingPaidInvoice('');
         }
     };
 
@@ -130,7 +122,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                         key={invoice.id}
                                         invoice={invoice}
                                         isLast={index === invoices.length - 1}
-                                        isUpdating={updatingInvoices.has(invoice.id)}
+                                        isUpdating={invoice.id === updatingPaidInvoice}
                                         onMarkAsPaid={markAsPaid}
                                         onCancel={cancel}
                                     />
