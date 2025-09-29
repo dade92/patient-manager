@@ -1,20 +1,11 @@
 import React from 'react';
-import {
-    Box,
-    Button,
-    Chip,
-    Divider,
-    ListItem,
-    ListItemText,
-    Typography,
-    CircularProgress
-} from '@mui/material';
+import {Box, Button, Chip, CircularProgress, Divider, ListItem, ListItemText, Typography} from '@mui/material';
 import PaymentIcon from '@mui/icons-material/Payment';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { Invoice, InvoiceStatus } from '../../types/invoice';
-import { formatAmount } from '../../utils/currencyUtils';
-import { getInvoiceStatusColor } from '../../utils/invoiceUtils';
-import { idFormatter } from '../../utils/idFormatter';
+import {Invoice, InvoiceStatus} from '../../types/invoice';
+import {formatAmount} from '../../utils/currencyUtils';
+import {getInvoiceStatusColor} from '../../utils/invoiceUtils';
+import {idFormatter} from '../../utils/idFormatter';
 
 interface Props {
     invoice: Invoice;
@@ -23,12 +14,7 @@ interface Props {
     onMarkAsPaid: (invoiceId: string) => void;
 }
 
-export const InvoiceListItem: React.FC<Props> = ({
-    invoice,
-    isLast,
-    isUpdating,
-    onMarkAsPaid
-}) =>
+export const InvoiceListItem: React.FC<Props> = ({invoice, isLast, isUpdating, onMarkAsPaid}) =>
     (
         <React.Fragment key={invoice.id}>
             <ListItem>
@@ -68,7 +54,10 @@ export const InvoiceListItem: React.FC<Props> = ({
                                         variant="contained"
                                         size="small"
                                         color="success"
-                                        startIcon={isUpdating ? <CircularProgress size={16} color="inherit" /> : <CheckCircleIcon/>}
+                                        startIcon={
+                                            isUpdating ? <CircularProgress size={16} color="inherit"/> :
+                                                <CheckCircleIcon/>
+                                        }
                                         onClick={() => onMarkAsPaid(invoice.id)}
                                     >
                                         {isUpdating ? 'Updating...' : 'Mark as Paid'}
@@ -78,13 +67,17 @@ export const InvoiceListItem: React.FC<Props> = ({
                         </Box>
                     }
                     secondary={
-                        <Box sx={{mt: 1}}>
+                        <Box sx={{mt: 1, display: 'flex', flexDirection: 'column', gap: 0.5}}>
                             <Typography variant="body2" color="textSecondary">
-                                Operation ID: {idFormatter(invoice.operationId)}
+                                Operation: {idFormatter(invoice.operationId)}
                             </Typography>
                             <Typography variant="caption" color="textSecondary">
-                                {invoice.createdAt}
+                                Created at: {invoice.createdAt}
                             </Typography>
+                            {invoice.status === InvoiceStatus.PAID &&
+                                <Typography variant="caption" color="textSecondary">
+                                    PAID at {invoice.updatedAt}
+                                </Typography>}
                         </Box>
                     }
                 />
