@@ -122,7 +122,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                         key={invoice.id}
                                         invoice={invoice}
                                         isLast={index === invoices.length - 1}
-                                        isUpdating={invoice.id === updatingPaidInvoice}
+                                        isUpdatingOnPaid={invoice.id === updatingPaidInvoice}
                                         onMarkAsPaid={markAsPaid}
                                         onCancel={cancel}
                                     />
