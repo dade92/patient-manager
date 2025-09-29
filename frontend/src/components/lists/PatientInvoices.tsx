@@ -17,6 +17,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
     const [error, setError] = useState<string | null>(null);
     const [expanded, setExpanded] = useState(false);
     const [updatingPaidInvoice, setUpdatingPaidInvoice] = useState<string>('');
+    const [updatingCancelledInvoice, setUpdatingCancelledInvoice] = useState<string>('');
 
     const {getCachedInvoicesForPatient, setCachedInvoicesForPatient} = useCache();
 
@@ -70,7 +71,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
     };
 
     const cancel = async (invoiceId: string) => {
-        setUpdatingPaidInvoice(invoiceId);
+        setUpdatingCancelledInvoice(invoiceId);
 
         try {
             await RestClient.post(`/api/invoice/${invoiceId}/status`, {status: 'CANCELLED'});
@@ -84,7 +85,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         } catch (err: any) {
             setError('An error occurred while updating the invoice');
         } finally {
-            setUpdatingPaidInvoice('');
+            setUpdatingCancelledInvoice('');
         }
     };
 
@@ -123,6 +124,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                         invoice={invoice}
                                         isLast={index === invoices.length - 1}
                                         isUpdatingOnPaid={invoice.id === updatingPaidInvoice}
+                                        isUpdatingOnCancel={invoice.id === updatingCancelledInvoice}
                                         onMarkAsPaid={markAsPaid}
                                         onCancel={cancel}
                                     />
