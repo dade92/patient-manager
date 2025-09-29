@@ -222,7 +222,7 @@ export function makeServer({ environment = 'development' } = {}) {
             operationId: patientOperations[0] || 'OP-1001',
             amount: {
               amount: 150.00,
-              currency: 'USD'
+              currency: 'EUR'
             },
             status: 'PAID',
             createdAt: '15/06/2025 10:00:00',
@@ -244,7 +244,7 @@ export function makeServer({ environment = 'development' } = {}) {
             operationId: patientOperations[0] || 'OP-1001',
             amount: {
               amount: 320.50,
-              currency: 'USD'
+              currency: 'EUR'
             },
             status: 'CANCELLED',
             createdAt: '20/06/2025 09:30:00',

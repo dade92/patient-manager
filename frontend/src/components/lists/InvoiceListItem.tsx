@@ -18,7 +18,7 @@ interface Props {
 
 export const InvoiceListItem: React.FC<Props> = ({invoice, isLast, isUpdating, onMarkAsPaid}) => (
     <React.Fragment key={invoice.id}>
-        <ListItem alignItems="flex-start" disableGutters sx={{ height: 120 }}>
+        <ListItem alignItems="flex-start" disableGutters sx={{ height: 140 }}>
             <Box sx={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'flex-start'}}>
                 <InvoiceItemDetail invoice={invoice}/>
                 <InvoiceItemPayment invoice={invoice} onMarkAsPaid={onMarkAsPaid} isUpdating={isUpdating}/>
