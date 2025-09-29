@@ -4,7 +4,7 @@ import {Invoice, InvoiceStatus} from '../../types/invoice';
 import {InvoiceListItem} from './InvoiceListItem';
 import {PatientInvoicesHeader} from '../headers/PatientInvoicesHeader';
 import {useCache} from '../../context/CacheContext';
-import { RestClient } from '../../utils/restClient';
+import {RestClient} from '../../utils/restClient';
 
 interface Props {
     patientId: string;
@@ -54,20 +54,16 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         setUpdatingInvoices(prev => new Set(prev).add(invoiceId));
 
         try {
-            await RestClient.post(`/api/invoice/${invoiceId}/status`, { status: 'PAID' });
+            await RestClient.post(`/api/invoice/${invoiceId}/status`, {status: 'PAID'});
             const updatedInvoices = invoices.map(invoice =>
                 invoice.id === invoiceId
-                    ? { ...invoice, status: InvoiceStatus.PAID }
+                    ? {...invoice, status: InvoiceStatus.PAID}
                     : invoice
             );
             setInvoices(updatedInvoices);
             setCachedInvoicesForPatient(patientId, updatedInvoices);
         } catch (err: any) {
-            if (err && err.body && err.body.message) {
-                setError(err.body.message);
-            } else {
-                setError('An error occurred while updating the invoice');
-            }
+            setError('An error occurred while updating the invoice');
         } finally {
             setUpdatingInvoices(prev => {
                 const newSet = new Set(prev);
