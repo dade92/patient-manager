@@ -65,11 +65,9 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         setUpdatingInvoiceStatus(invoiceId, status);
 
         try {
-            await RestClient.post(`/api/invoice/${invoiceId}/status`, {status: status});
+            const updatedInvoice = await RestClient.post<Invoice>(`/api/invoice/${invoiceId}/status`, { status });
             const updatedInvoices = invoices.map(invoice =>
-                invoice.id === invoiceId
-                    ? {...invoice, status: status}
-                    : invoice
+                invoice.id === updatedInvoice.id ? updatedInvoice : invoice
             );
             setInvoices(updatedInvoices);
             setCachedInvoicesForPatient(patientId, updatedInvoices);
