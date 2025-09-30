@@ -51,14 +51,14 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         }
     };
 
-    const markInvoiceAsPaid = async (invoiceId: string) => {
+    const changeInvoiceStatus = async (invoiceId: string, status: InvoiceStatus) => {
         setUpdatingPaidInvoice(invoiceId);
 
         try {
-            await RestClient.post(`/api/invoice/${invoiceId}/status`, {status: 'PAID'});
+            await RestClient.post(`/api/invoice/${invoiceId}/status`, {status: status});
             const updatedInvoices = invoices.map(invoice =>
                 invoice.id === invoiceId
-                    ? {...invoice, status: InvoiceStatus.PAID}
+                    ? {...invoice, status: status}
                     : invoice
             );
             setInvoices(updatedInvoices);
@@ -67,25 +67,6 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
             setError('An error occurred while updating the invoice');
         } finally {
             setUpdatingPaidInvoice('');
-        }
-    };
-
-    const cancelInvoice = async (invoiceId: string) => {
-        setUpdatingCancelledInvoice(invoiceId);
-
-        try {
-            await RestClient.post(`/api/invoice/${invoiceId}/status`, {status: 'CANCELLED'});
-            const updatedInvoices = invoices.map(invoice =>
-                invoice.id === invoiceId
-                    ? {...invoice, status: InvoiceStatus.CANCELLED}
-                    : invoice
-            );
-            setInvoices(updatedInvoices);
-            setCachedInvoicesForPatient(patientId, updatedInvoices);
-        } catch (err: any) {
-            setError('An error occurred while updating the invoice');
-        } finally {
-            setUpdatingCancelledInvoice('');
         }
     };
 
@@ -125,8 +106,8 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                         isLast={index === invoices.length - 1}
                                         isUpdatingOnPaid={invoice.id === updatingPaidInvoice}
                                         isUpdatingOnCancel={invoice.id === updatingCancelledInvoice}
-                                        onMarkAsPaid={markInvoiceAsPaid}
-                                        onCancel={cancelInvoice}
+                                        onMarkAsPaid={(invoiceId: string) => changeInvoiceStatus(invoiceId, InvoiceStatus.PAID)}
+                                        onCancel={(invoiceId: string) => changeInvoiceStatus(invoiceId, InvoiceStatus.CANCELLED)}
                                     />
                                 ))}
                             </List>
