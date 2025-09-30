@@ -1,11 +1,6 @@
 import React from 'react';
-import {Box, Button, Chip, CircularProgress, Divider, ListItem, Typography} from '@mui/material';
-import PaymentIcon from '@mui/icons-material/Payment';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import {Box, Divider, ListItem} from '@mui/material';
 import {Invoice, InvoiceStatus} from '../../types/invoice';
-import {formatAmount} from '../../utils/currencyUtils';
-import {getInvoiceStatusColor} from '../../utils/invoiceUtils';
-import {idFormatter} from '../../utils/idFormatter';
 import {InvoiceItemDetail} from "./InvoiceItemDetail";
 import {InvoiceItemPayment} from "./InvoiceItemPayment";
 
@@ -14,16 +9,20 @@ interface Props {
     isLast: boolean;
     isUpdatingOnPaid: boolean;
     isUpdatingOnCancel: boolean;
-    onMarkAsPaid: (invoiceId: string) => void;
-    onCancel: (invoiceId: string) => void;
+    onChangeInvoiceStatus: (invoiceId: string, status: InvoiceStatus) => void;
 }
 
-export const InvoiceListItem: React.FC<Props> = ({invoice, isLast, isUpdatingOnPaid, onMarkAsPaid, onCancel, isUpdatingOnCancel}) => (
+export const InvoiceListItem: React.FC<Props> = ({invoice, isLast, isUpdatingOnPaid, isUpdatingOnCancel, onChangeInvoiceStatus}) => (
     <React.Fragment key={invoice.id}>
         <ListItem alignItems="flex-start" disableGutters sx={{ height: 140 }}>
             <Box sx={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'flex-start'}}>
                 <InvoiceItemDetail invoice={invoice}/>
-                <InvoiceItemPayment invoice={invoice} onMarkAsPaid={onMarkAsPaid} isUpdatingOnPaid={isUpdatingOnPaid} onCancel={onCancel} isUpdatingOnCancel={isUpdatingOnCancel}/>
+                <InvoiceItemPayment
+                    invoice={invoice}
+                    isUpdatingOnPaid={isUpdatingOnPaid}
+                    isUpdatingOnCancel={isUpdatingOnCancel}
+                    onChangeInvoiceStatus={onChangeInvoiceStatus}
+                />
             </Box>
         </ListItem>
         {!isLast && <Divider/>}

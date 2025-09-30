@@ -51,8 +51,18 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         }
     };
 
+    const setUpdatingInvoiceStatus = (invoiceId: string, status: InvoiceStatus) => {
+        if (status === InvoiceStatus.PAID) {
+            setUpdatingPaidInvoice(invoiceId);
+            setUpdatingCancelledInvoice('');
+        } else if (status === InvoiceStatus.CANCELLED) {
+            setUpdatingCancelledInvoice(invoiceId);
+            setUpdatingPaidInvoice('');
+        }
+    }
+
     const changeInvoiceStatus = async (invoiceId: string, status: InvoiceStatus) => {
-        setUpdatingPaidInvoice(invoiceId);
+        setUpdatingInvoiceStatus(invoiceId, status);
 
         try {
             await RestClient.post(`/api/invoice/${invoiceId}/status`, {status: status});
@@ -106,8 +116,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                         isLast={index === invoices.length - 1}
                                         isUpdatingOnPaid={invoice.id === updatingPaidInvoice}
                                         isUpdatingOnCancel={invoice.id === updatingCancelledInvoice}
-                                        onMarkAsPaid={(invoiceId: string) => changeInvoiceStatus(invoiceId, InvoiceStatus.PAID)}
-                                        onCancel={(invoiceId: string) => changeInvoiceStatus(invoiceId, InvoiceStatus.CANCELLED)}
+                                        onChangeInvoiceStatus={changeInvoiceStatus}
                                     />
                                 ))}
                             </List>

@@ -10,11 +10,10 @@ interface Props {
     invoice: Invoice;
     isUpdatingOnPaid: boolean;
     isUpdatingOnCancel: boolean;
-    onMarkAsPaid: (invoiceId: string) => void;
-    onCancel: (invoiceId: string) => void;
+    onChangeInvoiceStatus: (invoiceId: string, status: InvoiceStatus) => void;
 }
 
-export const InvoiceItemPayment: React.FC<Props> = ({invoice, onMarkAsPaid, isUpdatingOnPaid, onCancel, isUpdatingOnCancel}) =>
+export const InvoiceItemPayment: React.FC<Props> = ({invoice, isUpdatingOnPaid, isUpdatingOnCancel, onChangeInvoiceStatus}) =>
     <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1, minWidth: 120, ml: 2}}>
         <Typography sx={{ fontWeight: 400 }} noWrap>
             {formatAmount(invoice.amount.amount, invoice.amount.currency)}
@@ -35,7 +34,7 @@ export const InvoiceItemPayment: React.FC<Props> = ({invoice, onMarkAsPaid, isUp
                         isUpdatingOnPaid ? <CircularProgress size={14} color="inherit"/> :
                             <CheckCircleIcon sx={{ fontSize: 16 }} />
                     }
-                    onClick={() => onMarkAsPaid(invoice.id)}
+                    onClick={() => onChangeInvoiceStatus(invoice.id, InvoiceStatus.PAID)}
                     sx={{ minWidth: 80, px: 1, py: 0.5, fontSize: '0.75rem', lineHeight: 1.2 }}
                     disabled={isUpdatingOnPaid || isUpdatingOnCancel}
                 >
@@ -49,7 +48,7 @@ export const InvoiceItemPayment: React.FC<Props> = ({invoice, onMarkAsPaid, isUp
                         isUpdatingOnCancel ? <CircularProgress size={14} color="inherit"/> :
                             <CloseIcon sx={{ fontSize: 16 }} />
                     }
-                    onClick={() => onCancel(invoice.id)}
+                    onClick={() => onChangeInvoiceStatus(invoice.id, InvoiceStatus.CANCELLED)}
                     sx={{ minWidth: 80, px: 1, py: 0.5, fontSize: '0.75rem', lineHeight: 1.2 }}
                     disabled={isUpdatingOnPaid || isUpdatingOnCancel}
                 >
