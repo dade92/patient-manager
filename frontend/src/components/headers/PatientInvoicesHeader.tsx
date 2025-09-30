@@ -50,18 +50,21 @@ export const PatientInvoicesHeader: React.FC<Props> = ({
                             }
                         }}
                     >
-                        <Typography variant="h6">
-                            Invoices
-                        </Typography>
+                        <InvoiceTitle/>
                     </Badge>
                 ) : (
-                    <Typography variant="h6">
-                        Invoices
-                    </Typography>
+                    <InvoiceTitle/>
                 )}
             </Box>
             <IconButton size="small">
                 {expanded ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
             </IconButton>
         </Box>
+    );
+
+const InvoiceTitle: React.FC = () =>
+    (
+        <Typography variant="h6">
+            Invoices
+        </Typography>
     );

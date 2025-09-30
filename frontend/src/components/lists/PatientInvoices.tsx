@@ -16,7 +16,8 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [expanded, setExpanded] = useState(false);
-    const [updatingInvoices, setUpdatingInvoices] = useState<Set<string>>(new Set());
+    const [updatingPaidInvoice, setUpdatingPaidInvoice] = useState<string>('');
+    const [updatingCancelledInvoice, setUpdatingCancelledInvoice] = useState<string>('');
 
     const {getCachedInvoicesForPatient, setCachedInvoicesForPatient} = useCache();
 
@@ -50,26 +51,30 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         }
     };
 
-    const markAsPaid = async (invoiceId: string) => {
-        setUpdatingInvoices(prev => new Set(prev).add(invoiceId));
+    const setUpdatingInvoiceStatus = (invoiceId: string, status: InvoiceStatus) => {
+        if (status === InvoiceStatus.PAID) {
+            setUpdatingPaidInvoice(invoiceId);
+            setUpdatingCancelledInvoice('');
+        } else if (status === InvoiceStatus.CANCELLED) {
+            setUpdatingCancelledInvoice(invoiceId);
+            setUpdatingPaidInvoice('');
+        }
+    }
+
+    const changeInvoiceStatus = async (invoiceId: string, status: InvoiceStatus) => {
+        setUpdatingInvoiceStatus(invoiceId, status);
 
         try {
-            await RestClient.post(`/api/invoice/${invoiceId}/status`, {status: 'PAID'});
+            const updatedInvoice = await RestClient.post<Invoice>(`/api/invoice/${invoiceId}/status`, { status });
             const updatedInvoices = invoices.map(invoice =>
-                invoice.id === invoiceId
-                    ? {...invoice, status: InvoiceStatus.PAID}
-                    : invoice
+                invoice.id === updatedInvoice.id ? updatedInvoice : invoice
             );
             setInvoices(updatedInvoices);
             setCachedInvoicesForPatient(patientId, updatedInvoices);
         } catch (err: any) {
             setError('An error occurred while updating the invoice');
         } finally {
-            setUpdatingInvoices(prev => {
-                const newSet = new Set(prev);
-                newSet.delete(invoiceId);
-                return newSet;
-            });
+            setUpdatingPaidInvoice('');
         }
     };
 
@@ -107,8 +112,9 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                         key={invoice.id}
                                         invoice={invoice}
                                         isLast={index === invoices.length - 1}
-                                        isUpdating={updatingInvoices.has(invoice.id)}
-                                        onMarkAsPaid={markAsPaid}
+                                        isUpdatingOnPaid={invoice.id === updatingPaidInvoice}
+                                        isUpdatingOnCancel={invoice.id === updatingCancelledInvoice}
+                                        onChangeInvoiceStatus={changeInvoiceStatus}
                                     />
                                 ))}
                             </List>
