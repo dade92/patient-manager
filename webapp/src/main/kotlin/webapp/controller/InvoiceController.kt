@@ -2,6 +2,7 @@ package webapp.controller
 
 import domain.invoice.CreateInvoiceRequest
 import domain.invoice.InvoiceService
+import domain.model.Invoice
 import domain.model.InvoiceId
 import domain.model.InvoiceStatus
 import domain.model.Money
@@ -88,7 +89,7 @@ class InvoiceController(
         }
     }
 
-    private fun mapToResponse(invoice: domain.model.Invoice): InvoiceResponse =
+    private fun mapToResponse(invoice: Invoice): InvoiceResponse =
         InvoiceResponse(
             id = invoice.id.value,
             operationId = invoice.operationId.value,
