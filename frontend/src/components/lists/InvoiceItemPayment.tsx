@@ -26,33 +26,35 @@ export const InvoiceItemPayment: React.FC<Props> = ({invoice, onMarkAsPaid, isUp
             variant="outlined"
         />
         {invoice.status === InvoiceStatus.PENDING && (
-            <Button
-                variant="contained"
-                size="small"
-                color="success"
-                startIcon={
-                    isUpdatingOnPaid ? <CircularProgress size={14} color="inherit"/> :
-                        <CheckCircleIcon sx={{ fontSize: 16 }} />
-                }
-                onClick={() => onMarkAsPaid(invoice.id)}
-                sx={{ mt: 0.5, minWidth: 80, px: 1, py: 0.5, fontSize: '0.75rem', lineHeight: 1.2 }}
-            >
-                {isUpdatingOnPaid ? 'Updating...' : 'Mark as Paid'}
-            </Button>
-        )}
-        {invoice.status === InvoiceStatus.PENDING && (
-            <Button
-                variant="contained"
-                size="small"
-                color="error"
-                startIcon={
-                    isUpdatingOnCancel ? <CircularProgress size={14} color="inherit"/> :
-                        <CloseIcon sx={{ fontSize: 16 }} />
-                }
-                onClick={() => onCancel(invoice.id)}
-                sx={{ mt: 0.5, minWidth: 80, px: 1, py: 0.5, fontSize: '0.75rem', lineHeight: 1.2 }}
-            >
-                {isUpdatingOnCancel ? 'Updating...' : 'Cancel'}
-            </Button>
+            <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
+                <Button
+                    variant="contained"
+                    size="small"
+                    color="success"
+                    startIcon={
+                        isUpdatingOnPaid ? <CircularProgress size={14} color="inherit"/> :
+                            <CheckCircleIcon sx={{ fontSize: 16 }} />
+                    }
+                    onClick={() => onMarkAsPaid(invoice.id)}
+                    sx={{ minWidth: 80, px: 1, py: 0.5, fontSize: '0.75rem', lineHeight: 1.2 }}
+                    disabled={isUpdatingOnPaid || isUpdatingOnCancel}
+                >
+                    {isUpdatingOnPaid ? 'Updating...' : 'Mark as Paid'}
+                </Button>
+                <Button
+                    variant="contained"
+                    size="small"
+                    color="error"
+                    startIcon={
+                        isUpdatingOnCancel ? <CircularProgress size={14} color="inherit"/> :
+                            <CloseIcon sx={{ fontSize: 16 }} />
+                    }
+                    onClick={() => onCancel(invoice.id)}
+                    sx={{ minWidth: 80, px: 1, py: 0.5, fontSize: '0.75rem', lineHeight: 1.2 }}
+                    disabled={isUpdatingOnPaid || isUpdatingOnCancel}
+                >
+                    {isUpdatingOnCancel ? 'Updating...' : 'Cancel'}
+                </Button>
+            </Box>
         )}
     </Box>

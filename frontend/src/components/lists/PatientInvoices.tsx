@@ -51,7 +51,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         }
     };
 
-    const markAsPaid = async (invoiceId: string) => {
+    const markInvoiceAsPaid = async (invoiceId: string) => {
         setUpdatingPaidInvoice(invoiceId);
 
         try {
@@ -70,7 +70,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
         }
     };
 
-    const cancel = async (invoiceId: string) => {
+    const cancelInvoice = async (invoiceId: string) => {
         setUpdatingCancelledInvoice(invoiceId);
 
         try {
@@ -125,8 +125,8 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
                                         isLast={index === invoices.length - 1}
                                         isUpdatingOnPaid={invoice.id === updatingPaidInvoice}
                                         isUpdatingOnCancel={invoice.id === updatingCancelledInvoice}
-                                        onMarkAsPaid={markAsPaid}
-                                        onCancel={cancel}
+                                        onMarkAsPaid={markInvoiceAsPaid}
+                                        onCancel={cancelInvoice}
                                     />
                                 ))}
                             </List>
