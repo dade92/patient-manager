@@ -5,11 +5,7 @@ import domain.storage.UploadFileRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import webapp.utils.ContentTypeResolver
 import java.io.InputStream
@@ -69,18 +65,16 @@ class FileController(
         }
     }
 
-    private fun isDisplayableInBrowser(contentType: String): Boolean {
-        val browserDisplayableTypes = listOf(
+    private fun isDisplayableInBrowser(contentType: String): Boolean = DISPLAYABLE_TYPES.contains(contentType)
+
+    companion object {
+        private const val DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_OCTET_STREAM_VALUE
+        private val DISPLAYABLE_TYPES = setOf(
             "application/pdf",
             "image/jpeg", "image/png", "image/gif", "image/svg+xml",
             "text/plain", "text/html",
             "video/mp4",
             "audio/mpeg"
         )
-        return browserDisplayableTypes.contains(contentType)
-    }
-
-    companion object {
-        private const val DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_OCTET_STREAM_VALUE
     }
 }
