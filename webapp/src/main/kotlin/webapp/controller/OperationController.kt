@@ -108,7 +108,8 @@ class OperationController(
                 OperationNoteResponse(it.content, it.creationTime)
             },
             createdAt = this.creationDateTime,
-            updatedAt = this.lastUpdate
+            updatedAt = this.lastUpdate,
+            estimatedCost = this.estimatedCost,
         )
 
     data class CreateOperationJsonRequest(
@@ -132,7 +133,8 @@ class OperationController(
         val assets: List<String>,
         val additionalNotes: List<OperationNoteResponse>,
         val createdAt: LocalDateTime,
-        val updatedAt: LocalDateTime
+        val updatedAt: LocalDateTime,
+        val estimatedCost: BigDecimal
     )
 
     data class OperationNoteResponse(
