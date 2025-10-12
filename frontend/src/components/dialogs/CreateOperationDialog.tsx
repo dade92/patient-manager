@@ -18,6 +18,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import {Operation, OperationType} from '../../types/operation';
 import {RestClient} from '../../utils/restClient';
+import { Money } from '../../types/Money';
 
 export interface CreateOperationFormData {
     type: OperationType;
@@ -39,7 +40,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
     patientId,
     onOperationCreated
 }) => {
-    const [formData, setFormData] = useState<CreateOperationFormData>({
+    const [formData, setFormData] = useState({
         type: '' as OperationType,
         description: '',
         executor: '',
@@ -64,23 +65,23 @@ export const CreateOperationDialog: React.FC<Props> = ({
         }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
         setError(null);
         setIsSubmitting(true);
 
         try {
-            const payload = {
-                patientId,
-                type: formData.type,
-                description: formData.description,
-                executor: formData.executor,
-                estimatedCost: parseFloat(formData.estimatedCost) || 0
+            const operationPayload = {
+                ...formData,
+                estimatedCost: {
+                    amount: parseFloat(formData.estimatedCost) || 0,
+                    currency: 'EUR'
+                } as Money
             };
 
             const newOperation = await RestClient.post<Operation>(
                 '/api/operation',
-                payload
+                operationPayload
             );
             onOperationCreated(newOperation);
             onClose();

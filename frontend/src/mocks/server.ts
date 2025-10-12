@@ -92,7 +92,11 @@ export function makeServer({ environment = 'development' } = {}) {
           additionalNotes: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          estimatedCost: typeof attrs.estimatedCost === 'number' ? attrs.estimatedCost : 0
+          // When creating or updating an operation, ensure estimatedCost is a Money object
+          // Example for creation:
+          estimatedCost: typeof attrs.estimatedCost === 'object' && attrs.estimatedCost !== null
+            ? attrs.estimatedCost
+            : { amount: typeof attrs.estimatedCost === 'number' ? attrs.estimatedCost : 0, currency: 'EUR' },
         });
 
         return new Response(201, {}, operation.attrs);
@@ -108,16 +112,15 @@ export function makeServer({ environment = 'development' } = {}) {
           return new Response(404, {}, { message: 'Operation not found' });
         }
 
-        // Simulate file upload - in a real implementation, you'd handle the FormData
-        // For now, we'll just add a mock filename to the assets array
         const mockFileName = `uploaded_file_${Date.now()}.pdf`;
         const updatedAssets = [...(operation.attrs.assets || []), mockFileName];
 
-        // Update the operation with the new asset and preserve estimatedCost
         operation.update({
           assets: updatedAssets,
           updatedAt: new Date().toISOString(),
-          estimatedCost: operation.attrs.estimatedCost ?? 0
+          estimatedCost: operation.attrs.estimatedCost && typeof operation.attrs.estimatedCost === 'object'
+            ? operation.attrs.estimatedCost
+            : { amount: operation.attrs.estimatedCost ?? 0, currency: 'EUR' },
         });
 
         return new Response(200, {}, operation.attrs);
@@ -133,27 +136,25 @@ export function makeServer({ environment = 'development' } = {}) {
           return new Response(404, {}, { message: 'Operation not found' });
         }
 
-        // Parse the request body to get the note content
         const attrs = JSON.parse(request.requestBody);
 
         if (!attrs.content || attrs.content.trim() === '') {
           return new Response(400, {}, { message: 'Note content cannot be empty' });
         }
 
-        // Create a new note with the content and current timestamp
         const newNote = {
           content: attrs.content,
           createdAt: new Date().toISOString()
         };
 
-        // Add the new note to the operation's additionalNotes array
         const updatedNotes = [...(operation.attrs.additionalNotes || []), newNote];
 
-        // Update the operation with the new note and preserve estimatedCost
         operation.update({
           additionalNotes: updatedNotes,
           updatedAt: new Date().toISOString(),
-          estimatedCost: operation.attrs.estimatedCost ?? 0
+          estimatedCost: operation.attrs.estimatedCost && typeof operation.attrs.estimatedCost === 'object'
+            ? operation.attrs.estimatedCost
+            : { amount: operation.attrs.estimatedCost ?? 0, currency: 'EUR' },
         });
 
         return new Response(200, {}, operation.attrs);

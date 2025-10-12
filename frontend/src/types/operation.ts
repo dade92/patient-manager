@@ -1,3 +1,5 @@
+import { Money } from './Money';
+
 export interface Operation {
     id: string;
     patientId: string;
@@ -8,7 +10,7 @@ export interface Operation {
     additionalNotes: OperationNote[];
     createdAt: string;
     updatedAt: string;
-    estimatedCost: number; // added estimated cost
+    estimatedCost: Money;
 }
 
 export interface OperationNote {

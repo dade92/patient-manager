@@ -70,7 +70,7 @@ export const OperationDetailCard: React.FC<Props> = ({
                     <Grid item xs={12} sm={6}>
                         <Typography variant="subtitle1" color="textSecondary">Estimated Cost</Typography>
                         <Typography variant="body1" paragraph>
-                            {formatAmount(operation.estimatedCost ?? 0, 'EUR')}
+                            {formatAmount(operation.estimatedCost.amount, operation.estimatedCost.currency)}
                         </Typography>
                     </Grid>
 
