@@ -30,16 +30,19 @@ export interface CreateOperationFormData {
 interface Props {
     open: boolean;
     onClose: () => void;
+    patientId: string;
     onOperationCreated: (operation: Operation) => void;
 }
 
 export const CreateOperationDialog: React.FC<Props> = ({
     open,
     onClose,
+    patientId,
     onOperationCreated
 }) => {
     const [formData, setFormData] = useState({
         type: '' as OperationType,
+        patientId: patientId,
         description: '',
         executor: '',
         estimatedCost: ''
@@ -79,7 +82,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
 
             const newOperation = await RestClient.post<Operation>(
                 '/api/operation',
-                operationPayload
+                payload
             );
             onOperationCreated(newOperation);
             onClose();

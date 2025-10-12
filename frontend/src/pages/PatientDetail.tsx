@@ -112,6 +112,7 @@ export const PatientDetail: React.FC = () => {
                     <CreateOperationDialog
                         open={isCreateOperationOpen}
                         onClose={() => setIsCreateOperationOpen(false)}
+                        patientId={patient.id}
                         onOperationCreated={(newOperation: Operation) => {
                             const cachedOperations = getCachedOperationsForPatient(patientId!) || [];
                             setCachedOperationsForPatient(patientId!, [newOperation, ...cachedOperations]);
