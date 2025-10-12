@@ -1,3 +1,5 @@
+import {Money} from "./Money";
+
 export interface Invoice {
     id: string;
     operationId: string;
@@ -5,11 +7,6 @@ export interface Invoice {
     status: InvoiceStatus;
     createdAt: string;
     updatedAt: string;
-}
-
-export interface Money {
-    amount: number;
-    currency: string;
 }
 
 export enum InvoiceStatus {
