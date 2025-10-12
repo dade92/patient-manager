@@ -2,10 +2,7 @@ package domain.operation
 
 import domain.exceptions.PatientNotFoundException
 import domain.generator.OperationIdGenerator
-import domain.model.OperationId
-import domain.model.OperationType
-import domain.model.PatientId
-import domain.model.PatientOperation
+import domain.model.*
 import domain.patient.PatientRepository
 import domain.storage.StorageService
 import domain.storage.UploadFileRequest
@@ -34,7 +31,8 @@ class OperationService(
                 description = request.description,
                 executor = request.executor,
                 creationDateTime = now,
-                lastUpdate = now
+                lastUpdate = now,
+                estimatedCost = request.estimatedCost
             )
         )
     }
@@ -77,4 +75,5 @@ data class CreateOperationRequest(
     val type: OperationType,
     val description: String,
     val executor: String,
+    val estimatedCost: Money
 )

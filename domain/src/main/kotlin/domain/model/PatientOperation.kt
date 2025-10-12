@@ -16,7 +16,8 @@ data class PatientOperation(
     val assets: List<String> = emptyList(),
     val additionalNotes: List<OperationNote> = emptyList(),
     val creationDateTime: LocalDateTime,
-    val lastUpdate: LocalDateTime
+    val lastUpdate: LocalDateTime,
+    val estimatedCost: Money
 )
 
 enum class OperationType {

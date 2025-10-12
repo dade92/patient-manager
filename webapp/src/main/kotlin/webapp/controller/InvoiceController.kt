@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 
 @RestController
@@ -114,11 +113,6 @@ class InvoiceController(
         val operationId: String,
         val patientId: String,
         val amount: MoneyDto,
-    )
-
-    data class MoneyDto(
-        val amount: BigDecimal,
-        val currency: String
     )
 
     data class UpdateInvoiceStatusRequest(

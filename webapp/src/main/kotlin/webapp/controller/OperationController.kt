@@ -1,6 +1,7 @@
 package webapp.controller
 
 import domain.exceptions.PatientNotFoundException
+import domain.model.Money
 import domain.model.OperationId
 import domain.model.OperationType
 import domain.model.PatientId
@@ -32,6 +33,7 @@ class OperationController(
             type = request.type,
             description = request.description,
             executor = request.executor,
+            estimatedCost = request.estimatedCost.toDomain()
         )
 
         val operation = operationService.createOperation(domainRequest)
@@ -106,7 +108,8 @@ class OperationController(
                 OperationNoteResponse(it.content, it.creationTime)
             },
             createdAt = this.creationDateTime,
-            updatedAt = this.lastUpdate
+            updatedAt = this.lastUpdate,
+            estimatedCost = this.estimatedCost.toDto(),
         )
 
     data class CreateOperationJsonRequest(
@@ -114,6 +117,7 @@ class OperationController(
         val type: OperationType,
         val description: String,
         val executor: String,
+        val estimatedCost: MoneyDto
     )
 
     data class AddOperationNoteJsonRequest(
@@ -129,7 +133,8 @@ class OperationController(
         val assets: List<String>,
         val additionalNotes: List<OperationNoteResponse>,
         val createdAt: LocalDateTime,
-        val updatedAt: LocalDateTime
+        val updatedAt: LocalDateTime,
+        val estimatedCost: MoneyDto
     )
 
     data class OperationNoteResponse(
@@ -140,4 +145,7 @@ class OperationController(
     data class PatientOperationsResponse(
         val operations: List<OperationResponse>
     )
+
+    private fun MoneyDto.toDomain() = Money(amount = this.amount, currency = this.currency)
+    private fun Money.toDto() = MoneyDto(amount = this.amount, currency = this.currency)
 }

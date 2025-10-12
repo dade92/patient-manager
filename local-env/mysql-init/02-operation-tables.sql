@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS OPERATION (
     executor VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    estimated_cost DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     INDEX idx_patient_id (patient_id),
     INDEX idx_operation_id (operation_id)
 );
@@ -28,7 +29,7 @@ CREATE TABLE IF NOT EXISTS OPERATION_NOTE (
     FOREIGN KEY (operation_id) REFERENCES OPERATION(operation_id) ON DELETE CASCADE
 );
 
-INSERT INTO OPERATION (operation_id, patient_id, type, description, executor, created_at, updated_at)
+INSERT INTO OPERATION (operation_id, patient_id, type, description, executor, created_at, updated_at, estimated_cost)
 VALUES
     ('33333333-3333-3333-3333-333333333333',
      '11111111-1111-1111-1111-111111111111',
@@ -36,7 +37,8 @@ VALUES
      'Initial consultation for chronic back pain',
      'Dr. Jane Smith',
      '2025-06-15 09:30:00',
-     '2025-06-15 09:30:00'),
+     '2025-06-15 09:30:00',
+     150.00),
 
     ('44444444-4444-4444-4444-444444444444',
      '11111111-1111-1111-1111-111111111111',
@@ -44,7 +46,8 @@ VALUES
      'MRI scan of lumbar spine',
      'Dr. Robert Johnson',
      '2025-06-18 14:15:00',
-     '2025-06-18 14:15:00'),
+     '2025-06-18 14:15:00',
+     1200.00),
 
     ('55555555-5555-5555-5555-555555555555',
      '22222222-2222-2222-2222-222222222222',
@@ -52,7 +55,17 @@ VALUES
      'Arthroscopic knee surgery',
      'Dr. Michael Chen',
      '2025-06-10 08:00:00',
-     '2025-06-10 16:30:00');
+     '2025-06-10 16:30:00',
+     3500.00),
+
+    ('66666666-6666-6666-6666-666666666666',
+     '33333333-3333-3333-3333-333333333333',
+     'SURGERY',
+     'Knee replacement surgery',
+     'Dr. John Doe',
+     '2025-07-20 14:00:00',
+     '2025-07-20 14:00:00',
+     5000.00);
 
 INSERT INTO OPERATION_ASSET (operation_id, asset_name)
 VALUES
