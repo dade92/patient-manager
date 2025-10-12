@@ -75,11 +75,9 @@ export function makeServer({ environment = 'development' } = {}) {
         return operation.attrs;
       });
 
-      // Create new operation
       this.post('/operation', (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
 
-        // Validate that patient exists
         const patient = schema.findBy('patient', { id: attrs.patientId });
         if (!patient) {
           return new Response(404, {}, { message: 'Patient not found' });
@@ -92,17 +90,12 @@ export function makeServer({ environment = 'development' } = {}) {
           additionalNotes: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          // When creating or updating an operation, ensure estimatedCost is a Money object
-          // Example for creation:
-          estimatedCost: typeof attrs.estimatedCost === 'object' && attrs.estimatedCost !== null
-            ? attrs.estimatedCost
-            : { amount: typeof attrs.estimatedCost === 'number' ? attrs.estimatedCost : 0, currency: 'EUR' },
+          estimatedCost: attrs.estimatedCost
         });
 
         return new Response(201, {}, operation.attrs);
       });
 
-      // Upload asset to operation
       this.post('/operation/:id/assets', (schema, request) => {
         const operationId = request.params.id;
         const operation = (schema.all('operation').models as any[])
@@ -117,16 +110,12 @@ export function makeServer({ environment = 'development' } = {}) {
 
         operation.update({
           assets: updatedAssets,
-          updatedAt: new Date().toISOString(),
-          estimatedCost: operation.attrs.estimatedCost && typeof operation.attrs.estimatedCost === 'object'
-            ? operation.attrs.estimatedCost
-            : { amount: operation.attrs.estimatedCost ?? 0, currency: 'EUR' },
+          updatedAt: new Date().toISOString()
         });
 
         return new Response(200, {}, operation.attrs);
       });
 
-      // Add note to operation
       this.post('/operation/:id/notes', (schema, request) => {
         const operationId = request.params.id;
         const operation = (schema.all('operation').models as any[])
@@ -151,10 +140,7 @@ export function makeServer({ environment = 'development' } = {}) {
 
         operation.update({
           additionalNotes: updatedNotes,
-          updatedAt: new Date().toISOString(),
-          estimatedCost: operation.attrs.estimatedCost && typeof operation.attrs.estimatedCost === 'object'
-            ? operation.attrs.estimatedCost
-            : { amount: operation.attrs.estimatedCost ?? 0, currency: 'EUR' },
+          updatedAt: new Date().toISOString()
         });
 
         return new Response(200, {}, operation.attrs);
