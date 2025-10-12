@@ -8,6 +8,7 @@ export interface Operation {
     additionalNotes: OperationNote[];
     createdAt: string;
     updatedAt: string;
+    estimatedCost: number; // added estimated cost
 }
 
 export interface OperationNote {

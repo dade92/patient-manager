@@ -23,6 +23,7 @@ export interface CreateOperationFormData {
     type: OperationType;
     description: string;
     executor: string;
+    estimatedCost: string; // keep as string for the input
 }
 
 interface Props {
@@ -41,7 +42,8 @@ export const CreateOperationDialog: React.FC<Props> = ({
     const [formData, setFormData] = useState<CreateOperationFormData>({
         type: '' as OperationType,
         description: '',
-        executor: ''
+        executor: '',
+        estimatedCost: ''
     });
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,16 +70,21 @@ export const CreateOperationDialog: React.FC<Props> = ({
         setIsSubmitting(true);
 
         try {
+            const payload = {
+                patientId,
+                type: formData.type,
+                description: formData.description,
+                executor: formData.executor,
+                estimatedCost: parseFloat(formData.estimatedCost) || 0
+            };
+
             const newOperation = await RestClient.post<Operation>(
                 '/api/operation',
-                {
-                    patientId,
-                    ...formData
-                }
+                payload
             );
             onOperationCreated(newOperation);
             onClose();
-            setFormData({type: '' as OperationType, description: '', executor: ''});
+            setFormData({type: '' as OperationType, description: '', executor: '', estimatedCost: ''});
         } catch (err: any) {
             setError('An error occurred while creating the operation');
         } finally {
@@ -86,7 +93,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
     };
 
     const handleClose = () => {
-        setFormData({type: '' as OperationType, description: '', executor: ''});
+        setFormData({type: '' as OperationType, description: '', executor: '', estimatedCost: ''});
         setError(null);
         onClose();
     };
@@ -141,6 +148,17 @@ export const CreateOperationDialog: React.FC<Props> = ({
                             label="Executor"
                             name="executor"
                             value={formData.executor}
+                            onChange={handleTextChange}
+                        />
+
+                        <TextField
+                            required
+                            fullWidth
+                            label="Estimated Cost"
+                            name="estimatedCost"
+                            type="number"
+                            inputProps={{ step: '0.01', min: '0' }}
+                            value={formData.estimatedCost}
                             onChange={handleTextChange}
                         />
                     </Box>
