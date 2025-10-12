@@ -2,16 +2,12 @@ package domain.operation
 
 import domain.exceptions.PatientNotFoundException
 import domain.generator.OperationIdGenerator
-import domain.model.OperationId
-import domain.model.OperationType
-import domain.model.PatientId
-import domain.model.PatientOperation
+import domain.model.*
 import domain.patient.PatientRepository
 import domain.storage.StorageService
 import domain.storage.UploadFileRequest
 import domain.utils.DateTimeProvider
 import java.io.InputStream
-import java.math.BigDecimal
 
 class OperationService(
     private val patientRepository: PatientRepository,
@@ -79,5 +75,5 @@ data class CreateOperationRequest(
     val type: OperationType,
     val description: String,
     val executor: String,
-    val estimatedCost: domain.model.Money
+    val estimatedCost: Money
 )
