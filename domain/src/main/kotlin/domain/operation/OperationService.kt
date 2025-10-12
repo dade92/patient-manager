@@ -11,6 +11,7 @@ import domain.storage.StorageService
 import domain.storage.UploadFileRequest
 import domain.utils.DateTimeProvider
 import java.io.InputStream
+import java.math.BigDecimal
 
 class OperationService(
     private val patientRepository: PatientRepository,
@@ -34,7 +35,8 @@ class OperationService(
                 description = request.description,
                 executor = request.executor,
                 creationDateTime = now,
-                lastUpdate = now
+                lastUpdate = now,
+                estimatedCost = request.estimatedCost
             )
         )
     }
@@ -77,4 +79,5 @@ data class CreateOperationRequest(
     val type: OperationType,
     val description: String,
     val executor: String,
+    val estimatedCost: BigDecimal
 )

@@ -3,6 +3,7 @@ package adapters.operation
 import domain.model.*
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
+import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.Timestamp
@@ -25,7 +26,7 @@ class JdbcOperationRepository(
 
     override fun retrieve(operationId: OperationId): PatientOperation? {
         val sql =
-            "SELECT operation_id, patient_id, type, description, executor, created_at, updated_at FROM OPERATION WHERE operation_id = ?"
+            "SELECT operation_id, patient_id, type, description, executor, created_at, updated_at, estimated_cost FROM OPERATION WHERE operation_id = ?"
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -43,7 +44,7 @@ class JdbcOperationRepository(
 
     override fun findByPatientId(patientId: PatientId): List<PatientOperation> {
         val sql =
-            "SELECT operation_id, patient_id, type, description, executor, created_at, updated_at FROM OPERATION WHERE patient_id = ? ORDER BY created_at DESC LIMIT 10"
+            "SELECT operation_id, patient_id, type, description, executor, created_at, updated_at, estimated_cost FROM OPERATION WHERE patient_id = ? ORDER BY created_at DESC LIMIT 10"
         val operations = mutableListOf<PatientOperation>()
 
         dataSource.connection.use { connection ->
@@ -202,7 +203,8 @@ class JdbcOperationRepository(
             assets = assets,
             additionalNotes = additionalNotes,
             creationDateTime = resultSet.getTimestamp("created_at").toLocalDateTime(),
-            lastUpdate = resultSet.getTimestamp("updated_at").toLocalDateTime()
+            lastUpdate = resultSet.getTimestamp("updated_at").toLocalDateTime(),
+            estimatedCost = resultSet.getBigDecimal("estimated_cost") // Parse estimatedCost
         )
     }
 

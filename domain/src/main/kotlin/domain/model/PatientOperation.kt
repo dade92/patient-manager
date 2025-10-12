@@ -1,5 +1,6 @@
 package domain.model
 
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @JvmInline
@@ -16,7 +17,8 @@ data class PatientOperation(
     val assets: List<String> = emptyList(),
     val additionalNotes: List<OperationNote> = emptyList(),
     val creationDateTime: LocalDateTime,
-    val lastUpdate: LocalDateTime
+    val lastUpdate: LocalDateTime,
+    val estimatedCost: BigDecimal
 )
 
 enum class OperationType {

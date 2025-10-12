@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @RestController
@@ -32,6 +33,7 @@ class OperationController(
             type = request.type,
             description = request.description,
             executor = request.executor,
+            estimatedCost = request.estimatedCost
         )
 
         val operation = operationService.createOperation(domainRequest)
@@ -114,6 +116,7 @@ class OperationController(
         val type: OperationType,
         val description: String,
         val executor: String,
+        val estimatedCost: BigDecimal
     )
 
     data class AddOperationNoteJsonRequest(
