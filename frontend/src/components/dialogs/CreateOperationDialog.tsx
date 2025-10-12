@@ -82,11 +82,11 @@ export const CreateOperationDialog: React.FC<Props> = ({
 
             const newOperation = await RestClient.post<Operation>(
                 '/api/operation',
-                payload
+                operationPayload
             );
             onOperationCreated(newOperation);
             onClose();
-            setFormData({type: '' as OperationType, description: '', executor: '', estimatedCost: ''});
+            setFormData({type: '' as OperationType, patientId: patientId, description: '', executor: '', estimatedCost: ''});
         } catch (err: any) {
             setError('An error occurred while creating the operation');
         } finally {
@@ -95,7 +95,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
     };
 
     const handleClose = () => {
-        setFormData({type: '' as OperationType, description: '', executor: '', estimatedCost: ''});
+        setFormData({type: '' as OperationType, patientId: patientId, description: '', executor: '', estimatedCost: ''});
         setError(null);
         onClose();
     };
