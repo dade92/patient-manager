@@ -110,7 +110,7 @@ class JdbcOperationRepository(
         dataSource.connection.use { connection ->
             connection.prepareStatement(
                 """
-                INSERT INTO OPERATION (operation_id, patient_id, type, description, executor, created_at, updated_at)
+                INSERT INTO OPERATION (operation_id, patient_id, type, description, executor, created_at, updated_at, estimated_cost)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
                 """
             ).use { statement ->
@@ -121,6 +121,7 @@ class JdbcOperationRepository(
                 statement.setString(5, operation.executor)
                 statement.setTimestamp(6, Timestamp.valueOf(operation.creationDateTime))
                 statement.setTimestamp(7, Timestamp.valueOf(operation.lastUpdate))
+                statement.setBigDecimal(8, operation.estimatedCost.amount)
                 statement.executeUpdate()
             }
 
