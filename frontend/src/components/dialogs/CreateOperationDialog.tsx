@@ -20,13 +20,6 @@ import {Operation, OperationType} from '../../types/operation';
 import {RestClient} from '../../utils/restClient';
 import { Money } from '../../types/Money';
 
-export interface CreateOperationFormData {
-    type: OperationType;
-    description: string;
-    executor: string;
-    estimatedCost: string;
-}
-
 interface Props {
     open: boolean;
     onClose: () => void;
