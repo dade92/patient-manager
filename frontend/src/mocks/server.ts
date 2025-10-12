@@ -91,7 +91,8 @@ export function makeServer({ environment = 'development' } = {}) {
           assets: [],
           additionalNotes: [],
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
+          estimatedCost: typeof attrs.estimatedCost === 'number' ? attrs.estimatedCost : 0
         });
 
         return new Response(201, {}, operation.attrs);
@@ -112,10 +113,11 @@ export function makeServer({ environment = 'development' } = {}) {
         const mockFileName = `uploaded_file_${Date.now()}.pdf`;
         const updatedAssets = [...(operation.attrs.assets || []), mockFileName];
 
-        // Update the operation with the new asset
+        // Update the operation with the new asset and preserve estimatedCost
         operation.update({
           assets: updatedAssets,
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
+          estimatedCost: operation.attrs.estimatedCost ?? 0
         });
 
         return new Response(200, {}, operation.attrs);
@@ -147,10 +149,11 @@ export function makeServer({ environment = 'development' } = {}) {
         // Add the new note to the operation's additionalNotes array
         const updatedNotes = [...(operation.attrs.additionalNotes || []), newNote];
 
-        // Update the operation with the new note
+        // Update the operation with the new note and preserve estimatedCost
         operation.update({
           additionalNotes: updatedNotes,
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
+          estimatedCost: operation.attrs.estimatedCost ?? 0
         });
 
         return new Response(200, {}, operation.attrs);

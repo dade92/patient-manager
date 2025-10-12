@@ -49,7 +49,8 @@ export const mockOperations = [
             }
         ],
         createdAt: '2025-06-01T10:00:00',
-        updatedAt: '2025-06-01T10:30:00'
+        updatedAt: '2025-06-01T10:30:00',
+        estimatedCost: 50.00
     },
     {
         id: 'OP-1002',
@@ -65,6 +66,7 @@ export const mockOperations = [
             }
         ],
         createdAt: '2025-06-15T14:00:00',
-        updatedAt: '2025-06-15T14:45:00'
+        updatedAt: '2025-06-15T14:45:00',
+        estimatedCost: 120.00
     }
 ];

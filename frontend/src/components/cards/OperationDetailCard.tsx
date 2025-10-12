@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { Operation } from '../../types/operation';
 import { formatDateTime } from '../../utils/dateUtils';
+import { formatAmount } from '../../utils/currencyUtils';
 import { ExpandableChip } from '../atoms/ExpandableChip';
 import { OperationAssets } from '../lists/OperationAssets';
 import { OperationNotes } from '../lists/OperationNotes';
@@ -63,6 +64,13 @@ export const OperationDetailCard: React.FC<Props> = ({
                         <Typography variant="subtitle1" color="textSecondary">Date</Typography>
                         <Typography variant="body1" paragraph>
                             {formatDateTime(operation.createdAt)}
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <Typography variant="subtitle1" color="textSecondary">Estimated Cost</Typography>
+                        <Typography variant="body1" paragraph>
+                            {formatAmount(operation.estimatedCost ?? 0, 'EUR')}
                         </Typography>
                     </Grid>
 
