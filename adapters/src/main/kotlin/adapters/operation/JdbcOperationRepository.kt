@@ -111,7 +111,7 @@ class JdbcOperationRepository(
             connection.prepareStatement(
                 """
                 INSERT INTO OPERATION (operation_id, patient_id, type, description, executor, created_at, updated_at, estimated_cost)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """
             ).use { statement ->
                 statement.setString(1, operation.id.value)
