@@ -23,7 +23,7 @@ export interface CreateOperationFormData {
     type: OperationType;
     description: string;
     executor: string;
-    estimatedCost: string; // keep as string for the input
+    estimatedCost: string;
 }
 
 interface Props {
