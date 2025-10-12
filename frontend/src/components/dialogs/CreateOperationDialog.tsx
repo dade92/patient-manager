@@ -30,14 +30,12 @@ export interface CreateOperationFormData {
 interface Props {
     open: boolean;
     onClose: () => void;
-    patientId: string;
     onOperationCreated: (operation: Operation) => void;
 }
 
 export const CreateOperationDialog: React.FC<Props> = ({
     open,
     onClose,
-    patientId,
     onOperationCreated
 }) => {
     const [formData, setFormData] = useState({
