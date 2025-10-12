@@ -79,5 +79,5 @@ data class CreateOperationRequest(
     val type: OperationType,
     val description: String,
     val executor: String,
-    val estimatedCost: BigDecimal
+    val estimatedCost: domain.model.Money
 )

@@ -204,7 +204,7 @@ class JdbcOperationRepository(
             additionalNotes = additionalNotes,
             creationDateTime = resultSet.getTimestamp("created_at").toLocalDateTime(),
             lastUpdate = resultSet.getTimestamp("updated_at").toLocalDateTime(),
-            estimatedCost = resultSet.getBigDecimal("estimated_cost")
+            estimatedCost = Money(resultSet.getBigDecimal("estimated_cost"))
         )
     }
 

@@ -1,6 +1,7 @@
 package webapp.controller
 
 import domain.exceptions.PatientNotFoundException
+import domain.model.Money
 import domain.model.OperationId
 import domain.model.OperationType
 import domain.model.PatientId
@@ -13,7 +14,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
-import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @RestController
@@ -33,7 +33,7 @@ class OperationController(
             type = request.type,
             description = request.description,
             executor = request.executor,
-            estimatedCost = request.estimatedCost
+            estimatedCost = request.estimatedCost.toDomain()
         )
 
         val operation = operationService.createOperation(domainRequest)
@@ -109,7 +109,7 @@ class OperationController(
             },
             createdAt = this.creationDateTime,
             updatedAt = this.lastUpdate,
-            estimatedCost = this.estimatedCost,
+            estimatedCost = this.estimatedCost.toDto(),
         )
 
     data class CreateOperationJsonRequest(
@@ -117,7 +117,7 @@ class OperationController(
         val type: OperationType,
         val description: String,
         val executor: String,
-        val estimatedCost: BigDecimal
+        val estimatedCost: MoneyDto
     )
 
     data class AddOperationNoteJsonRequest(
@@ -134,7 +134,7 @@ class OperationController(
         val additionalNotes: List<OperationNoteResponse>,
         val createdAt: LocalDateTime,
         val updatedAt: LocalDateTime,
-        val estimatedCost: BigDecimal
+        val estimatedCost: MoneyDto
     )
 
     data class OperationNoteResponse(
@@ -145,4 +145,7 @@ class OperationController(
     data class PatientOperationsResponse(
         val operations: List<OperationResponse>
     )
+
+    private fun MoneyDto.toDomain() = Money(amount = this.amount, currency = this.currency)
+    private fun Money.toDto() = MoneyDto(amount = this.amount, currency = this.currency)
 }
