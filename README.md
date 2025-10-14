@@ -14,6 +14,9 @@ container used as a file storage.
 Note that you have to set four environment variables in your OS, the `BLOB_DB_USERNAME` and `BLOB_DB_PASSWORD` for the
 minIO blob storage, and `PATIENT_DB_USERNAME` and `PATIENT_DB_PASSWORD` for the patient manager database
 (`PATIENT_DB_PASSWORD` is used as root password at the moment).
+At the first run, you need also to execute manually the script `init.sql` inside the same folder. 
+If you want to connect to the minio instance, go to `localhost:9000` and use the credentials you set in the environment
+variables. Remeber to create a bucket named `patient-manager-bucket`.
 
 ## Local testing
 
