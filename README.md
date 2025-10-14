@@ -20,8 +20,10 @@ variables. Remeber to create a bucket named `patient-manager-bucket`.
 
 ## Local testing
 
-You can run the spring boot application locally after you have run the script `run-local-env.sh` that will run an instance of
+You can run the spring boot application locally after you have done the following steps:
+- run the script `run-local-env.sh`: it will run an instance of
 minIO locally and a fresh mysql instance with all the tables initialized with sample values.
+- run a `mvn clean install` that will generate the static files for the UI.
 
 ### Local testing with UI
 
