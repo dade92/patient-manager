@@ -11,3 +11,8 @@ INSERT INTO `OPERATION_ASSET` (operation_id, asset_name) VALUES
 
 INSERT INTO `OPERATION_NOTE` (operation_id, content, created_at) VALUES
 ('OP-001', 'Initial assessment complete', TIMESTAMP '2025-01-01 11:00:00');
+
+-- Seed invoices for OP-001 / PAT-001
+INSERT INTO `INVOICE` (invoice_id, operation_id, patient_id, amount, currency, status, created_at, updated_at) VALUES
+('INV-001', 'OP-001', 'PAT-001', 100.00, 'EUR', 'PENDING', TIMESTAMP '2025-01-01 12:00:00', TIMESTAMP '2025-01-01 12:00:00'),
+('INV-002', 'OP-001', 'PAT-001', 150.50, 'EUR', 'PAID',    TIMESTAMP '2025-01-02 09:00:00', TIMESTAMP '2025-01-02 10:00:00');

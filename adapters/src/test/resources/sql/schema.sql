@@ -43,3 +43,16 @@ CREATE TABLE `OPERATION_NOTE` (
     `content` VARCHAR(2048) NOT NULL,
     `created_at` TIMESTAMP NOT NULL
 );
+
+-- Invoice table
+DROP TABLE IF EXISTS `INVOICE`;
+CREATE TABLE `INVOICE` (
+    `invoice_id` VARCHAR(255) PRIMARY KEY,
+    `operation_id` VARCHAR(255) NOT NULL,
+    `patient_id` VARCHAR(255) NOT NULL,
+    `amount` DECIMAL(19,2) NOT NULL,
+    `currency` VARCHAR(10) NOT NULL,
+    `status` VARCHAR(50) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL,
+    `updated_at` TIMESTAMP NOT NULL
+);
