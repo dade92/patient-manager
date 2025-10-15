@@ -21,11 +21,11 @@ class JdbcPatientRepositoryTest {
     @BeforeEach
     fun setUp() {
         dataSource = JdbcDataSource().apply {
-            setUrl("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL")
+            setUrl(DB_URL)
         }
 
-        runSql("/sql/schema.sql")
-        runSql("/sql/data.sql")
+        runSql(SCHEMA_SQL)
+        runSql(DATA_SQL)
 
         repository = JdbcPatientRepository(dataSource)
     }
@@ -35,18 +35,18 @@ class JdbcPatientRepositoryTest {
 
     @Test
     fun `retrieve returns patient when present`() {
-        val result = repository.retrieve(PatientId("PAT-001"))
+        val result = repository.retrieve(PatientId(ID))
 
         val expected = aPatient(
-            id = PatientId("PAT-001"),
-            name = "John Doe",
-            email = "john.doe@example.com",
-            phoneNumber = "1234567890",
-            address = "123 Main St",
-            cityOfResidence = "Springfield",
-            nationality = "Italian",
-            birthDate = LocalDate.of(1990, 1, 1),
-            taxCode = "TAXCODE123"
+            id = PatientId(ID),
+            name = NAME,
+            email = EMAIL,
+            phoneNumber = PHONE,
+            address = ADDRESS,
+            cityOfResidence = CITY,
+            nationality = NATIONALITY,
+            birthDate = BIRTH,
+            taxCode = TAX
         )
 
         assertEquals(expected, result)
@@ -57,48 +57,48 @@ class JdbcPatientRepositoryTest {
         val result = repository.searchByName("Jo")
 
         assertEquals(1, result.size)
-        assertEquals("PAT-001", result[0].id.value)
+        assertEquals(ID, result[0].id.value)
     }
 
     @Test
     fun `save inserts when patient not existing`() {
         val newPatient = aPatient(
-            id = PatientId("PAT-003"),
-            name = "Alice Smith",
-            email = "alice@example.com",
+            id = PatientId(ID),
+            name = NAME,
+            email = EMAIL,
             phoneNumber = null,
             address = null,
-            cityOfResidence = "Gotham",
-            nationality = "German",
-            birthDate = LocalDate.of(1992, 7, 15),
-            taxCode = "TAX-ALICE"
+            cityOfResidence = CITY,
+            nationality = NATIONALITY,
+            birthDate = BIRTH,
+            taxCode = TAX
         )
 
         val saved = repository.save(newPatient)
         assertEquals(newPatient, saved)
 
-        val retrieved = repository.retrieve(PatientId("PAT-003"))
+        val retrieved = repository.retrieve(PatientId(ID))
         assertEquals(newPatient, retrieved)
     }
 
     @Test
     fun `save updates when patient existing`() {
         val updatedPatient = aPatient(
-            id = PatientId("PAT-002"),
-            name = "Jane Roe Updated",
-            email = "jane.roe.updated@example.com",
-            phoneNumber = "555-1212",
-            address = "789 New Ave",
-            cityOfResidence = "Star City",
-            nationality = "Spanish",
-            birthDate = LocalDate.of(1986, 6, 21),
-            taxCode = "TAX987-UPDATED"
+            id = PatientId(ID),
+            name = NAME,
+            email = EMAIL,
+            phoneNumber = PHONE,
+            address = ADDRESS,
+            cityOfResidence = CITY,
+            nationality = NATIONALITY,
+            birthDate = BIRTH,
+            taxCode = TAX
         )
 
         val saved = repository.save(updatedPatient)
         assertEquals(updatedPatient, saved)
 
-        val retrieved = repository.retrieve(PatientId("PAT-002"))
+        val retrieved = repository.retrieve(PatientId(ID))
         assertEquals(updatedPatient, retrieved)
     }
 
@@ -110,5 +110,21 @@ class JdbcPatientRepositoryTest {
                 RunScript.execute(conn, reader)
             }
         }
+    }
+
+    companion object {
+        private const val DB_URL = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL"
+        private const val SCHEMA_SQL = "/sql/schema.sql"
+        private const val DATA_SQL = "/sql/data.sql"
+
+        private const val ID = "PAT-001"
+        private const val NAME = "John Doe"
+        private const val EMAIL = "john.doe@example.com"
+        private const val PHONE = "1234567890"
+        private const val ADDRESS = "123 Main St"
+        private const val CITY = "Springfield"
+        private const val NATIONALITY = "Italian"
+        private val BIRTH: LocalDate = LocalDate.of(1990, 1, 1)
+        private const val TAX = "TAXCODE123"
     }
 }
