@@ -8,7 +8,7 @@ import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationType
 import domain.model.OperationType.SURGERY
-import domain.model.PatientId
+import domain.model.PatientBuilder.aPatientId
 import domain.patient.PatientRepository
 import domain.storage.StorageService
 import domain.storage.UploadFileRequest
@@ -159,7 +159,7 @@ class OperationServiceTest {
 
     companion object {
         private val OPERATION_ID = anOperationId()
-        private val PATIENT_ID = PatientId("PAT-789")
+        private val PATIENT_ID = aPatientId()
         private val AMOUNT = aMoney()
         private const val DESCRIPTION = "Appendectomy"
         private const val EXECUTOR = "Dr. Who"
