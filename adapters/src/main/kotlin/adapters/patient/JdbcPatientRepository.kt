@@ -16,11 +16,12 @@ class JdbcPatientRepository(
     override fun retrieve(patientId: PatientId): Patient? {
         val sql =
             """SELECT
-                $COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, 
-                $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, 
-                $COL_BIRTH_DATE, $COL_TAX_CODE FROM `$TABLE_PATIENT` 
-                WHERE $COL_PATIENT_ID = ?
-                """.trimMargin()
+                | $COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, 
+                | $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, 
+                | $COL_BIRTH_DATE, $COL_TAX_CODE 
+                | FROM `$TABLE_PATIENT` 
+                | WHERE $COL_PATIENT_ID = ?
+            """.trimMargin()
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -48,7 +49,7 @@ class JdbcPatientRepository(
 
     override fun searchByName(name: String): List<Patient> {
         val sql =
-            "SELECT $COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, $COL_BIRTH_DATE, $COL_TAX_CODE FROM `$TABLE_PATIENT` WHERE $COL_NAME LIKE ?"
+            """SELECT $COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, $COL_BIRTH_DATE, $COL_TAX_CODE FROM `$TABLE_PATIENT` WHERE $COL_NAME LIKE ?"""
         val patients = mutableListOf<Patient>()
 
         dataSource.connection.use { connection ->
@@ -67,9 +68,10 @@ class JdbcPatientRepository(
 
     private fun insertPatient(patient: Patient): Patient {
         val sql = """
-            INSERT INTO `$TABLE_PATIENT` ($COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, $COL_BIRTH_DATE, $COL_TAX_CODE, $COL_CREATION_DATE) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """.trimIndent()
+            INSERT INTO `$TABLE_PATIENT` (
+            | $COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, $COL_BIRTH_DATE, $COL_TAX_CODE, $COL_CREATION_DATE) 
+            | VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """.trimMargin()
 
         val now = LocalDateTime.now()
 
