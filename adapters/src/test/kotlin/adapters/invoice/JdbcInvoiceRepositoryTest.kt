@@ -50,8 +50,8 @@ class JdbcInvoiceRepositoryTest {
             operationId = OPERATION_ID,
             amount = aMoney(BigDecimal("100.00")),
             status = PENDING,
-            creationDateTime = LocalDateTime.of(2025, 1, 1, 12, 0, 0),
-            lastUpdate = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
+            creationDateTime = FIRST_OF_JAN,
+            lastUpdate = FIRST_OF_JAN
         )
 
         assertEquals(expected, result)
@@ -67,16 +67,16 @@ class JdbcInvoiceRepositoryTest {
                 operationId = OPERATION_ID,
                 amount = aMoney(BigDecimal("150.50")),
                 status = PAID,
-                creationDateTime = LocalDateTime.of(2025, 1, 2, 9, 0, 0),
-                lastUpdate = LocalDateTime.of(2025, 1, 2, 10, 0, 0)
+                creationDateTime = SECOND_OF_JAN,
+                lastUpdate = SECOND_OF_JAN
             ),
             anInvoice(
                 id = INVOICE_ID,
                 operationId = OPERATION_ID,
                 amount = aMoney(BigDecimal("100.00")),
                 status = PENDING,
-                creationDateTime = LocalDateTime.of(2025, 1, 1, 12, 0, 0),
-                lastUpdate = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
+                creationDateTime = FIRST_OF_JAN,
+                lastUpdate = FIRST_OF_JAN
             )
         )
 
@@ -93,16 +93,16 @@ class JdbcInvoiceRepositoryTest {
                 operationId = OPERATION_ID,
                 amount = aMoney(BigDecimal("150.50")),
                 status = PAID,
-                creationDateTime = LocalDateTime.of(2025, 1, 2, 9, 0, 0),
-                lastUpdate = LocalDateTime.of(2025, 1, 2, 10, 0, 0)
+                creationDateTime = SECOND_OF_JAN,
+                lastUpdate = SECOND_OF_JAN
             ),
             anInvoice(
                 id = INVOICE_ID,
                 operationId = OPERATION_ID,
                 amount = aMoney(BigDecimal("100.00")),
                 status = PENDING,
-                creationDateTime = LocalDateTime.of(2025, 1, 1, 12, 0, 0),
-                lastUpdate = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
+                creationDateTime = FIRST_OF_JAN,
+                lastUpdate = FIRST_OF_JAN
             )
         )
 
@@ -172,5 +172,7 @@ class JdbcInvoiceRepositoryTest {
         private val INVOICE_ID = anInvoiceId("INV-001")
         private val INVOICE_ID_2 = anInvoiceId("INV-002")
         private val FIXED_NOW: LocalDateTime = LocalDateTime.of(2025, 1, 5, 10, 0, 0)
+        private val FIRST_OF_JAN = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
+        private val SECOND_OF_JAN = LocalDateTime.of(2025, 1, 2, 9, 0, 0)
     }
 }
