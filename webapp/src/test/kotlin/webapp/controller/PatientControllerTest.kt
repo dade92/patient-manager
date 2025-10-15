@@ -63,9 +63,7 @@ class PatientControllerTest {
         mockMvc.perform(get("/api/patient/search").param("name", NAME_QUERY))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.patients", hasSize<Any>(2)))
-            .andExpect(jsonPath("$.patients[0].id").value(p1.id.value))
-            .andExpect(jsonPath("$.patients[1].id").value(p2.id.value))
+            .andExpect(content().json(FixtureLoader.readFile("/fixtures/patient/search-patients.json"), false))
     }
 
     @Test
