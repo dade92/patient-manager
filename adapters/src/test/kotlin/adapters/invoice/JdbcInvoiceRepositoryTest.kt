@@ -1,9 +1,10 @@
 package adapters.invoice
 
-import domain.model.*
 import domain.model.InvoiceBuilder.anInvoice
 import domain.model.InvoiceBuilder.anInvoiceId
+import domain.model.InvoiceStatus
 import domain.model.InvoiceStatus.PAID
+import domain.model.InvoiceStatus.PENDING
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.anOperationId
 import domain.model.PatientBuilder.aPatientId
@@ -48,7 +49,7 @@ class JdbcInvoiceRepositoryTest {
             id = INVOICE_ID_1,
             operationId = OPERATION_ID,
             amount = aMoney(BigDecimal("100.00")),
-            status = InvoiceStatus.PENDING,
+            status = PENDING,
             creationDateTime = LocalDateTime.of(2025, 1, 1, 12, 0, 0),
             lastUpdate = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
         )
@@ -60,14 +61,52 @@ class JdbcInvoiceRepositoryTest {
     fun `findByOperationId returns invoices ordered by creation desc`() {
         val result = repository.findByOperationId(OPERATION_ID)
 
-        assertEquals(listOf(INVOICE_ID_2, INVOICE_ID_1), result.map { it.id })
+        val expected = listOf(
+            anInvoice(
+                id = INVOICE_ID_2,
+                operationId = OPERATION_ID,
+                amount = aMoney(BigDecimal("150.50")),
+                status = PAID,
+                creationDateTime = LocalDateTime.of(2025, 1, 2, 9, 0, 0),
+                lastUpdate = LocalDateTime.of(2025, 1, 2, 10, 0, 0)
+            ),
+            anInvoice(
+                id = INVOICE_ID_1,
+                operationId = OPERATION_ID,
+                amount = aMoney(BigDecimal("100.00")),
+                status = PENDING,
+                creationDateTime = LocalDateTime.of(2025, 1, 1, 12, 0, 0),
+                lastUpdate = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
+            )
+        )
+
+        assertEquals(expected, result)
     }
 
     @Test
     fun `findByPatientId returns invoices ordered by creation desc`() {
         val result = repository.findByPatientId(PATIENT_ID)
 
-        assertEquals(listOf(INVOICE_ID_2, INVOICE_ID_1), result.map { it.id })
+        val expected = listOf(
+            anInvoice(
+                id = INVOICE_ID_2,
+                operationId = OPERATION_ID,
+                amount = aMoney(BigDecimal("150.50")),
+                status = PAID,
+                creationDateTime = LocalDateTime.of(2025, 1, 2, 9, 0, 0),
+                lastUpdate = LocalDateTime.of(2025, 1, 2, 10, 0, 0)
+            ),
+            anInvoice(
+                id = INVOICE_ID_1,
+                operationId = OPERATION_ID,
+                amount = aMoney(BigDecimal("100.00")),
+                status = PENDING,
+                creationDateTime = LocalDateTime.of(2025, 1, 1, 12, 0, 0),
+                lastUpdate = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
+            )
+        )
+
+        assertEquals(expected, result)
     }
 
     @Test
