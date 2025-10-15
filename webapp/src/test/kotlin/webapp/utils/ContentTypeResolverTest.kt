@@ -8,7 +8,7 @@ class ContentTypeResolverTest {
 
     private val resolver = ContentTypeResolver()
 
-    @ParameterizedTest(name = "{index} => '{0}' -> {1}")
+    @ParameterizedTest(name = "{index} => ''{0}'' -> {1}")
     @CsvSource(
         "file.pdf, application/pdf",
         "FILE.PDF, application/pdf",
