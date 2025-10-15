@@ -93,6 +93,7 @@ class OperationServiceTest {
     @Test
     fun `getOperation delegates to repository`() {
         val operation = aPatientOperation(OPERATION_ID)
+
         every { operationRepository.retrieve(OPERATION_ID) } returns operation
 
         val result = service.getOperation(OPERATION_ID)
@@ -103,8 +104,8 @@ class OperationServiceTest {
     @Test
     fun `retrieveOperationsBy validates patient exists then delegates`() {
         val operations = listOf(
-            aPatientOperation(anOperationId("123")),
-            aPatientOperation(anOperationId("456"))
+            aPatientOperation(anOperationId()),
+            aPatientOperation(anOperationId())
         )
 
         every { patientRepository.retrieve(PATIENT_ID) } returns mockk(relaxed = true)
@@ -129,9 +130,10 @@ class OperationServiceTest {
     @Test
     fun `addOperationNote delegates to repository`() {
         val updatedPatientOperation = aPatientOperation(OPERATION_ID)
-        every { operationRepository.addNote(OPERATION_ID, "note") } returns updatedPatientOperation
 
-        val result = service.addOperationNote(OPERATION_ID, "note")
+        every { operationRepository.addNote(OPERATION_ID, NOTE) } returns updatedPatientOperation
+
+        val result = service.addOperationNote(OPERATION_ID, NOTE)
 
         assertEquals(updatedPatientOperation, result)
     }
@@ -162,6 +164,7 @@ class OperationServiceTest {
         private const val DESCRIPTION = "Appendectomy"
         private const val EXECUTOR = "Dr. Who"
         private const val FILENAME = "file1.png"
+        private const val NOTE = "note"
         private val NOW = LocalDateTime.of(2025, 1, 2, 3, 4, 5)
     }
 }
