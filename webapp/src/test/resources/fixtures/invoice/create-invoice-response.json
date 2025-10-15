@@ -1,0 +1,11 @@
+{
+  "id": "INV-123",
+  "operationId": "OP-999",
+  "amount": {
+    "amount": 120.50,
+    "currency": "EUR"
+  },
+  "status": "PENDING",
+  "createdAt": "01/01/2025 12:00:00",
+  "updatedAt": "01/01/2025 13:00:00"
+}

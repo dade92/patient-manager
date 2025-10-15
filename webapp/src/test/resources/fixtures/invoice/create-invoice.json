@@ -1,0 +1,8 @@
+{
+  "operationId": "OP-999",
+  "patientId": "PAT-111",
+  "amount": {
+    "amount": 120.50,
+    "currency": "EUR"
+  }
+}
