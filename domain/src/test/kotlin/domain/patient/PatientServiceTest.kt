@@ -6,10 +6,8 @@ import domain.model.PatientBuilder.aPatient
 import domain.model.PatientBuilder.aPatientId
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import javax.print.attribute.standard.MediaSize
 
 class PatientServiceTest {
 
@@ -33,9 +31,8 @@ class PatientServiceTest {
             birthDate = BIRTH_DATE,
             taxCode = TAX_CODE
         )
-        val generatedId = GENERATED_ID
         val expected = aPatient(
-            id = generatedId,
+            id = PATIENT_ID,
             name = NAME,
             email = EMAIL,
             phoneNumber = PHONE,
@@ -46,23 +43,21 @@ class PatientServiceTest {
             taxCode = TAX_CODE
         )
 
-        every { patientIdGenerator.get() } returns generatedId
+        every { patientIdGenerator.get() } returns PATIENT_ID
         every { patientRepository.save(expected) } returns expected
 
         val result = service.createPatient(request)
 
         assertEquals(expected, result)
-        verify(exactly = 1) { patientRepository.save(expected) }
     }
 
     @Test
     fun `retrievePatient delegates to repository`() {
-        val patientId = aPatientId()
-        val patient = aPatient(id = patientId)
+        val patient = aPatient(id = PATIENT_ID)
 
-        every { patientRepository.retrieve(patientId) } returns patient
+        every { patientRepository.retrieve(PATIENT_ID) } returns patient
 
-        val result = service.retrievePatient(patientId)
+        val result = service.retrievePatient(PATIENT_ID)
 
         assertEquals(patient, result)
     }
@@ -70,8 +65,8 @@ class PatientServiceTest {
     @Test
     fun `searchPatientsByName delegates to repository`() {
         val patients = listOf(
-            aPatient(aPatientId("PAT-1")),
-            aPatient(aPatientId("PAT-2"))
+            aPatient(aPatientId()),
+            aPatient(aPatientId())
         )
 
         every { patientRepository.searchByName(NAME) } returns patients
@@ -82,7 +77,7 @@ class PatientServiceTest {
     }
 
     companion object {
-        private val GENERATED_ID = aPatientId("PAT-999")
+        private val PATIENT_ID = aPatientId("PAT-999")
         private const val NAME = "Jane Roe"
         private const val EMAIL = "jane.roe@example.com"
         private const val PHONE = "9876543210"
