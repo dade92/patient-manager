@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 object InvoiceBuilder {
 
-    fun anInvoiceId() = InvoiceId("INV-123")
+    fun anInvoiceId(value: String = "INV-123") = InvoiceId(value)
 
     fun anInvoice(
         id: InvoiceId = anInvoiceId(),
