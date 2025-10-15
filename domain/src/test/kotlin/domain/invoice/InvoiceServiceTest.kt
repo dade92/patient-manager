@@ -12,6 +12,7 @@ import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
+import domain.model.PatientBuilder.aPatientId
 import domain.model.PatientId
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
@@ -126,7 +127,7 @@ class InvoiceServiceTest {
 
     companion object {
         private val OPERATION_ID = anOperationId()
-        private val PATIENT_ID = PatientId("PAT-789")
+        private val PATIENT_ID = aPatientId()
         private val INVOICE_ID = anInvoiceId()
         private val AMOUNT = aMoney()
         private val NOW = LocalDateTime.of(2025, 1, 2, 3, 4, 5)

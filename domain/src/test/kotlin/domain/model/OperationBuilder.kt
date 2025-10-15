@@ -36,10 +36,10 @@ object OperationBuilder {
 
     fun aCreateOperationRequest(
         patientId: PatientId = aPatientId(),
-        description: String = "",
-        estimatedCost: Money = aMoney(),
-        executor: String = "",
         type: OperationType = OperationType.CONSULTATION,
+        description: String = "",
+        executor: String = "",
+        estimatedCost: Money = aMoney(),
     ) = CreateOperationRequest(
         patientId = patientId,
         type = type,

@@ -10,10 +10,10 @@ object PatientBuilder {
         id: PatientId = aPatientId(),
         name: String = "John Doe",
         email: String = "john.doe@example.com",
-        phoneNumber: String? = "1234567890",
-        address: String? = "123 Main St",
-        cityOfResidence: String? = "Springfield",
-        nationality: String? = "Italian",
+        phoneNumber: String? = null,
+        address: String? = null,
+        cityOfResidence: String? = null,
+        nationality: String? = null,
         birthDate: LocalDate = LocalDate.of(1990, 1, 1),
         taxCode: String = "TAXCODE123"
     ) = Patient(
@@ -31,10 +31,10 @@ object PatientBuilder {
     fun aCreatePatientRequest(
         name: String = "John Doe",
         email: String = "john.doe@example.com",
-        phoneNumber: String? = "1234567890",
-        address: String? = "123 Main St",
-        cityOfResidence: String? = "Springfield",
-        nationality: String? = "Italian",
+        phoneNumber: String? = null,
+        address: String? = null,
+        cityOfResidence: String? = null,
+        nationality: String? = null,
         birthDate: LocalDate = LocalDate.of(1990, 1, 1),
         taxCode: String = "TAXCODE123"
     ) = domain.patient.CreatePatientRequest(
