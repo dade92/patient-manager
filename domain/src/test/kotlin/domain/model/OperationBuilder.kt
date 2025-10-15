@@ -2,11 +2,12 @@ package domain.model
 
 import domain.model.MoneyBuilder.aMoney
 import domain.model.PatientBuilder.aPatientId
+import domain.operation.CreateOperationRequest
 import java.time.LocalDateTime
 
 object OperationBuilder {
 
-    fun anOperationId() = OperationId("OP-123")
+    fun anOperationId(value: String = "OP-123") = OperationId(value)
 
     fun aPatientOperation(
         id: OperationId = anOperationId(),
@@ -33,4 +34,17 @@ object OperationBuilder {
             estimatedCost = estimatedCost
         )
 
+    fun aCreateOperationRequest(
+        patientId: PatientId = aPatientId(),
+        description: String = "",
+        estimatedCost: Money = aMoney(),
+        executor: String = "",
+        type: OperationType = OperationType.CONSULTATION,
+    ) = CreateOperationRequest(
+        patientId = patientId,
+        type = type,
+        description = description,
+        executor = executor,
+        estimatedCost = estimatedCost
+    )
 }

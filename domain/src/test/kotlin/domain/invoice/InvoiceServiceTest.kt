@@ -13,7 +13,6 @@ import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationType
 import domain.model.PatientId
-import domain.model.PatientOperation
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
 import io.mockk.Called
@@ -27,7 +26,7 @@ import java.time.LocalDateTime
 
 class InvoiceServiceTest {
 
-    private val invoiceRepository: InvoiceRepository = mockk(relaxed = true)
+    private val invoiceRepository: InvoiceRepository = mockk()
     private val operationRepository: OperationRepository = mockk()
     private val invoiceIdGenerator: InvoiceIdGenerator = mockk()
     private val dateTimeProvider: DateTimeProvider = mockk()
