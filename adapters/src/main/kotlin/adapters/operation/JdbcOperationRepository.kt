@@ -26,7 +26,16 @@ class JdbcOperationRepository(
 
     override fun retrieve(operationId: OperationId): PatientOperation? {
         val sql =
-            "SELECT operation_id, patient_id, type, description, executor, created_at, updated_at, estimated_cost FROM OPERATION WHERE operation_id = ?"
+            """SELECT 
+                |operation_id, 
+                |patient_id,
+                | type,
+                |  description,
+                |executor,
+                | created_at,
+                |  updated_at,
+                |   estimated_cost 
+                |   FROM OPERATION WHERE operation_id = ?""".trimMargin()
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->

@@ -27,7 +27,18 @@ class JdbcInvoiceRepository(
     }
 
     override fun retrieve(invoiceId: InvoiceId): Invoice? {
-        val sql = "SELECT invoice_id, operation_id, patient_id, amount, currency, status, created_at, updated_at FROM INVOICE WHERE invoice_id = ?"
+        val sql = """
+            SELECT 
+            invoice_id, 
+            operation_id, 
+            patient_id, 
+            amount,
+            currency, 
+            status, 
+            created_at, 
+            updated_at 
+            FROM INVOICE WHERE invoice_id = ?
+            """.trimIndent()
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -44,7 +55,8 @@ class JdbcInvoiceRepository(
     }
 
     override fun findByOperationId(operationId: OperationId): List<Invoice> {
-        val sql = "SELECT invoice_id, operation_id, patient_id, amount, currency, status, created_at, updated_at FROM INVOICE WHERE operation_id = ? ORDER BY created_at DESC"
+        val sql =
+            "SELECT invoice_id, operation_id, patient_id, amount, currency, status, created_at, updated_at FROM INVOICE WHERE operation_id = ? ORDER BY created_at DESC"
         val invoices = mutableListOf<Invoice>()
 
         dataSource.connection.use { connection ->
@@ -62,7 +74,8 @@ class JdbcInvoiceRepository(
     }
 
     override fun findByPatientId(patientId: PatientId): List<Invoice> {
-        val sql = "SELECT invoice_id, operation_id, patient_id, amount, currency, status, created_at, updated_at FROM INVOICE WHERE patient_id = ? ORDER BY created_at DESC"
+        val sql =
+            "SELECT invoice_id, operation_id, patient_id, amount, currency, status, created_at, updated_at FROM INVOICE WHERE patient_id = ? ORDER BY created_at DESC"
         val invoices = mutableListOf<Invoice>()
 
         dataSource.connection.use { connection ->
