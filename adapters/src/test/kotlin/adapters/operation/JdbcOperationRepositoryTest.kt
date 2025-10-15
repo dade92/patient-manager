@@ -40,39 +40,6 @@ class JdbcOperationRepositoryTest {
     }
 
     @Test
-    fun `retrieve returns operation when present`() {
-        val result = repository.retrieve(OPERATION_ID)
-
-        val expected = aPatientOperation(
-            id = OPERATION_ID,
-            patientId = aPatientId("PAT-001"),
-            type = OperationType.SURGERY,
-            description = "Appendectomy",
-            executor = "Dr. Who",
-            assets = listOf("scan1.png"),
-            additionalNotes = listOf(
-                anOperationNote(
-                    content = "Initial assessment complete",
-                    creationTime = LocalDateTime.of(2025, 1, 1, 11, 0, 0)
-                )
-            ),
-            creationDateTime = LocalDateTime.of(2025, 1, 1, 10, 0, 0),
-            lastUpdate = LocalDateTime.of(2025, 1, 1, 10, 0, 0),
-            estimatedCost = aMoney(BigDecimal("2500.00"))
-        )
-
-        assertEquals(expected, result)
-    }
-
-    @Test
-    fun `findByPatientId returns matches`() {
-        val result = repository.findByPatientId(PATIENT_ID)
-
-        assertEquals(1, result.size)
-        assertEquals(OPERATION_ID, result[0].id)
-    }
-
-    @Test
     fun `save inserts when operation not existing`() {
         val newOperationId = anOperationId("OP-002")
         val newOperation = aPatientOperation(
@@ -99,11 +66,11 @@ class JdbcOperationRepositoryTest {
             additionalNotes = listOf(
                 anOperationNote(
                     "Initial assessment complete",
-                    LocalDateTime.of(2025, 1, 1, 11, 0, 0)
+                    ADDITIONAL_NOTE_CREATION_TIME
                 )
             ),
-            creationDateTime = LocalDateTime.of(2025, 1, 1, 10, 0, 0),
-            lastUpdate = LocalDateTime.of(2025, 1, 3, 9, 0, 0),
+            creationDateTime = OPERATION_CREATION_TIME,
+            lastUpdate = OPERATION_LAST_UPDATE_TIME,
             estimatedCost = Money(BigDecimal("2500.00"))
         )
 
@@ -112,6 +79,59 @@ class JdbcOperationRepositoryTest {
 
         val retrieved = repository.retrieve(OPERATION_ID)
         assertEquals(updated, retrieved)
+    }
+
+    @Test
+    fun `retrieve returns operation when present`() {
+        val result = repository.retrieve(OPERATION_ID)
+
+        val expected = aPatientOperation(
+            id = OPERATION_ID,
+            patientId = aPatientId("PAT-001"),
+            type = OperationType.SURGERY,
+            description = "Appendectomy",
+            executor = "Dr. Who",
+            assets = listOf("scan1.png"),
+            additionalNotes = listOf(
+                anOperationNote(
+                    content = "Initial assessment complete",
+                    creationTime = ADDITIONAL_NOTE_CREATION_TIME
+                )
+            ),
+            creationDateTime = OPERATION_CREATION_TIME,
+            lastUpdate = OPERATION_LAST_UPDATE_TIME,
+            estimatedCost = aMoney(BigDecimal("2500.00"))
+        )
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `findByPatientId returns matches`() {
+        val result = repository.findByPatientId(PATIENT_ID)
+
+        assertEquals(
+            listOf(
+                aPatientOperation(
+                    id = OPERATION_ID,
+                    patientId = PATIENT_ID,
+                    type = OperationType.SURGERY,
+                    description = "Appendectomy",
+                    executor = "Dr. Who",
+                    assets = listOf("scan1.png"),
+                    additionalNotes = listOf(
+                        anOperationNote(
+                            content = "Initial assessment complete",
+                            creationTime = ADDITIONAL_NOTE_CREATION_TIME
+                        )
+                    ),
+                    creationDateTime = OPERATION_CREATION_TIME,
+                    lastUpdate = OPERATION_LAST_UPDATE_TIME,
+                    estimatedCost = aMoney(BigDecimal("2500.00"))
+                )
+            ),
+            result
+        )
     }
 
     @Test
@@ -160,5 +180,8 @@ class JdbcOperationRepositoryTest {
         private val OPERATION_ID = OperationId("OP-001")
         private val PATIENT_ID = PatientId("PAT-001")
         private val FIXED_NOW: LocalDateTime = LocalDateTime.of(2025, 1, 4, 8, 0, 0)
+        private val ADDITIONAL_NOTE_CREATION_TIME = LocalDateTime.of(2025, 1, 1, 11, 0, 0)
+        private val OPERATION_CREATION_TIME = LocalDateTime.of(2025, 1, 1, 10, 0, 0)
+        private val OPERATION_LAST_UPDATE_TIME = LocalDateTime.of(2025, 1, 1, 10, 0, 0)
     }
 }
