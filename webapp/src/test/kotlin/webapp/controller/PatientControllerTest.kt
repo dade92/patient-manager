@@ -35,12 +35,11 @@ class PatientControllerTest {
 
     @Test
     fun `getPatient returns 200 with body when patient exists`() {
-        val id = aPatientId("PAT-123")
-        val patient = aPatient(id = id)
+        val patient = aPatient(id = PATIENT_ID)
 
-        every { patientService.retrievePatient(id) } returns patient
+        every { patientService.retrievePatient(PATIENT_ID) } returns patient
 
-        mockMvc.perform(get("/api/patient/${id.value}"))
+        mockMvc.perform(get("/api/patient/${PATIENT_ID.value}"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().json(FixtureLoader.readFile("/fixtures/patient/get-patient.json")))
@@ -57,7 +56,7 @@ class PatientControllerTest {
 
     @Test
     fun `searchPatients returns list wrapped in response`() {
-        val p1 = aPatient(aPatientId("PAT-1"))
+        val p1 = aPatient(PATIENT_ID)
         val p2 = aPatient(aPatientId("PAT-2"))
         every { patientService.searchPatientsByName(NAME_QUERY) } returns listOf(p1, p2)
 
@@ -103,6 +102,7 @@ class PatientControllerTest {
     companion object {
         private const val NAME_QUERY = "Jo"
 
+        private val PATIENT_ID = aPatientId("PAT-123")
         private const val NAME = "John Doe"
         private const val EMAIL = "john.doe@example.com"
         private const val PHONE = "1234567890"
