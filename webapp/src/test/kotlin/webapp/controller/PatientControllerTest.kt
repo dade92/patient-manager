@@ -1,13 +1,11 @@
 package webapp.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import domain.model.PatientBuilder.aPatient
 import domain.model.PatientBuilder.aPatientId
 import domain.patient.CreatePatientRequest
 import domain.patient.PatientService
 import io.mockk.every
 import io.mockk.mockk
-import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
@@ -22,13 +20,10 @@ import java.time.LocalDate
 class PatientControllerTest {
 
     private lateinit var mockMvc: MockMvc
-    private lateinit var patientService: PatientService
-
-    private val objectMapper = ObjectMapper()
+    private val patientService = mockk<PatientService>()
 
     @BeforeEach
     fun setUp() {
-        patientService = mockk()
         val controller = PatientController(patientService)
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
     }
@@ -42,7 +37,11 @@ class PatientControllerTest {
         mockMvc.perform(get("/api/patient/${PATIENT_ID.value}"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(content().json(FixtureLoader.readFile("/fixtures/patient/get-patient.json")))
+            .andExpect(
+                content().json(
+                    FixtureLoader.readFile("/fixtures/patient/get-patient.json")
+                )
+            )
     }
 
     @Test
@@ -63,7 +62,11 @@ class PatientControllerTest {
         mockMvc.perform(get("/api/patient/search").param("name", NAME_QUERY))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(content().json(FixtureLoader.readFile("/fixtures/patient/search-patients.json"), false))
+            .andExpect(
+                content().json(
+                    FixtureLoader.readFile("/fixtures/patient/search-patients.json")
+                )
+            )
     }
 
     @Test
@@ -80,7 +83,8 @@ class PatientControllerTest {
             birthDate = BIRTH_DATE,
             taxCode = TAX_CODE
         )
-        val created = aPatient(aPatientId("PAT-999"), NAME, EMAIL, PHONE, ADDRESS, CITY, NATIONALITY, BIRTH_DATE, TAX_CODE)
+        val created =
+            aPatient(aPatientId("PAT-999"), NAME, EMAIL, PHONE, ADDRESS, CITY, NATIONALITY, BIRTH_DATE, TAX_CODE)
 
         every { patientService.createPatient(expectedRequest) } returns created
 
