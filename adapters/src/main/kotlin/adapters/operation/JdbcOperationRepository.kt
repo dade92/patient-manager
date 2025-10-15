@@ -86,7 +86,7 @@ class JdbcOperationRepository(
     override fun addNote(operationId: OperationId, note: String): PatientOperation? {
         dataSource.connection.use { connection ->
             connection.prepareStatement(
-                "INSERT INTO OPERATION_NOTE (operation_id, content, created_at) VALUES (?, ?, ?)"
+                """INSERT INTO OPERATION_NOTE (operation_id, content, created_at) VALUES (?, ?, ?)"""
             ).use { statement ->
                 statement.setString(1, operationId.value)
                 statement.setString(2, note)
@@ -95,7 +95,7 @@ class JdbcOperationRepository(
             }
 
             connection.prepareStatement(
-                "UPDATE OPERATION SET updated_at = ? WHERE operation_id = ?"
+                """UPDATE OPERATION SET updated_at = ? WHERE operation_id = ?"""
             ).use { statement ->
                 statement.setTimestamp(1, Timestamp.valueOf(dateTimeProvider.now()))
                 statement.setString(2, operationId.value)
@@ -109,7 +109,7 @@ class JdbcOperationRepository(
     override fun addAsset(operationId: OperationId, assetName: String): PatientOperation? {
         dataSource.connection.use { connection ->
             connection.prepareStatement(
-                "INSERT INTO OPERATION_ASSET (operation_id, asset_name) VALUES (?, ?)"
+                """INSERT INTO OPERATION_ASSET (operation_id, asset_name) VALUES (?, ?)"""
             ).use { statement ->
                 statement.setString(1, operationId.value)
                 statement.setString(2, assetName)
@@ -117,7 +117,7 @@ class JdbcOperationRepository(
             }
 
             connection.prepareStatement(
-                "UPDATE OPERATION SET updated_at = ? WHERE operation_id = ?"
+                """UPDATE OPERATION SET updated_at = ? WHERE operation_id = ?"""
             ).use { statement ->
                 statement.setTimestamp(1, Timestamp.valueOf(dateTimeProvider.now()))
                 statement.setString(2, operationId.value)
@@ -149,7 +149,7 @@ class JdbcOperationRepository(
 
             for (asset in operation.assets) {
                 connection.prepareStatement(
-                    "INSERT INTO OPERATION_ASSET (operation_id, asset_name) VALUES (?, ?)"
+                    """INSERT INTO OPERATION_ASSET (operation_id, asset_name) VALUES (?, ?)"""
                 ).use { statement ->
                     statement.setString(1, operation.id.value)
                     statement.setString(2, asset)
@@ -159,7 +159,7 @@ class JdbcOperationRepository(
 
             for (note in operation.additionalNotes) {
                 connection.prepareStatement(
-                    "INSERT INTO OPERATION_NOTE (operation_id, content, created_at) VALUES (?, ?, ?)"
+                    """INSERT INTO OPERATION_NOTE (operation_id, content, created_at) VALUES (?, ?, ?)"""
                 ).use { statement ->
                     statement.setString(1, operation.id.value)
                     statement.setString(2, note.content)
@@ -190,7 +190,7 @@ class JdbcOperationRepository(
             }
 
             connection.prepareStatement(
-                "DELETE FROM OPERATION_ASSET WHERE operation_id = ?"
+                """DELETE FROM OPERATION_ASSET WHERE operation_id = ?"""
             ).use { statement ->
                 statement.setString(1, operation.id.value)
                 statement.executeUpdate()
@@ -198,7 +198,7 @@ class JdbcOperationRepository(
 
             for (asset in operation.assets) {
                 connection.prepareStatement(
-                    "INSERT INTO OPERATION_ASSET (operation_id, asset_name) VALUES (?, ?)"
+                    """INSERT INTO OPERATION_ASSET (operation_id, asset_name) VALUES (?, ?)"""
                 ).use { statement ->
                     statement.setString(1, operation.id.value)
                     statement.setString(2, asset)
@@ -234,7 +234,7 @@ class JdbcOperationRepository(
     private fun getOperationAssets(operationId: OperationId, connection: Connection): List<String> {
         val assets = mutableListOf<String>()
         connection.prepareStatement(
-            "SELECT asset_name FROM OPERATION_ASSET WHERE operation_id = ?"
+            """SELECT asset_name FROM OPERATION_ASSET WHERE operation_id = ?"""
         ).use { statement ->
             statement.setString(1, operationId.value)
             statement.executeQuery().use { resultSet ->
@@ -249,7 +249,7 @@ class JdbcOperationRepository(
     private fun getOperationNotes(operationId: OperationId, connection: Connection): List<OperationNote> {
         val notes = mutableListOf<OperationNote>()
         connection.prepareStatement(
-            "SELECT content, created_at FROM OPERATION_NOTE WHERE operation_id = ? ORDER BY created_at DESC"
+            """SELECT content, created_at FROM OPERATION_NOTE WHERE operation_id = ? ORDER BY created_at DESC"""
         ).use { statement ->
             statement.setString(1, operationId.value)
             statement.executeQuery().use { resultSet ->
