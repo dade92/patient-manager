@@ -1,0 +1,115 @@
+package webapp.controller
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import domain.model.PatientBuilder.aPatient
+import domain.model.PatientBuilder.aPatientId
+import domain.patient.CreatePatientRequest
+import domain.patient.PatientService
+import io.mockk.every
+import io.mockk.mockk
+import org.hamcrest.Matchers.hasSize
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.springframework.http.MediaType
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import utils.FixtureLoader
+import java.time.LocalDate
+
+class PatientControllerTest {
+
+    private lateinit var mockMvc: MockMvc
+    private lateinit var patientService: PatientService
+
+    private val objectMapper = ObjectMapper()
+
+    @BeforeEach
+    fun setUp() {
+        patientService = mockk()
+        val controller = PatientController(patientService)
+        mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
+    }
+
+    @Test
+    fun `getPatient returns 200 with body when patient exists`() {
+        val id = aPatientId("PAT-123")
+        val patient = aPatient(id = id)
+
+        every { patientService.retrievePatient(id) } returns patient
+
+        mockMvc.perform(get("/api/patient/${id.value}"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(FixtureLoader.readFile("/fixtures/patient/get-patient.json")))
+    }
+
+    @Test
+    fun `getPatient returns 404 when not found`() {
+        val id = aPatientId("PAT-404")
+        every { patientService.retrievePatient(id) } returns null
+
+        mockMvc.perform(get("/api/patient/${id.value}"))
+            .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `searchPatients returns list wrapped in response`() {
+        val p1 = aPatient(aPatientId("PAT-1"))
+        val p2 = aPatient(aPatientId("PAT-2"))
+        every { patientService.searchPatientsByName(NAME_QUERY) } returns listOf(p1, p2)
+
+        mockMvc.perform(get("/api/patient/search").param("name", NAME_QUERY))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.patients", hasSize<Any>(2)))
+            .andExpect(jsonPath("$.patients[0].id").value(p1.id.value))
+            .andExpect(jsonPath("$.patients[1].id").value(p2.id.value))
+    }
+
+    @Test
+    fun `createPatient returns 201 and delegates to service`() {
+        val requestJson = FixtureLoader.readFile("/fixtures/patient/create-patient.json")
+
+        val expectedRequest = CreatePatientRequest(
+            name = NAME,
+            email = EMAIL,
+            phoneNumber = PHONE,
+            address = ADDRESS,
+            cityOfResidence = CITY,
+            nationality = NATIONALITY,
+            birthDate = BIRTH_DATE,
+            taxCode = TAX_CODE
+        )
+        val created = aPatient(aPatientId("PAT-999"), NAME, EMAIL, PHONE, ADDRESS, CITY, NATIONALITY, BIRTH_DATE, TAX_CODE)
+
+        every { patientService.createPatient(expectedRequest) } returns created
+
+        mockMvc.perform(
+            post("/api/patient")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson)
+        )
+            .andExpect(status().isCreated)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(created.id.value))
+            .andExpect(jsonPath("$.name").value(NAME))
+            .andExpect(jsonPath("$.email").value(EMAIL))
+            .andExpect(jsonPath("$.taxCode").value(TAX_CODE))
+    }
+
+    companion object {
+        private const val NAME_QUERY = "Jo"
+
+        private const val NAME = "John Doe"
+        private const val EMAIL = "john.doe@example.com"
+        private const val PHONE = "1234567890"
+        private const val ADDRESS = "123 Main St"
+        private const val CITY = "Springfield"
+        private const val NATIONALITY = "Italian"
+        private val BIRTH_DATE: LocalDate = LocalDate.of(1990, 1, 1)
+        private const val TAX_CODE = "TAXCODE123"
+    }
+}
