@@ -35,7 +35,7 @@ class JdbcInvoiceRepositoryTest {
 
         repository = JdbcInvoiceRepository(dataSource, dateTimeProvider)
 
-        every { dateTimeProvider.now() } returns FIXED_NOW
+        every { dateTimeProvider.now() } returns NOW
     }
 
     @AfterEach
@@ -153,7 +153,7 @@ class JdbcInvoiceRepositoryTest {
             amount = aMoney(BigDecimal("100.00")),
             status = PAID,
             creationDateTime = LocalDateTime.of(2025, 1, 1, 12, 0, 0),
-            lastUpdate = FIXED_NOW
+            lastUpdate = NOW
         )
 
         assertEquals(expected, result)
@@ -168,7 +168,7 @@ class JdbcInvoiceRepositoryTest {
         private val PATIENT_ID = aPatientId("PAT-001")
         private val INVOICE_ID = anInvoiceId("INV-001")
         private val INVOICE_ID_2 = anInvoiceId("INV-002")
-        private val FIXED_NOW: LocalDateTime = LocalDateTime.of(2025, 1, 5, 10, 0, 0)
+        private val NOW: LocalDateTime = LocalDateTime.of(2025, 1, 5, 10, 0, 0)
         private val FIRST_OF_JAN = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
         private val SECOND_OF_JAN = LocalDateTime.of(2025, 1, 2, 9, 0, 0)
     }

@@ -8,15 +8,14 @@ import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
 import domain.model.PatientBuilder.aPatientId
 import domain.utils.DateTimeProvider
+import io.mockk.every
+import io.mockk.mockk
 import org.h2.jdbcx.JdbcDataSource
-import org.h2.tools.RunScript
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.InputStreamReader
 import java.math.BigDecimal
-import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import javax.sql.DataSource
 
@@ -24,7 +23,7 @@ class JdbcOperationRepositoryTest {
 
     private lateinit var dataSource: DataSource
     private lateinit var repository: JdbcOperationRepository
-    private val dateTimeProvider = FixedDateTimeProvider(FIXED_NOW)
+    private val dateTimeProvider = mockk<DateTimeProvider>()
 
     @BeforeEach
     fun setUp() {
@@ -34,6 +33,8 @@ class JdbcOperationRepositoryTest {
         runSql(DATA_SQL, dataSource)
 
         repository = JdbcOperationRepository(dataSource, dateTimeProvider)
+
+        every { dateTimeProvider.now() } returns NOW
     }
 
     @AfterEach
@@ -141,9 +142,9 @@ class JdbcOperationRepositoryTest {
         val result = repository.addNote(OPERATION_ID, note)
 
         assertEquals(OPERATION_ID, result!!.id)
-        assertEquals(FIXED_NOW, result.lastUpdate)
+        assertEquals(NOW, result.lastUpdate)
         assertEquals(note, result.additionalNotes.first().content)
-        assertEquals(FIXED_NOW, result.additionalNotes.first().creationTime)
+        assertEquals(NOW, result.additionalNotes.first().creationTime)
     }
 
     @Test
@@ -152,7 +153,7 @@ class JdbcOperationRepositoryTest {
         val result = repository.addAsset(OPERATION_ID, newAssetName)
 
         assertEquals(OPERATION_ID, result!!.id)
-        assertEquals(FIXED_NOW, result.lastUpdate)
+        assertEquals(NOW, result.lastUpdate)
 
         val assets = result.assets.toSet()
         assertTrue(assets.containsAll(setOf(OTHER_ASSET_NAME, newAssetName)))
@@ -170,7 +171,7 @@ class JdbcOperationRepositoryTest {
         private const val OTHER_ASSET_NAME = "scan1.png"
         private val OPERATION_ID = OperationId("OP-001")
         private val PATIENT_ID = PatientId("PAT-001")
-        private val FIXED_NOW: LocalDateTime = LocalDateTime.of(2025, 1, 4, 8, 0, 0)
+        private val NOW: LocalDateTime = LocalDateTime.of(2025, 1, 4, 8, 0, 0)
         private val ADDITIONAL_NOTE_CREATION_TIME = LocalDateTime.of(2025, 1, 1, 11, 0, 0)
         private val OPERATION_CREATION_TIME = LocalDateTime.of(2025, 1, 1, 10, 0, 0)
         private val OPERATION_LAST_UPDATE_TIME = LocalDateTime.of(2025, 1, 1, 10, 0, 0)
