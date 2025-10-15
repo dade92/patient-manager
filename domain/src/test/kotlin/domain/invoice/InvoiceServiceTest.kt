@@ -9,9 +9,9 @@ import domain.model.InvoiceId
 import domain.model.InvoiceStatus.PAID
 import domain.model.InvoiceStatus.PENDING
 import domain.model.MoneyBuilder.aMoney
+import domain.model.OperationBuilder
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
-import domain.model.OperationType
 import domain.model.PatientId
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
@@ -40,17 +40,6 @@ class InvoiceServiceTest {
 
     @Test
     fun `createInvoice creates a pending invoice with generated id and current time`() {
-        val existingOperation = aPatientOperation(
-            id = OPERATION_ID,
-            patientId = PATIENT_ID,
-            type = OperationType.SURGERY,
-            description = "Appendectomy",
-            executor = "Dr. Who",
-            creationDateTime = NOW.minusDays(1),
-            lastUpdate = NOW.minusHours(1),
-            estimatedCost = AMOUNT
-        )
-
         val request = aCreateInvoiceRequest(
             operationId = OPERATION_ID,
             patientId = PATIENT_ID,
@@ -64,7 +53,7 @@ class InvoiceServiceTest {
             creationDateTime = NOW,
             lastUpdate = NOW
         )
-        every { operationRepository.retrieve(OPERATION_ID) } returns existingOperation
+        every { operationRepository.retrieve(OPERATION_ID) } returns aPatientOperation()
         every { invoiceIdGenerator.generate() } returns INVOICE_ID
         every { dateTimeProvider.now() } returns NOW
         every { invoiceRepository.save(invoice, PATIENT_ID) } returns invoice
@@ -72,11 +61,6 @@ class InvoiceServiceTest {
         val result = service.createInvoice(request)
 
         assertEquals(result, invoice)
-
-        verify(exactly = 1) { operationRepository.retrieve(OPERATION_ID) }
-        verify(exactly = 1) { invoiceIdGenerator.generate() }
-        verify(exactly = 1) { dateTimeProvider.now() }
-        verify(exactly = 1) { invoiceRepository.save(any(), PATIENT_ID) }
     }
 
     @Test

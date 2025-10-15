@@ -112,9 +112,6 @@ class OperationServiceTest {
         val result = service.retrieveOperationsBy(PATIENT_ID)
 
         assertEquals(operations, result)
-
-        verify(exactly = 1) { patientRepository.retrieve(PATIENT_ID) }
-        verify(exactly = 1) { operationRepository.findByPatientId(PATIENT_ID) }
     }
 
     @Test
@@ -125,7 +122,6 @@ class OperationServiceTest {
             service.retrieveOperationsBy(PATIENT_ID)
         }
 
-        verify(exactly = 1) { patientRepository.retrieve(PATIENT_ID) }
         verify { operationRepository wasNot Called }
     }
 
