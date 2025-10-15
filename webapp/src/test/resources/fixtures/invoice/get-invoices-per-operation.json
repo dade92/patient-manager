@@ -1,0 +1,26 @@
+{
+  "invoices": [
+    {
+      "id": "INV-1",
+      "operationId": "OP-999",
+      "amount": {
+        "amount": 120.50,
+        "currency": "EUR"
+      },
+      "status": "PENDING",
+      "createdAt": "02/01/2025 03:04:05",
+      "updatedAt": "02/01/2025 03:04:05"
+    },
+    {
+      "id": "INV-2",
+      "operationId": "OP-999",
+      "amount": {
+        "amount": 120.50,
+        "currency": "EUR"
+      },
+      "status": "PAID",
+      "createdAt": "02/01/2025 03:04:05",
+      "updatedAt": "02/01/2025 03:04:05"
+    }
+  ]
+}
