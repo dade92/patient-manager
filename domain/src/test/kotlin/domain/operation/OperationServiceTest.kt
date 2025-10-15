@@ -7,6 +7,7 @@ import domain.model.OperationBuilder.aCreateOperationRequest
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationType
+import domain.model.OperationType.SURGERY
 import domain.model.PatientId
 import domain.patient.PatientRepository
 import domain.storage.StorageService
@@ -42,18 +43,18 @@ class OperationServiceTest {
     fun `createOperation creates operation with generated id and current time`() {
         val request = aCreateOperationRequest(
             patientId = PATIENT_ID,
-            type = OperationType.SURGERY,
-            description = "Appendectomy",
-            executor = "Dr. Who",
+            type = SURGERY,
+            description = DESCRIPTION,
+            executor = EXECUTOR,
             estimatedCost = AMOUNT
         )
 
         val expected = aPatientOperation(
             id = OPERATION_ID,
             patientId = PATIENT_ID,
-            type = request.type,
-            description = request.description,
-            executor = request.executor,
+            type = SURGERY,
+            description = DESCRIPTION,
+            executor = EXECUTOR,
             creationDateTime = NOW,
             lastUpdate = NOW,
             estimatedCost = AMOUNT
@@ -74,8 +75,8 @@ class OperationServiceTest {
         val request = CreateOperationRequest(
             patientId = PATIENT_ID,
             type = OperationType.CONSULTATION,
-            description = "desc",
-            executor = "exec",
+            description = DESCRIPTION,
+            executor = EXECUTOR,
             estimatedCost = AMOUNT
         )
 
@@ -139,14 +140,13 @@ class OperationServiceTest {
     fun `addOperationAsset uploads file then delegates to repository`() {
         val input: InputStream = mockk()
         val updatedPatientOperation = aPatientOperation(OPERATION_ID)
-        val fileName = "file1.png"
 
         every { storageService.uploadFile(any<UploadFileRequest>()) } returns Unit
-        every { operationRepository.addAsset(OPERATION_ID, fileName) } returns updatedPatientOperation
+        every { operationRepository.addAsset(OPERATION_ID, FILENAME) } returns updatedPatientOperation
 
         val result = service.addOperationAsset(
             operationId = OPERATION_ID,
-            assetName = fileName,
+            assetName = FILENAME,
             contentLength = 1234,
             contentType = "image/png",
             inputStream = input
@@ -159,6 +159,9 @@ class OperationServiceTest {
         private val OPERATION_ID = anOperationId()
         private val PATIENT_ID = PatientId("PAT-789")
         private val AMOUNT = aMoney()
+        private const val DESCRIPTION = "Appendectomy"
+        private const val EXECUTOR = "Dr. Who"
+        private const val FILENAME = "file1.png"
         private val NOW = LocalDateTime.of(2025, 1, 2, 3, 4, 5)
     }
 }
