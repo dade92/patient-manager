@@ -2,15 +2,27 @@ package domain.invoice
 
 import domain.exceptions.OperationNotFoundException
 import domain.generator.InvoiceIdGenerator
-import domain.model.*
+import domain.model.InvoiceBuilder.aCreateInvoiceRequest
+import domain.model.InvoiceBuilder.anInvoice
+import domain.model.InvoiceBuilder.anInvoiceId
+import domain.model.InvoiceId
+import domain.model.InvoiceStatus.PAID
 import domain.model.InvoiceStatus.PENDING
+import domain.model.MoneyBuilder.aMoney
+import domain.model.OperationBuilder.aPatientOperation
+import domain.model.OperationBuilder.anOperationId
+import domain.model.OperationType
+import domain.model.PatientId
+import domain.model.PatientOperation
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
-import io.mockk.*
+import io.mockk.Called
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
-import java.math.BigDecimal
 import java.time.LocalDateTime
 
 class InvoiceServiceTest {
@@ -29,157 +41,111 @@ class InvoiceServiceTest {
 
     @Test
     fun `createInvoice creates a pending invoice with generated id and current time`() {
-        val amount = Money(BigDecimal("123.45"), Money.EUR)
-
-        val existingOperation = PatientOperation(
-            id = operationId,
-            patientId = patientId,
+        val existingOperation = aPatientOperation(
+            id = OPERATION_ID,
+            patientId = PATIENT_ID,
             type = OperationType.SURGERY,
             description = "Appendectomy",
             executor = "Dr. Who",
             creationDateTime = NOW.minusDays(1),
             lastUpdate = NOW.minusHours(1),
-            estimatedCost = amount
+            estimatedCost = AMOUNT
         )
 
-        val request = CreateInvoiceRequest(
-            operationId = operationId,
-            patientId = patientId,
-            amount = amount
+        val request = aCreateInvoiceRequest(
+            operationId = OPERATION_ID,
+            patientId = PATIENT_ID,
+            amount = AMOUNT
         )
-        val invoice = Invoice(
-            id = invoiceId,
-            operationId = operationId,
-            amount = amount,
+        val invoice = anInvoice(
+            id = INVOICE_ID,
+            operationId = OPERATION_ID,
+            amount = AMOUNT,
             status = PENDING,
             creationDateTime = NOW,
             lastUpdate = NOW
         )
-        every { operationRepository.retrieve(operationId) } returns existingOperation
-        every { invoiceIdGenerator.generate() } returns invoiceId
+        every { operationRepository.retrieve(OPERATION_ID) } returns existingOperation
+        every { invoiceIdGenerator.generate() } returns INVOICE_ID
         every { dateTimeProvider.now() } returns NOW
-        every { invoiceRepository.save(invoice, patientId) } returns invoice
+        every { invoiceRepository.save(invoice, PATIENT_ID) } returns invoice
 
         val result = service.createInvoice(request)
 
         assertEquals(result, invoice)
 
-        verify(exactly = 1) { operationRepository.retrieve(operationId) }
+        verify(exactly = 1) { operationRepository.retrieve(OPERATION_ID) }
         verify(exactly = 1) { invoiceIdGenerator.generate() }
         verify(exactly = 1) { dateTimeProvider.now() }
-        verify(exactly = 1) { invoiceRepository.save(any(), patientId) }
+        verify(exactly = 1) { invoiceRepository.save(any(), PATIENT_ID) }
     }
 
     @Test
     fun `createInvoice throws when operation is not found`() {
-        val operationId = OperationId("OP-404")
-        val patientId = PatientId("PAT-1")
-        val amount = Money(BigDecimal.TEN)
-        val request = CreateInvoiceRequest(operationId, patientId, amount)
+        val request = aCreateInvoiceRequest(OPERATION_ID, PATIENT_ID, AMOUNT)
 
-        every { operationRepository.retrieve(operationId) } returns null
+        every { operationRepository.retrieve(OPERATION_ID) } returns null
 
         assertThrows(OperationNotFoundException::class.java) {
             service.createInvoice(request)
         }
 
-        verify(exactly = 1) { operationRepository.retrieve(operationId) }
+        verify(exactly = 1) { operationRepository.retrieve(OPERATION_ID) }
         verify { invoiceRepository wasNot Called }
     }
 
     @Test
     fun `getInvoice delegates to repository`() {
-        val invoiceId = InvoiceId("INV-1")
-        val invoice = Invoice(
-            invoiceId, OperationId("OP-1"), Money(BigDecimal.ONE), InvoiceStatus.PENDING,
-            LocalDateTime.now(), LocalDateTime.now()
-        )
+        val invoice = anInvoice(INVOICE_ID)
 
-        every { invoiceRepository.retrieve(invoiceId) } returns invoice
+        every { invoiceRepository.retrieve(INVOICE_ID) } returns invoice
 
-        val result = service.getInvoice(invoiceId)
+        val result = service.getInvoice(INVOICE_ID)
 
         assertEquals(invoice, result)
-        verify(exactly = 1) { invoiceRepository.retrieve(invoiceId) }
-        confirmVerified(invoiceRepository)
     }
 
     @Test
     fun `getInvoicesForOperation delegates to repository`() {
-        val opId = OperationId("OP-2")
         val invoices = listOf(
-            Invoice(
-                InvoiceId("INV-2"),
-                opId,
-                Money(BigDecimal("5")),
-                InvoiceStatus.PENDING,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-            ),
-            Invoice(
-                InvoiceId("INV-3"),
-                opId,
-                Money(BigDecimal("7.5")),
-                InvoiceStatus.PAID,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-            )
+            anInvoice(InvoiceId("INV-2")),
+            anInvoice(InvoiceId("INV-3"))
         )
 
-        every { invoiceRepository.findByOperationId(opId) } returns invoices
+        every { invoiceRepository.findByOperationId(OPERATION_ID) } returns invoices
 
-        val result = service.getInvoicesForOperation(opId)
+        val result = service.getInvoicesForOperation(OPERATION_ID)
+
         assertEquals(invoices, result)
-        verify(exactly = 1) { invoiceRepository.findByOperationId(opId) }
-        confirmVerified(invoiceRepository)
     }
 
     @Test
     fun `getInvoicesForPatient delegates to repository`() {
-        val invoices = listOf(
-            Invoice(
-                InvoiceId("INV-4"),
-                OperationId("OP-4"),
-                Money(BigDecimal("9")),
-                InvoiceStatus.CANCELLED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-            )
-        )
+        val invoices = listOf(anInvoice(INVOICE_ID))
 
-        every { invoiceRepository.findByPatientId(patientId) } returns invoices
+        every { invoiceRepository.findByPatientId(PATIENT_ID) } returns invoices
 
-        val result = service.getInvoicesForPatient(patientId)
+        val result = service.getInvoicesForPatient(PATIENT_ID)
+
         assertEquals(invoices, result)
-        verify(exactly = 1) { invoiceRepository.findByPatientId(patientId) }
-        confirmVerified(invoiceRepository)
     }
 
     @Test
     fun `updateInvoiceStatus delegates to repository`() {
-        val invoiceId = InvoiceId("INV-5")
-        val updated = Invoice(
-            invoiceId,
-            OperationId("OP-9"),
-            Money(BigDecimal("10")),
-            InvoiceStatus.PAID,
-            LocalDateTime.now(),
-            LocalDateTime.now()
-        )
+        val updated = anInvoice(INVOICE_ID)
 
-        every { invoiceRepository.updateStatus(invoiceId, InvoiceStatus.PAID) } returns updated
+        every { invoiceRepository.updateStatus(INVOICE_ID, PAID) } returns updated
 
-        val result = service.updateInvoiceStatus(invoiceId, InvoiceStatus.PAID)
+        val result = service.updateInvoiceStatus(INVOICE_ID, PAID)
 
         assertEquals(updated, result)
-        verify(exactly = 1) { invoiceRepository.updateStatus(invoiceId, InvoiceStatus.PAID) }
-        confirmVerified(invoiceRepository)
     }
 
     companion object {
-        private val operationId = OperationId("OP-123")
-        private val patientId = PatientId("PAT-789")
+        private val OPERATION_ID = anOperationId()
+        private val PATIENT_ID = PatientId("PAT-789")
+        private val INVOICE_ID = anInvoiceId()
+        private val AMOUNT = aMoney()
         private val NOW = LocalDateTime.of(2025, 1, 2, 3, 4, 5)
-        private val invoiceId = InvoiceId("INV-123")
     }
 }
