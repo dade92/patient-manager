@@ -2,7 +2,6 @@ package adapters.invoice
 
 import domain.model.InvoiceBuilder.anInvoice
 import domain.model.InvoiceBuilder.anInvoiceId
-import domain.model.InvoiceStatus
 import domain.model.InvoiceStatus.PAID
 import domain.model.InvoiceStatus.PENDING
 import domain.model.MoneyBuilder.aMoney
@@ -43,10 +42,10 @@ class JdbcInvoiceRepositoryTest {
 
     @Test
     fun `retrieve returns invoice when present`() {
-        val result = repository.retrieve(INVOICE_ID_1)
+        val result = repository.retrieve(INVOICE_ID)
 
         val expected = anInvoice(
-            id = INVOICE_ID_1,
+            id = INVOICE_ID,
             operationId = OPERATION_ID,
             amount = aMoney(BigDecimal("100.00")),
             status = PENDING,
@@ -71,7 +70,7 @@ class JdbcInvoiceRepositoryTest {
                 lastUpdate = LocalDateTime.of(2025, 1, 2, 10, 0, 0)
             ),
             anInvoice(
-                id = INVOICE_ID_1,
+                id = INVOICE_ID,
                 operationId = OPERATION_ID,
                 amount = aMoney(BigDecimal("100.00")),
                 status = PENDING,
@@ -97,7 +96,7 @@ class JdbcInvoiceRepositoryTest {
                 lastUpdate = LocalDateTime.of(2025, 1, 2, 10, 0, 0)
             ),
             anInvoice(
-                id = INVOICE_ID_1,
+                id = INVOICE_ID,
                 operationId = OPERATION_ID,
                 amount = aMoney(BigDecimal("100.00")),
                 status = PENDING,
@@ -127,7 +126,7 @@ class JdbcInvoiceRepositoryTest {
     @Test
     fun `save updates when invoice existing`() {
         val updated = anInvoice(
-            id = INVOICE_ID_1,
+            id = INVOICE_ID,
             operationId = OPERATION_ID,
             amount = aMoney(BigDecimal("120.00"), "USD"),
             status = PAID,
@@ -138,16 +137,16 @@ class JdbcInvoiceRepositoryTest {
         val saved = repository.save(updated, PATIENT_ID)
         assertEquals(updated, saved)
 
-        val retrieved = repository.retrieve(INVOICE_ID_1)
+        val retrieved = repository.retrieve(INVOICE_ID)
         assertEquals(updated, retrieved)
     }
 
     @Test
-    fun `updateStatus updates status and lastUpdate`() {
-        val result = repository.updateStatus(INVOICE_ID_1, PAID)
+    fun `updateStatus updates status and lastUpdate of the invoice`() {
+        val result = repository.updateStatus(INVOICE_ID, PAID)
 
         val expected = anInvoice(
-            id = INVOICE_ID_1,
+            id = INVOICE_ID,
             operationId = OPERATION_ID,
             amount = aMoney(BigDecimal("100.00")),
             status = PAID,
@@ -179,7 +178,7 @@ class JdbcInvoiceRepositoryTest {
 
         private val OPERATION_ID = anOperationId("OP-001")
         private val PATIENT_ID = aPatientId("PAT-001")
-        private val INVOICE_ID_1 = anInvoiceId("INV-001")
+        private val INVOICE_ID = anInvoiceId("INV-001")
         private val INVOICE_ID_2 = anInvoiceId("INV-002")
         private val FIXED_NOW: LocalDateTime = LocalDateTime.of(2025, 1, 5, 10, 0, 0)
     }
