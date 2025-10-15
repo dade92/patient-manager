@@ -1,6 +1,6 @@
 package adapters.storage
 
-import domain.storage.UploadFileRequest
+import domain.model.UploadFileRequestBuilder.anUploadFileRequest
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -27,7 +27,7 @@ class MinioStorageServiceTest {
     fun `uploadFile delegates to s3 with correct request`() {
         val bytes = byteArrayOf(1, 2, 3, 4)
         val input = ByteArrayInputStream(bytes)
-        val request = UploadFileRequest(
+        val request = anUploadFileRequest(
             key = KEY,
             contentLength = bytes.size.toLong(),
             contentType = CONTENT_TYPE,
