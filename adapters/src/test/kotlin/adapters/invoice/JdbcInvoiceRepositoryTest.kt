@@ -9,15 +9,14 @@ import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.anOperationId
 import domain.model.PatientBuilder.aPatientId
 import domain.utils.DateTimeProvider
+import io.mockk.every
+import io.mockk.mockk
 import org.h2.jdbcx.JdbcDataSource
-import org.h2.tools.RunScript
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.InputStreamReader
 import java.math.BigDecimal
-import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import javax.sql.DataSource
 
@@ -25,7 +24,7 @@ class JdbcInvoiceRepositoryTest {
 
     private lateinit var dataSource: DataSource
     private lateinit var repository: JdbcInvoiceRepository
-    private val dateTimeProvider = FixedDateTimeProvider(FIXED_NOW)
+    private val dateTimeProvider = mockk<DateTimeProvider>()
 
     @BeforeEach
     fun setUp() {
@@ -35,6 +34,8 @@ class JdbcInvoiceRepositoryTest {
         runSql(DATA_SQL, dataSource)
 
         repository = JdbcInvoiceRepository(dataSource, dateTimeProvider)
+
+        every { dateTimeProvider.now() } returns FIXED_NOW
     }
 
     @AfterEach
@@ -156,10 +157,6 @@ class JdbcInvoiceRepositoryTest {
         )
 
         assertEquals(expected, result)
-    }
-
-    private class FixedDateTimeProvider(private val fixedNow: LocalDateTime) : DateTimeProvider {
-        override fun now(): LocalDateTime = fixedNow
     }
 
     companion object {
