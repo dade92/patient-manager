@@ -91,8 +91,8 @@ class InvoiceServiceTest {
     @Test
     fun `getInvoicesForOperation delegates to repository`() {
         val invoices = listOf(
-            anInvoice(InvoiceId("INV-2")),
-            anInvoice(InvoiceId("INV-3"))
+            anInvoice(anInvoiceId()),
+            anInvoice(anInvoiceId())
         )
 
         every { invoiceRepository.findByOperationId(OPERATION_ID) } returns invoices
@@ -104,7 +104,7 @@ class InvoiceServiceTest {
 
     @Test
     fun `getInvoicesForPatient delegates to repository`() {
-        val invoices = listOf(anInvoice(INVOICE_ID))
+        val invoices = listOf(anInvoice())
 
         every { invoiceRepository.findByPatientId(PATIENT_ID) } returns invoices
 
