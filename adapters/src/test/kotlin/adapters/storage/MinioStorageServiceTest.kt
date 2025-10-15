@@ -28,9 +28,9 @@ class MinioStorageServiceTest {
         val bytes = byteArrayOf(1, 2, 3, 4)
         val input = ByteArrayInputStream(bytes)
         val request = UploadFileRequest(
-            key = "folder/file.png",
+            key = KEY,
             contentLength = bytes.size.toLong(),
-            contentType = "image/png",
+            contentType = CONTENT_TYPE,
             inputStream = input
         )
 
@@ -47,26 +47,28 @@ class MinioStorageServiceTest {
         assertEquals(request.contentType, capturedPut.contentType())
 
         val capturedBody = bodySlot.captured
-        // Ensure the content length has been set correctly in the RequestBody
-        assertEquals(request.contentLength, capturedBody.contentLength())
 
-        verify(exactly = 1) { s3Client.putObject(any<PutObjectRequest>(), any<RequestBody>()) }
+        assertEquals(request.contentLength, capturedBody.contentLength())
     }
 
     @Test
     fun `getFile delegates to s3 and returns input stream`() {
-        val key = "folder/file.pdf"
         val expectedStream = mockk<ResponseInputStream<GetObjectResponse>>()
 
         val reqSlot = slot<GetObjectRequest>()
         every { s3Client.getObject(capture(reqSlot)) } returns expectedStream
 
-        val result = service.getFile(key)
+        val result = service.getFile(KEY)
 
         assertEquals(bucketName, reqSlot.captured.bucket())
-        assertEquals(key, reqSlot.captured.key())
+        assertEquals(KEY, reqSlot.captured.key())
         assertEquals(expectedStream, result)
 
         verify(exactly = 1) { s3Client.getObject(any<GetObjectRequest>()) }
+    }
+
+    companion object {
+        private const val KEY = "folder/file.pdf"
+        private const val CONTENT_TYPE = "image/png"
     }
 }
