@@ -3,12 +3,24 @@
     {
       "id": "PAT-123",
       "name": "John Doe",
-      "email": "john.doe@example.com"
+      "email": "john.doe@example.com",
+      "phoneNumber": "1234567890",
+      "address": "123 Main St",
+      "cityOfResidence": "Springfield",
+      "nationality": "Italian",
+      "birthDate": [1990, 1, 1],
+      "taxCode": "TAXCODE123"
     },
     {
       "id": "PAT-2",
       "name": "John Doe",
-      "email": "john.doe@example.com"
+      "email": "john.doe@example.com",
+      "phoneNumber": "1234567890",
+      "address": "123 Main St",
+      "cityOfResidence": "Springfield",
+      "nationality": "Italian",
+      "birthDate": [1990, 1, 1],
+      "taxCode": "TAXCODE123"
     }
   ]
 }

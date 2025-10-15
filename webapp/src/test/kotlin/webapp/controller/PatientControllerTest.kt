@@ -30,7 +30,17 @@ class PatientControllerTest {
 
     @Test
     fun `getPatient returns 200 with body when patient exists`() {
-        val patient = aPatient(id = PATIENT_ID)
+        val patient = aPatient(
+            id = PATIENT_ID,
+            name = NAME,
+            email = EMAIL,
+            phoneNumber = PHONE,
+            address = ADDRESS,
+            cityOfResidence = CITY,
+            nationality = NATIONALITY,
+            birthDate = BIRTH_DATE,
+            taxCode = TAX_CODE
+        )
 
         every { patientService.retrievePatient(PATIENT_ID) } returns patient
 
@@ -55,8 +65,28 @@ class PatientControllerTest {
 
     @Test
     fun `searchPatients returns list wrapped in response`() {
-        val p1 = aPatient(PATIENT_ID)
-        val p2 = aPatient(aPatientId("PAT-2"))
+        val p1 = aPatient(
+            id = PATIENT_ID,
+            name = NAME,
+            email = EMAIL,
+            phoneNumber = PHONE,
+            address = ADDRESS,
+            cityOfResidence = CITY,
+            nationality = NATIONALITY,
+            birthDate = BIRTH_DATE,
+            taxCode = TAX_CODE
+        )
+        val p2 = aPatient(
+            id = aPatientId("PAT-2"),
+            name = NAME,
+            email = EMAIL,
+            phoneNumber = PHONE,
+            address = ADDRESS,
+            cityOfResidence = CITY,
+            nationality = NATIONALITY,
+            birthDate = BIRTH_DATE,
+            taxCode = TAX_CODE
+        )
         every { patientService.searchPatientsByName(NAME_QUERY) } returns listOf(p1, p2)
 
         mockMvc.perform(get("/api/patient/search").param("name", NAME_QUERY))
