@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import utils.FixtureLoader
+import utils.FixtureLoader.readFile
 
 class InvoiceControllerTest {
 
@@ -54,13 +54,13 @@ class InvoiceControllerTest {
         mockMvc.perform(
             post("/api/invoice")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(FixtureLoader.readFile("/fixtures/invoice/create-invoice.json"))
+                .content(readFile("/fixtures/invoice/create-invoice.json"))
         )
             .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/invoice/create-invoice-response.json")
+                    readFile("/fixtures/invoice/create-invoice-response.json")
                 )
             )
     }
@@ -81,7 +81,7 @@ class InvoiceControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/invoice/get-invoice.json")
+                    readFile("/fixtures/invoice/get-invoice.json")
                 )
             )
     }
@@ -116,7 +116,7 @@ class InvoiceControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/invoice/get-invoices-per-operation.json")
+                    readFile("/fixtures/invoice/get-invoices-per-operation.json")
                 )
             )
     }
@@ -143,7 +143,7 @@ class InvoiceControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/invoice/get-invoices-per-patient.json")
+                    readFile("/fixtures/invoice/get-invoices-per-patient.json")
                 )
             )
     }
@@ -159,18 +159,16 @@ class InvoiceControllerTest {
 
         every { invoiceService.updateInvoiceStatus(anInvoiceId(INVOICE_ID), PAID) } returns updated
 
-        val requestJson = FixtureLoader.readFile("/fixtures/invoice/update-invoice-status.json")
-
         mockMvc.perform(
             post("/api/invoice/$INVOICE_ID/status")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson)
+                .content(readFile("/fixtures/invoice/update-invoice-status.json"))
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/invoice/update-invoice-status-response.json")
+                    readFile("/fixtures/invoice/update-invoice-status-response.json")
                 )
             )
     }
