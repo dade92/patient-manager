@@ -57,7 +57,7 @@ class PatientServiceTest {
 
     @Test
     fun `retrievePatient delegates to repository`() {
-        val patientId = aPatientId("PAT-123")
+        val patientId = aPatientId()
         val patient = aPatient(id = patientId)
 
         every { patientRepository.retrieve(patientId) } returns patient
@@ -74,9 +74,9 @@ class PatientServiceTest {
             aPatient(aPatientId("PAT-2"))
         )
 
-        every { patientRepository.searchByName("Jo") } returns patients
+        every { patientRepository.searchByName(NAME) } returns patients
 
-        val result = service.searchPatientsByName("Jo")
+        val result = service.searchPatientsByName(NAME)
 
         assertEquals(patients, result)
     }
