@@ -46,10 +46,10 @@ class PatientControllerTest {
 
     @Test
     fun `getPatient returns 404 when not found`() {
-        val id = aPatientId("PAT-404")
-        every { patientService.retrievePatient(id) } returns null
+        val id = "PAT-404"
+        every { patientService.retrievePatient(aPatientId(id)) } returns null
 
-        mockMvc.perform(get("/api/patient/${id.value}"))
+        mockMvc.perform(get("/api/patient/$id"))
             .andExpect(status().isNotFound)
     }
 
