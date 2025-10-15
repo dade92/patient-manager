@@ -1,5 +1,6 @@
 package adapters.operation
 
+import adapters.Utils.runSql
 import domain.model.*
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aPatientOperation
@@ -29,8 +30,8 @@ class JdbcOperationRepositoryTest {
     fun setUp() {
         dataSource = JdbcDataSource().apply { setUrl(DB_URL) }
 
-        runSql(SCHEMA_SQL)
-        runSql(DATA_SQL)
+        runSql(SCHEMA_SQL, dataSource)
+        runSql(DATA_SQL, dataSource)
 
         repository = JdbcOperationRepository(dataSource, dateTimeProvider)
     }
@@ -155,16 +156,6 @@ class JdbcOperationRepositoryTest {
 
         val assets = result.assets.toSet()
         assertTrue(assets.containsAll(setOf(OTHER_ASSET_NAME, newAssetName)))
-    }
-
-    private fun runSql(resourcePath: String) {
-        dataSource.connection.use { conn ->
-            val input = this::class.java.getResourceAsStream(resourcePath)
-                ?: throw IllegalStateException("Resource not found: $resourcePath")
-            InputStreamReader(input, StandardCharsets.UTF_8).use { reader ->
-                RunScript.execute(conn, reader)
-            }
-        }
     }
 
     private class FixedDateTimeProvider(private val fixedNow: LocalDateTime) : DateTimeProvider {

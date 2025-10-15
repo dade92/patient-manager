@@ -1,5 +1,6 @@
 package adapters.patient
 
+import adapters.Utils.runSql
 import domain.model.PatientBuilder.aPatient
 import domain.model.PatientBuilder.aPatientId
 import domain.model.PatientId
@@ -25,8 +26,8 @@ class JdbcPatientRepositoryTest {
             setUrl(DB_URL)
         }
 
-        runSql(SCHEMA_SQL)
-        runSql(DATA_SQL)
+        runSql(SCHEMA_SQL, dataSource)
+        runSql(DATA_SQL, dataSource)
 
         repository = JdbcPatientRepository(dataSource)
     }
@@ -101,16 +102,6 @@ class JdbcPatientRepositoryTest {
 
         val retrieved = repository.retrieve(PatientId(ID))
         assertEquals(updatedPatient, retrieved)
-    }
-
-    private fun runSql(resourcePath: String) {
-        dataSource.connection.use { conn ->
-            val input = this::class.java.getResourceAsStream(resourcePath)
-                ?: throw IllegalStateException("Resource not found: $resourcePath")
-            InputStreamReader(input, StandardCharsets.UTF_8).use { reader ->
-                RunScript.execute(conn, reader)
-            }
-        }
     }
 
     companion object {
