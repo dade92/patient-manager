@@ -1,0 +1,12 @@
+{
+  "id": "OP-999",
+  "patientId": "PAT-123",
+  "type": "SURGERY",
+  "description": "Appendectomy",
+  "executor": "Dr. Who",
+  "assets": [],
+  "additionalNotes": [],
+  "createdAt": [2025, 1, 1, 10, 0, 0],
+  "updatedAt": [2025, 1, 2, 9, 0, 0],
+  "estimatedCost": {"amount": 2500.00, "currency": "EUR"}
+}
