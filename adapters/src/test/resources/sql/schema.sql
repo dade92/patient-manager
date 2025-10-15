@@ -1,3 +1,9 @@
+-- Drop operation-related tables first to avoid FK issues if present
+DROP TABLE IF EXISTS `OPERATION_NOTE`;
+DROP TABLE IF EXISTS `OPERATION_ASSET`;
+DROP TABLE IF EXISTS `OPERATION`;
+
+-- Existing patient table
 DROP TABLE IF EXISTS `PATIENT`;
 
 CREATE TABLE `PATIENT` (
@@ -11,4 +17,29 @@ CREATE TABLE `PATIENT` (
     `birth_date` DATE NOT NULL,
     `tax_code` VARCHAR(100) NOT NULL,
     `creation_date` TIMESTAMP NOT NULL
+);
+
+-- Operation main table
+CREATE TABLE `OPERATION` (
+    `operation_id` VARCHAR(255) PRIMARY KEY,
+    `patient_id` VARCHAR(255) NOT NULL,
+    `type` VARCHAR(50) NOT NULL,
+    `description` VARCHAR(1024) NOT NULL,
+    `executor` VARCHAR(255) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL,
+    `updated_at` TIMESTAMP NOT NULL,
+    `estimated_cost` DECIMAL(19,2) NOT NULL
+);
+
+-- Operation assets table
+CREATE TABLE `OPERATION_ASSET` (
+    `operation_id` VARCHAR(255) NOT NULL,
+    `asset_name` VARCHAR(512) NOT NULL
+);
+
+-- Operation notes table
+CREATE TABLE `OPERATION_NOTE` (
+    `operation_id` VARCHAR(255) NOT NULL,
+    `content` VARCHAR(2048) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL
 );
