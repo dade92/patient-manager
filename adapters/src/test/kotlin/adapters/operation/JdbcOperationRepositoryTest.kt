@@ -1,6 +1,7 @@
 package adapters.operation
 
 import domain.model.*
+import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
@@ -57,7 +58,7 @@ class JdbcOperationRepositoryTest {
             ),
             creationDateTime = LocalDateTime.of(2025, 1, 1, 10, 0, 0),
             lastUpdate = LocalDateTime.of(2025, 1, 1, 10, 0, 0),
-            estimatedCost = Money(BigDecimal("2500.00"))
+            estimatedCost = aMoney(BigDecimal("2500.00"))
         )
 
         assertEquals(expected, result)
@@ -77,14 +78,6 @@ class JdbcOperationRepositoryTest {
         val newOperation = aPatientOperation(
             id = newOperationId,
             patientId = PATIENT_ID,
-            type = OperationType.CONSULTATION,
-            description = "General check",
-            executor = "Dr. House",
-            assets = listOf("doc1.pdf", "doc2.pdf"),
-            additionalNotes = listOf(anOperationNote("All good", LocalDateTime.of(2025, 1, 2, 12, 0, 0))),
-            creationDateTime = LocalDateTime.of(2025, 1, 2, 12, 0, 0),
-            lastUpdate = LocalDateTime.of(2025, 1, 2, 12, 0, 0),
-            estimatedCost = Money(BigDecimal("150.00"))
         )
 
         val saved = repository.save(newOperation)
@@ -141,7 +134,7 @@ class JdbcOperationRepositoryTest {
         assertEquals(FIXED_NOW, result.lastUpdate)
 
         val assets = result.assets.toSet()
-        assertTrue(assets.containsAll(setOf("scan1.png", newAssetName)))
+        assertTrue(assets.containsAll(setOf(OTHER_ASSET_NAME, newAssetName)))
     }
 
     private fun runSql(resourcePath: String) {
@@ -163,6 +156,7 @@ class JdbcOperationRepositoryTest {
         private const val SCHEMA_SQL = "/sql/schema.sql"
         private const val DATA_SQL = "/sql/data.sql"
 
+        private const val OTHER_ASSET_NAME = "scan1.png"
         private val OPERATION_ID = OperationId("OP-001")
         private val PATIENT_ID = PatientId("PAT-001")
         private val FIXED_NOW: LocalDateTime = LocalDateTime.of(2025, 1, 4, 8, 0, 0)
