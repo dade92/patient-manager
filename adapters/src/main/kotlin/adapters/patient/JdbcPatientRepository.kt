@@ -15,7 +15,7 @@ class JdbcPatientRepository(
 
     override fun retrieve(patientId: PatientId): Patient? {
         val sql =
-            "SELECT patient_id, name, email, phone_number, address, city_of_residence, nationality, birth_date, tax_code FROM `PATIENT` WHERE patient_id = ?"
+            "SELECT $COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, $COL_BIRTH_DATE, $COL_TAX_CODE FROM `$TABLE_PATIENT` WHERE $COL_PATIENT_ID = ?"
 
         dataSource.connection.use { connection ->
             connection.prepareStatement(sql).use { statement ->
@@ -43,7 +43,7 @@ class JdbcPatientRepository(
 
     override fun searchByName(name: String): List<Patient> {
         val sql =
-            "SELECT patient_id, name, email, phone_number, address, city_of_residence, nationality, birth_date, tax_code FROM `PATIENT` WHERE name LIKE ?"
+            "SELECT $COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, $COL_BIRTH_DATE, $COL_TAX_CODE FROM `$TABLE_PATIENT` WHERE $COL_NAME LIKE ?"
         val patients = mutableListOf<Patient>()
 
         dataSource.connection.use { connection ->
@@ -62,7 +62,7 @@ class JdbcPatientRepository(
 
     private fun insertPatient(patient: Patient): Patient {
         val sql = """
-            INSERT INTO `PATIENT` (patient_id, name, email, phone_number, address, city_of_residence, nationality, birth_date, tax_code, creation_date) 
+            INSERT INTO `$TABLE_PATIENT` ($COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, $COL_BIRTH_DATE, $COL_TAX_CODE, $COL_CREATION_DATE) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """.trimIndent()
 
@@ -90,9 +90,9 @@ class JdbcPatientRepository(
 
     private fun updatePatient(patient: Patient): Patient {
         val sql = """
-            UPDATE `PATIENT` 
-            SET name = ?, email = ?, phone_number = ?, address = ?, city_of_residence = ?, nationality = ?, birth_date = ?, tax_code = ? 
-            WHERE patient_id = ?
+            UPDATE `$TABLE_PATIENT` 
+            SET $COL_NAME = ?, $COL_EMAIL = ?, $COL_PHONE = ?, $COL_ADDRESS = ?, $COL_CITY = ?, $COL_NATIONALITY = ?, $COL_BIRTH_DATE = ?, $COL_TAX_CODE = ? 
+            WHERE $COL_PATIENT_ID = ?
         """.trimIndent()
 
         dataSource.connection.use { connection ->
@@ -116,16 +116,30 @@ class JdbcPatientRepository(
 
     private fun mapToPatient(resultSet: ResultSet): Patient =
         Patient(
-            id = PatientId(resultSet.getString("patient_id")),
-            name = resultSet.getString("name"),
-            email = resultSet.getString("email"),
-            phoneNumber = resultSet.getString("phone_number"),
-            address = resultSet.getString("address"),
-            cityOfResidence = resultSet.getString("city_of_residence"),
-            nationality = resultSet.getString("nationality"),
-            birthDate = resultSet.getDate("birth_date").toLocalDate(),
-            taxCode = resultSet.getString("tax_code")
+            id = PatientId(resultSet.getString(COL_PATIENT_ID)),
+            name = resultSet.getString(COL_NAME),
+            email = resultSet.getString(COL_EMAIL),
+            phoneNumber = resultSet.getString(COL_PHONE),
+            address = resultSet.getString(COL_ADDRESS),
+            cityOfResidence = resultSet.getString(COL_CITY),
+            nationality = resultSet.getString(COL_NATIONALITY),
+            birthDate = resultSet.getDate(COL_BIRTH_DATE).toLocalDate(),
+            taxCode = resultSet.getString(COL_TAX_CODE)
         )
+
+    private companion object {
+        const val TABLE_PATIENT = "PATIENT"
+        const val COL_PATIENT_ID = "patient_id"
+        const val COL_NAME = "name"
+        const val COL_EMAIL = "email"
+        const val COL_PHONE = "phone_number"
+        const val COL_ADDRESS = "address"
+        const val COL_CITY = "city_of_residence"
+        const val COL_NATIONALITY = "nationality"
+        const val COL_BIRTH_DATE = "birth_date"
+        const val COL_TAX_CODE = "tax_code"
+        const val COL_CREATION_DATE = "creation_date"
+    }
 }
 
 

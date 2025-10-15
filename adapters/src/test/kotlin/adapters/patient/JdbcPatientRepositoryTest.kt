@@ -1,6 +1,6 @@
 package adapters.patient
 
-import domain.model.Patient
+import domain.model.PatientBuilder.aPatient
 import domain.model.PatientId
 import org.h2.jdbcx.JdbcDataSource
 import org.h2.tools.RunScript
@@ -37,7 +37,7 @@ class JdbcPatientRepositoryTest {
     fun `retrieve returns patient when present`() {
         val result = repository.retrieve(PatientId("PAT-001"))
 
-        val expected = Patient(
+        val expected = aPatient(
             id = PatientId("PAT-001"),
             name = "John Doe",
             email = "john.doe@example.com",
@@ -62,7 +62,7 @@ class JdbcPatientRepositoryTest {
 
     @Test
     fun `save inserts when patient not existing`() {
-        val newPatient = Patient(
+        val newPatient = aPatient(
             id = PatientId("PAT-003"),
             name = "Alice Smith",
             email = "alice@example.com",
@@ -83,7 +83,7 @@ class JdbcPatientRepositoryTest {
 
     @Test
     fun `save updates when patient existing`() {
-        val updatedPatient = Patient(
+        val updatedPatient = aPatient(
             id = PatientId("PAT-002"),
             name = "Jane Roe Updated",
             email = "jane.roe.updated@example.com",
