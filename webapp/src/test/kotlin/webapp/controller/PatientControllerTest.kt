@@ -95,10 +95,11 @@ class PatientControllerTest {
         )
             .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(created.id.value))
-            .andExpect(jsonPath("$.name").value(NAME))
-            .andExpect(jsonPath("$.email").value(EMAIL))
-            .andExpect(jsonPath("$.taxCode").value(TAX_CODE))
+            .andExpect(
+                content().json(
+                    FixtureLoader.readFile("/fixtures/patient/create-patient-response.json")
+                )
+            )
     }
 
     companion object {
