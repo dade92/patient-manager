@@ -3,6 +3,7 @@ package adapters.operation
 import domain.model.*
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
+import domain.model.OperationBuilder.anOperationNote
 import domain.model.PatientBuilder.aPatientId
 import domain.utils.DateTimeProvider
 import org.h2.jdbcx.JdbcDataSource
@@ -34,7 +35,8 @@ class JdbcOperationRepositoryTest {
     }
 
     @AfterEach
-    fun tearDown() {}
+    fun tearDown() {
+    }
 
     @Test
     fun `retrieve returns operation when present`() {
@@ -42,14 +44,19 @@ class JdbcOperationRepositoryTest {
 
         val expected = aPatientOperation(
             id = OPERATION_ID,
-            patientId = PatientId("PAT-001"),
+            patientId = aPatientId("PAT-001"),
             type = OperationType.SURGERY,
             description = "Appendectomy",
             executor = "Dr. Who",
             assets = listOf("scan1.png"),
-            additionalNotes = listOf(OperationNote("Initial assessment complete", LocalDateTime.of(2025,1,1,11,0,0))),
-            creationDateTime = LocalDateTime.of(2025,1,1,10,0,0),
-            lastUpdate = LocalDateTime.of(2025,1,1,10,0,0),
+            additionalNotes = listOf(
+                anOperationNote(
+                    content = "Initial assessment complete",
+                    creationTime = LocalDateTime.of(2025, 1, 1, 11, 0, 0)
+                )
+            ),
+            creationDateTime = LocalDateTime.of(2025, 1, 1, 10, 0, 0),
+            lastUpdate = LocalDateTime.of(2025, 1, 1, 10, 0, 0),
             estimatedCost = Money(BigDecimal("2500.00"))
         )
 
@@ -58,7 +65,7 @@ class JdbcOperationRepositoryTest {
 
     @Test
     fun `findByPatientId returns matches`() {
-        val result = repository.findByPatientId(aPatientId("PAT-001"))
+        val result = repository.findByPatientId(PATIENT_ID)
 
         assertEquals(1, result.size)
         assertEquals(OPERATION_ID, result[0].id)
@@ -69,14 +76,14 @@ class JdbcOperationRepositoryTest {
         val newOperationId = anOperationId("OP-002")
         val newOperation = aPatientOperation(
             id = newOperationId,
-            patientId = PatientId("PAT-001"),
+            patientId = PATIENT_ID,
             type = OperationType.CONSULTATION,
             description = "General check",
             executor = "Dr. House",
             assets = listOf("doc1.pdf", "doc2.pdf"),
-            additionalNotes = listOf(OperationNote("All good", LocalDateTime.of(2025,1,2,12,0,0))),
-            creationDateTime = LocalDateTime.of(2025,1,2,12,0,0),
-            lastUpdate = LocalDateTime.of(2025,1,2,12,0,0),
+            additionalNotes = listOf(anOperationNote("All good", LocalDateTime.of(2025, 1, 2, 12, 0, 0))),
+            creationDateTime = LocalDateTime.of(2025, 1, 2, 12, 0, 0),
+            lastUpdate = LocalDateTime.of(2025, 1, 2, 12, 0, 0),
             estimatedCost = Money(BigDecimal("150.00"))
         )
 
@@ -91,14 +98,19 @@ class JdbcOperationRepositoryTest {
     fun `save updates when operation existing`() {
         val updated = aPatientOperation(
             id = OPERATION_ID,
-            patientId = PatientId("PAT-001"),
+            patientId = PATIENT_ID,
             type = OperationType.SURGERY,
             description = "Appendectomy - updated",
             executor = "Dr. Strange",
             assets = listOf("scan1.png", "scan2.png"),
-            additionalNotes = listOf(OperationNote("Initial assessment complete", LocalDateTime.of(2025,1,1,11,0,0))),
-            creationDateTime = LocalDateTime.of(2025,1,1,10,0,0),
-            lastUpdate = LocalDateTime.of(2025,1,3,9,0,0),
+            additionalNotes = listOf(
+                anOperationNote(
+                    "Initial assessment complete",
+                    LocalDateTime.of(2025, 1, 1, 11, 0, 0)
+                )
+            ),
+            creationDateTime = LocalDateTime.of(2025, 1, 1, 10, 0, 0),
+            lastUpdate = LocalDateTime.of(2025, 1, 3, 9, 0, 0),
             estimatedCost = Money(BigDecimal("2500.00"))
         )
 
@@ -111,27 +123,25 @@ class JdbcOperationRepositoryTest {
 
     @Test
     fun `addNote adds note and updates lastUpdate`() {
-        val result = repository.addNote(OPERATION_ID, "Follow-up done")
+        val note = "note"
+        val result = repository.addNote(OPERATION_ID, note)
 
-        assertNotNull(result)
-        val updated = result!!
-        assertEquals(OPERATION_ID, updated.id)
-        assertEquals(FIXED_NOW, updated.lastUpdate)
-        // newest first due to ORDER BY created_at DESC
-        assertEquals("Follow-up done", updated.additionalNotes.first().content)
-        assertEquals(FIXED_NOW, updated.additionalNotes.first().creationTime)
+        assertEquals(OPERATION_ID, result!!.id)
+        assertEquals(FIXED_NOW, result.lastUpdate)
+        assertEquals(note, result.additionalNotes.first().content)
+        assertEquals(FIXED_NOW, result.additionalNotes.first().creationTime)
     }
 
     @Test
     fun `addAsset adds asset and updates lastUpdate`() {
-        val result = repository.addAsset(OPERATION_ID, "xray2.png")
+        val newAssetName = "xray2.png"
+        val result = repository.addAsset(OPERATION_ID, newAssetName)
 
-        assertNotNull(result)
-        val updated = result!!
-        assertEquals(OPERATION_ID, updated.id)
-        assertEquals(FIXED_NOW, updated.lastUpdate)
-        val assets = updated.assets.toSet()
-        assertTrue(assets.containsAll(setOf("scan1.png", "xray2.png")))
+        assertEquals(OPERATION_ID, result!!.id)
+        assertEquals(FIXED_NOW, result.lastUpdate)
+
+        val assets = result.assets.toSet()
+        assertTrue(assets.containsAll(setOf("scan1.png", newAssetName)))
     }
 
     private fun runSql(resourcePath: String) {
@@ -154,6 +164,7 @@ class JdbcOperationRepositoryTest {
         private const val DATA_SQL = "/sql/data.sql"
 
         private val OPERATION_ID = OperationId("OP-001")
+        private val PATIENT_ID = PatientId("PAT-001")
         private val FIXED_NOW: LocalDateTime = LocalDateTime.of(2025, 1, 4, 8, 0, 0)
     }
 }
