@@ -47,4 +47,9 @@ object OperationBuilder {
         executor = executor,
         estimatedCost = estimatedCost
     )
+
+    fun anOperationNote(
+        content: String = "note",
+        creationTime: LocalDateTime = LocalDateTime.now()
+    ) = OperationNote(content, creationTime)
 }
