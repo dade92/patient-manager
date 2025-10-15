@@ -1,0 +1,14 @@
+{
+  "patients": [
+    {
+      "id": "PAT-123",
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    },
+    {
+      "id": "PAT-2",
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    }
+  ]
+}
