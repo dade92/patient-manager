@@ -46,7 +46,7 @@ class PatientControllerTest {
 
         every { patientService.retrievePatient(PATIENT_ID) } returns patient
 
-        mockMvc.perform(get("/api/patient/${PATIENT_ID.value}"))
+        mockMvc.perform(get("/api/patient/PAT-123"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
@@ -58,10 +58,9 @@ class PatientControllerTest {
 
     @Test
     fun `getPatient returns 404 when not found`() {
-        val id = "PAT-404"
-        every { patientService.retrievePatient(aPatientId(id)) } returns null
+        every { patientService.retrievePatient(PATIENT_ID) } returns null
 
-        mockMvc.perform(get("/api/patient/$id"))
+        mockMvc.perform(get("/api/patient/PAT-123"))
             .andExpect(status().isNotFound)
     }
 
@@ -79,7 +78,7 @@ class PatientControllerTest {
             taxCode = TAX_CODE
         )
         val p2 = aPatient(
-            id = aPatientId("PAT-2"),
+            id = ANOTHER_PATIENT_ID,
             name = NAME,
             email = EMAIL,
             phoneNumber = PHONE,
@@ -115,7 +114,7 @@ class PatientControllerTest {
         )
         val created =
             aPatient(
-                aPatientId("PAT-999"),
+                PATIENT_ID,
                 NAME,
                 EMAIL,
                 PHONE,
@@ -146,6 +145,7 @@ class PatientControllerTest {
         private const val NAME_QUERY = "Jo"
 
         private val PATIENT_ID = aPatientId("PAT-123")
+        private val ANOTHER_PATIENT_ID = aPatientId("PAT-456")
         private const val NAME = "John Doe"
         private const val EMAIL = "john.doe@example.com"
         private const val PHONE = "1234567890"

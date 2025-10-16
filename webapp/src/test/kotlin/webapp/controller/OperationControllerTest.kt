@@ -46,7 +46,7 @@ class OperationControllerTest {
             type = OperationType.SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
-            assets = listOf(ASSET_1),
+            assets = listOf(ORIGINAL_FILENAME_1),
             additionalNotes = listOf(anOperationNote(NOTE, NOTE_TIME)),
             creationDateTime = CREATED_AT,
             lastUpdate = UPDATED_AT,
@@ -81,7 +81,7 @@ class OperationControllerTest {
             type = OperationType.SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
-            assets = listOf(ASSET_1),
+            assets = listOf(ORIGINAL_FILENAME_1),
             additionalNotes = listOf(anOperationNote(NOTE, NOTE_TIME)),
             creationDateTime = CREATED_AT,
             lastUpdate = UPDATED_AT,
@@ -110,8 +110,6 @@ class OperationControllerTest {
 
     @Test
     fun `createOperation returns 201 and delegates to service`() {
-        val requestJson = readFile("/fixtures/operation/create-operation.json")
-
         val expectedRequest = CreateOperationRequest(
             patientId = PATIENT_ID,
             type = OperationType.SURGERY,
@@ -120,7 +118,7 @@ class OperationControllerTest {
             estimatedCost = aMoney(AMOUNT, EUR)
         )
         val created = aPatientOperation(
-            id = anOperationId("OP-999"),
+            id = OPERATION_ID,
             patientId = PATIENT_ID,
             type = OperationType.SURGERY,
             description = DESCRIPTION,
@@ -137,7 +135,7 @@ class OperationControllerTest {
         mockMvc.perform(
             post("/api/operation")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson)
+                .content(readFile("/fixtures/operation/create-operation.json"))
         )
             .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -156,7 +154,7 @@ class OperationControllerTest {
             type = OperationType.SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
-            assets = listOf(ASSET_1),
+            assets = listOf(ORIGINAL_FILENAME_1),
             additionalNotes = listOf(anOperationNote(NOTE, NOTE_TIME)),
             creationDateTime = CREATED_AT,
             lastUpdate = UPDATED_AT,
@@ -187,7 +185,7 @@ class OperationControllerTest {
             type = OperationType.SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
-            assets = listOf(ASSET_1, "xray2.png"),
+            assets = listOf(ORIGINAL_FILENAME_1, ORIGINAL_FILENAME_2),
             additionalNotes = listOf(anOperationNote(NOTE, NOTE_TIME)),
             creationDateTime = CREATED_AT,
             lastUpdate = UPDATED_AT,
@@ -196,7 +194,7 @@ class OperationControllerTest {
 
         val file = MockMultipartFile(
             "file",
-            "xray2.png",
+            ORIGINAL_FILENAME_2,
             "image/png",
             FILE_CONTENT
         )
@@ -204,7 +202,7 @@ class OperationControllerTest {
         every {
             operationService.addOperationAsset(
                 OPERATION_ID,
-                "xray2.png",
+                ORIGINAL_FILENAME_2,
                 3,
                 "image/png",
                 any()
@@ -228,8 +226,9 @@ class OperationControllerTest {
         private val PATIENT_ID = aPatientId("PAT-123")
         private const val DESCRIPTION = "Appendectomy"
         private const val EXECUTOR = "Dr. Who"
-        private const val ASSET_1 = "scan1.png"
+        private const val ORIGINAL_FILENAME_1 = "scan1.png"
         private const val NOTE = "Initial assessment complete"
+        private const val ORIGINAL_FILENAME_2 = "xray2.png"
         private val NOTE_TIME = LocalDateTime.of(2025, 1, 1, 11, 0, 0)
         private val CREATED_AT = LocalDateTime.of(2025, 1, 1, 10, 0, 0)
         private val UPDATED_AT = LocalDateTime.of(2025, 1, 2, 9, 0, 0)

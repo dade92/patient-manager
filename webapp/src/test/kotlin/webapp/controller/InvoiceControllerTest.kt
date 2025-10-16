@@ -10,7 +10,6 @@ import domain.model.Money.Companion.EUR
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.anOperationId
 import domain.model.PatientBuilder.aPatientId
-import domain.model.PatientId
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
