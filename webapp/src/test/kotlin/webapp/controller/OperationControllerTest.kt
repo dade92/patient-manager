@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import utils.FixtureLoader
 import utils.FixtureLoader.readFile
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -56,7 +55,7 @@ class OperationControllerTest {
 
         every { operationService.getOperation(OPERATION_ID) } returns operation
 
-        mockMvc.perform(get("/api/operation/${OPERATION_ID.value}"))
+        mockMvc.perform(get("/api/operation/OP-123"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
@@ -166,10 +165,10 @@ class OperationControllerTest {
 
         every { operationService.addOperationNote(OPERATION_ID, NOTE) } returns updated
 
-        val requestJson = "{" + "\"content\":\"$NOTE\"" + "}"
+        val requestJson = """{"content":"$NOTE"}"""
 
         mockMvc.perform(
-            post("/api/operation/${OPERATION_ID.value}/notes")
+            post("/api/operation/OP-123/notes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
         )
@@ -207,7 +206,12 @@ class OperationControllerTest {
             )
         } returns updated
 
-        val file = MockMultipartFile("file", "xray2.png", "image/png", byteArrayOf(1, 2, 3))
+        val file = MockMultipartFile(
+            "file",
+            "xray2.png",
+            "image/png",
+            FILE_CONTENT
+        )
 
         mockMvc.perform(
             multipart("/api/operation/${OPERATION_ID.value}/assets").file(file)
@@ -232,5 +236,6 @@ class OperationControllerTest {
         private val CREATED_AT = LocalDateTime.of(2025, 1, 1, 10, 0, 0)
         private val UPDATED_AT = LocalDateTime.of(2025, 1, 2, 9, 0, 0)
         private val AMOUNT = BigDecimal("2500.00")
+        private val FILE_CONTENT = byteArrayOf(1, 2, 3)
     }
 }
