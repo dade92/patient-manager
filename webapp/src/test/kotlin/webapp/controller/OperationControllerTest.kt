@@ -1,6 +1,7 @@
 package webapp.controller
 
 import domain.exceptions.PatientNotFoundException
+import domain.model.Money.Companion.EUR
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import utils.FixtureLoader
+import utils.FixtureLoader.readFile
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -49,7 +51,7 @@ class OperationControllerTest {
             additionalNotes = listOf(anOperationNote(NOTE, NOTE_TIME)),
             creationDateTime = CREATED_AT,
             lastUpdate = UPDATED_AT,
-            estimatedCost = aMoney(AMOUNT, CURRENCY)
+            estimatedCost = aMoney(AMOUNT, EUR)
         )
 
         every { operationService.getOperation(OPERATION_ID) } returns operation
@@ -59,7 +61,7 @@ class OperationControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/operation/get-operation.json")
+                    readFile("/fixtures/operation/get-operation.json")
                 )
             )
     }
@@ -68,12 +70,12 @@ class OperationControllerTest {
     fun `getOperation returns 404 when not found`() {
         every { operationService.getOperation(OPERATION_ID) } returns null
 
-        mockMvc.perform(get("/api/operation/${OPERATION_ID.value}"))
+        mockMvc.perform(get("/api/operation/OP-123"))
             .andExpect(status().isNotFound)
     }
 
     @Test
-    fun `getPatientOperations returns list wrapped in response`() {
+    fun `getPatientOperations returns 200 with the list of operations`() {
         val operation = aPatientOperation(
             id = OPERATION_ID,
             patientId = PATIENT_ID,
@@ -84,17 +86,17 @@ class OperationControllerTest {
             additionalNotes = listOf(anOperationNote(NOTE, NOTE_TIME)),
             creationDateTime = CREATED_AT,
             lastUpdate = UPDATED_AT,
-            estimatedCost = aMoney(AMOUNT, CURRENCY)
+            estimatedCost = aMoney(AMOUNT, EUR)
         )
 
         every { operationService.retrieveOperationsBy(PATIENT_ID) } returns listOf(operation)
 
-        mockMvc.perform(get("/api/operation/patient/${PATIENT_ID.value}"))
+        mockMvc.perform(get("/api/operation/patient/PAT-123"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/operation/search-operations.json")
+                    readFile("/fixtures/operation/search-operations.json")
                 )
             )
     }
@@ -103,20 +105,20 @@ class OperationControllerTest {
     fun `getPatientOperations returns 404 when patient not found`() {
         every { operationService.retrieveOperationsBy(PATIENT_ID) } throws PatientNotFoundException(PATIENT_ID)
 
-        mockMvc.perform(get("/api/operation/patient/${PATIENT_ID.value}"))
+        mockMvc.perform(get("/api/operation/patient/PAT-123"))
             .andExpect(status().isNotFound)
     }
 
     @Test
     fun `createOperation returns 201 and delegates to service`() {
-        val requestJson = FixtureLoader.readFile("/fixtures/operation/create-operation.json")
+        val requestJson = readFile("/fixtures/operation/create-operation.json")
 
         val expectedRequest = CreateOperationRequest(
             patientId = PATIENT_ID,
             type = OperationType.SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
-            estimatedCost = aMoney(AMOUNT, CURRENCY)
+            estimatedCost = aMoney(AMOUNT, EUR)
         )
         val created = aPatientOperation(
             id = anOperationId("OP-999"),
@@ -128,7 +130,7 @@ class OperationControllerTest {
             additionalNotes = emptyList(),
             creationDateTime = CREATED_AT,
             lastUpdate = UPDATED_AT,
-            estimatedCost = aMoney(AMOUNT, CURRENCY)
+            estimatedCost = aMoney(AMOUNT, EUR)
         )
 
         every { operationService.createOperation(expectedRequest) } returns created
@@ -142,7 +144,7 @@ class OperationControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/operation/create-operation-response.json")
+                    readFile("/fixtures/operation/create-operation-response.json")
                 )
             )
     }
@@ -159,7 +161,7 @@ class OperationControllerTest {
             additionalNotes = listOf(anOperationNote(NOTE, NOTE_TIME)),
             creationDateTime = CREATED_AT,
             lastUpdate = UPDATED_AT,
-            estimatedCost = aMoney(AMOUNT, CURRENCY)
+            estimatedCost = aMoney(AMOUNT, EUR)
         )
 
         every { operationService.addOperationNote(OPERATION_ID, NOTE) } returns updated
@@ -175,7 +177,7 @@ class OperationControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/operation/add-note-response.json")
+                    readFile("/fixtures/operation/add-note-response.json")
                 )
             )
     }
@@ -192,7 +194,7 @@ class OperationControllerTest {
             additionalNotes = listOf(anOperationNote(NOTE, NOTE_TIME)),
             creationDateTime = CREATED_AT,
             lastUpdate = UPDATED_AT,
-            estimatedCost = aMoney(AMOUNT, CURRENCY)
+            estimatedCost = aMoney(AMOUNT, EUR)
         )
 
         every {
@@ -214,7 +216,7 @@ class OperationControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/operation/add-asset-response.json")
+                    readFile("/fixtures/operation/add-asset-response.json")
                 )
             )
     }
@@ -230,6 +232,5 @@ class OperationControllerTest {
         private val CREATED_AT = LocalDateTime.of(2025, 1, 1, 10, 0, 0)
         private val UPDATED_AT = LocalDateTime.of(2025, 1, 2, 9, 0, 0)
         private val AMOUNT = BigDecimal("2500.00")
-        private const val CURRENCY = "EUR"
     }
 }

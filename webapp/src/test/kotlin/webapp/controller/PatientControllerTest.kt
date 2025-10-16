@@ -1,8 +1,8 @@
 package webapp.controller
 
+import domain.model.PatientBuilder.aCreatePatientRequest
 import domain.model.PatientBuilder.aPatient
 import domain.model.PatientBuilder.aPatientId
-import domain.patient.CreatePatientRequest
 import domain.patient.PatientService
 import io.mockk.every
 import io.mockk.mockk
@@ -12,9 +12,11 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import utils.FixtureLoader
+import utils.FixtureLoader.readFile
 import java.time.LocalDate
 
 class PatientControllerTest {
@@ -49,7 +51,7 @@ class PatientControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/patient/get-patient.json")
+                    readFile("/fixtures/patient/get-patient.json")
                 )
             )
     }
@@ -94,16 +96,14 @@ class PatientControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/patient/search-patients.json")
+                    readFile("/fixtures/patient/search-patients.json")
                 )
             )
     }
 
     @Test
     fun `createPatient returns 201 and delegates to service`() {
-        val requestJson = FixtureLoader.readFile("/fixtures/patient/create-patient.json")
-
-        val expectedRequest = CreatePatientRequest(
+        val expectedRequest = aCreatePatientRequest(
             name = NAME,
             email = EMAIL,
             phoneNumber = PHONE,
@@ -114,20 +114,30 @@ class PatientControllerTest {
             taxCode = TAX_CODE
         )
         val created =
-            aPatient(aPatientId("PAT-999"), NAME, EMAIL, PHONE, ADDRESS, CITY, NATIONALITY, BIRTH_DATE, TAX_CODE)
+            aPatient(
+                aPatientId("PAT-999"),
+                NAME,
+                EMAIL,
+                PHONE,
+                ADDRESS,
+                CITY,
+                NATIONALITY,
+                BIRTH_DATE,
+                TAX_CODE
+            )
 
         every { patientService.createPatient(expectedRequest) } returns created
 
         mockMvc.perform(
             post("/api/patient")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson)
+                .content(readFile("/fixtures/patient/create-patient.json"))
         )
             .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    FixtureLoader.readFile("/fixtures/patient/create-patient-response.json")
+                    readFile("/fixtures/patient/create-patient-response.json")
                 )
             )
     }
