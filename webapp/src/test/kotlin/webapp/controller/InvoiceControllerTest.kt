@@ -39,20 +39,20 @@ class InvoiceControllerTest {
     @Test
     fun `createInvoice returns 201 and delegates to service`() {
         val request = aCreateInvoiceRequest(
-            operationId = anOperationId(OPERATION_ID),
-            patientId = aPatientId(PATIENT_ID),
-            amount = aMoney(AMOUNT, CURRENCY)
+            operationId = OPERATION_ID,
+            patientId = PATIENT_ID,
+            amount = aMoney(AMOUNT, EUR)
         )
         val created = anInvoice(
-            id = anInvoiceId(INVOICE_ID),
-            operationId = anOperationId(OPERATION_ID),
-            amount = aMoney(AMOUNT, CURRENCY),
+            id = INVOICE_ID,
+            operationId = OPERATION_ID,
+            amount = aMoney(AMOUNT, EUR),
             status = PENDING,
             creationDateTime = CREATION_DATE_TIME,
             lastUpdate = CREATION_DATE_TIME
         )
 
-        every { invoiceService.createInvoice(any()) } returns created
+        every { invoiceService.createInvoice(request) } returns created
 
         mockMvc.perform(
             post("/api/invoice")
@@ -71,15 +71,15 @@ class InvoiceControllerTest {
     @Test
     fun `getInvoice returns 200 with body when invoice exists`() {
         val invoice = anInvoice(
-            id = anInvoiceId(INVOICE_ID),
-            operationId = anOperationId(OPERATION_ID),
-            amount = aMoney(AMOUNT, CURRENCY),
+            id = INVOICE_ID,
+            operationId = OPERATION_ID,
+            amount = aMoney(AMOUNT, EUR),
             status = PAID
         )
 
-        every { invoiceService.getInvoice(anInvoiceId(INVOICE_ID)) } returns invoice
+        every { invoiceService.getInvoice(INVOICE_ID) } returns invoice
 
-        mockMvc.perform(get("/api/invoice/$INVOICE_ID"))
+        mockMvc.perform(get("/api/invoice/INV-123"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
@@ -101,20 +101,20 @@ class InvoiceControllerTest {
     fun `getInvoicesForOperation returns list of invoices`() {
         val i1 = anInvoice(
             anInvoiceId("INV-1"),
-            anOperationId(OPERATION_ID),
-            aMoney(AMOUNT, CURRENCY),
+            OPERATION_ID,
+            aMoney(AMOUNT, EUR),
             PENDING
         )
         val i2 = anInvoice(
             anInvoiceId("INV-2"),
-            anOperationId(OPERATION_ID),
-            aMoney(AMOUNT, CURRENCY),
+            OPERATION_ID,
+            aMoney(AMOUNT, EUR),
             PAID
         )
 
-        every { invoiceService.getInvoicesForOperation(anOperationId(OPERATION_ID)) } returns listOf(i1, i2)
+        every { invoiceService.getInvoicesForOperation(OPERATION_ID) } returns listOf(i1, i2)
 
-        mockMvc.perform(get("/api/invoice/operation/$OPERATION_ID"))
+        mockMvc.perform(get("/api/invoice/operation/OP-999"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
@@ -128,20 +128,20 @@ class InvoiceControllerTest {
     fun `getInvoicesForPatient returns list of invoices`() {
         val i1 = anInvoice(
             anInvoiceId("INV-1"),
-            anOperationId(OPERATION_ID),
-            aMoney(AMOUNT, CURRENCY),
+            OPERATION_ID,
+            aMoney(AMOUNT, EUR),
             PENDING
         )
         val i2 = anInvoice(
             anInvoiceId("INV-2"),
-            anOperationId(OPERATION_ID),
-            aMoney(AMOUNT, CURRENCY),
+            OPERATION_ID,
+            aMoney(AMOUNT, EUR),
             PAID
         )
 
-        every { invoiceService.getInvoicesForPatient(PatientId(PATIENT_ID)) } returns listOf(i1, i2)
+        every { invoiceService.getInvoicesForPatient(PatientId("PAT-111")) } returns listOf(i1, i2)
 
-        mockMvc.perform(get("/api/invoice/patient/$PATIENT_ID"))
+        mockMvc.perform(get("/api/invoice/patient/PAT-111"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
@@ -154,16 +154,16 @@ class InvoiceControllerTest {
     @Test
     fun `updateInvoiceStatus returns 200 when status updated`() {
         val updated = anInvoice(
-            id = anInvoiceId(INVOICE_ID),
-            operationId = anOperationId(OPERATION_ID),
-            amount = aMoney(AMOUNT, CURRENCY),
+            id = INVOICE_ID,
+            operationId = OPERATION_ID,
+            amount = aMoney(AMOUNT, EUR),
             status = PAID
         )
 
-        every { invoiceService.updateInvoiceStatus(anInvoiceId(INVOICE_ID), PAID) } returns updated
+        every { invoiceService.updateInvoiceStatus(INVOICE_ID, PAID) } returns updated
 
         mockMvc.perform(
-            post("/api/invoice/$INVOICE_ID/status")
+            post("/api/invoice/INV-123/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(readFile("/fixtures/invoice/update-invoice-status.json"))
         )
@@ -178,12 +178,12 @@ class InvoiceControllerTest {
 
     @Test
     fun `updateInvoiceStatus returns 404 when invoice not found`() {
-        every { invoiceService.updateInvoiceStatus(anInvoiceId(INVOICE_ID), PAID) } returns null
+        every { invoiceService.updateInvoiceStatus(INVOICE_ID, PAID) } returns null
 
         val requestJson = """{"status": "PAID"}"""
 
         mockMvc.perform(
-            post("/api/invoice/$INVOICE_ID/status")
+            post("/api/invoice/INV-123/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
         )
@@ -191,10 +191,9 @@ class InvoiceControllerTest {
     }
 
     companion object {
-        private const val INVOICE_ID = "INV-123"
-        private const val OPERATION_ID = "OP-999"
-        private const val PATIENT_ID = "PAT-111"
-        private const val CURRENCY = EUR
+        private val INVOICE_ID = anInvoiceId("INV-123")
+        private val OPERATION_ID = anOperationId("OP-999")
+        private val PATIENT_ID = aPatientId("PAT-111")
         private val AMOUNT = 120.50.toBigDecimal()
         private val CREATION_DATE_TIME = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
     }
