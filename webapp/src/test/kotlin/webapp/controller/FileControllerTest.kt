@@ -73,38 +73,32 @@ class FileControllerTest {
 
     @Test
     fun `getFile returns file correctly`() {
-        val fileName = "test-image.png"
-        val fileContent = "This is test image content for testing file downloads.".toByteArray()
-
-        every { contentTypeResolver.getContentType(fileName) } returns MediaType.IMAGE_PNG_VALUE
-        every { storageService.getFile(fileName) } returns ByteArrayInputStream(fileContent)
+        every { contentTypeResolver.getContentType(FILENAME) } returns CONTENT_TYPE
+        every { storageService.getFile(FILENAME) } returns ByteArrayInputStream(FILE_CONTENT)
 
         mockMvc.perform(
             get("/files")
-                .param("filename", fileName)
+                .param("filename", FILENAME)
         )
             .andExpect(status().isOk)
-            .andExpect(header().string("Content-Disposition", "inline; filename=\"$fileName\""))
-            .andExpect(content().contentType(MediaType.IMAGE_PNG_VALUE))
-            .andExpect(content().bytes(fileContent))
+            .andExpect(header().string("Content-Disposition", "inline; filename=\"$FILENAME\""))
+            .andExpect(content().contentType(CONTENT_TYPE))
+            .andExpect(content().bytes(FILE_CONTENT))
     }
 
     @Test
     fun `getFile returns file with attachment content disposition for non-displayable types`() {
-        val fileName = "test-file.xyz"
-        val fileContent = "This is generic binary content for testing non-displayable file downloads.".toByteArray()
-
-        every { contentTypeResolver.getContentType(fileName) } returns APPLICATION_OCTET_STREAM_VALUE
-        every { storageService.getFile(fileName) } returns ByteArrayInputStream(fileContent)
+        every { contentTypeResolver.getContentType(FILENAME) } returns APPLICATION_OCTET_STREAM_VALUE
+        every { storageService.getFile(FILENAME) } returns ByteArrayInputStream(FILE_CONTENT)
 
         mockMvc.perform(
             get("/files")
-                .param("filename", fileName)
+                .param("filename", FILENAME)
         )
             .andExpect(status().isOk)
-            .andExpect(header().string("Content-Disposition", "attachment; filename=\"$fileName\""))
+            .andExpect(header().string("Content-Disposition", "attachment; filename=\"$FILENAME\""))
             .andExpect(content().contentType(APPLICATION_OCTET_STREAM_VALUE))
-            .andExpect(content().bytes(fileContent))
+            .andExpect(content().bytes(FILE_CONTENT))
     }
 
     companion object {
