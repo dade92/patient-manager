@@ -3,9 +3,11 @@ package webapp.controller
 import domain.model.UploadFileRequestBuilder.anUploadFileRequest
 import domain.storage.StorageService
 import domain.storage.UploadFileRequest
+import io.mockk.Called
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -72,6 +74,7 @@ class FileControllerTest {
         )
             .andExpect(status().isBadRequest)
             .andExpect(content().string("File name is missing"))
+        verify { storageService wasNot Called }
     }
 
     @Test
