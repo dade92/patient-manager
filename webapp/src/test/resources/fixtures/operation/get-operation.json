@@ -8,10 +8,10 @@
   "additionalNotes": [
     {
       "content": "Initial assessment complete",
-      "createdAt": [2025, 1, 1, 11, 0]
+      "createdAt": "01/01/2025 11:00:00"
     }
   ],
-  "createdAt": [2025, 1, 1, 10, 0],
-  "updatedAt": [2025, 1, 2, 9, 0],
+  "createdAt": "01/01/2025 10:00:00",
+  "updatedAt": "02/01/2025 09:00:00",
   "estimatedCost": {"amount": 2500.00, "currency": "EUR"}
 }
