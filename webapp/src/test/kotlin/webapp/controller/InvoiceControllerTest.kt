@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import utils.FixtureLoader.readFile
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 class InvoiceControllerTest {
@@ -190,7 +191,7 @@ class InvoiceControllerTest {
         private val INVOICE_ID = anInvoiceId("INV-123")
         private val OPERATION_ID = anOperationId("OP-999")
         private val PATIENT_ID = aPatientId("PAT-111")
-        private val AMOUNT = 120.50.toBigDecimal()
+        private val AMOUNT = BigDecimal.TEN
         private val CREATION_DATE_TIME = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
     }
 }
