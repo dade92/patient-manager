@@ -45,8 +45,8 @@ class FileControllerTest {
         every {
             storageService.uploadFile(match { request ->
                 request.key == FILENAME &&
-                        request.contentLength == 17L &&
-                        request.contentType == CONTENT_TYPE
+                request.contentLength == 17L &&
+                request.contentType == CONTENT_TYPE
             })
         } returns Unit
 
