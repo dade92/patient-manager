@@ -168,7 +168,7 @@ class JdbcOperationRepositoryTest {
         private const val DATA_SQL = "/sql/data.sql"
 
         private const val OTHER_ASSET_NAME = "scan1.png"
-        private val OPERATION_ID = OperationId("OP-001")
+        private val OPERATION_ID = anOperationId("OP-001")
         private val PATIENT_ID = aPatientId("PAT-001")
         private val NOW: LocalDateTime = LocalDateTime.of(2025, 1, 4, 8, 0, 0)
         private val ADDITIONAL_NOTE_CREATION_TIME = LocalDateTime.of(2025, 1, 1, 11, 0, 0)
