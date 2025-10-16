@@ -5,15 +5,12 @@ import domain.generator.InvoiceIdGenerator
 import domain.model.InvoiceBuilder.aCreateInvoiceRequest
 import domain.model.InvoiceBuilder.anInvoice
 import domain.model.InvoiceBuilder.anInvoiceId
-import domain.model.InvoiceId
 import domain.model.InvoiceStatus.PAID
 import domain.model.InvoiceStatus.PENDING
 import domain.model.MoneyBuilder.aMoney
-import domain.model.OperationBuilder
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
 import domain.model.PatientBuilder.aPatientId
-import domain.model.PatientId
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
 import io.mockk.Called
@@ -27,12 +24,12 @@ import java.time.LocalDateTime
 
 class InvoiceServiceTest {
 
-    private val invoiceRepository: InvoiceRepository = mockk()
-    private val operationRepository: OperationRepository = mockk()
-    private val invoiceIdGenerator: InvoiceIdGenerator = mockk()
-    private val dateTimeProvider: DateTimeProvider = mockk()
+    private val invoiceRepository = mockk<InvoiceRepository>()
+    private val operationRepository = mockk<OperationRepository>()
+    private val invoiceIdGenerator = mockk<InvoiceIdGenerator>()
+    private val dateTimeProvider = mockk<DateTimeProvider>()
 
-    private val service = InvoiceService(
+    private val invoiceService = InvoiceService(
         invoiceRepository = invoiceRepository,
         operationRepository = operationRepository,
         invoiceIdGenerator = invoiceIdGenerator,
@@ -54,24 +51,24 @@ class InvoiceServiceTest {
             creationDateTime = NOW,
             lastUpdate = NOW
         )
-        every { operationRepository.retrieve(OPERATION_ID) } returns aPatientOperation()
+        every { operationRepository.retrieve(OPERATION_ID) } returns PATIENT_OPERATION
         every { invoiceIdGenerator.generate() } returns INVOICE_ID
         every { dateTimeProvider.now() } returns NOW
         every { invoiceRepository.save(invoice, PATIENT_ID) } returns invoice
 
-        val result = service.createInvoice(request)
+        val result = invoiceService.createInvoice(request)
 
         assertEquals(result, invoice)
     }
 
     @Test
-    fun `createInvoice throws when operation is not found`() {
+    fun `createInvoice throws exception when operation is not found`() {
         val request = aCreateInvoiceRequest(OPERATION_ID, PATIENT_ID, AMOUNT)
 
         every { operationRepository.retrieve(OPERATION_ID) } returns null
 
         assertThrows(OperationNotFoundException::class.java) {
-            service.createInvoice(request)
+            invoiceService.createInvoice(request)
         }
 
         verify(exactly = 1) { operationRepository.retrieve(OPERATION_ID) }
@@ -84,7 +81,7 @@ class InvoiceServiceTest {
 
         every { invoiceRepository.retrieve(INVOICE_ID) } returns invoice
 
-        val result = service.getInvoice(INVOICE_ID)
+        val result = invoiceService.getInvoice(INVOICE_ID)
 
         assertEquals(invoice, result)
     }
@@ -98,7 +95,7 @@ class InvoiceServiceTest {
 
         every { invoiceRepository.findByOperationId(OPERATION_ID) } returns invoices
 
-        val result = service.getInvoicesForOperation(OPERATION_ID)
+        val result = invoiceService.getInvoicesForOperation(OPERATION_ID)
 
         assertEquals(invoices, result)
     }
@@ -109,7 +106,7 @@ class InvoiceServiceTest {
 
         every { invoiceRepository.findByPatientId(PATIENT_ID) } returns invoices
 
-        val result = service.getInvoicesForPatient(PATIENT_ID)
+        val result = invoiceService.getInvoicesForPatient(PATIENT_ID)
 
         assertEquals(invoices, result)
     }
@@ -120,7 +117,7 @@ class InvoiceServiceTest {
 
         every { invoiceRepository.updateStatus(INVOICE_ID, PAID) } returns updated
 
-        val result = service.updateInvoiceStatus(INVOICE_ID, PAID)
+        val result = invoiceService.updateInvoiceStatus(INVOICE_ID, PAID)
 
         assertEquals(updated, result)
     }
@@ -131,5 +128,6 @@ class InvoiceServiceTest {
         private val INVOICE_ID = anInvoiceId()
         private val AMOUNT = aMoney()
         private val NOW = LocalDateTime.of(2025, 1, 2, 3, 4, 5)
+        private val PATIENT_OPERATION = aPatientOperation()
     }
 }

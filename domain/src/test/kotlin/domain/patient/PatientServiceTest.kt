@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test
 
 class PatientServiceTest {
 
-    private val patientRepository: PatientRepository = mockk()
-    private val patientIdGenerator: PatientIdGenerator = mockk()
+    private val patientRepository = mockk<PatientRepository>()
+    private val patientIdGenerator = mockk<PatientIdGenerator>()
 
-    private val service = PatientService(
+    private val patientService = PatientService(
         patientRepository = patientRepository,
         patientIdGenerator = patientIdGenerator
     )
@@ -46,7 +46,7 @@ class PatientServiceTest {
         every { patientIdGenerator.get() } returns PATIENT_ID
         every { patientRepository.save(expected) } returns expected
 
-        val result = service.createPatient(request)
+        val result = patientService.createPatient(request)
 
         assertEquals(expected, result)
     }
@@ -57,7 +57,7 @@ class PatientServiceTest {
 
         every { patientRepository.retrieve(PATIENT_ID) } returns patient
 
-        val result = service.retrievePatient(PATIENT_ID)
+        val result = patientService.retrievePatient(PATIENT_ID)
 
         assertEquals(patient, result)
     }
@@ -65,19 +65,20 @@ class PatientServiceTest {
     @Test
     fun `searchPatientsByName delegates to repository`() {
         val patients = listOf(
-            aPatient(aPatientId()),
-            aPatient(aPatientId())
+            aPatient(PATIENT_ID),
+            aPatient(ANOTHER_PATIENT_ID)
         )
 
         every { patientRepository.searchByName(NAME) } returns patients
 
-        val result = service.searchPatientsByName(NAME)
+        val result = patientService.searchPatientsByName(NAME)
 
         assertEquals(patients, result)
     }
 
     companion object {
         private val PATIENT_ID = aPatientId("PAT-999")
+        private val ANOTHER_PATIENT_ID = aPatientId("PAT-888")
         private const val NAME = "Jane Roe"
         private const val EMAIL = "jane.roe@example.com"
         private const val PHONE = "9876543210"

@@ -6,14 +6,14 @@ import org.junit.jupiter.api.Test
 
 class PatientIdGeneratorTest {
 
-    private val generator = PatientIdGenerator()
+    private val patientIdGenerator = PatientIdGenerator()
 
     @Test
     fun `should generate different ids`() {
         val generatedIds = mutableSetOf<PatientId>()
 
         (1..100).forEach { _ ->
-            generatedIds.add(generator.get())
+            generatedIds.add(patientIdGenerator.get())
         }
 
         assertEquals(100, generatedIds.size)

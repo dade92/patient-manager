@@ -6,14 +6,14 @@ import org.junit.jupiter.api.Test
 
 class OperationIdGeneratorTest {
 
-    private val generator = OperationIdGenerator()
+    private val operationIdGenerator = OperationIdGenerator()
 
     @Test
     fun `should generate different ids`() {
         val generatedIds = mutableSetOf<OperationId>()
 
         (1..100).forEach { _ ->
-            generatedIds.add(generator.get())
+            generatedIds.add(operationIdGenerator.get())
         }
 
         assertEquals(100, generatedIds.size)

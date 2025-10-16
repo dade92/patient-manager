@@ -6,14 +6,14 @@ import org.junit.jupiter.api.Test
 
 class InvoiceIdGeneratorTest {
 
-    private val generator = InvoiceIdGenerator()
+    private val invoiceIdGenerator = InvoiceIdGenerator()
 
     @Test
     fun `should generate different ids`() {
         val generatedIds = mutableSetOf<InvoiceId>()
 
         (1..100).forEach { _ ->
-            generatedIds.add(generator.generate())
+            generatedIds.add(invoiceIdGenerator.generate())
         }
 
         assertEquals(100, generatedIds.size)

@@ -6,6 +6,7 @@ import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
 import domain.model.OperationType
+import domain.model.OperationType.SURGERY
 import domain.model.PatientBuilder.aPatientId
 import domain.utils.DateTimeProvider
 import io.mockk.every
@@ -62,19 +63,14 @@ class JdbcOperationRepositoryTest {
         val updated = aPatientOperation(
             id = OPERATION_ID,
             patientId = PATIENT_ID,
-            type = OperationType.SURGERY,
-            description = "Appendectomy - updated",
-            executor = "Dr. Strange",
-            assets = listOf("scan1.png", "scan2.png"),
-            additionalNotes = listOf(
-                anOperationNote(
-                    "Initial assessment complete",
-                    ADDITIONAL_NOTE_CREATION_TIME
-                )
-            ),
+            type = SURGERY,
+            description = DESCRIPTION,
+            executor = EXECUTOR,
+            assets = ASSETS,
+            additionalNotes = ADDITIONAL_NOTES,
             creationDateTime = OPERATION_CREATION_TIME,
             lastUpdate = OPERATION_LAST_UPDATE_TIME,
-            estimatedCost = aMoney(BigDecimal("2500.00"))
+            estimatedCost = ESTIMATED_COST
         )
 
         val saved = repository.save(updated)
@@ -90,20 +86,15 @@ class JdbcOperationRepositoryTest {
 
         val expected = aPatientOperation(
             id = OPERATION_ID,
-            patientId = aPatientId("PAT-001"),
-            type = OperationType.SURGERY,
-            description = "Appendectomy",
-            executor = "Dr. Who",
-            assets = listOf("scan1.png"),
-            additionalNotes = listOf(
-                anOperationNote(
-                    content = "Initial assessment complete",
-                    creationTime = ADDITIONAL_NOTE_CREATION_TIME
-                )
-            ),
+            patientId = PATIENT_ID,
+            type = SURGERY,
+            description = DESCRIPTION,
+            executor = EXECUTOR,
+            assets = ASSETS,
+            additionalNotes = ADDITIONAL_NOTES,
             creationDateTime = OPERATION_CREATION_TIME,
             lastUpdate = OPERATION_LAST_UPDATE_TIME,
-            estimatedCost = aMoney(BigDecimal("2500.00"))
+            estimatedCost = ESTIMATED_COST
         )
 
         assertEquals(expected, result)
@@ -118,19 +109,14 @@ class JdbcOperationRepositoryTest {
                 aPatientOperation(
                     id = OPERATION_ID,
                     patientId = PATIENT_ID,
-                    type = OperationType.SURGERY,
-                    description = "Appendectomy",
-                    executor = "Dr. Who",
-                    assets = listOf("scan1.png"),
-                    additionalNotes = listOf(
-                        anOperationNote(
-                            content = "Initial assessment complete",
-                            creationTime = ADDITIONAL_NOTE_CREATION_TIME
-                        )
-                    ),
+                    type = SURGERY,
+                    description = DESCRIPTION,
+                    executor = EXECUTOR,
+                    assets = ASSETS,
+                    additionalNotes = ADDITIONAL_NOTES,
                     creationDateTime = OPERATION_CREATION_TIME,
                     lastUpdate = OPERATION_LAST_UPDATE_TIME,
-                    estimatedCost = aMoney(BigDecimal("2500.00"))
+                    estimatedCost = ESTIMATED_COST
                 )
             ),
             result
@@ -172,5 +158,15 @@ class JdbcOperationRepositoryTest {
         private val ADDITIONAL_NOTE_CREATION_TIME = LocalDateTime.of(2025, 1, 1, 11, 0, 0)
         private val OPERATION_CREATION_TIME = LocalDateTime.of(2025, 1, 1, 10, 0, 0)
         private val OPERATION_LAST_UPDATE_TIME = LocalDateTime.of(2025, 1, 1, 10, 0, 0)
+        private const val DESCRIPTION = "Appendectomy"
+        private const val EXECUTOR = "Dr. Who"
+        private val ASSETS = listOf("scan1.png")
+        private val ADDITIONAL_NOTES = listOf(
+            anOperationNote(
+                content = "Initial assessment complete",
+                creationTime = ADDITIONAL_NOTE_CREATION_TIME
+            )
+        )
+        private val ESTIMATED_COST = aMoney(BigDecimal("2500.00"))
     }
 }

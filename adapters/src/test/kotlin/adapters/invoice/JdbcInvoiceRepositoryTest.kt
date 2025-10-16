@@ -132,8 +132,8 @@ class JdbcInvoiceRepositoryTest {
             operationId = OPERATION_ID,
             amount = aMoney(BigDecimal("120.00"), "USD"),
             status = PAID,
-            creationDateTime = LocalDateTime.of(2025, 1, 1, 12, 0, 0),
-            lastUpdate = LocalDateTime.of(2025, 1, 4, 9, 0, 0)
+            creationDateTime = CREATION_DATE,
+            lastUpdate = LAST_UPDATE
         )
 
         val saved = repository.save(updated, PATIENT_ID)
@@ -152,7 +152,7 @@ class JdbcInvoiceRepositoryTest {
             operationId = OPERATION_ID,
             amount = aMoney(BigDecimal("100.00")),
             status = PAID,
-            creationDateTime = LocalDateTime.of(2025, 1, 1, 12, 0, 0),
+            creationDateTime = CREATION_DATE,
             lastUpdate = NOW
         )
 
@@ -168,8 +168,10 @@ class JdbcInvoiceRepositoryTest {
         private val PATIENT_ID = aPatientId("PAT-001")
         private val INVOICE_ID = anInvoiceId("INV-001")
         private val INVOICE_ID_2 = anInvoiceId("INV-002")
-        private val NOW: LocalDateTime = LocalDateTime.of(2025, 1, 5, 10, 0, 0)
+        private val NOW = LocalDateTime.of(2025, 1, 5, 10, 0, 0)
         private val FIRST_OF_JAN = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
         private val SECOND_OF_JAN = LocalDateTime.of(2025, 1, 2, 9, 0, 0)
+        private val CREATION_DATE = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
+        private val LAST_UPDATE = LocalDateTime.of(2025, 1, 4, 9, 0, 0)
     }
 }

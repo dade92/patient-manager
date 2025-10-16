@@ -8,6 +8,7 @@ import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationType
 import domain.model.OperationType.SURGERY
+import domain.model.PatientBuilder.aPatient
 import domain.model.PatientBuilder.aPatientId
 import domain.patient.PatientRepository
 import domain.storage.StorageService
@@ -25,13 +26,13 @@ import java.time.LocalDateTime
 
 class OperationServiceTest {
 
-    private val patientRepository: PatientRepository = mockk()
-    private val operationRepository: OperationRepository = mockk()
-    private val operationIdGenerator: OperationIdGenerator = mockk()
-    private val dateTimeProvider: DateTimeProvider = mockk()
-    private val storageService: StorageService = mockk()
+    private val patientRepository = mockk<PatientRepository>()
+    private val operationRepository = mockk<OperationRepository>()
+    private val operationIdGenerator = mockk<OperationIdGenerator>()
+    private val dateTimeProvider = mockk<DateTimeProvider>()
+    private val storageService = mockk<StorageService>()
 
-    private val service = OperationService(
+    private val operationService = OperationService(
         patientRepository = patientRepository,
         operationRepository = operationRepository,
         operationIdGenerator = operationIdGenerator,
@@ -60,18 +61,18 @@ class OperationServiceTest {
             estimatedCost = AMOUNT
         )
 
-        every { patientRepository.retrieve(PATIENT_ID) } returns mockk(relaxed = true)
+        every { patientRepository.retrieve(PATIENT_ID) } returns PATIENT
         every { operationIdGenerator.get() } returns OPERATION_ID
         every { dateTimeProvider.now() } returns NOW
         every { operationRepository.save(expected) } returns expected
 
-        val result = service.createOperation(request)
+        val result = operationService.createOperation(request)
 
         assertEquals(expected, result)
     }
 
     @Test
-    fun `createOperation throws when patient is not found`() {
+    fun `createOperation throws exception when patient is not found`() {
         val request = CreateOperationRequest(
             patientId = PATIENT_ID,
             type = OperationType.CONSULTATION,
@@ -83,7 +84,7 @@ class OperationServiceTest {
         every { patientRepository.retrieve(PATIENT_ID) } returns null
 
         assertThrows(PatientNotFoundException::class.java) {
-            service.createOperation(request)
+            operationService.createOperation(request)
         }
 
         verify(exactly = 1) { patientRepository.retrieve(PATIENT_ID) }
@@ -96,7 +97,7 @@ class OperationServiceTest {
 
         every { operationRepository.retrieve(OPERATION_ID) } returns operation
 
-        val result = service.getOperation(OPERATION_ID)
+        val result = operationService.getOperation(OPERATION_ID)
 
         assertEquals(operation, result)
     }
@@ -108,10 +109,10 @@ class OperationServiceTest {
             aPatientOperation(anOperationId())
         )
 
-        every { patientRepository.retrieve(PATIENT_ID) } returns mockk(relaxed = true)
+        every { patientRepository.retrieve(PATIENT_ID) } returns PATIENT
         every { operationRepository.findByPatientId(PATIENT_ID) } returns operations
 
-        val result = service.retrieveOperationsBy(PATIENT_ID)
+        val result = operationService.retrieveOperationsBy(PATIENT_ID)
 
         assertEquals(operations, result)
     }
@@ -121,7 +122,7 @@ class OperationServiceTest {
         every { patientRepository.retrieve(PATIENT_ID) } returns null
 
         assertThrows(PatientNotFoundException::class.java) {
-            service.retrieveOperationsBy(PATIENT_ID)
+            operationService.retrieveOperationsBy(PATIENT_ID)
         }
 
         verify { operationRepository wasNot Called }
@@ -133,7 +134,7 @@ class OperationServiceTest {
 
         every { operationRepository.addNote(OPERATION_ID, NOTE) } returns updatedPatientOperation
 
-        val result = service.addOperationNote(OPERATION_ID, NOTE)
+        val result = operationService.addOperationNote(OPERATION_ID, NOTE)
 
         assertEquals(updatedPatientOperation, result)
     }
@@ -146,7 +147,7 @@ class OperationServiceTest {
         every { storageService.uploadFile(any<UploadFileRequest>()) } returns Unit
         every { operationRepository.addAsset(OPERATION_ID, FILENAME) } returns updatedPatientOperation
 
-        val result = service.addOperationAsset(
+        val result = operationService.addOperationAsset(
             operationId = OPERATION_ID,
             assetName = FILENAME,
             contentLength = 1234,
@@ -160,6 +161,7 @@ class OperationServiceTest {
     companion object {
         private val OPERATION_ID = anOperationId()
         private val PATIENT_ID = aPatientId()
+        private val PATIENT = aPatient()
         private val AMOUNT = aMoney()
         private const val DESCRIPTION = "Appendectomy"
         private const val EXECUTOR = "Dr. Who"

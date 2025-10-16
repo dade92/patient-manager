@@ -55,7 +55,20 @@ class JdbcPatientRepositoryTest {
         val result = repository.searchByName("Jo")
 
         assertEquals(1, result.size)
-        assertEquals(ID, result[0].id.value)
+
+        val expected = aPatient(
+            id = aPatientId(ID),
+            name = NAME,
+            email = EMAIL,
+            phoneNumber = PHONE,
+            address = ADDRESS,
+            cityOfResidence = CITY,
+            nationality = NATIONALITY,
+            birthDate = BIRTH,
+            taxCode = TAX
+        )
+
+        assertEquals(listOf(expected), result)
     }
 
     @Test
