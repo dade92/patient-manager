@@ -19,9 +19,8 @@ import java.io.ByteArrayInputStream
 class MinioStorageServiceTest {
 
     private val s3Client: S3Client = mockk()
-    private val bucketName = "test-bucket"
 
-    private val service = MinioStorageService(s3Client, bucketName)
+    private val service = MinioStorageService(s3Client, BUCKET_NAME)
 
     @Test
     fun `uploadFile delegates to s3 with correct request`() {
@@ -42,7 +41,7 @@ class MinioStorageServiceTest {
         service.uploadFile(request)
 
         val capturedPut = putRequestSlot.captured
-        assertEquals(bucketName, capturedPut.bucket())
+        assertEquals(BUCKET_NAME, capturedPut.bucket())
         assertEquals(request.key, capturedPut.key())
         assertEquals(request.contentType, capturedPut.contentType())
 
@@ -60,7 +59,7 @@ class MinioStorageServiceTest {
 
         val result = service.getFile(KEY)
 
-        assertEquals(bucketName, reqSlot.captured.bucket())
+        assertEquals(BUCKET_NAME, reqSlot.captured.bucket())
         assertEquals(KEY, reqSlot.captured.key())
         assertEquals(expectedStream, result)
 
@@ -70,5 +69,6 @@ class MinioStorageServiceTest {
     companion object {
         private const val KEY = "folder/file.pdf"
         private const val CONTENT_TYPE = "image/png"
+        private const val BUCKET_NAME = "test-bucket"
     }
 }

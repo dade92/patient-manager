@@ -77,15 +77,11 @@ class InvoiceController(
         @PathVariable invoiceId: String,
         @RequestBody requestDto: UpdateInvoiceStatusRequest
     ): ResponseEntity<InvoiceResponse> {
-        try {
-            val status = InvoiceStatus.valueOf(requestDto.status)
-            val updatedInvoice = invoiceService.updateInvoiceStatus(InvoiceId(invoiceId), status)
-                ?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        val status = InvoiceStatus.valueOf(requestDto.status)
+        val updatedInvoice = invoiceService.updateInvoiceStatus(InvoiceId(invoiceId), status)
+            ?: return ResponseEntity(HttpStatus.NOT_FOUND)
 
-            return ResponseEntity(mapToResponse(updatedInvoice), HttpStatus.OK)
-        } catch (e: IllegalArgumentException) {
-            return ResponseEntity(HttpStatus.BAD_REQUEST)
-        }
+        return ResponseEntity(mapToResponse(updatedInvoice), HttpStatus.OK)
     }
 
     private fun mapToResponse(invoice: Invoice): InvoiceResponse =

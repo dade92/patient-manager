@@ -156,7 +156,6 @@ class PatientControllerTest {
 
     companion object {
         private const val NAME_QUERY = "Jo"
-
         private val PATIENT_ID = aPatientId("PAT-123")
         private val ANOTHER_PATIENT_ID = aPatientId("PAT-456")
         private const val NAME = "John Doe"
@@ -165,7 +164,7 @@ class PatientControllerTest {
         private const val ADDRESS = "123 Main St"
         private const val CITY = "Springfield"
         private const val NATIONALITY = "Italian"
-        private val BIRTH_DATE: LocalDate = LocalDate.of(1990, 1, 1)
+        private val BIRTH_DATE = LocalDate.of(1990, 1, 1)
         private const val TAX_CODE = "TAXCODE123"
     }
 }

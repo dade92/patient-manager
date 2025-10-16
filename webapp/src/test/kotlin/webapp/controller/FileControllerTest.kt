@@ -45,8 +45,8 @@ class FileControllerTest {
         every {
             storageService.uploadFile(match { request ->
                 request.key == FILENAME &&
-                request.contentLength == 17L &&
-                request.contentType == CONTENT_TYPE
+                        request.contentLength == 17L &&
+                        request.contentType == CONTENT_TYPE
             })
         } returns Unit
 
@@ -109,7 +109,7 @@ class FileControllerTest {
 
     @Test
     fun `getFile returns file with attachment content disposition for non-displayable types`() {
-        every { contentTypeResolver.getContentType(FILENAME) } returns APPLICATION_OCTET_STREAM_VALUE
+        every { contentTypeResolver.getContentType(FILENAME) } returns NON_DISPLAYABLE_CONTENT_TYPE
         every { storageService.getFile(FILENAME) } returns ByteArrayInputStream(FILE_CONTENT)
 
         mockMvc.perform(
@@ -118,7 +118,7 @@ class FileControllerTest {
         )
             .andExpect(status().isOk)
             .andExpect(header().string("Content-Disposition", "attachment; filename=\"$FILENAME\""))
-            .andExpect(content().contentType(APPLICATION_OCTET_STREAM_VALUE))
+            .andExpect(content().contentType(NON_DISPLAYABLE_CONTENT_TYPE))
             .andExpect(content().bytes(FILE_CONTENT))
     }
 
@@ -126,5 +126,6 @@ class FileControllerTest {
         private val FILE_CONTENT = "test file content".toByteArray()
         private const val FILENAME = "test-document.pdf"
         private const val CONTENT_TYPE = APPLICATION_PDF_VALUE
+        private const val NON_DISPLAYABLE_CONTENT_TYPE = APPLICATION_OCTET_STREAM_VALUE
     }
 }

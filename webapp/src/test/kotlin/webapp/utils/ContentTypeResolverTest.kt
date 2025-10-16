@@ -24,8 +24,6 @@ class ContentTypeResolverTest {
         "noextension, application/octet-stream"
     )
     fun `getContentType resolves expected media type`(filename: String, expectedContentType: String) {
-        val result = resolver.getContentType(filename)
-
-        assertEquals(expectedContentType, result)
+        assertEquals(expectedContentType, resolver.getContentType(filename))
     }
 }
