@@ -1,18 +1,21 @@
 package adapters.operation
 
 import adapters.Utils.runSql
-import domain.model.*
+import domain.model.Money
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
+import domain.model.OperationId
+import domain.model.OperationType
 import domain.model.PatientBuilder.aPatientId
 import domain.utils.DateTimeProvider
 import io.mockk.every
 import io.mockk.mockk
 import org.h2.jdbcx.JdbcDataSource
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -159,10 +162,6 @@ class JdbcOperationRepositoryTest {
         assertTrue(assets.containsAll(setOf(OTHER_ASSET_NAME, newAssetName)))
     }
 
-    private class FixedDateTimeProvider(private val fixedNow: LocalDateTime) : DateTimeProvider {
-        override fun now(): LocalDateTime = fixedNow
-    }
-
     companion object {
         private const val DB_URL = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL"
         private const val SCHEMA_SQL = "/sql/schema.sql"
@@ -170,7 +169,7 @@ class JdbcOperationRepositoryTest {
 
         private const val OTHER_ASSET_NAME = "scan1.png"
         private val OPERATION_ID = OperationId("OP-001")
-        private val PATIENT_ID = PatientId("PAT-001")
+        private val PATIENT_ID = aPatientId("PAT-001")
         private val NOW: LocalDateTime = LocalDateTime.of(2025, 1, 4, 8, 0, 0)
         private val ADDITIONAL_NOTE_CREATION_TIME = LocalDateTime.of(2025, 1, 1, 11, 0, 0)
         private val OPERATION_CREATION_TIME = LocalDateTime.of(2025, 1, 1, 10, 0, 0)

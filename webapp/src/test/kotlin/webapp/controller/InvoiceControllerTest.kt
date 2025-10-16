@@ -139,7 +139,7 @@ class InvoiceControllerTest {
             PAID
         )
 
-        every { invoiceService.getInvoicesForPatient(PatientId("PAT-111")) } returns listOf(i1, i2)
+        every { invoiceService.getInvoicesForPatient(aPatientId("PAT-111")) } returns listOf(i1, i2)
 
         mockMvc.perform(get("/api/invoice/patient/PAT-111"))
             .andExpect(status().isOk)
@@ -166,8 +166,7 @@ class InvoiceControllerTest {
             post("/api/invoice/INV-123/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(readFile("/fixtures/invoice/update-invoice-status.json"))
-        )
-            .andExpect(status().isOk)
+        ).andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
@@ -180,14 +179,11 @@ class InvoiceControllerTest {
     fun `updateInvoiceStatus returns 404 when invoice not found`() {
         every { invoiceService.updateInvoiceStatus(INVOICE_ID, PAID) } returns null
 
-        val requestJson = """{"status": "PAID"}"""
-
         mockMvc.perform(
             post("/api/invoice/INV-123/status")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson)
-        )
-            .andExpect(status().isNotFound)
+                .content("""{"status": "PAID"}""")
+        ).andExpect(status().isNotFound)
     }
 
     companion object {
