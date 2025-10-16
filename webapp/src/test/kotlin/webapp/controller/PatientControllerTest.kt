@@ -27,7 +27,10 @@ class PatientControllerTest {
     @BeforeEach
     fun setUp() {
         val controller = PatientController(patientService)
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
+        mockMvc = MockMvcBuilders
+            .standaloneSetup(controller)
+            .setControllerAdvice(GlobalExceptionHandler())
+            .build()
     }
 
     @Test
@@ -139,6 +142,19 @@ class PatientControllerTest {
                     readFile("/fixtures/patient/create-patient-response.json")
                 )
             )
+    }
+
+    @Test
+    fun `createPatient returns 500 when service throws an exception`() {
+        val expectedException = RuntimeException("Database connection failed")
+
+        every { patientService.createPatient(any()) } throws expectedException
+
+        mockMvc.perform(
+            post("/api/patient")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(readFile("/fixtures/patient/create-patient.json"))
+        ).andExpect(status().isInternalServerError)
     }
 
     companion object {
