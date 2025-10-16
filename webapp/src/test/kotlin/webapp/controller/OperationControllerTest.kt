@@ -196,22 +196,23 @@ class OperationControllerTest {
             estimatedCost = aMoney(AMOUNT, EUR)
         )
 
-        every {
-            operationService.addOperationAsset(
-                OPERATION_ID,
-                "xray2.png",
-                any(),
-                any(),
-                any()
-            )
-        } returns updated
-
         val file = MockMultipartFile(
             "file",
             "xray2.png",
             "image/png",
             FILE_CONTENT
         )
+
+        every {
+            operationService.addOperationAsset(
+                OPERATION_ID,
+                "xray2.png",
+                3,
+                "image/png",
+                any()
+            )
+        } returns updated
+
 
         mockMvc.perform(
             multipart("/api/operation/${OPERATION_ID.value}/assets").file(file)
