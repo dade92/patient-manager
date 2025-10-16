@@ -1,5 +1,6 @@
 package domain.model
 
+import domain.patient.CreatePatientRequest
 import java.time.LocalDate
 
 object PatientBuilder {
@@ -37,7 +38,7 @@ object PatientBuilder {
         nationality: String? = null,
         birthDate: LocalDate = LocalDate.of(1990, 1, 1),
         taxCode: String = "TAXCODE123"
-    ) = domain.patient.CreatePatientRequest(
+    ) = CreatePatientRequest(
         name = name,
         email = email,
         phoneNumber = phoneNumber,

@@ -1,0 +1,10 @@
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "phoneNumber": "1234567890",
+  "address": "123 Main St",
+  "cityOfResidence": "Springfield",
+  "nationality": "Italian",
+  "birthDate": "1990-01-01",
+  "taxCode": "TAXCODE123"
+}

@@ -9,12 +9,3 @@ export const formatDate = (dateString: string): string =>
         month: MONTH_FORMAT,
         day: DAY_FORMAT
     });
-
-export const formatDateTime = (dateString: string): string =>
-    new Date(dateString).toLocaleDateString(LOCALE, {
-        year: YEAR_FORMAT,
-        month: MONTH_FORMAT,
-        day: DAY_FORMAT,
-        hour: '2-digit',
-        minute: '2-digit'
-    });

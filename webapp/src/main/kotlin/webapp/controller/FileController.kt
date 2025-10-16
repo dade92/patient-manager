@@ -19,7 +19,7 @@ class FileController(
 
     @PostMapping("/upload")
     fun uploadFile(@RequestParam file: MultipartFile): ResponseEntity<*> =
-        file.originalFilename?.let { filename ->
+        file.originalFilename?.takeIf { it.isNotEmpty() }?.let { filename ->
             storageService.uploadFile(
                 UploadFileRequest(
                     key = filename,

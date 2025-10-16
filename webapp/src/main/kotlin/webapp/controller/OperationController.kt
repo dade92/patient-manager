@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @RestController
 @RequestMapping("/api/operation")
@@ -23,6 +24,7 @@ class OperationController(
 ) {
 
     private val logger = LoggerFactory.getLogger(OperationController::class.java)
+    private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
 
     @PostMapping
     fun createOperation(
@@ -105,10 +107,10 @@ class OperationController(
             executor = this.executor,
             assets = this.assets,
             additionalNotes = this.additionalNotes.map {
-                OperationNoteResponse(it.content, it.creationTime)
+                OperationNoteResponse(it.content, it.creationTime.format(dateFormatter))
             },
-            createdAt = this.creationDateTime,
-            updatedAt = this.lastUpdate,
+            createdAt = this.creationDateTime.format(dateFormatter),
+            updatedAt = this.lastUpdate.format(dateFormatter),
             estimatedCost = this.estimatedCost.toDto(),
         )
 
@@ -132,14 +134,14 @@ class OperationController(
         val executor: String,
         val assets: List<String>,
         val additionalNotes: List<OperationNoteResponse>,
-        val createdAt: LocalDateTime,
-        val updatedAt: LocalDateTime,
+        val createdAt: String,
+        val updatedAt: String,
         val estimatedCost: MoneyDto
     )
 
     data class OperationNoteResponse(
         val content: String,
-        val createdAt: LocalDateTime
+        val createdAt: String
     )
 
     data class PatientOperationsResponse(

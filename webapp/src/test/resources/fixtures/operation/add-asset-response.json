@@ -1,0 +1,17 @@
+{
+  "id": "OP-123",
+  "patientId": "PAT-123",
+  "type": "SURGERY",
+  "description": "Appendectomy",
+  "executor": "Dr. Who",
+  "assets": ["scan1.png", "xray2.png"],
+  "additionalNotes": [
+    {
+      "content": "Initial assessment complete",
+      "createdAt": "01/01/2025 11:00"
+    }
+  ],
+  "createdAt": "01/01/2025 10:00",
+  "updatedAt": "02/01/2025 09:00",
+  "estimatedCost": {"amount": 2500.00, "currency": "EUR"}
+}

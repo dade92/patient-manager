@@ -3,15 +3,11 @@ package adapters.patient
 import adapters.Utils.runSql
 import domain.model.PatientBuilder.aPatient
 import domain.model.PatientBuilder.aPatientId
-import domain.model.PatientId
 import org.h2.jdbcx.JdbcDataSource
-import org.h2.tools.RunScript
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.InputStreamReader
-import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 import javax.sql.DataSource
 
@@ -40,7 +36,7 @@ class JdbcPatientRepositoryTest {
         val result = repository.retrieve(aPatientId(ID))
 
         val expected = aPatient(
-            id = PatientId(ID),
+            id = aPatientId(ID),
             name = NAME,
             email = EMAIL,
             phoneNumber = PHONE,
@@ -65,7 +61,7 @@ class JdbcPatientRepositoryTest {
     @Test
     fun `save inserts when patient not existing`() {
         val newPatient = aPatient(
-            id = PatientId(ID),
+            id = aPatientId(ID),
             name = NAME,
             email = EMAIL,
             phoneNumber = null,
@@ -86,7 +82,7 @@ class JdbcPatientRepositoryTest {
     @Test
     fun `save updates when patient existing`() {
         val updatedPatient = aPatient(
-            id = PatientId(ID),
+            id = aPatientId(ID),
             name = NAME,
             email = EMAIL,
             phoneNumber = PHONE,
@@ -100,7 +96,7 @@ class JdbcPatientRepositoryTest {
         val saved = repository.save(updatedPatient)
         assertEquals(updatedPatient, saved)
 
-        val retrieved = repository.retrieve(PatientId(ID))
+        val retrieved = repository.retrieve(aPatientId(ID))
         assertEquals(updatedPatient, retrieved)
     }
 

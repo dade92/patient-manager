@@ -1,0 +1,7 @@
+{
+  "patientId": "PAT-123",
+  "type": "SURGERY",
+  "description": "Appendectomy",
+  "executor": "Dr. Who",
+  "estimatedCost": {"amount": 2500.00, "currency": "EUR"}
+}
