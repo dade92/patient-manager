@@ -79,8 +79,7 @@ class InvoiceControllerTest {
             post("/api/invoice")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(readFile("/fixtures/invoice/create-invoice.json"))
-        )
-            .andExpect(status().isInternalServerError)
+        ).andExpect(status().isInternalServerError)
     }
 
     @Test
