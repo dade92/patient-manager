@@ -1,12 +1,10 @@
 package adapters.operation
 
 import adapters.Utils.runSql
-import domain.model.Money
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
-import domain.model.OperationId
 import domain.model.OperationType
 import domain.model.PatientBuilder.aPatientId
 import domain.utils.DateTimeProvider
@@ -76,7 +74,7 @@ class JdbcOperationRepositoryTest {
             ),
             creationDateTime = OPERATION_CREATION_TIME,
             lastUpdate = OPERATION_LAST_UPDATE_TIME,
-            estimatedCost = Money(BigDecimal("2500.00"))
+            estimatedCost = aMoney(BigDecimal("2500.00"))
         )
 
         val saved = repository.save(updated)

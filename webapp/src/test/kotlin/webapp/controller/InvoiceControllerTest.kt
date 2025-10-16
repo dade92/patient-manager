@@ -139,7 +139,7 @@ class InvoiceControllerTest {
             PAID
         )
 
-        every { invoiceService.getInvoicesForPatient(aPatientId("PAT-111")) } returns listOf(i1, i2)
+        every { invoiceService.getInvoicesForPatient(PATIENT_ID) } returns listOf(i1, i2)
 
         mockMvc.perform(get("/api/invoice/patient/PAT-111"))
             .andExpect(status().isOk)
