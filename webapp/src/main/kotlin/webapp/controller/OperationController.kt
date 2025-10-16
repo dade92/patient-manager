@@ -24,7 +24,7 @@ class OperationController(
 ) {
 
     private val logger = LoggerFactory.getLogger(OperationController::class.java)
-    private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+    private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
 
     @PostMapping
     fun createOperation(

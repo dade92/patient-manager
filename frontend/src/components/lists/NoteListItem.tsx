@@ -1,6 +1,5 @@
 import React from 'react';
 import {Divider, ListItem, ListItemText} from '@mui/material';
-import {formatDateTime} from '../../utils/dateUtils';
 import {OperationNote} from "../../types/operation";
 
 interface Props {
@@ -13,7 +12,7 @@ export const NoteListItem: React.FC<Props> = ({ note, isLast }) => (
         <ListItem alignItems="flex-start">
             <ListItemText
                 primary={note.content}
-                secondary={formatDateTime(note.createdAt)}
+                secondary={note.createdAt}
             />
         </ListItem>
         {!isLast && <Divider component="li"/>}

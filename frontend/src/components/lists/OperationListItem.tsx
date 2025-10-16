@@ -10,7 +10,6 @@ import {
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import NoteIcon from '@mui/icons-material/Note';
 import { Operation } from '../../types/operation';
-import { formatDateTime } from '../../utils/dateUtils';
 
 interface Props {
     operation: Operation;
@@ -60,7 +59,7 @@ export const OperationListItem: React.FC<Props> = ({
                                 {operation.description}
                             </Typography>
                             <Typography variant="caption" color="textSecondary">
-                                {formatDateTime(operation.createdAt)}
+                                {operation.createdAt}
                             </Typography>
                         </>
                     }
