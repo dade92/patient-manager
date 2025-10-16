@@ -33,7 +33,10 @@ class InvoiceControllerTest {
     @BeforeEach
     fun setUp() {
         val controller = InvoiceController(invoiceService)
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
+        mockMvc = MockMvcBuilders
+            .standaloneSetup(controller)
+            .setControllerAdvice(GlobalExceptionHandler())
+            .build()
     }
 
     @Test
@@ -66,6 +69,17 @@ class InvoiceControllerTest {
                     readFile("/fixtures/invoice/create-invoice-response.json")
                 )
             )
+    }
+
+    @Test
+    fun `createInvoice returns 500 when service throws an exception`() {
+        every { invoiceService.createInvoice(any()) } throws RuntimeException("Database connection failed")
+
+        mockMvc.perform(
+            post("/api/invoice")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(readFile("/fixtures/invoice/create-invoice.json"))
+        ).andExpect(status().isInternalServerError)
     }
 
     @Test

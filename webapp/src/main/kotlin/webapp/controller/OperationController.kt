@@ -1,6 +1,5 @@
 package webapp.controller
 
-import domain.exceptions.PatientNotFoundException
 import domain.model.Money
 import domain.model.OperationId
 import domain.model.OperationType
@@ -56,15 +55,9 @@ class OperationController(
     fun getPatientOperations(
         @PathVariable patientId: String
     ): ResponseEntity<PatientOperationsResponse> {
-        try {
-            val operations = operationService.retrieveOperationsBy(PatientId(patientId))
+        val operations = operationService.retrieveOperationsBy(PatientId(patientId))
 
-            return ResponseEntity.ok(PatientOperationsResponse(operations.map { it.toResponse() }))
-        } catch (e: PatientNotFoundException) {
-            logger.error("Patient not found", e)
-            return ResponseEntity
-                .status(HttpStatus.NOT_FOUND).build()
-        }
+        return ResponseEntity.ok(PatientOperationsResponse(operations.map { it.toResponse() }))
     }
 
     @PostMapping("/{id}/notes")

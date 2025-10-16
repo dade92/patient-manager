@@ -35,7 +35,10 @@ class OperationControllerTest {
     @BeforeEach
     fun setUp() {
         val controller = OperationController(operationService)
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
+        mockMvc = MockMvcBuilders
+            .standaloneSetup(controller)
+            .setControllerAdvice(GlobalExceptionHandler())
+            .build()
     }
 
     @Test
@@ -144,6 +147,17 @@ class OperationControllerTest {
                     readFile("/fixtures/operation/create-operation-response.json")
                 )
             )
+    }
+
+    @Test
+    fun `createOperation returns 500 when service throws an exception`() {
+        every { operationService.createOperation(any()) } throws RuntimeException("Database connection failed")
+
+        mockMvc.perform(
+            post("/api/operation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(readFile("/fixtures/operation/create-operation.json"))
+        ).andExpect(status().isInternalServerError)
     }
 
     @Test

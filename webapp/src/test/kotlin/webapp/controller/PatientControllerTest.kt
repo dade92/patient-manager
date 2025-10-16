@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import utils.FixtureLoader
 import utils.FixtureLoader.readFile
 import java.time.LocalDate
 
@@ -27,7 +26,10 @@ class PatientControllerTest {
     @BeforeEach
     fun setUp() {
         val controller = PatientController(patientService)
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
+        mockMvc = MockMvcBuilders
+            .standaloneSetup(controller)
+            .setControllerAdvice(GlobalExceptionHandler())
+            .build()
     }
 
     @Test
@@ -139,6 +141,17 @@ class PatientControllerTest {
                     readFile("/fixtures/patient/create-patient-response.json")
                 )
             )
+    }
+
+    @Test
+    fun `createPatient returns 500 when service throws an exception`() {
+        every { patientService.createPatient(any()) } throws RuntimeException("Database connection failed")
+
+        mockMvc.perform(
+            post("/api/patient")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(readFile("/fixtures/patient/create-patient.json"))
+        ).andExpect(status().isInternalServerError)
     }
 
     companion object {

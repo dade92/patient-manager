@@ -5,13 +5,7 @@ import domain.model.PatientId
 import domain.patient.PatientService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 import domain.patient.CreatePatientRequest as DomainCreatePatientRequest
 
@@ -20,7 +14,6 @@ import domain.patient.CreatePatientRequest as DomainCreatePatientRequest
 class PatientController(
     private val patientService: PatientService
 ) {
-
     @GetMapping("/{patientId}")
     fun getPatient(@PathVariable patientId: String): ResponseEntity<Patient> {
         val patient = patientService.retrievePatient(PatientId(patientId))
