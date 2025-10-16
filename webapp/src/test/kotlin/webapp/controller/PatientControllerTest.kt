@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import utils.FixtureLoader
 import utils.FixtureLoader.readFile
 import java.time.LocalDate
 
@@ -146,9 +145,7 @@ class PatientControllerTest {
 
     @Test
     fun `createPatient returns 500 when service throws an exception`() {
-        val expectedException = RuntimeException("Database connection failed")
-
-        every { patientService.createPatient(any()) } throws expectedException
+        every { patientService.createPatient(any()) } throws RuntimeException("Database connection failed")
 
         mockMvc.perform(
             post("/api/patient")
