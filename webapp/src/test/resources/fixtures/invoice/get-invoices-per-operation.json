@@ -4,7 +4,7 @@
       "id": "INV-1",
       "operationId": "OP-999",
       "amount": {
-        "amount": 120.50,
+        "amount": 10,
         "currency": "EUR"
       },
       "status": "PENDING",
@@ -15,7 +15,7 @@
       "id": "INV-2",
       "operationId": "OP-999",
       "amount": {
-        "amount": 120.50,
+        "amount": 10,
         "currency": "EUR"
       },
       "status": "PAID",
