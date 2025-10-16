@@ -7,7 +7,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE
 import org.springframework.http.MediaType.APPLICATION_PDF_VALUE
 import org.springframework.mock.web.MockMultipartFile
@@ -28,7 +27,10 @@ class FileControllerTest {
     @BeforeEach
     fun setUp() {
         val controller = FileController(storageService, contentTypeResolver)
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
+        mockMvc = MockMvcBuilders
+            .standaloneSetup(controller)
+            .setControllerAdvice(GlobalExceptionHandler())
+            .build()
     }
 
     @Test
@@ -43,8 +45,8 @@ class FileControllerTest {
         every {
             storageService.uploadFile(match { request ->
                 request.key == FILENAME &&
-                request.contentLength == 17L &&
-                request.contentType == CONTENT_TYPE
+                        request.contentLength == 17L &&
+                        request.contentType == CONTENT_TYPE
             })
         } returns Unit
 
@@ -69,6 +71,25 @@ class FileControllerTest {
             .andExpect(status().isBadRequest)
             .andExpect(content().string("File name is missing"))
         verify { storageService wasNot Called }
+    }
+
+    @Test
+    fun `uploadFile returns 500 when service throws an exception`() {
+        val file = MockMultipartFile(
+            "file",
+            FILENAME,
+            CONTENT_TYPE,
+            FILE_CONTENT
+        )
+
+        every {
+            storageService.uploadFile(any())
+        } throws RuntimeException("Storage service unavailable")
+
+        mockMvc.perform(
+            multipart("/files/upload")
+                .file(file)
+        ).andExpect(status().isInternalServerError)
     }
 
     @Test
