@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import utils.FixtureLoader.readFile
+import java.time.LocalDateTime
 
 class InvoiceControllerTest {
 
@@ -47,8 +48,8 @@ class InvoiceControllerTest {
             operationId = anOperationId(OPERATION_ID),
             amount = aMoney(AMOUNT, CURRENCY),
             status = PENDING,
-            creationDateTime = java.time.LocalDateTime.of(2025, 1, 1, 12, 0, 0),
-            lastUpdate = java.time.LocalDateTime.of(2025, 1, 1, 13, 0, 0)
+            creationDateTime = CREATION_DATE_TIME,
+            lastUpdate = CREATION_DATE_TIME
         )
 
         every { invoiceService.createInvoice(any()) } returns created
@@ -195,5 +196,6 @@ class InvoiceControllerTest {
         private const val PATIENT_ID = "PAT-111"
         private const val CURRENCY = EUR
         private val AMOUNT = 120.50.toBigDecimal()
+        private val CREATION_DATE_TIME = LocalDateTime.of(2025, 1, 1, 12, 0, 0)
     }
 }
