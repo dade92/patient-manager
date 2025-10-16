@@ -33,10 +33,10 @@ class JdbcPatientRepositoryTest {
 
     @Test
     fun `retrieve returns patient when present`() {
-        val result = repository.retrieve(aPatientId(ID))
+        val result = repository.retrieve(PATIENT_ID)
 
         val expected = aPatient(
-            id = aPatientId(ID),
+            id = PATIENT_ID,
             name = NAME,
             email = EMAIL,
             phoneNumber = PHONE,
@@ -57,7 +57,7 @@ class JdbcPatientRepositoryTest {
         assertEquals(1, result.size)
 
         val expected = aPatient(
-            id = aPatientId(ID),
+            id = PATIENT_ID,
             name = NAME,
             email = EMAIL,
             phoneNumber = PHONE,
@@ -74,7 +74,7 @@ class JdbcPatientRepositoryTest {
     @Test
     fun `save inserts when patient not existing`() {
         val newPatient = aPatient(
-            id = aPatientId(ID),
+            id = PATIENT_ID,
             name = NAME,
             email = EMAIL,
             phoneNumber = null,
@@ -88,14 +88,14 @@ class JdbcPatientRepositoryTest {
         val saved = repository.save(newPatient)
         assertEquals(newPatient, saved)
 
-        val retrieved = repository.retrieve(aPatientId(ID))
+        val retrieved = repository.retrieve(PATIENT_ID)
         assertEquals(newPatient, retrieved)
     }
 
     @Test
     fun `save updates when patient existing`() {
         val updatedPatient = aPatient(
-            id = aPatientId(ID),
+            id = PATIENT_ID,
             name = NAME,
             email = EMAIL,
             phoneNumber = PHONE,
@@ -109,7 +109,7 @@ class JdbcPatientRepositoryTest {
         val saved = repository.save(updatedPatient)
         assertEquals(updatedPatient, saved)
 
-        val retrieved = repository.retrieve(aPatientId(ID))
+        val retrieved = repository.retrieve(PATIENT_ID)
         assertEquals(updatedPatient, retrieved)
     }
 
@@ -118,7 +118,7 @@ class JdbcPatientRepositoryTest {
         private const val SCHEMA_SQL = "/sql/schema.sql"
         private const val DATA_SQL = "/sql/data.sql"
 
-        private const val ID = "PAT-001"
+        private val PATIENT_ID = aPatientId("PAT-001")
         private const val NAME = "John Doe"
         private const val EMAIL = "john.doe@example.com"
         private const val PHONE = "1234567890"
