@@ -165,12 +165,10 @@ class OperationControllerTest {
 
         every { operationService.addOperationNote(OPERATION_ID, NOTE) } returns updated
 
-        val requestJson = """{"content":"$NOTE"}"""
-
         mockMvc.perform(
             post("/api/operation/OP-123/notes")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson)
+                .content("""{"content":"$NOTE"}""")
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -213,9 +211,8 @@ class OperationControllerTest {
             )
         } returns updated
 
-
         mockMvc.perform(
-            multipart("/api/operation/${OPERATION_ID.value}/assets").file(file)
+            multipart("/api/operation/OP-123/assets").file(file)
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
