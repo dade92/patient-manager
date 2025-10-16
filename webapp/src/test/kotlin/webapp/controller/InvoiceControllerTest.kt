@@ -46,10 +46,12 @@ class InvoiceControllerTest {
             id = anInvoiceId(INVOICE_ID),
             operationId = anOperationId(OPERATION_ID),
             amount = aMoney(AMOUNT, CURRENCY),
-            status = PENDING
+            status = PENDING,
+            creationDateTime = java.time.LocalDateTime.of(2025, 1, 1, 12, 0, 0),
+            lastUpdate = java.time.LocalDateTime.of(2025, 1, 1, 13, 0, 0)
         )
 
-        every { invoiceService.createInvoice(request) } returns created
+        every { invoiceService.createInvoice(any()) } returns created
 
         mockMvc.perform(
             post("/api/invoice")
