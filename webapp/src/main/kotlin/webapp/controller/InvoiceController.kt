@@ -29,20 +29,19 @@ class InvoiceController(
     @PostMapping
     fun createInvoice(
         @RequestBody requestDto: CreateInvoiceJsonRequest
-    ): ResponseEntity<InvoiceResponse> {
-        val request = CreateInvoiceRequest(
-            operationId = OperationId(requestDto.operationId),
-            patientId = PatientId(requestDto.patientId),
-            amount = Money(
-                amount = requestDto.amount.amount,
-                currency = requestDto.amount.currency
+    ): ResponseEntity<InvoiceResponse> =
+        invoiceService.createInvoice(
+            CreateInvoiceRequest(
+                operationId = OperationId(requestDto.operationId),
+                patientId = PatientId(requestDto.patientId),
+                amount = Money(
+                    amount = requestDto.amount.amount,
+                    currency = requestDto.amount.currency
+                )
             )
-        )
-
-        val invoice = invoiceService.createInvoice(request)
-
-        return ResponseEntity(mapToResponse(invoice), HttpStatus.CREATED)
-    }
+        ).let {
+            ResponseEntity(mapToResponse(it), HttpStatus.CREATED)
+        }
 
     @GetMapping("/{invoiceId}")
     fun getInvoice(@PathVariable invoiceId: String): ResponseEntity<InvoiceResponse> =
