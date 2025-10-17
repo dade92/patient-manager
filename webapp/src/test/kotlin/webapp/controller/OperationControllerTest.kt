@@ -193,6 +193,17 @@ class OperationControllerTest {
     }
 
     @Test
+    fun `addOperationNote returns 404 when operation not found`() {
+        every { operationService.addOperationNote(OPERATION_ID, NOTE) } returns null
+
+        mockMvc.perform(
+            post("/api/operation/OP-123/notes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"content":"$NOTE"}""")
+        ).andExpect(status().isNotFound)
+    }
+
+    @Test
     fun `addOperationAsset returns 200 with updated operation`() {
         val updated = aPatientOperation(
             id = OPERATION_ID,
@@ -234,6 +245,29 @@ class OperationControllerTest {
                     readFile("/fixtures/operation/add-asset-response.json")
                 )
             )
+    }
+
+    @Test
+    fun `addOperationAsset returns 404 when operation not found`() {
+        val file = MockMultipartFile(
+            "file",
+            ORIGINAL_FILENAME_2,
+            "image/png",
+            FILE_CONTENT
+        )
+        every {
+            operationService.addOperationAsset(
+                OPERATION_ID,
+                ORIGINAL_FILENAME_2,
+                3,
+                "image/png",
+                any()
+            )
+        } returns null
+
+        mockMvc.perform(
+            multipart("/api/operation/OP-123/assets").file(file)
+        ).andExpect(status().isNotFound)
     }
 
     companion object {

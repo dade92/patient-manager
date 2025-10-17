@@ -5,7 +5,6 @@ import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
-import domain.model.OperationType
 import domain.model.OperationType.SURGERY
 import domain.model.PatientBuilder.aPatientId
 import domain.utils.DateTimeProvider
@@ -13,8 +12,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.h2.jdbcx.JdbcDataSource
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -132,6 +130,14 @@ class JdbcOperationRepositoryTest {
         assertEquals(NOW, result.lastUpdate)
         assertEquals(note, result.additionalNotes.first().content)
         assertEquals(NOW, result.additionalNotes.first().creationTime)
+    }
+
+    @Test
+    fun `addNote returns null when operation not found`() {
+        val nonExistentOperationId = anOperationId("OP-999")
+        val note = "note"
+
+        assertNull(repository.addNote(nonExistentOperationId, note))
     }
 
     @Test

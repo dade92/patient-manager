@@ -47,42 +47,38 @@ class OperationController(
     @GetMapping("/patient/{patientId}")
     fun getPatientOperations(
         @PathVariable patientId: String
-    ): ResponseEntity<PatientOperationsResponse> {
-        val operations = operationService.retrieveOperationsBy(PatientId(patientId))
-
-        return ResponseEntity.ok(PatientOperationsResponse(operations.map { it.toResponse() }))
-    }
+    ): ResponseEntity<PatientOperationsResponse> =
+        ResponseEntity.ok(
+            PatientOperationsResponse(
+                operationService.retrieveOperationsBy(PatientId(patientId)).map { it.toResponse() }
+            )
+        )
 
     @PostMapping("/{id}/notes")
     fun addOperationNote(
         @PathVariable id: String,
         @RequestBody request: AddOperationNoteJsonRequest
-    ): ResponseEntity<OperationResponse> {
-        val operation = operationService.addOperationNote(OperationId(id), request.content)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Operation not found")
-
-        return ResponseEntity.ok(operation.toResponse())
-    }
+    ): ResponseEntity<OperationResponse> =
+        operationService.addOperationNote(OperationId(id), request.content)
+            ?.let { ResponseEntity.ok(it.toResponse()) }
+            ?: ResponseEntity.notFound().build()
 
     @PostMapping("/{id}/assets")
     fun addOperationAsset(
         @PathVariable id: String,
         @RequestParam("file") file: MultipartFile
-    ): ResponseEntity<OperationResponse> {
-        val filename = file.originalFilename ?: return ResponseEntity
-            .badRequest()
-            .build()
-
-        val operation = operationService.addOperationAsset(
-            operationId = OperationId(id),
-            assetName = filename,
-            contentLength = file.size,
-            contentType = file.contentType ?: "application/octet-stream",
-            inputStream = file.inputStream
-        ) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Operation not found")
-
-        return ResponseEntity.ok(operation.toResponse())
-    }
+    ): ResponseEntity<OperationResponse> =
+        file.originalFilename
+            ?.takeIf { it.isNotBlank() }
+            ?.let { filename ->
+                operationService.addOperationAsset(
+                    operationId = OperationId(id),
+                    assetName = filename,
+                    contentLength = file.size,
+                    contentType = file.contentType ?: "application/octet-stream",
+                    inputStream = file.inputStream
+                )?.let { ResponseEntity.ok(it.toResponse()) } ?: ResponseEntity.notFound().build()
+            } ?: ResponseEntity.badRequest().build()
 
     private fun PatientOperation.toResponse(): OperationResponse =
         OperationResponse(
