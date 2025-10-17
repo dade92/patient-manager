@@ -24,8 +24,6 @@ class InvoiceController(
     private val invoiceService: InvoiceService
 ) {
 
-    private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-
     @PostMapping
     fun createInvoice(
         @RequestBody requestDto: CreateInvoiceJsonRequest
@@ -84,6 +82,10 @@ class InvoiceController(
             ?.let { ResponseEntity(mapToResponse(it), HttpStatus.OK) }
             ?: ResponseEntity(HttpStatus.NOT_FOUND)
 
+    companion object {
+        private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+    }
+
     private fun mapToResponse(invoice: Invoice): InvoiceResponse =
         InvoiceResponse(
             id = invoice.id.value,
@@ -93,8 +95,8 @@ class InvoiceController(
                 currency = invoice.amount.currency
             ),
             status = invoice.status.name,
-            createdAt = invoice.creationDateTime.format(dateFormatter),
-            updatedAt = invoice.lastUpdate.format(dateFormatter)
+            createdAt = invoice.creationDateTime.format(DATE_FORMATTER),
+            updatedAt = invoice.lastUpdate.format(DATE_FORMATTER)
         )
 
     data class InvoicesPerOperationResponse(
