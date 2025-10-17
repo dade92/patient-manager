@@ -14,6 +14,7 @@ import io.mockk.mockk
 import org.h2.jdbcx.JdbcDataSource
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -157,6 +158,13 @@ class JdbcInvoiceRepositoryTest {
         )
 
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun `updateStatus returns null when invoice not found`() {
+        val nonExistentInvoiceId = anInvoiceId("INV-666")
+
+        assertNull(repository.updateStatus(nonExistentInvoiceId, PAID))
     }
 
     companion object {

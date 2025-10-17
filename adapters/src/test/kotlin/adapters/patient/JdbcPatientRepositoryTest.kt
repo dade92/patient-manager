@@ -6,6 +6,7 @@ import domain.model.PatientBuilder.aPatientId
 import org.h2.jdbcx.JdbcDataSource
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -29,7 +30,8 @@ class JdbcPatientRepositoryTest {
     }
 
     @AfterEach
-    fun tearDown() {}
+    fun tearDown() {
+    }
 
     @Test
     fun `retrieve returns patient when present`() {
@@ -48,6 +50,13 @@ class JdbcPatientRepositoryTest {
         )
 
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun `retrieve returns null when not present`() {
+        val nonExistentPatientId = aPatientId("PAT-666")
+
+        assertNull(repository.retrieve(nonExistentPatientId))
     }
 
     @Test

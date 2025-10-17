@@ -7,13 +7,11 @@ import domain.model.PatientId
 import domain.model.PatientOperation
 import domain.operation.CreateOperationRequest
 import domain.operation.OperationService
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @RestController
@@ -22,74 +20,65 @@ class OperationController(
     private val operationService: OperationService
 ) {
 
-    private val logger = LoggerFactory.getLogger(OperationController::class.java)
-    private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-
     @PostMapping
     fun createOperation(
         @RequestBody request: CreateOperationJsonRequest
-    ): ResponseEntity<OperationResponse> {
-        val domainRequest = CreateOperationRequest(
-            patientId = PatientId(request.patientId),
-            type = request.type,
-            description = request.description,
-            executor = request.executor,
-            estimatedCost = request.estimatedCost.toDomain()
-        )
-
-        val operation = operationService.createOperation(domainRequest)
-        return ResponseEntity.status(HttpStatus.CREATED).body(operation.toResponse())
-    }
+    ): ResponseEntity<OperationResponse> =
+        operationService.createOperation(
+            CreateOperationRequest(
+                patientId = PatientId(request.patientId),
+                type = request.type,
+                description = request.description,
+                executor = request.executor,
+                estimatedCost = request.estimatedCost.toDomain()
+            )
+        ).let {
+            ResponseEntity.status(HttpStatus.CREATED).body(it.toResponse())
+        }
 
     @GetMapping("/{id}")
     fun getOperation(
         @PathVariable id: String
-    ): ResponseEntity<OperationResponse> {
-        val operation = operationService.getOperation(OperationId(id))
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Operation not found")
-
-        return ResponseEntity.ok(operation.toResponse())
-    }
+    ): ResponseEntity<OperationResponse> =
+        operationService.getOperation(OperationId(id))
+            ?.let { ResponseEntity.ok(it.toResponse()) }
+            ?: ResponseEntity.notFound().build()
 
     @GetMapping("/patient/{patientId}")
     fun getPatientOperations(
         @PathVariable patientId: String
-    ): ResponseEntity<PatientOperationsResponse> {
-        val operations = operationService.retrieveOperationsBy(PatientId(patientId))
-
-        return ResponseEntity.ok(PatientOperationsResponse(operations.map { it.toResponse() }))
-    }
+    ): ResponseEntity<PatientOperationsResponse> =
+        ResponseEntity.ok(
+            PatientOperationsResponse(
+                operationService.retrieveOperationsBy(PatientId(patientId)).map { it.toResponse() }
+            )
+        )
 
     @PostMapping("/{id}/notes")
     fun addOperationNote(
         @PathVariable id: String,
         @RequestBody request: AddOperationNoteJsonRequest
-    ): ResponseEntity<OperationResponse> {
-        val operation = operationService.addOperationNote(OperationId(id), request.content)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Operation not found")
-
-        return ResponseEntity.ok(operation.toResponse())
-    }
+    ): ResponseEntity<OperationResponse> =
+        operationService.addOperationNote(OperationId(id), request.content)
+            ?.let { ResponseEntity.ok(it.toResponse()) }
+            ?: ResponseEntity.notFound().build()
 
     @PostMapping("/{id}/assets")
     fun addOperationAsset(
         @PathVariable id: String,
         @RequestParam("file") file: MultipartFile
-    ): ResponseEntity<OperationResponse> {
-        val filename = file.originalFilename ?: return ResponseEntity
-            .badRequest()
-            .build()
-
-        val operation = operationService.addOperationAsset(
-            operationId = OperationId(id),
-            assetName = filename,
-            contentLength = file.size,
-            contentType = file.contentType ?: "application/octet-stream",
-            inputStream = file.inputStream
-        ) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Operation not found")
-
-        return ResponseEntity.ok(operation.toResponse())
-    }
+    ): ResponseEntity<OperationResponse> =
+        file.originalFilename
+            ?.takeIf { it.isNotBlank() }
+            ?.let { filename ->
+                operationService.addOperationAsset(
+                    operationId = OperationId(id),
+                    assetName = filename,
+                    contentLength = file.size,
+                    contentType = file.contentType ?: "application/octet-stream",
+                    inputStream = file.inputStream
+                )?.let { ResponseEntity.ok(it.toResponse()) } ?: ResponseEntity.notFound().build()
+            } ?: ResponseEntity.badRequest().build()
 
     private fun PatientOperation.toResponse(): OperationResponse =
         OperationResponse(
@@ -100,12 +89,16 @@ class OperationController(
             executor = this.executor,
             assets = this.assets,
             additionalNotes = this.additionalNotes.map {
-                OperationNoteResponse(it.content, it.creationTime.format(dateFormatter))
+                OperationNoteResponse(it.content, it.creationTime.format(DATE_FORMATTER))
             },
-            createdAt = this.creationDateTime.format(dateFormatter),
-            updatedAt = this.lastUpdate.format(dateFormatter),
+            createdAt = this.creationDateTime.format(DATE_FORMATTER),
+            updatedAt = this.lastUpdate.format(DATE_FORMATTER),
             estimatedCost = this.estimatedCost.toDto(),
         )
+
+    companion object {
+        private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+    }
 
     data class CreateOperationJsonRequest(
         val patientId: String,

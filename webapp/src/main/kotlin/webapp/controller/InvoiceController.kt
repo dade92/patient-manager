@@ -24,64 +24,66 @@ class InvoiceController(
     private val invoiceService: InvoiceService
 ) {
 
-    private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-
     @PostMapping
     fun createInvoice(
         @RequestBody requestDto: CreateInvoiceJsonRequest
-    ): ResponseEntity<InvoiceResponse> {
-        val request = CreateInvoiceRequest(
-            operationId = OperationId(requestDto.operationId),
-            patientId = PatientId(requestDto.patientId),
-            amount = Money(
-                amount = requestDto.amount.amount,
-                currency = requestDto.amount.currency
+    ): ResponseEntity<InvoiceResponse> =
+        invoiceService.createInvoice(
+            CreateInvoiceRequest(
+                operationId = OperationId(requestDto.operationId),
+                patientId = PatientId(requestDto.patientId),
+                amount = Money(
+                    amount = requestDto.amount.amount,
+                    currency = requestDto.amount.currency
+                )
             )
-        )
-
-        val invoice = invoiceService.createInvoice(request)
-
-        return ResponseEntity(mapToResponse(invoice), HttpStatus.CREATED)
-    }
+        ).let {
+            ResponseEntity(mapToResponse(it), HttpStatus.CREATED)
+        }
 
     @GetMapping("/{invoiceId}")
-    fun getInvoice(@PathVariable invoiceId: String): ResponseEntity<InvoiceResponse> {
-        val invoice = invoiceService.getInvoice(InvoiceId(invoiceId))
-            ?: return ResponseEntity(HttpStatus.NOT_FOUND)
-
-        return ResponseEntity(mapToResponse(invoice), HttpStatus.OK)
-    }
+    fun getInvoice(@PathVariable invoiceId: String): ResponseEntity<InvoiceResponse> =
+        invoiceService.getInvoice(InvoiceId(invoiceId))?.let {
+            ResponseEntity(
+                mapToResponse(it),
+                HttpStatus.OK
+            )
+        } ?: ResponseEntity(HttpStatus.NOT_FOUND)
 
     @GetMapping("/operation/{operationId}")
-    fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<InvoicesPerOperationResponse> {
-        val invoices = invoiceService.getInvoicesForOperation(OperationId(operationId))
-
-        return ResponseEntity(
-            InvoicesPerOperationResponse(invoices = invoices.map { mapToResponse(it) }),
-            HttpStatus.OK
-        )
-    }
+    fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<InvoicesPerOperationResponse> =
+        invoiceService.getInvoicesForOperation(OperationId(operationId))
+            .let { invoices ->
+                ResponseEntity(
+                    InvoicesPerOperationResponse(invoices = invoices.map { mapToResponse(it) }),
+                    HttpStatus.OK
+                )
+            }
 
     @GetMapping("/patient/{patientId}")
-    fun getInvoicesForPatient(@PathVariable patientId: String): ResponseEntity<InvoicesPerPatientResponse> {
-        val invoices = invoiceService.getInvoicesForPatient(PatientId(patientId))
-
-        return ResponseEntity(
-            InvoicesPerPatientResponse(invoices = invoices.map { mapToResponse(it) }),
-            HttpStatus.OK
-        )
-    }
+    fun getInvoicesForPatient(@PathVariable patientId: String): ResponseEntity<InvoicesPerPatientResponse> =
+        invoiceService.getInvoicesForPatient(PatientId(patientId))
+            .let { invoices ->
+                ResponseEntity(
+                    InvoicesPerPatientResponse(invoices = invoices.map { mapToResponse(it) }),
+                    HttpStatus.OK
+                )
+            }
 
     @PostMapping("/{invoiceId}/status")
     fun updateInvoiceStatus(
         @PathVariable invoiceId: String,
         @RequestBody requestDto: UpdateInvoiceStatusRequest
-    ): ResponseEntity<InvoiceResponse> {
-        val status = InvoiceStatus.valueOf(requestDto.status)
-        val updatedInvoice = invoiceService.updateInvoiceStatus(InvoiceId(invoiceId), status)
-            ?: return ResponseEntity(HttpStatus.NOT_FOUND)
+    ): ResponseEntity<InvoiceResponse> =
+        invoiceService.updateInvoiceStatus(
+            InvoiceId(invoiceId),
+            InvoiceStatus.valueOf(requestDto.status)
+        )
+            ?.let { ResponseEntity(mapToResponse(it), HttpStatus.OK) }
+            ?: ResponseEntity(HttpStatus.NOT_FOUND)
 
-        return ResponseEntity(mapToResponse(updatedInvoice), HttpStatus.OK)
+    companion object {
+        private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
     }
 
     private fun mapToResponse(invoice: Invoice): InvoiceResponse =
@@ -93,8 +95,8 @@ class InvoiceController(
                 currency = invoice.amount.currency
             ),
             status = invoice.status.name,
-            createdAt = invoice.creationDateTime.format(dateFormatter),
-            updatedAt = invoice.lastUpdate.format(dateFormatter)
+            createdAt = invoice.creationDateTime.format(DATE_FORMATTER),
+            updatedAt = invoice.lastUpdate.format(DATE_FORMATTER)
         )
 
     data class InvoicesPerOperationResponse(

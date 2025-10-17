@@ -15,6 +15,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
+import org.springframework.jdbc.CannotGetJdbcConnectionException
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -151,7 +152,7 @@ class OperationControllerTest {
 
     @Test
     fun `createOperation returns 500 when service throws an exception`() {
-        every { operationService.createOperation(any()) } throws RuntimeException("Database connection failed")
+        every { operationService.createOperation(any()) } throws CannotGetJdbcConnectionException("Database connection failed")
 
         mockMvc.perform(
             post("/api/operation")
@@ -189,6 +190,17 @@ class OperationControllerTest {
                     readFile("/fixtures/operation/add-note-response.json")
                 )
             )
+    }
+
+    @Test
+    fun `addOperationNote returns 404 when operation not found`() {
+        every { operationService.addOperationNote(OPERATION_ID, NOTE) } returns null
+
+        mockMvc.perform(
+            post("/api/operation/OP-123/notes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"content":"$NOTE"}""")
+        ).andExpect(status().isNotFound)
     }
 
     @Test
@@ -233,6 +245,29 @@ class OperationControllerTest {
                     readFile("/fixtures/operation/add-asset-response.json")
                 )
             )
+    }
+
+    @Test
+    fun `addOperationAsset returns 404 when operation not found`() {
+        val file = MockMultipartFile(
+            "file",
+            ORIGINAL_FILENAME_2,
+            "image/png",
+            FILE_CONTENT
+        )
+        every {
+            operationService.addOperationAsset(
+                OPERATION_ID,
+                ORIGINAL_FILENAME_2,
+                3,
+                "image/png",
+                any()
+            )
+        } returns null
+
+        mockMvc.perform(
+            multipart("/api/operation/OP-123/assets").file(file)
+        ).andExpect(status().isNotFound)
     }
 
     companion object {
