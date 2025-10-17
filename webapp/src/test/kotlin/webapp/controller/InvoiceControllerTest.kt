@@ -1,5 +1,6 @@
 package webapp.controller
 
+import domain.exceptions.OperationNotFoundException
 import domain.invoice.InvoiceService
 import domain.model.InvoiceBuilder.aCreateInvoiceRequest
 import domain.model.InvoiceBuilder.anInvoice
@@ -15,6 +16,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
+import org.springframework.jdbc.CannotGetJdbcConnectionException
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -72,8 +74,25 @@ class InvoiceControllerTest {
     }
 
     @Test
+    fun `create invoice returns 404 when operation not found`() {
+        val request = aCreateInvoiceRequest(
+            operationId = OPERATION_ID,
+            patientId = PATIENT_ID,
+            amount = aMoney(AMOUNT, EUR)
+        )
+
+        every { invoiceService.createInvoice(request) } throws OperationNotFoundException(OPERATION_ID)
+
+        mockMvc.perform(
+            post("/api/invoice")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(readFile("/fixtures/invoice/create-invoice.json"))
+        ).andExpect(status().isNotFound)
+    }
+
+    @Test
     fun `createInvoice returns 500 when service throws an exception`() {
-        every { invoiceService.createInvoice(any()) } throws RuntimeException("Database connection failed")
+        every { invoiceService.createInvoice(any()) } throws CannotGetJdbcConnectionException("Database connection failed")
 
         mockMvc.perform(
             post("/api/invoice")

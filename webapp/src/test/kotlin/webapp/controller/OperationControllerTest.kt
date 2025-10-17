@@ -15,6 +15,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
+import org.springframework.jdbc.CannotGetJdbcConnectionException
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -151,7 +152,7 @@ class OperationControllerTest {
 
     @Test
     fun `createOperation returns 500 when service throws an exception`() {
-        every { operationService.createOperation(any()) } throws RuntimeException("Database connection failed")
+        every { operationService.createOperation(any()) } throws CannotGetJdbcConnectionException("Database connection failed")
 
         mockMvc.perform(
             post("/api/operation")
