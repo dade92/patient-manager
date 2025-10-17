@@ -15,37 +15,31 @@ class PatientController(
     private val patientService: PatientService
 ) {
     @GetMapping("/{patientId}")
-    fun getPatient(@PathVariable patientId: String): ResponseEntity<Patient> {
-        val patient = patientService.retrievePatient(PatientId(patientId))
-        return if (patient != null) {
-            ResponseEntity.ok(patient)
-        } else {
-            ResponseEntity.notFound().build()
-        }
-    }
+    fun getPatient(@PathVariable patientId: String): ResponseEntity<Patient> =
+        patientService.retrievePatient(PatientId(patientId))
+            ?.let { ResponseEntity.ok(it) }
+            ?: ResponseEntity.notFound().build()
 
     @GetMapping("/search")
-    fun searchPatients(@RequestParam name: String): ResponseEntity<SearchPatientsResponse> {
-        val patients = patientService.searchPatientsByName(name)
-        return ResponseEntity.ok(SearchPatientsResponse(patients))
-    }
+    fun searchPatients(@RequestParam name: String): ResponseEntity<SearchPatientsResponse> =
+        ResponseEntity.ok(SearchPatientsResponse(patientService.searchPatientsByName(name)))
 
     @PostMapping
-    fun createPatient(@RequestBody request: CreatePatientRequest): ResponseEntity<Patient> {
-        val domainRequest = DomainCreatePatientRequest(
-            name = request.name,
-            email = request.email,
-            phoneNumber = request.phoneNumber,
-            address = request.address,
-            cityOfResidence = request.cityOfResidence,
-            nationality = request.nationality,
-            birthDate = request.birthDate,
-            taxCode = request.taxCode
-        )
-
-        val patient = patientService.createPatient(domainRequest)
-        return ResponseEntity.status(HttpStatus.CREATED).body(patient)
-    }
+    fun createPatient(@RequestBody request: CreatePatientRequest): ResponseEntity<Patient> =
+        patientService.createPatient(
+            DomainCreatePatientRequest(
+                name = request.name,
+                email = request.email,
+                phoneNumber = request.phoneNumber,
+                address = request.address,
+                cityOfResidence = request.cityOfResidence,
+                nationality = request.nationality,
+                birthDate = request.birthDate,
+                taxCode = request.taxCode
+            )
+        ).let {
+            ResponseEntity.status(HttpStatus.CREATED).body(it)
+        }
 
     data class CreatePatientRequest(
         val name: String,
