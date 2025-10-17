@@ -45,32 +45,31 @@ class InvoiceController(
     }
 
     @GetMapping("/{invoiceId}")
-    fun getInvoice(@PathVariable invoiceId: String): ResponseEntity<InvoiceResponse> {
-        val invoice = invoiceService.getInvoice(InvoiceId(invoiceId))
-            ?: return ResponseEntity(HttpStatus.NOT_FOUND)
-
-        return ResponseEntity(mapToResponse(invoice), HttpStatus.OK)
-    }
+    fun getInvoice(@PathVariable invoiceId: String): ResponseEntity<InvoiceResponse> =
+        invoiceService.getInvoice(InvoiceId(invoiceId))?.let {
+            ResponseEntity(
+                mapToResponse(it),
+                HttpStatus.OK
+            )
+        } ?: ResponseEntity(HttpStatus.NOT_FOUND)
 
     @GetMapping("/operation/{operationId}")
-    fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<InvoicesPerOperationResponse> {
-        val invoices = invoiceService.getInvoicesForOperation(OperationId(operationId))
-
-        return ResponseEntity(
-            InvoicesPerOperationResponse(invoices = invoices.map { mapToResponse(it) }),
-            HttpStatus.OK
-        )
-    }
+    fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<InvoicesPerOperationResponse> =
+        invoiceService.getInvoicesForOperation(OperationId(operationId)).let { invoices ->
+            ResponseEntity(
+                InvoicesPerOperationResponse(invoices = invoices.map { mapToResponse(it) }),
+                HttpStatus.OK
+            )
+        }
 
     @GetMapping("/patient/{patientId}")
-    fun getInvoicesForPatient(@PathVariable patientId: String): ResponseEntity<InvoicesPerPatientResponse> {
-        val invoices = invoiceService.getInvoicesForPatient(PatientId(patientId))
-
-        return ResponseEntity(
-            InvoicesPerPatientResponse(invoices = invoices.map { mapToResponse(it) }),
-            HttpStatus.OK
-        )
-    }
+    fun getInvoicesForPatient(@PathVariable patientId: String): ResponseEntity<InvoicesPerPatientResponse> =
+        invoiceService.getInvoicesForPatient(PatientId(patientId)).let { invoices ->
+            ResponseEntity(
+                InvoicesPerPatientResponse(invoices = invoices.map { mapToResponse(it) }),
+                HttpStatus.OK
+            )
+        }
 
     @PostMapping("/{invoiceId}/status")
     fun updateInvoiceStatus(
