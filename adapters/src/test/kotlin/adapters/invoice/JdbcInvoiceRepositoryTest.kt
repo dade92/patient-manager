@@ -159,6 +159,14 @@ class JdbcInvoiceRepositoryTest {
         assertEquals(expected, result)
     }
 
+    @Test
+    fun `updateStatus returns null when invoice not found`() {
+        val nonExistentInvoiceId = anInvoiceId("INV-666")
+        val result = repository.updateStatus(nonExistentInvoiceId, PAID)
+
+        assertEquals(null, result)
+    }
+
     companion object {
         private const val DB_URL = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL"
         private const val SCHEMA_SQL = "/sql/schema.sql"
