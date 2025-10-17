@@ -21,6 +21,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.io.InputStream
 import java.time.LocalDateTime
 
@@ -72,7 +73,7 @@ class OperationServiceTest {
     }
 
     @Test
-    fun `createOperation throws exception when patient is not found`() {
+    fun `createOperation throws PatientNotFoundException when patient is not found`() {
         val request = CreateOperationRequest(
             patientId = PATIENT_ID,
             type = OperationType.CONSULTATION,
@@ -118,7 +119,7 @@ class OperationServiceTest {
     }
 
     @Test
-    fun `retrieveOperationsBy throws when patient not found`() {
+    fun `retrieveOperationsBy throws PatientNotFoundException when patient not found`() {
         every { patientRepository.retrieve(PATIENT_ID) } returns null
 
         assertThrows(PatientNotFoundException::class.java) {
@@ -156,6 +157,26 @@ class OperationServiceTest {
         )
 
         assertEquals(updatedPatientOperation, result)
+    }
+
+    @Test
+    fun `if upload file fails propagates exception and does not save asset`() {
+        val input: InputStream = mockk()
+        val exception = RuntimeException("error")
+
+        every { storageService.uploadFile(any<UploadFileRequest>()) } throws exception
+
+        assertThrows<RuntimeException> {
+            operationService.addOperationAsset(
+                operationId = OPERATION_ID,
+                assetName = FILENAME,
+                contentLength = 1234,
+                contentType = "image/png",
+                inputStream = input
+            )
+        }
+
+        verify { operationRepository wasNot Called }
     }
 
     companion object {
