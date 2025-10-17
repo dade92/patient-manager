@@ -54,33 +54,35 @@ class InvoiceController(
 
     @GetMapping("/operation/{operationId}")
     fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<InvoicesPerOperationResponse> =
-        invoiceService.getInvoicesForOperation(OperationId(operationId)).let { invoices ->
-            ResponseEntity(
-                InvoicesPerOperationResponse(invoices = invoices.map { mapToResponse(it) }),
-                HttpStatus.OK
-            )
-        }
+        invoiceService.getInvoicesForOperation(OperationId(operationId))
+            .let { invoices ->
+                ResponseEntity(
+                    InvoicesPerOperationResponse(invoices = invoices.map { mapToResponse(it) }),
+                    HttpStatus.OK
+                )
+            }
 
     @GetMapping("/patient/{patientId}")
     fun getInvoicesForPatient(@PathVariable patientId: String): ResponseEntity<InvoicesPerPatientResponse> =
-        invoiceService.getInvoicesForPatient(PatientId(patientId)).let { invoices ->
-            ResponseEntity(
-                InvoicesPerPatientResponse(invoices = invoices.map { mapToResponse(it) }),
-                HttpStatus.OK
-            )
-        }
+        invoiceService.getInvoicesForPatient(PatientId(patientId))
+            .let { invoices ->
+                ResponseEntity(
+                    InvoicesPerPatientResponse(invoices = invoices.map { mapToResponse(it) }),
+                    HttpStatus.OK
+                )
+            }
 
     @PostMapping("/{invoiceId}/status")
     fun updateInvoiceStatus(
         @PathVariable invoiceId: String,
         @RequestBody requestDto: UpdateInvoiceStatusRequest
-    ): ResponseEntity<InvoiceResponse> {
-        val status = InvoiceStatus.valueOf(requestDto.status)
-        val updatedInvoice = invoiceService.updateInvoiceStatus(InvoiceId(invoiceId), status)
-            ?: return ResponseEntity(HttpStatus.NOT_FOUND)
-
-        return ResponseEntity(mapToResponse(updatedInvoice), HttpStatus.OK)
-    }
+    ): ResponseEntity<InvoiceResponse> =
+        invoiceService.updateInvoiceStatus(
+            InvoiceId(invoiceId),
+            InvoiceStatus.valueOf(requestDto.status)
+        )
+            ?.let { ResponseEntity(mapToResponse(it), HttpStatus.OK) }
+            ?: ResponseEntity(HttpStatus.NOT_FOUND)
 
     private fun mapToResponse(invoice: Invoice): InvoiceResponse =
         InvoiceResponse(
