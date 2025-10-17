@@ -152,6 +152,14 @@ class JdbcOperationRepositoryTest {
         assertTrue(assets.containsAll(setOf(OTHER_ASSET_NAME, newAssetName)))
     }
 
+    @Test
+    fun `addAsset returns null when operation not found`() {
+        val nonExistentOperationId = anOperationId("OP-999")
+        val asset = "note"
+
+        assertNull(repository.addAsset(nonExistentOperationId, asset))
+    }
+
     companion object {
         private const val DB_URL = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL"
         private const val SCHEMA_SQL = "/sql/schema.sql"
