@@ -51,6 +51,15 @@ class JdbcPatientRepositoryTest {
     }
 
     @Test
+    fun `retrieve returns null when not present`() {
+        val result = repository.retrieve(aPatientId("PAT-666"))
+
+        val expected = null
+
+        assertEquals(expected, result)
+    }
+
+    @Test
     fun `searchByName returns matches`() {
         val result = repository.searchByName("Jo")
 
