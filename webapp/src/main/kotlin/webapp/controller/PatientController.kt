@@ -22,7 +22,9 @@ class PatientController(
 
     @GetMapping("/search")
     fun searchPatients(@RequestParam name: String): ResponseEntity<SearchPatientsResponse> =
-        ResponseEntity.ok(SearchPatientsResponse(patientService.searchPatientsByName(name)))
+        ResponseEntity.ok(
+            SearchPatientsResponse(patientService.searchPatientsByName(name))
+        )
 
     @PostMapping
     fun createPatient(@RequestBody request: CreatePatientRequest): ResponseEntity<Patient> =
