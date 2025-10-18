@@ -4,7 +4,6 @@ import domain.model.*
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import java.sql.Connection
 import java.sql.ResultSet

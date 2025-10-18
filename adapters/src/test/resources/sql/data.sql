@@ -4,7 +4,7 @@ INSERT INTO `PATIENT` (patient_id, name, email, phone_number, address, city_of_r
 
 -- Seed one operation for PAT-001 with one asset and one note
 INSERT INTO `OPERATION` (operation_id, patient_id, type, description, executor, created_at, updated_at, estimated_cost, info) VALUES
-('OP-001', 'PAT-001', 'SURGERY', 'Appendectomy', 'Dr. Who', TIMESTAMP '2025-01-01 10:00:00', TIMESTAMP '2025-01-01 10:00:00', 2500.00, '{"details": []}');
+('OP-001', 'PAT-001', 'SURGERY', 'Appendectomy', 'Dr. Who', TIMESTAMP '2025-01-01 10:00:00', TIMESTAMP '2025-01-01 10:00:00', 2500.00, '{"details": [{"toothNumber": 2, "estimatedCost": {"amount": 150.50, "currency": "EUR"}}]}');
 
 INSERT INTO `OPERATION_ASSET` (operation_id, asset_name) VALUES
 ('OP-001', 'scan1.png');

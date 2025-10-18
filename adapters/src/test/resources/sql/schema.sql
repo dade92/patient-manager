@@ -29,7 +29,7 @@ CREATE TABLE `OPERATION` (
     `created_at` TIMESTAMP NOT NULL,
     `updated_at` TIMESTAMP NOT NULL,
     `estimated_cost` DECIMAL(19,2) NOT NULL,
-    `info` JSON
+    `info` TEXT
 );
 
 -- Operation assets table

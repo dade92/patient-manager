@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import domain.model.*
 import domain.model.MoneyBuilder.aMoney
+import domain.model.OperationBuilder.aDetail
 import domain.model.OperationBuilder.aPatientOperation
+import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
 import domain.model.OperationType.SURGERY
@@ -193,6 +195,13 @@ class JdbcOperationRepositoryTest {
             )
         )
         private val ESTIMATED_COST = aMoney(BigDecimal("2500.00"))
-        private val DEFAULT_INFO = PatientOperationInfo(emptyList())
+        private val DEFAULT_INFO = aPatientOperationInfo(
+            details = listOf(
+                aDetail(
+                    toothNumber = 2,
+                    estimatedCost = aMoney(BigDecimal("150.50"))
+                )
+            )
+        )
     }
 }
