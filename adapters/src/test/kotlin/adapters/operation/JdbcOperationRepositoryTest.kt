@@ -3,7 +3,6 @@ package adapters.operation
 import adapters.Utils.runSql
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import domain.model.*
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aDetail
 import domain.model.OperationBuilder.aPatientOperation
@@ -56,7 +55,7 @@ class JdbcOperationRepositoryTest {
         val newOperation = aPatientOperation(
             id = newOperationId,
             patientId = PATIENT_ID,
-            info = DEFAULT_INFO
+            info = INFO
         )
 
         val saved = repository.save(newOperation)
@@ -79,7 +78,7 @@ class JdbcOperationRepositoryTest {
             creationDateTime = OPERATION_CREATION_TIME,
             lastUpdate = OPERATION_LAST_UPDATE_TIME,
             estimatedCost = ESTIMATED_COST,
-            info = DEFAULT_INFO
+            info = INFO
         )
 
         val saved = repository.save(updated)
@@ -104,7 +103,7 @@ class JdbcOperationRepositoryTest {
             creationDateTime = OPERATION_CREATION_TIME,
             lastUpdate = OPERATION_LAST_UPDATE_TIME,
             estimatedCost = ESTIMATED_COST,
-            info = DEFAULT_INFO
+            info = INFO
         )
 
         assertEquals(expected, result)
@@ -127,7 +126,7 @@ class JdbcOperationRepositoryTest {
                     creationDateTime = OPERATION_CREATION_TIME,
                     lastUpdate = OPERATION_LAST_UPDATE_TIME,
                     estimatedCost = ESTIMATED_COST,
-                    info = DEFAULT_INFO
+                    info = INFO
                 )
             ),
             result
@@ -195,7 +194,7 @@ class JdbcOperationRepositoryTest {
             )
         )
         private val ESTIMATED_COST = aMoney(BigDecimal("2500.00"))
-        private val DEFAULT_INFO = aPatientOperationInfo(
+        private val INFO = aPatientOperationInfo(
             details = listOf(
                 aDetail(
                     toothNumber = 2,
