@@ -22,7 +22,7 @@ data class PatientOperation(
 )
 
 data class PatientOperationInfo(
-    val teeth: List<Detail>
+    val details: List<Detail>
 )
 
 data class Detail(

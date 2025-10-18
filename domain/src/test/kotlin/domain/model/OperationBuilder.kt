@@ -62,4 +62,12 @@ object OperationBuilder {
     ): PatientOperationInfo = PatientOperationInfo(
         details
     )
+
+    fun aDetail(
+        toothNumber: Int = 1,
+        estimatedCost: Money = aMoney()
+    ): Detail = Detail(
+        toothNumber = toothNumber,
+        estimatedCost = estimatedCost
+    )
 }

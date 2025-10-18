@@ -33,7 +33,7 @@ class OperationService(
                 creationDateTime = now,
                 lastUpdate = now,
                 estimatedCost = request.estimatedCost,
-                info = PatientOperationInfo(emptyList())
+                info = request.patientOperationInfo
             )
         )
     }
