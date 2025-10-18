@@ -24,12 +24,11 @@ class RepositoryConfiguration(
     fun operationRepository(
         dataSource: DataSource,
         dateTimeProvider: DateTimeProvider,
-        objectMapper: ObjectMapper
     ): OperationRepository =
         JdbcOperationRepository(
             dataSource,
             dateTimeProvider,
-            objectMapper
+            ObjectMapper().registerModule(KotlinModule.Builder().build())
         )
 
     @Bean
@@ -42,6 +41,4 @@ class RepositoryConfiguration(
             dateTimeProvider
         )
 
-    @Bean
-    fun objectMapper(): ObjectMapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
 }
