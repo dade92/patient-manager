@@ -6,7 +6,6 @@ import domain.utils.DateTimeProvider
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
-import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.Timestamp
@@ -15,7 +14,7 @@ import javax.sql.DataSource
 class JdbcOperationRepository(
     private val dataSource: DataSource,
     private val dateTimeProvider: DateTimeProvider,
-    private val objectMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
+    private val objectMapper: ObjectMapper
 ) : OperationRepository {
 
     override fun save(operation: PatientOperation): PatientOperation {

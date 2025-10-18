@@ -1,6 +1,8 @@
 package adapters.operation
 
 import adapters.Utils.runSql
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import domain.model.*
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aPatientOperation
@@ -33,7 +35,11 @@ class JdbcOperationRepositoryTest {
         runSql(SCHEMA_SQL, dataSource)
         runSql(DATA_SQL, dataSource)
 
-        repository = JdbcOperationRepository(dataSource, dateTimeProvider)
+        repository = JdbcOperationRepository(
+            dataSource,
+            dateTimeProvider,
+            ObjectMapper().registerModule(KotlinModule.Builder().build())
+        )
 
         every { dateTimeProvider.now() } returns NOW
     }

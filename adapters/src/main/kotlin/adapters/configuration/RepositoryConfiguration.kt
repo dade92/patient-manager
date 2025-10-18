@@ -3,6 +3,8 @@ package adapters.configuration
 import adapters.invoice.JdbcInvoiceRepository
 import adapters.operation.JdbcOperationRepository
 import adapters.patient.JdbcPatientRepository
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import domain.invoice.InvoiceRepository
 import domain.operation.OperationRepository
 import domain.patient.PatientRepository
@@ -21,11 +23,13 @@ class RepositoryConfiguration(
     @Bean
     fun operationRepository(
         dataSource: DataSource,
-        dateTimeProvider: DateTimeProvider
+        dateTimeProvider: DateTimeProvider,
+        objectMapper: ObjectMapper
     ): OperationRepository =
         JdbcOperationRepository(
             dataSource,
-            dateTimeProvider
+            dateTimeProvider,
+            objectMapper
         )
 
     @Bean
@@ -37,4 +41,7 @@ class RepositoryConfiguration(
             dataSource,
             dateTimeProvider
         )
+
+    @Bean
+    fun objectMapper(): ObjectMapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
 }
