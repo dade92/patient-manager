@@ -5,6 +5,6 @@
   "executor": "Dr. Who",
   "estimatedCost": {"amount": 2500.00, "currency": "EUR"},
   "patientOperationInfo": {
-    "teeth": []
+    "details": []
   }
 }
