@@ -3,6 +3,9 @@ package adapters.operation
 import domain.model.*
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.readValue
 import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.ResultSet
@@ -11,7 +14,8 @@ import javax.sql.DataSource
 
 class JdbcOperationRepository(
     private val dataSource: DataSource,
-    private val dateTimeProvider: DateTimeProvider
+    private val dateTimeProvider: DateTimeProvider,
+    private val objectMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
 ) : OperationRepository {
 
     override fun save(operation: PatientOperation): PatientOperation {
@@ -34,7 +38,8 @@ class JdbcOperationRepository(
                 | executor,
                 | created_at,
                 | updated_at,
-                | estimated_cost 
+                | estimated_cost,
+                | info
                 | FROM OPERATION 
                 | WHERE operation_id = ?
             """.trimMargin()
@@ -63,7 +68,8 @@ class JdbcOperationRepository(
                 | executor, 
                 | created_at, 
                 | updated_at, 
-                | estimated_cost 
+                | estimated_cost,
+                | info
                 | FROM OPERATION 
                 | WHERE patient_id = ? ORDER BY created_at DESC LIMIT 10
             """.trimMargin()
@@ -132,8 +138,8 @@ class JdbcOperationRepository(
         dataSource.connection.use { connection ->
             connection.prepareStatement(
                 """
-                INSERT INTO OPERATION (operation_id, patient_id, type, description, executor, created_at, updated_at, estimated_cost)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO OPERATION (operation_id, patient_id, type, description, executor, created_at, updated_at, estimated_cost, info)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """
             ).use { statement ->
                 statement.setString(1, operation.id.value)
@@ -144,6 +150,7 @@ class JdbcOperationRepository(
                 statement.setTimestamp(6, Timestamp.valueOf(operation.creationDateTime))
                 statement.setTimestamp(7, Timestamp.valueOf(operation.lastUpdate))
                 statement.setBigDecimal(8, operation.estimatedCost.amount)
+                statement.setString(9, objectMapper.writeValueAsString(operation.info))
                 statement.executeUpdate()
             }
 
@@ -177,7 +184,7 @@ class JdbcOperationRepository(
             connection.prepareStatement(
                 """
                 UPDATE OPERATION
-                SET type = ?, description = ?, executor = ?, updated_at = ?
+                SET type = ?, description = ?, executor = ?, updated_at = ?, info = ?
                 WHERE operation_id = ?
                 """
             ).use { statement ->
@@ -185,7 +192,8 @@ class JdbcOperationRepository(
                 statement.setString(2, operation.description)
                 statement.setString(3, operation.executor)
                 statement.setTimestamp(4, Timestamp.valueOf(operation.lastUpdate))
-                statement.setString(5, operation.id.value)
+                statement.setString(5, objectMapper.writeValueAsString(operation.info))
+                statement.setString(6, operation.id.value)
                 statement.executeUpdate()
             }
 
@@ -217,6 +225,8 @@ class JdbcOperationRepository(
 
         val additionalNotes = getOperationNotes(operationId, connection)
 
+        val info = objectMapper.readValue(resultSet.getString("info"), PatientOperationInfo::class.java)
+
         return PatientOperation(
             id = operationId,
             patientId = PatientId(resultSet.getString("patient_id")),
@@ -228,7 +238,7 @@ class JdbcOperationRepository(
             creationDateTime = resultSet.getTimestamp("created_at").toLocalDateTime(),
             lastUpdate = resultSet.getTimestamp("updated_at").toLocalDateTime(),
             estimatedCost = Money(resultSet.getBigDecimal("estimated_cost")),
-            info = PatientOperationInfo(emptyList())
+            info = info
         )
     }
 

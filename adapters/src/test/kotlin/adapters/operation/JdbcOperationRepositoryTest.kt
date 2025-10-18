@@ -1,6 +1,7 @@
 package adapters.operation
 
 import adapters.Utils.runSql
+import domain.model.*
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.anOperationId
@@ -47,6 +48,7 @@ class JdbcOperationRepositoryTest {
         val newOperation = aPatientOperation(
             id = newOperationId,
             patientId = PATIENT_ID,
+            info = DEFAULT_INFO
         )
 
         val saved = repository.save(newOperation)
@@ -68,7 +70,8 @@ class JdbcOperationRepositoryTest {
             additionalNotes = ADDITIONAL_NOTES,
             creationDateTime = OPERATION_CREATION_TIME,
             lastUpdate = OPERATION_LAST_UPDATE_TIME,
-            estimatedCost = ESTIMATED_COST
+            estimatedCost = ESTIMATED_COST,
+            info = DEFAULT_INFO
         )
 
         val saved = repository.save(updated)
@@ -92,7 +95,8 @@ class JdbcOperationRepositoryTest {
             additionalNotes = ADDITIONAL_NOTES,
             creationDateTime = OPERATION_CREATION_TIME,
             lastUpdate = OPERATION_LAST_UPDATE_TIME,
-            estimatedCost = ESTIMATED_COST
+            estimatedCost = ESTIMATED_COST,
+            info = DEFAULT_INFO
         )
 
         assertEquals(expected, result)
@@ -114,7 +118,8 @@ class JdbcOperationRepositoryTest {
                     additionalNotes = ADDITIONAL_NOTES,
                     creationDateTime = OPERATION_CREATION_TIME,
                     lastUpdate = OPERATION_LAST_UPDATE_TIME,
-                    estimatedCost = ESTIMATED_COST
+                    estimatedCost = ESTIMATED_COST,
+                    info = DEFAULT_INFO
                 )
             ),
             result
@@ -182,5 +187,6 @@ class JdbcOperationRepositoryTest {
             )
         )
         private val ESTIMATED_COST = aMoney(BigDecimal("2500.00"))
+        private val DEFAULT_INFO = PatientOperationInfo(emptyList())
     }
 }
