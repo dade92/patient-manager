@@ -95,6 +95,20 @@ class OperationController(
 
     companion object {
         private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+        private fun MoneyDto.toDomain() = Money(amount = this.amount, currency = this.currency)
+        private fun Money.toDto() = MoneyDto(amount = this.amount, currency = this.currency)
+        private fun PatientOperationInfo.toDto() =
+            PatientOperationInfoDto(
+                details = this.details.map { DetailDto(it.toothNumber, it.estimatedCost.toDto()) }
+            )
+
+        private fun PatientOperationInfoDto.toDomain() =
+            PatientOperationInfo(details = this.details.map {
+                Detail(
+                    toothNumber = it.toothNumber,
+                    estimatedCost = it.estimatedCost.toDomain()
+                )
+            })
     }
 
     data class CreateOperationJsonRequest(
@@ -141,16 +155,4 @@ class OperationController(
         val toothNumber: Int,
         val estimatedCost: MoneyDto
     )
-
-    private fun MoneyDto.toDomain() = Money(amount = this.amount, currency = this.currency)
-    private fun Money.toDto() = MoneyDto(amount = this.amount, currency = this.currency)
-    private fun PatientOperationInfo.toDto() =
-        PatientOperationInfoDto(details = this.details.map { DetailDto(it.toothNumber, it.estimatedCost.toDto()) })
-
-    private fun PatientOperationInfoDto.toDomain() = PatientOperationInfo(details = this.details.map {
-        Detail(
-            toothNumber = it.toothNumber,
-            estimatedCost = it.estimatedCost.toDomain()
-        )
-    })
 }
