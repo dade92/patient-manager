@@ -3,7 +3,7 @@ POST {{host}}/api/invoice
 Content-Type: application/json
 
 {
-  "operationId": "33333333-3333-3333-3333-333333333333",
+  "operationId": "3333333-3333-3333-3333-333333333333",
   "patientId": "22222222-2222-2222-2222-222222222222",
   "amount": {
     "amount": 120.50,

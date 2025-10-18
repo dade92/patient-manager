@@ -7,12 +7,27 @@ Content-Type: application/json
   "patientId": "22222222-2222-2222-2222-222222222222",
   "type": "CONSULTATION",
   "description": "Initial consultation for knee pain",
-  "executor": "Dr. Alice Wilson"
+  "executor": "Dr. Alice Wilson",
+  "estimatedCost": {
+    "amount": 150.00,
+    "currency": "USD"
+  },
+  "patientOperationInfo": {
+    "details": [
+      {
+        "toothNumber": 2,
+        "estimatedCost": {
+            "amount": 75.00,
+            "currency": "USD"
+        }
+      }
+    ]
+  }
 }
 
 ### Get a specific operation by ID
 
-GET {{host}}/api/operation/33333333-3333-3333-3333-333333333333
+GET {{host}}/api/operation/33333333-3333-3333-3333-333333333332
 
 ### Get all operations for a specific patient
 

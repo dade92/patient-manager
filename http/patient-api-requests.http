@@ -20,4 +20,4 @@ GET {{host}}/api/patient/22222222-2222-2222-2222-222222222222
 
 ### Search patients by name
 
-GET {{host}}/api/patient/search?name=Jo
+GET {{host}}/api/patient/search?name=Jodfd
