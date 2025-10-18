@@ -19,7 +19,8 @@ object OperationBuilder {
         additionalNotes: List<OperationNote> = emptyList(),
         creationDateTime: LocalDateTime = LocalDateTime.of(2025, 1, 2, 3, 4, 5),
         lastUpdate: LocalDateTime = LocalDateTime.of(2025, 2, 2, 3, 4, 5),
-        estimatedCost: Money = aMoney()
+        estimatedCost: Money = aMoney(),
+        info: PatientOperationInfo = aPatientOperationInfo()
     ) =
         PatientOperation(
             id = id,
@@ -31,7 +32,8 @@ object OperationBuilder {
             additionalNotes = additionalNotes,
             creationDateTime = creationDateTime,
             lastUpdate = lastUpdate,
-            estimatedCost = estimatedCost
+            estimatedCost = estimatedCost,
+            info = info
         )
 
     fun aCreateOperationRequest(
@@ -40,16 +42,24 @@ object OperationBuilder {
         description: String = "",
         executor: String = "",
         estimatedCost: Money = aMoney(),
+        patientOperationInfo: PatientOperationInfo = aPatientOperationInfo(),
     ) = CreateOperationRequest(
         patientId = patientId,
         type = type,
         description = description,
         executor = executor,
-        estimatedCost = estimatedCost
+        estimatedCost = estimatedCost,
+        patientOperationInfo = patientOperationInfo
     )
 
     fun anOperationNote(
         content: String = "note",
         creationTime: LocalDateTime = LocalDateTime.now()
     ) = OperationNote(content, creationTime)
+
+    fun aPatientOperationInfo(
+        details: List<Detail> = emptyList()
+    ): PatientOperationInfo = PatientOperationInfo(
+        details
+    )
 }

@@ -17,6 +17,16 @@ data class PatientOperation(
     val additionalNotes: List<OperationNote> = emptyList(),
     val creationDateTime: LocalDateTime,
     val lastUpdate: LocalDateTime,
+    val estimatedCost: Money,
+    val info: PatientOperationInfo
+)
+
+data class PatientOperationInfo(
+    val teeth: List<Detail>
+)
+
+data class Detail(
+    val toothNumber: Int,
     val estimatedCost: Money
 )
 

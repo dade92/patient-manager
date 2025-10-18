@@ -74,12 +74,8 @@ class OperationServiceTest {
 
     @Test
     fun `createOperation throws PatientNotFoundException when patient is not found`() {
-        val request = CreateOperationRequest(
+        val request = aCreateOperationRequest(
             patientId = PATIENT_ID,
-            type = OperationType.CONSULTATION,
-            description = DESCRIPTION,
-            executor = EXECUTOR,
-            estimatedCost = AMOUNT
         )
 
         every { patientRepository.retrieve(PATIENT_ID) } returns null

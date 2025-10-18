@@ -1,10 +1,6 @@
 package webapp.controller
 
-import domain.model.Money
-import domain.model.OperationId
-import domain.model.OperationType
-import domain.model.PatientId
-import domain.model.PatientOperation
+import domain.model.*
 import domain.operation.CreateOperationRequest
 import domain.operation.OperationService
 import org.springframework.http.HttpStatus
@@ -30,7 +26,8 @@ class OperationController(
                 type = request.type,
                 description = request.description,
                 executor = request.executor,
-                estimatedCost = request.estimatedCost.toDomain()
+                estimatedCost = request.estimatedCost.toDomain(),
+                patientOperationInfo = request.patientOperationInfo
             )
         ).let {
             ResponseEntity.status(HttpStatus.CREATED).body(it.toResponse())
@@ -94,6 +91,7 @@ class OperationController(
             createdAt = this.creationDateTime.format(DATE_FORMATTER),
             updatedAt = this.lastUpdate.format(DATE_FORMATTER),
             estimatedCost = this.estimatedCost.toDto(),
+            patientOperationInfo = this.info
         )
 
     companion object {
@@ -105,7 +103,8 @@ class OperationController(
         val type: OperationType,
         val description: String,
         val executor: String,
-        val estimatedCost: MoneyDto
+        val estimatedCost: MoneyDto,
+        val patientOperationInfo: PatientOperationInfo
     )
 
     data class AddOperationNoteJsonRequest(
@@ -122,7 +121,8 @@ class OperationController(
         val additionalNotes: List<OperationNoteResponse>,
         val createdAt: String,
         val updatedAt: String,
-        val estimatedCost: MoneyDto
+        val estimatedCost: MoneyDto,
+        val patientOperationInfo: PatientOperationInfo
     )
 
     data class OperationNoteResponse(
