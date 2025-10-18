@@ -1,8 +1,12 @@
 package adapters.operation
 
 import adapters.Utils.runSql
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import domain.model.MoneyBuilder.aMoney
+import domain.model.OperationBuilder.aDetail
 import domain.model.OperationBuilder.aPatientOperation
+import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
 import domain.model.OperationType.SURGERY
@@ -32,7 +36,11 @@ class JdbcOperationRepositoryTest {
         runSql(SCHEMA_SQL, dataSource)
         runSql(DATA_SQL, dataSource)
 
-        repository = JdbcOperationRepository(dataSource, dateTimeProvider)
+        repository = JdbcOperationRepository(
+            dataSource,
+            dateTimeProvider,
+            ObjectMapper().registerModule(KotlinModule.Builder().build())
+        )
 
         every { dateTimeProvider.now() } returns NOW
     }
@@ -47,6 +55,7 @@ class JdbcOperationRepositoryTest {
         val newOperation = aPatientOperation(
             id = newOperationId,
             patientId = PATIENT_ID,
+            info = INFO
         )
 
         val saved = repository.save(newOperation)
@@ -68,7 +77,8 @@ class JdbcOperationRepositoryTest {
             additionalNotes = ADDITIONAL_NOTES,
             creationDateTime = OPERATION_CREATION_TIME,
             lastUpdate = OPERATION_LAST_UPDATE_TIME,
-            estimatedCost = ESTIMATED_COST
+            estimatedCost = ESTIMATED_COST,
+            info = INFO
         )
 
         val saved = repository.save(updated)
@@ -92,7 +102,8 @@ class JdbcOperationRepositoryTest {
             additionalNotes = ADDITIONAL_NOTES,
             creationDateTime = OPERATION_CREATION_TIME,
             lastUpdate = OPERATION_LAST_UPDATE_TIME,
-            estimatedCost = ESTIMATED_COST
+            estimatedCost = ESTIMATED_COST,
+            info = INFO
         )
 
         assertEquals(expected, result)
@@ -114,7 +125,8 @@ class JdbcOperationRepositoryTest {
                     additionalNotes = ADDITIONAL_NOTES,
                     creationDateTime = OPERATION_CREATION_TIME,
                     lastUpdate = OPERATION_LAST_UPDATE_TIME,
-                    estimatedCost = ESTIMATED_COST
+                    estimatedCost = ESTIMATED_COST,
+                    info = INFO
                 )
             ),
             result
@@ -182,5 +194,13 @@ class JdbcOperationRepositoryTest {
             )
         )
         private val ESTIMATED_COST = aMoney(BigDecimal("2500.00"))
+        private val INFO = aPatientOperationInfo(
+            details = listOf(
+                aDetail(
+                    toothNumber = 2,
+                    estimatedCost = aMoney(BigDecimal("150.50"))
+                )
+            )
+        )
     }
 }

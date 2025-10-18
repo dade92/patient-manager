@@ -3,5 +3,8 @@
   "type": "SURGERY",
   "description": "Appendectomy",
   "executor": "Dr. Who",
-  "estimatedCost": {"amount": 2500.00, "currency": "EUR"}
+  "estimatedCost": {"amount": 2500.00, "currency": "EUR"},
+  "patientOperationInfo": {
+    "details": []
+  }
 }

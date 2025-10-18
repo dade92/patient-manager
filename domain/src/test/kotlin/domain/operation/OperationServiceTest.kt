@@ -4,7 +4,9 @@ import domain.exceptions.PatientNotFoundException
 import domain.generator.OperationIdGenerator
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aCreateOperationRequest
+import domain.model.OperationBuilder.aDetail
 import domain.model.OperationBuilder.aPatientOperation
+import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationType
 import domain.model.OperationType.SURGERY
@@ -48,7 +50,8 @@ class OperationServiceTest {
             type = SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
-            estimatedCost = AMOUNT
+            estimatedCost = AMOUNT,
+            patientOperationInfo = PATIENT_OPERATION_INFO
         )
 
         val expected = aPatientOperation(
@@ -59,7 +62,8 @@ class OperationServiceTest {
             executor = EXECUTOR,
             creationDateTime = NOW,
             lastUpdate = NOW,
-            estimatedCost = AMOUNT
+            estimatedCost = AMOUNT,
+            info = PATIENT_OPERATION_INFO
         )
 
         every { patientRepository.retrieve(PATIENT_ID) } returns PATIENT
@@ -74,12 +78,8 @@ class OperationServiceTest {
 
     @Test
     fun `createOperation throws PatientNotFoundException when patient is not found`() {
-        val request = CreateOperationRequest(
+        val request = aCreateOperationRequest(
             patientId = PATIENT_ID,
-            type = OperationType.CONSULTATION,
-            description = DESCRIPTION,
-            executor = EXECUTOR,
-            estimatedCost = AMOUNT
         )
 
         every { patientRepository.retrieve(PATIENT_ID) } returns null
@@ -189,5 +189,6 @@ class OperationServiceTest {
         private const val FILENAME = "file1.png"
         private const val NOTE = "note"
         private val NOW = LocalDateTime.of(2025, 1, 2, 3, 4, 5)
+        private val PATIENT_OPERATION_INFO = aPatientOperationInfo(listOf(aDetail()))
     }
 }

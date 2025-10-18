@@ -1,17 +1,12 @@
 package webapp.controller
 
-import domain.model.Money
-import domain.model.OperationId
-import domain.model.OperationType
-import domain.model.PatientId
-import domain.model.PatientOperation
+import domain.model.*
 import domain.operation.CreateOperationRequest
 import domain.operation.OperationService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.server.ResponseStatusException
 import java.time.format.DateTimeFormatter
 
 @RestController
@@ -30,7 +25,8 @@ class OperationController(
                 type = request.type,
                 description = request.description,
                 executor = request.executor,
-                estimatedCost = request.estimatedCost.toDomain()
+                estimatedCost = request.estimatedCost.toDomain(),
+                patientOperationInfo = request.patientOperationInfo.toDomain()
             )
         ).let {
             ResponseEntity.status(HttpStatus.CREATED).body(it.toResponse())
@@ -94,10 +90,25 @@ class OperationController(
             createdAt = this.creationDateTime.format(DATE_FORMATTER),
             updatedAt = this.lastUpdate.format(DATE_FORMATTER),
             estimatedCost = this.estimatedCost.toDto(),
+            patientOperationInfo = this.info.toDto()
         )
 
     companion object {
         private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+        private fun MoneyDto.toDomain() = Money(amount = this.amount, currency = this.currency)
+        private fun Money.toDto() = MoneyDto(amount = this.amount, currency = this.currency)
+        private fun PatientOperationInfo.toDto() =
+            PatientOperationInfoDto(
+                details = this.details.map { DetailDto(it.toothNumber, it.estimatedCost.toDto()) }
+            )
+
+        private fun PatientOperationInfoDto.toDomain() =
+            PatientOperationInfo(details = this.details.map {
+                Detail(
+                    toothNumber = it.toothNumber,
+                    estimatedCost = it.estimatedCost.toDomain()
+                )
+            })
     }
 
     data class CreateOperationJsonRequest(
@@ -105,7 +116,8 @@ class OperationController(
         val type: OperationType,
         val description: String,
         val executor: String,
-        val estimatedCost: MoneyDto
+        val estimatedCost: MoneyDto,
+        val patientOperationInfo: PatientOperationInfoDto
     )
 
     data class AddOperationNoteJsonRequest(
@@ -122,7 +134,8 @@ class OperationController(
         val additionalNotes: List<OperationNoteResponse>,
         val createdAt: String,
         val updatedAt: String,
-        val estimatedCost: MoneyDto
+        val estimatedCost: MoneyDto,
+        val patientOperationInfo: PatientOperationInfoDto
     )
 
     data class OperationNoteResponse(
@@ -134,6 +147,12 @@ class OperationController(
         val operations: List<OperationResponse>
     )
 
-    private fun MoneyDto.toDomain() = Money(amount = this.amount, currency = this.currency)
-    private fun Money.toDto() = MoneyDto(amount = this.amount, currency = this.currency)
+    data class PatientOperationInfoDto(
+        val details: List<DetailDto>
+    )
+
+    data class DetailDto(
+        val toothNumber: Int,
+        val estimatedCost: MoneyDto
+    )
 }
