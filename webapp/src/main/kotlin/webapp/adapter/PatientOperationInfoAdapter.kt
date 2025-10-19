@@ -1,8 +1,6 @@
 package webapp.adapter
 
 import domain.model.PatientOperationInfo
-import webapp.controller.toDomain
-import webapp.controller.toDto
 
 class PatientOperationInfoAdapter {
 

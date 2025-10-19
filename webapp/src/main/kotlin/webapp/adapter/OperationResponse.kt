@@ -3,8 +3,6 @@ package webapp.adapter
 import domain.model.Detail
 import domain.model.OperationType
 import domain.model.PatientOperationInfo
-import webapp.controller.MoneyDto
-import webapp.controller.toDomain
 
 data class OperationResponse(
     val id: String,

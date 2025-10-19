@@ -5,7 +5,6 @@ import domain.model.OperationBuilder.aDetail
 import domain.model.OperationBuilder.aPatientOperationInfo
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import webapp.controller.MoneyDto
 import java.math.BigDecimal
 
 class PatientOperationInfoAdapterTest {

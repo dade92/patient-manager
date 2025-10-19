@@ -1,4 +1,4 @@
-package webapp.controller
+package webapp.adapter
 
 import domain.model.Money
 import java.math.BigDecimal

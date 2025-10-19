@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import webapp.adapter.InvoiceResponse
+import webapp.adapter.InvoicesPerOperationResponse
+import webapp.adapter.InvoicesPerPatientResponse
+import webapp.adapter.MoneyDto
 import java.time.format.DateTimeFormatter
 
 @RestController
@@ -99,14 +103,6 @@ class InvoiceController(
             updatedAt = invoice.lastUpdate.format(DATE_FORMATTER)
         )
 
-    data class InvoicesPerOperationResponse(
-        val invoices: List<InvoiceResponse>
-    )
-
-    data class InvoicesPerPatientResponse(
-        val invoices: List<InvoiceResponse>
-    )
-
     data class CreateInvoiceJsonRequest(
         val operationId: String,
         val patientId: String,
@@ -115,15 +111,6 @@ class InvoiceController(
 
     data class UpdateInvoiceStatusRequest(
         val status: String
-    )
-
-    data class InvoiceResponse(
-        val id: String,
-        val operationId: String,
-        val amount: MoneyDto,
-        val status: String,
-        val createdAt: String,
-        val updatedAt: String
     )
 }
 
