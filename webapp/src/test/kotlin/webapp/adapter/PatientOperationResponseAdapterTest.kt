@@ -20,8 +20,8 @@ class PatientOperationResponseAdapterTest {
     private val adapter = PatientOperationResponseAdapter(patientOperationInfoAdapter)
 
     @Test
-    fun `should adapt PatientOperation to OperationResponse`() {
-        val mockPatientOperationInfoDto = PatientOperationInfoDto(emptyList())
+    fun adapt() {
+        val info = PatientOperationInfoDto(emptyList())
         val patientOperationInfo = aPatientOperationInfo()
 
         val patientOperation = aPatientOperation(
@@ -41,7 +41,7 @@ class PatientOperationResponseAdapterTest {
             info = patientOperationInfo
         )
 
-        every { patientOperationInfoAdapter.adapt(patientOperationInfo) } returns mockPatientOperationInfoDto
+        every { patientOperationInfoAdapter.adapt(patientOperationInfo) } returns info
 
         val expected = OperationResponse(
             id = "OP-789",
@@ -57,9 +57,11 @@ class PatientOperationResponseAdapterTest {
             createdAt = "02/01/2025 03:04",
             updatedAt = "03/02/2025 04:05",
             estimatedCost = MoneyDto(BigDecimal("250.00"), "EUR"),
-            patientOperationInfo = mockPatientOperationInfoDto
+            patientOperationInfo = info
         )
 
-        assertEquals(expected, adapter.adapt(patientOperation))
+        val actual = adapter.adapt(patientOperation)
+
+        assertEquals(expected, actual)
     }
 }
