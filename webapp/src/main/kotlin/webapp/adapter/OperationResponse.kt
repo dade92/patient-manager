@@ -1,7 +1,10 @@
 package webapp.adapter
 
+import domain.model.Detail
 import domain.model.OperationType
+import domain.model.PatientOperationInfo
 import webapp.controller.MoneyDto
+import webapp.controller.toDomain
 
 data class OperationResponse(
     val id: String,
@@ -29,6 +32,14 @@ data class PatientOperationsResponse(
 data class PatientOperationInfoDto(
     val details: List<DetailDto>
 )
+
+fun PatientOperationInfoDto.toDomain() =
+    PatientOperationInfo(details = this.details.map {
+        Detail(
+            toothNumber = it.toothNumber,
+            estimatedCost = it.estimatedCost.toDomain()
+        )
+    })
 
 data class DetailDto(
     val toothNumber: Int,

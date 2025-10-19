@@ -1,16 +1,15 @@
 package webapp.controller
 
-import domain.model.*
+import domain.model.OperationId
+import domain.model.OperationType
+import domain.model.PatientId
 import domain.operation.CreateOperationRequest
 import domain.operation.OperationService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import webapp.adapter.OperationResponse
-import webapp.adapter.PatientOperationInfoDto
-import webapp.adapter.PatientOperationResponseAdapter
-import webapp.adapter.PatientOperationsResponse
+import webapp.adapter.*
 
 @RestController
 @RequestMapping("/api/operation")
@@ -81,19 +80,6 @@ class OperationController(
                 )?.let { ResponseEntity.ok(patientOperationResponseAdapter.adapt(it)) } ?: ResponseEntity.notFound()
                     .build()
             } ?: ResponseEntity.badRequest().build()
-
-    companion object {
-        fun MoneyDto.toDomain() = Money(amount = this.amount, currency = this.currency)
-        fun Money.toDto() = MoneyDto(amount = this.amount, currency = this.currency)
-
-        private fun PatientOperationInfoDto.toDomain() =
-            PatientOperationInfo(details = this.details.map {
-                Detail(
-                    toothNumber = it.toothNumber,
-                    estimatedCost = it.estimatedCost.toDomain()
-                )
-            })
-    }
 
     data class CreateOperationJsonRequest(
         val patientId: String,
