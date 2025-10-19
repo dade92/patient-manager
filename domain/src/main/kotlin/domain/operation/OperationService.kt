@@ -33,7 +33,9 @@ class OperationService(
                 creationDateTime = now,
                 lastUpdate = now,
                 estimatedCost = request.estimatedCost,
-                info = request.patientOperationInfo
+                info = request.patientOperationInfo,
+                assets = emptyList(),
+                additionalNotes = emptyList()
             )
         )
     }

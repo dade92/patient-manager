@@ -22,7 +22,6 @@ class PatientOperationResponseAdapterTest {
     @Test
     fun adapt() {
         val info = PatientOperationInfoResponse(emptyList())
-
         val patientOperation = aPatientOperation(
             id = anOperationId(OPERATION_ID),
             patientId = aPatientId(PATIENT_ID),
@@ -39,9 +38,6 @@ class PatientOperationResponseAdapterTest {
             estimatedCost = aMoney(BigDecimal(AMOUNT), CURRENCY),
             info = PATIENT_OPERATION_INFO
         )
-
-        every { patientOperationInfoAdapter.adapt(PATIENT_OPERATION_INFO) } returns info
-
         val expected = OperationResponse(
             id = OPERATION_ID,
             patientId = PATIENT_ID,
@@ -58,6 +54,8 @@ class PatientOperationResponseAdapterTest {
             estimatedCost = MoneyDto(BigDecimal(AMOUNT), CURRENCY),
             patientOperationInfo = info
         )
+
+        every { patientOperationInfoAdapter.adapt(PATIENT_OPERATION_INFO) } returns info
 
         val actual = adapter.adapt(patientOperation)
 
