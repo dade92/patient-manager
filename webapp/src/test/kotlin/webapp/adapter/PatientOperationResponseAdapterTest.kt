@@ -22,46 +22,60 @@ class PatientOperationResponseAdapterTest {
     @Test
     fun adapt() {
         val info = PatientOperationInfoDto(emptyList())
-        val patientOperationInfo = aPatientOperationInfo()
 
         val patientOperation = aPatientOperation(
-            id = OperationId("OP-789"),
-            patientId = aPatientId("PAT-123"),
+            id = OperationId(OPERATION_ID),
+            patientId = aPatientId(PATIENT_ID),
             type = OperationType.DIAGNOSTIC,
-            description = "Test operation",
-            executor = "Dr. Smith",
-            assets = listOf("xray.jpg", "scan.png"),
+            description = DESCRIPTION,
+            executor = EXECUTOR,
+            assets = listOf(ASSET_1, ASSET_2),
             additionalNotes = listOf(
-                anOperationNote("First note", LocalDateTime.of(2025, 3, 4, 5, 6, 7)),
-                anOperationNote("Second note", LocalDateTime.of(2025, 3, 5, 6, 7, 8))
+                anOperationNote(FIRST_NOTE, LocalDateTime.of(2025, 3, 4, 5, 6, 7)),
+                anOperationNote(SECOND_NOTE, LocalDateTime.of(2025, 3, 5, 6, 7, 8))
             ),
             creationDateTime = LocalDateTime.of(2025, 1, 2, 3, 4, 5),
             lastUpdate = LocalDateTime.of(2025, 2, 3, 4, 5, 6),
-            estimatedCost = aMoney(BigDecimal("250.00"), "EUR"),
-            info = patientOperationInfo
+            estimatedCost = aMoney(BigDecimal(AMOUNT), CURRENCY),
+            info = PATIENT_OPERATION_INFO
         )
 
-        every { patientOperationInfoAdapter.adapt(patientOperationInfo) } returns info
+        every { patientOperationInfoAdapter.adapt(PATIENT_OPERATION_INFO) } returns info
 
         val expected = OperationResponse(
-            id = "OP-789",
-            patientId = "PAT-123",
+            id = OPERATION_ID,
+            patientId = PATIENT_ID,
             type = OperationType.DIAGNOSTIC,
-            description = "Test operation",
-            executor = "Dr. Smith",
-            assets = listOf("xray.jpg", "scan.png"),
+            description = DESCRIPTION,
+            executor = EXECUTOR,
+            assets = listOf(ASSET_1, ASSET_2),
             additionalNotes = listOf(
-                OperationNoteResponse("First note", "04/03/2025 05:06"),
-                OperationNoteResponse("Second note", "05/03/2025 06:07")
+                OperationNoteResponse(FIRST_NOTE, "04/03/2025 05:06"),
+                OperationNoteResponse(SECOND_NOTE, "05/03/2025 06:07")
             ),
             createdAt = "02/01/2025 03:04",
             updatedAt = "03/02/2025 04:05",
-            estimatedCost = MoneyDto(BigDecimal("250.00"), "EUR"),
+            estimatedCost = MoneyDto(BigDecimal(AMOUNT), CURRENCY),
             patientOperationInfo = info
         )
 
         val actual = adapter.adapt(patientOperation)
 
         assertEquals(expected, actual)
+    }
+
+    companion object {
+        private const val OPERATION_ID = "OP-123"
+        private const val PATIENT_ID = "PAT-456"
+        private const val DESCRIPTION = "Routine check-up"
+        private const val EXECUTOR = "Dr. Smith"
+        private const val ASSET_1 = "X-Ray"
+        private const val ASSET_2 = "Blood Test"
+        private const val AMOUNT = "150.00"
+        private const val CURRENCY = "EUR"
+        private const val FIRST_NOTE = "First note"
+        private const val SECOND_NOTE = "Second note"
+
+        private val PATIENT_OPERATION_INFO = aPatientOperationInfo()
     }
 }
