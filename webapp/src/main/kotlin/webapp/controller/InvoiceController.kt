@@ -73,7 +73,7 @@ class InvoiceController(
     @PostMapping("/{invoiceId}/status")
     fun updateInvoiceStatus(
         @PathVariable invoiceId: String,
-        @RequestBody requestDto: UpdateInvoiceStatusRequest
+        @RequestBody requestDto: UpdateInvoiceStatusJsonRequest
     ): ResponseEntity<InvoiceResponse> =
         invoiceService.updateInvoiceStatus(
             InvoiceId(invoiceId),
@@ -88,7 +88,7 @@ class InvoiceController(
         val amount: MoneyDto,
     )
 
-    data class UpdateInvoiceStatusRequest(
+    data class UpdateInvoiceStatusJsonRequest(
         val status: String
     )
 }
