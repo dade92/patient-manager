@@ -7,7 +7,10 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import webapp.adapter.OperationResponse
+import webapp.adapter.PatientOperationInfoDto
 import webapp.adapter.PatientOperationResponseAdapter
+import webapp.adapter.PatientOperationsResponse
 
 @RestController
 @RequestMapping("/api/operation")
@@ -103,37 +106,5 @@ class OperationController(
 
     data class AddOperationNoteJsonRequest(
         val content: String
-    )
-
-    data class OperationResponse(
-        val id: String,
-        val patientId: String,
-        val type: OperationType,
-        val description: String,
-        val executor: String,
-        val assets: List<String>,
-        val additionalNotes: List<OperationNoteResponse>,
-        val createdAt: String,
-        val updatedAt: String,
-        val estimatedCost: MoneyDto,
-        val patientOperationInfo: PatientOperationInfoDto
-    )
-
-    data class OperationNoteResponse(
-        val content: String,
-        val createdAt: String
-    )
-
-    data class PatientOperationsResponse(
-        val operations: List<OperationResponse>
-    )
-
-    data class PatientOperationInfoDto(
-        val details: List<DetailDto>
-    )
-
-    data class DetailDto(
-        val toothNumber: Int,
-        val estimatedCost: MoneyDto
     )
 }

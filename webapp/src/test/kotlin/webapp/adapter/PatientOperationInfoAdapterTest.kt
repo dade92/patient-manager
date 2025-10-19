@@ -6,7 +6,6 @@ import domain.model.OperationBuilder.aPatientOperationInfo
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import webapp.controller.MoneyDto
-import webapp.controller.OperationController
 import java.math.BigDecimal
 
 class PatientOperationInfoAdapterTest {
@@ -22,13 +21,13 @@ class PatientOperationInfoAdapterTest {
             )
         )
 
-        val expected = OperationController.PatientOperationInfoDto(
+        val expected = PatientOperationInfoDto(
             details = listOf(
-                OperationController.DetailDto(
+                DetailDto(
                     toothNumber = 1,
                     estimatedCost = MoneyDto(BigDecimal("100.00"), "EUR")
                 ),
-                OperationController.DetailDto(
+                DetailDto(
                     toothNumber = 2,
                     estimatedCost = MoneyDto(BigDecimal("150.50"), "USD")
                 )
@@ -40,13 +39,13 @@ class PatientOperationInfoAdapterTest {
 
     @Test
     fun `should convert from dto to domain`() {
-        val dto = OperationController.PatientOperationInfoDto(
+        val dto = PatientOperationInfoDto(
             details = listOf(
-                OperationController.DetailDto(
+                DetailDto(
                     toothNumber = 1,
                     estimatedCost = MoneyDto(BigDecimal("100.00"), "EUR")
                 ),
-                OperationController.DetailDto(
+                DetailDto(
                     toothNumber = 2,
                     estimatedCost = MoneyDto(BigDecimal("150.50"), "USD")
                 )

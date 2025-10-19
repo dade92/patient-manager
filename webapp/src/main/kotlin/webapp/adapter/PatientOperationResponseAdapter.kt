@@ -2,8 +2,6 @@ package webapp.adapter
 
 import domain.model.PatientOperation
 import webapp.controller.OperationController.Companion.toDto
-import webapp.controller.OperationController.OperationNoteResponse
-import webapp.controller.OperationController.OperationResponse
 import java.time.format.DateTimeFormatter
 
 class PatientOperationResponseAdapter(

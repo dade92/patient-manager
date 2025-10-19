@@ -12,9 +12,6 @@ import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import webapp.controller.MoneyDto
-import webapp.controller.OperationController.OperationNoteResponse
-import webapp.controller.OperationController.OperationResponse
-import webapp.controller.OperationController.PatientOperationInfoDto
 import java.math.BigDecimal
 import java.time.LocalDateTime
 

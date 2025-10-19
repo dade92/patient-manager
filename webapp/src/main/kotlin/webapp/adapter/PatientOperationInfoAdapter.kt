@@ -1,15 +1,13 @@
 package webapp.adapter
 
 import domain.model.PatientOperationInfo
-import webapp.controller.OperationController
 import webapp.controller.OperationController.Companion.toDomain
 import webapp.controller.OperationController.Companion.toDto
-import webapp.controller.OperationController.DetailDto
 
 class PatientOperationInfoAdapter {
 
-    fun adapt(patientOperationInfo: PatientOperationInfo): OperationController.PatientOperationInfoDto =
-        OperationController.PatientOperationInfoDto(
+    fun adapt(patientOperationInfo: PatientOperationInfo): PatientOperationInfoDto =
+        PatientOperationInfoDto(
             details = patientOperationInfo.details.map {
                 DetailDto(
                     toothNumber = it.toothNumber,
@@ -18,7 +16,7 @@ class PatientOperationInfoAdapter {
             }
         )
 
-    fun adapt(patientOperationInfoDto: OperationController.PatientOperationInfoDto): PatientOperationInfo =
+    fun adapt(patientOperationInfoDto: PatientOperationInfoDto): PatientOperationInfo =
         PatientOperationInfo(
             details = patientOperationInfoDto.details.map {
                 domain.model.Detail(
