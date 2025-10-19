@@ -12,52 +12,63 @@ class PatientOperationInfoAdapterTest {
     private val adapter = PatientOperationInfoAdapter()
 
     @Test
-    fun `should convert from domain to dto`() {
+    fun `from domain to response`() {
         val patientOperationInfo = aPatientOperationInfo(
             details = listOf(
-                aDetail(toothNumber = 1, estimatedCost = aMoney(BigDecimal("100.00"), "EUR")),
-                aDetail(toothNumber = 2, estimatedCost = aMoney(BigDecimal("150.50"), "USD"))
+                aDetail(toothNumber = 1, estimatedCost = aMoney(BigDecimal(AMOUNT_1), CURRENCY_1)),
+                aDetail(toothNumber = 2, estimatedCost = aMoney(BigDecimal(AMOUNT_2), CURRENCY_2))
             )
         )
 
-        val expected = PatientOperationInfoDto(
+        val expected = PatientOperationInfoResponse(
             details = listOf(
-                DetailDto(
+                DetailResponse(
                     toothNumber = 1,
-                    estimatedCost = MoneyDto(BigDecimal("100.00"), "EUR")
+                    estimatedCost = MoneyDto(BigDecimal(AMOUNT_1), CURRENCY_1)
                 ),
-                DetailDto(
+                DetailResponse(
                     toothNumber = 2,
-                    estimatedCost = MoneyDto(BigDecimal("150.50"), "USD")
+                    estimatedCost = MoneyDto(BigDecimal(AMOUNT_2), CURRENCY_2)
                 )
             )
         )
 
-        assertEquals(expected, adapter.adapt(patientOperationInfo))
+        val actual = adapter.adapt(patientOperationInfo)
+
+        assertEquals(expected, actual)
     }
 
     @Test
-    fun `should convert from dto to domain`() {
-        val dto = PatientOperationInfoDto(
+    fun `from response to domain`() {
+        val dto = PatientOperationInfoResponse(
             details = listOf(
-                DetailDto(
+                DetailResponse(
                     toothNumber = 1,
-                    estimatedCost = MoneyDto(BigDecimal("100.00"), "EUR")
+                    estimatedCost = MoneyDto(BigDecimal(AMOUNT_1), CURRENCY_1)
                 ),
-                DetailDto(
+                DetailResponse(
                     toothNumber = 2,
-                    estimatedCost = MoneyDto(BigDecimal("150.50"), "USD")
+                    estimatedCost = MoneyDto(BigDecimal(AMOUNT_2), CURRENCY_2)
                 )
             )
         )
 
         val expected = aPatientOperationInfo(
             details = listOf(
-                aDetail(toothNumber = 1, estimatedCost = aMoney(BigDecimal("100.00"), "EUR")),
-                aDetail(toothNumber = 2, estimatedCost = aMoney(BigDecimal("150.50"), "USD"))
+                aDetail(toothNumber = 1, estimatedCost = aMoney(BigDecimal(AMOUNT_1), CURRENCY_1)),
+                aDetail(toothNumber = 2, estimatedCost = aMoney(BigDecimal(AMOUNT_2), CURRENCY_2))
             )
         )
 
-        assertEquals(expected, adapter.adapt(dto))
+        val actual = adapter.adapt(dto)
+
+        assertEquals(expected, actual)
+    }
+
+    companion object {
+        private const val AMOUNT_1 = "100.00"
+        private const val CURRENCY_1 = "EUR"
+        private const val AMOUNT_2 = "150.50"
+        private const val CURRENCY_2 = "USD"
     }
 }

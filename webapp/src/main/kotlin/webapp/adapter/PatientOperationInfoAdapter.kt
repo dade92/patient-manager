@@ -4,19 +4,19 @@ import domain.model.PatientOperationInfo
 
 class PatientOperationInfoAdapter {
 
-    fun adapt(patientOperationInfo: PatientOperationInfo): PatientOperationInfoDto =
-        PatientOperationInfoDto(
+    fun adapt(patientOperationInfo: PatientOperationInfo): PatientOperationInfoResponse =
+        PatientOperationInfoResponse(
             details = patientOperationInfo.details.map {
-                DetailDto(
+                DetailResponse(
                     toothNumber = it.toothNumber,
                     estimatedCost = it.estimatedCost.toDto()
                 )
             }
         )
 
-    fun adapt(patientOperationInfoDto: PatientOperationInfoDto): PatientOperationInfo =
+    fun adapt(patientOperationInfoResponse: PatientOperationInfoResponse): PatientOperationInfo =
         PatientOperationInfo(
-            details = patientOperationInfoDto.details.map {
+            details = patientOperationInfoResponse.details.map {
                 domain.model.Detail(
                     toothNumber = it.toothNumber,
                     estimatedCost = it.estimatedCost.toDomain()

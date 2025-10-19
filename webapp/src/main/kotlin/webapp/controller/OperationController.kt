@@ -87,7 +87,7 @@ class OperationController(
         val description: String,
         val executor: String,
         val estimatedCost: MoneyDto,
-        val patientOperationInfo: PatientOperationInfoDto
+        val patientOperationInfo: PatientOperationInfoResponse
     )
 
     data class AddOperationNoteJsonRequest(

@@ -15,7 +15,7 @@ data class OperationResponse(
     val createdAt: String,
     val updatedAt: String,
     val estimatedCost: MoneyDto,
-    val patientOperationInfo: PatientOperationInfoDto
+    val patientOperationInfo: PatientOperationInfoResponse
 )
 
 data class OperationNoteResponse(
@@ -27,11 +27,11 @@ data class PatientOperationsResponse(
     val operations: List<OperationResponse>
 )
 
-data class PatientOperationInfoDto(
-    val details: List<DetailDto>
+data class PatientOperationInfoResponse(
+    val details: List<DetailResponse>
 )
 
-fun PatientOperationInfoDto.toDomain() =
+fun PatientOperationInfoResponse.toDomain() =
     PatientOperationInfo(details = this.details.map {
         Detail(
             toothNumber = it.toothNumber,
@@ -39,7 +39,7 @@ fun PatientOperationInfoDto.toDomain() =
         )
     })
 
-data class DetailDto(
+data class DetailResponse(
     val toothNumber: Int,
     val estimatedCost: MoneyDto
 )
