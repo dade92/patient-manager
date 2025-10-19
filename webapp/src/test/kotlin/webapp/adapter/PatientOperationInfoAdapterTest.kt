@@ -40,7 +40,7 @@ class PatientOperationInfoAdapterTest {
 
     @Test
     fun `from response to domain`() {
-        val dto = PatientOperationInfoResponse(
+        val response = PatientOperationInfoResponse(
             details = listOf(
                 DetailResponse(
                     toothNumber = 1,
@@ -60,7 +60,7 @@ class PatientOperationInfoAdapterTest {
             )
         )
 
-        val actual = adapter.adapt(dto)
+        val actual = adapter.adapt(response)
 
         assertEquals(expected, actual)
     }

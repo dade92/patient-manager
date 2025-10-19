@@ -3,7 +3,6 @@ package webapp.adapter
 import domain.model.PatientOperationInfo
 
 class PatientOperationInfoAdapter {
-
     fun adapt(patientOperationInfo: PatientOperationInfo): PatientOperationInfoResponse =
         PatientOperationInfoResponse(
             details = patientOperationInfo.details.map {
