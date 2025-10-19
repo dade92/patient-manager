@@ -17,7 +17,7 @@ class PatientOperationInfoAdapter {
     fun adapt(patientOperationInfoResponse: PatientOperationInfoResponse): PatientOperationInfo =
         PatientOperationInfo(
             details = patientOperationInfoResponse.details.map {
-                domain.model.Detail(
+                PatientOperationInfo.Detail(
                     toothNumber = it.toothNumber,
                     estimatedCost = it.estimatedCost.toDomain()
                 )

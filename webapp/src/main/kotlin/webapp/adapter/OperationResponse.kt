@@ -1,6 +1,5 @@
 package webapp.adapter
 
-import domain.model.Detail
 import domain.model.OperationType
 import domain.model.PatientOperationInfo
 
@@ -33,7 +32,7 @@ data class PatientOperationInfoResponse(
 
 fun PatientOperationInfoResponse.toDomain() =
     PatientOperationInfo(details = this.details.map {
-        Detail(
+        PatientOperationInfo.Detail(
             toothNumber = it.toothNumber,
             estimatedCost = it.estimatedCost.toDomain()
         )

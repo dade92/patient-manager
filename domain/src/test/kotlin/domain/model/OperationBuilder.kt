@@ -58,7 +58,7 @@ object OperationBuilder {
     ) = OperationNote(content, creationTime)
 
     fun aPatientOperationInfo(
-        details: List<Detail> = emptyList()
+        details: List<PatientOperationInfo.Detail> = emptyList()
     ): PatientOperationInfo = PatientOperationInfo(
         details
     )
@@ -66,7 +66,7 @@ object OperationBuilder {
     fun aDetail(
         toothNumber: Int = 1,
         estimatedCost: Money = aMoney()
-    ): Detail = Detail(
+    ): PatientOperationInfo.Detail = PatientOperationInfo.Detail(
         toothNumber = toothNumber,
         estimatedCost = estimatedCost
     )

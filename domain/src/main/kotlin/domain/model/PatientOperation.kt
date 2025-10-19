@@ -23,12 +23,12 @@ data class PatientOperation(
 
 data class PatientOperationInfo(
     val details: List<Detail>
-)
-
-data class Detail(
-    val toothNumber: Int,
-    val estimatedCost: Money
-)
+) {
+    data class Detail(
+        val toothNumber: Int,
+        val estimatedCost: Money
+    )
+}
 
 enum class OperationType {
     CONSULTATION,
