@@ -1,8 +1,9 @@
 package webapp.adapter
 
 import domain.model.InvoiceBuilder.anInvoice
-import domain.model.InvoiceId
+import domain.model.InvoiceBuilder.anInvoiceId
 import domain.model.InvoiceStatus
+import domain.model.InvoiceStatus.PAID
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.anOperationId
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -17,10 +18,10 @@ class InvoiceResponseAdapterTest {
     @Test
     fun adapt() {
         val invoice = anInvoice(
-            id = InvoiceId("INV-789"),
+            id = anInvoiceId("INV-789"),
             operationId = anOperationId("OP-456"),
             amount = aMoney(BigDecimal("350.00"), "EUR"),
-            status = InvoiceStatus.PAID,
+            status = PAID,
             creationDateTime = LocalDateTime.of(2025, 3, 15, 14, 30, 45),
             lastUpdate = LocalDateTime.of(2025, 4, 20, 10, 15, 30)
         )
