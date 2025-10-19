@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import utils.FixtureLoader.readFile
+import webapp.adapter.InvoiceResponseAdapter
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -31,10 +32,11 @@ class InvoiceControllerTest {
 
     private lateinit var mockMvc: MockMvc
     private val invoiceService = mockk<InvoiceService>()
+    private val invoiceResponseAdapter = InvoiceResponseAdapter()
 
     @BeforeEach
     fun setUp() {
-        val controller = InvoiceController(invoiceService)
+        val controller = InvoiceController(invoiceService, invoiceResponseAdapter)
         mockMvc = MockMvcBuilders
             .standaloneSetup(controller)
             .setControllerAdvice(GlobalExceptionHandler())

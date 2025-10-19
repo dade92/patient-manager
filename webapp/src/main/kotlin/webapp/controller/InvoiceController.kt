@@ -2,7 +2,6 @@ package webapp.controller
 
 import domain.invoice.CreateInvoiceRequest
 import domain.invoice.InvoiceService
-import domain.model.Invoice
 import domain.model.InvoiceId
 import domain.model.InvoiceStatus
 import domain.model.Money
@@ -16,16 +15,14 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import webapp.adapter.InvoiceResponse
-import webapp.adapter.InvoicesPerOperationResponse
-import webapp.adapter.InvoicesPerPatientResponse
-import webapp.adapter.MoneyDto
+import webapp.adapter.*
 import java.time.format.DateTimeFormatter
 
 @RestController
 @RequestMapping("/api/invoice")
 class InvoiceController(
-    private val invoiceService: InvoiceService
+    private val invoiceService: InvoiceService,
+    private val invoiceResponseAdapter: InvoiceResponseAdapter
 ) {
 
     @PostMapping
@@ -42,14 +39,14 @@ class InvoiceController(
                 )
             )
         ).let {
-            ResponseEntity(mapToResponse(it), HttpStatus.CREATED)
+            ResponseEntity(invoiceResponseAdapter.adapt(it), HttpStatus.CREATED)
         }
 
     @GetMapping("/{invoiceId}")
     fun getInvoice(@PathVariable invoiceId: String): ResponseEntity<InvoiceResponse> =
         invoiceService.getInvoice(InvoiceId(invoiceId))?.let {
             ResponseEntity(
-                mapToResponse(it),
+                invoiceResponseAdapter.adapt(it),
                 HttpStatus.OK
             )
         } ?: ResponseEntity(HttpStatus.NOT_FOUND)
@@ -59,7 +56,7 @@ class InvoiceController(
         invoiceService.getInvoicesForOperation(OperationId(operationId))
             .let { invoices ->
                 ResponseEntity(
-                    InvoicesPerOperationResponse(invoices = invoices.map { mapToResponse(it) }),
+                    InvoicesPerOperationResponse(invoices = invoices.map { invoiceResponseAdapter.adapt(it) }),
                     HttpStatus.OK
                 )
             }
@@ -69,7 +66,7 @@ class InvoiceController(
         invoiceService.getInvoicesForPatient(PatientId(patientId))
             .let { invoices ->
                 ResponseEntity(
-                    InvoicesPerPatientResponse(invoices = invoices.map { mapToResponse(it) }),
+                    InvoicesPerPatientResponse(invoices = invoices.map { invoiceResponseAdapter.adapt(it) }),
                     HttpStatus.OK
                 )
             }
@@ -83,25 +80,8 @@ class InvoiceController(
             InvoiceId(invoiceId),
             InvoiceStatus.valueOf(requestDto.status)
         )
-            ?.let { ResponseEntity(mapToResponse(it), HttpStatus.OK) }
+            ?.let { ResponseEntity(invoiceResponseAdapter.adapt(it), HttpStatus.OK) }
             ?: ResponseEntity(HttpStatus.NOT_FOUND)
-
-    companion object {
-        private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-    }
-
-    private fun mapToResponse(invoice: Invoice): InvoiceResponse =
-        InvoiceResponse(
-            id = invoice.id.value,
-            operationId = invoice.operationId.value,
-            amount = MoneyDto(
-                amount = invoice.amount.amount,
-                currency = invoice.amount.currency
-            ),
-            status = invoice.status.name,
-            createdAt = invoice.creationDateTime.format(DATE_FORMATTER),
-            updatedAt = invoice.lastUpdate.format(DATE_FORMATTER)
-        )
 
     data class CreateInvoiceJsonRequest(
         val operationId: String,

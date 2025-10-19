@@ -7,6 +7,7 @@ import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import webapp.adapter.InvoiceResponseAdapter
 
 @Configuration
 class InvoiceConfiguration {
@@ -27,4 +28,7 @@ class InvoiceConfiguration {
             invoiceIdGenerator,
             dateTimeProvider
         )
+
+    @Bean
+    fun invoiceResponseAdapter(): InvoiceResponseAdapter = InvoiceResponseAdapter()
 }
