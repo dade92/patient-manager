@@ -27,7 +27,7 @@ Content-Type: application/json
 
 ### Get a specific operation by ID
 
-GET {{host}}/api/operation/33333333-3333-3333-3333-333333333332
+GET {{host}}/api/operation/763dc687-7056-4774-8223-b8f33b93e27f
 
 ### Get all operations for a specific patient
 

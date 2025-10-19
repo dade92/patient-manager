@@ -7,12 +7,13 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.time.format.DateTimeFormatter
+import webapp.adapter.PatientOperationResponseAdapter
 
 @RestController
 @RequestMapping("/api/operation")
 class OperationController(
-    private val operationService: OperationService
+    private val operationService: OperationService,
+    private val patientOperationResponseAdapter: PatientOperationResponseAdapter
 ) {
 
     @PostMapping
@@ -29,7 +30,7 @@ class OperationController(
                 patientOperationInfo = request.patientOperationInfo.toDomain()
             )
         ).let {
-            ResponseEntity.status(HttpStatus.CREATED).body(it.toResponse())
+            ResponseEntity.status(HttpStatus.CREATED).body(patientOperationResponseAdapter.adapt(it))
         }
 
     @GetMapping("/{id}")
@@ -37,7 +38,7 @@ class OperationController(
         @PathVariable id: String
     ): ResponseEntity<OperationResponse> =
         operationService.getOperation(OperationId(id))
-            ?.let { ResponseEntity.ok(it.toResponse()) }
+            ?.let { ResponseEntity.ok(patientOperationResponseAdapter.adapt(it)) }
             ?: ResponseEntity.notFound().build()
 
     @GetMapping("/patient/{patientId}")
@@ -46,7 +47,8 @@ class OperationController(
     ): ResponseEntity<PatientOperationsResponse> =
         ResponseEntity.ok(
             PatientOperationsResponse(
-                operationService.retrieveOperationsBy(PatientId(patientId)).map { it.toResponse() }
+                operationService.retrieveOperationsBy(PatientId(patientId))
+                    .map { patientOperationResponseAdapter.adapt(it) }
             )
         )
 
@@ -56,7 +58,7 @@ class OperationController(
         @RequestBody request: AddOperationNoteJsonRequest
     ): ResponseEntity<OperationResponse> =
         operationService.addOperationNote(OperationId(id), request.content)
-            ?.let { ResponseEntity.ok(it.toResponse()) }
+            ?.let { ResponseEntity.ok(patientOperationResponseAdapter.adapt(it)) }
             ?: ResponseEntity.notFound().build()
 
     @PostMapping("/{id}/assets")
@@ -73,34 +75,13 @@ class OperationController(
                     contentLength = file.size,
                     contentType = file.contentType ?: "application/octet-stream",
                     inputStream = file.inputStream
-                )?.let { ResponseEntity.ok(it.toResponse()) } ?: ResponseEntity.notFound().build()
+                )?.let { ResponseEntity.ok(patientOperationResponseAdapter.adapt(it)) } ?: ResponseEntity.notFound()
+                    .build()
             } ?: ResponseEntity.badRequest().build()
 
-    private fun PatientOperation.toResponse(): OperationResponse =
-        OperationResponse(
-            id = this.id.value,
-            patientId = this.patientId.value,
-            type = this.type,
-            description = this.description,
-            executor = this.executor,
-            assets = this.assets,
-            additionalNotes = this.additionalNotes.map {
-                OperationNoteResponse(it.content, it.creationTime.format(DATE_FORMATTER))
-            },
-            createdAt = this.creationDateTime.format(DATE_FORMATTER),
-            updatedAt = this.lastUpdate.format(DATE_FORMATTER),
-            estimatedCost = this.estimatedCost.toDto(),
-            patientOperationInfo = this.info.toDto()
-        )
-
     companion object {
-        private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-        private fun MoneyDto.toDomain() = Money(amount = this.amount, currency = this.currency)
-        private fun Money.toDto() = MoneyDto(amount = this.amount, currency = this.currency)
-        private fun PatientOperationInfo.toDto() =
-            PatientOperationInfoDto(
-                details = this.details.map { DetailDto(it.toothNumber, it.estimatedCost.toDto()) }
-            )
+        fun MoneyDto.toDomain() = Money(amount = this.amount, currency = this.currency)
+        fun Money.toDto() = MoneyDto(amount = this.amount, currency = this.currency)
 
         private fun PatientOperationInfoDto.toDomain() =
             PatientOperationInfo(details = this.details.map {

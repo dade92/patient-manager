@@ -9,6 +9,7 @@ import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
 import domain.model.OperationType
+import domain.model.Patient
 import domain.model.PatientBuilder.aPatientId
 import domain.operation.CreateOperationRequest
 import domain.operation.OperationService
@@ -27,6 +28,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import utils.FixtureLoader.readFile
+import webapp.adapter.PatientOperationInfoAdapter
+import webapp.adapter.PatientOperationResponseAdapter
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -34,10 +37,11 @@ class OperationControllerTest {
 
     private lateinit var mockMvc: MockMvc
     private val operationService = mockk<OperationService>()
+    private val patientOperationResponseAdapter = PatientOperationResponseAdapter(PatientOperationInfoAdapter())
 
     @BeforeEach
     fun setUp() {
-        val controller = OperationController(operationService)
+        val controller = OperationController(operationService, patientOperationResponseAdapter)
         mockMvc = MockMvcBuilders
             .standaloneSetup(controller)
             .setControllerAdvice(GlobalExceptionHandler())
