@@ -8,6 +8,8 @@ import domain.storage.StorageService
 import domain.utils.DateTimeProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import webapp.adapter.PatientOperationInfoAdapter
+import webapp.adapter.PatientOperationResponseAdapter
 
 @Configuration
 class OperationConfiguration {
@@ -26,4 +28,8 @@ class OperationConfiguration {
             dateTimeProvider,
             storageService
         )
+
+    @Bean
+    fun patientOperationResponseAdapter(): PatientOperationResponseAdapter =
+        PatientOperationResponseAdapter(PatientOperationInfoAdapter())
 }

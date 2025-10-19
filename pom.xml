@@ -34,6 +34,7 @@
         <jackson-module-kotlin.version>2.19.0</jackson-module-kotlin.version>
         <log4j2.version>2.24.3</log4j2.version>
         <junit.jupiter.version>5.13.1</junit.jupiter.version>
+        <mockk-jvm.version>1.13.2</mockk-jvm.version>
     </properties>
 
     <dependencies>
@@ -65,7 +66,7 @@
         <dependency>
             <groupId>io.mockk</groupId>
             <artifactId>mockk-jvm</artifactId>
-            <version>1.13.2</version>
+            <version>${mockk-jvm.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

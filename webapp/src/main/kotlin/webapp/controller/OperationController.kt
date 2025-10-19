@@ -1,23 +1,21 @@
 package webapp.controller
 
-import domain.model.Money
 import domain.model.OperationId
 import domain.model.OperationType
 import domain.model.PatientId
-import domain.model.PatientOperation
 import domain.operation.CreateOperationRequest
 import domain.operation.OperationService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.server.ResponseStatusException
-import java.time.format.DateTimeFormatter
+import webapp.adapter.*
 
 @RestController
 @RequestMapping("/api/operation")
 class OperationController(
-    private val operationService: OperationService
+    private val operationService: OperationService,
+    private val patientOperationResponseAdapter: PatientOperationResponseAdapter
 ) {
 
     @PostMapping
@@ -30,10 +28,11 @@ class OperationController(
                 type = request.type,
                 description = request.description,
                 executor = request.executor,
-                estimatedCost = request.estimatedCost.toDomain()
+                estimatedCost = request.estimatedCost.toDomain(),
+                patientOperationInfo = request.patientOperationInfo.toDomain()
             )
         ).let {
-            ResponseEntity.status(HttpStatus.CREATED).body(it.toResponse())
+            ResponseEntity.status(HttpStatus.CREATED).body(patientOperationResponseAdapter.adapt(it))
         }
 
     @GetMapping("/{id}")
@@ -41,7 +40,7 @@ class OperationController(
         @PathVariable id: String
     ): ResponseEntity<OperationResponse> =
         operationService.getOperation(OperationId(id))
-            ?.let { ResponseEntity.ok(it.toResponse()) }
+            ?.let { ResponseEntity.ok(patientOperationResponseAdapter.adapt(it)) }
             ?: ResponseEntity.notFound().build()
 
     @GetMapping("/patient/{patientId}")
@@ -50,7 +49,8 @@ class OperationController(
     ): ResponseEntity<PatientOperationsResponse> =
         ResponseEntity.ok(
             PatientOperationsResponse(
-                operationService.retrieveOperationsBy(PatientId(patientId)).map { it.toResponse() }
+                operationService.retrieveOperationsBy(PatientId(patientId))
+                    .map { patientOperationResponseAdapter.adapt(it) }
             )
         )
 
@@ -60,7 +60,7 @@ class OperationController(
         @RequestBody request: AddOperationNoteJsonRequest
     ): ResponseEntity<OperationResponse> =
         operationService.addOperationNote(OperationId(id), request.content)
-            ?.let { ResponseEntity.ok(it.toResponse()) }
+            ?.let { ResponseEntity.ok(patientOperationResponseAdapter.adapt(it)) }
             ?: ResponseEntity.notFound().build()
 
     @PostMapping("/{id}/assets")
@@ -77,63 +77,20 @@ class OperationController(
                     contentLength = file.size,
                     contentType = file.contentType ?: "application/octet-stream",
                     inputStream = file.inputStream
-                )?.let { ResponseEntity.ok(it.toResponse()) } ?: ResponseEntity.notFound().build()
+                )?.let { ResponseEntity.ok(patientOperationResponseAdapter.adapt(it)) } ?: ResponseEntity.notFound()
+                    .build()
             } ?: ResponseEntity.badRequest().build()
-
-    private fun PatientOperation.toResponse(): OperationResponse =
-        OperationResponse(
-            id = this.id.value,
-            patientId = this.patientId.value,
-            type = this.type,
-            description = this.description,
-            executor = this.executor,
-            assets = this.assets,
-            additionalNotes = this.additionalNotes.map {
-                OperationNoteResponse(it.content, it.creationTime.format(DATE_FORMATTER))
-            },
-            createdAt = this.creationDateTime.format(DATE_FORMATTER),
-            updatedAt = this.lastUpdate.format(DATE_FORMATTER),
-            estimatedCost = this.estimatedCost.toDto(),
-        )
-
-    companion object {
-        private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-    }
 
     data class CreateOperationJsonRequest(
         val patientId: String,
         val type: OperationType,
         val description: String,
         val executor: String,
-        val estimatedCost: MoneyDto
+        val estimatedCost: MoneyDto,
+        val patientOperationInfo: PatientOperationInfoResponse
     )
 
     data class AddOperationNoteJsonRequest(
         val content: String
     )
-
-    data class OperationResponse(
-        val id: String,
-        val patientId: String,
-        val type: OperationType,
-        val description: String,
-        val executor: String,
-        val assets: List<String>,
-        val additionalNotes: List<OperationNoteResponse>,
-        val createdAt: String,
-        val updatedAt: String,
-        val estimatedCost: MoneyDto
-    )
-
-    data class OperationNoteResponse(
-        val content: String,
-        val createdAt: String
-    )
-
-    data class PatientOperationsResponse(
-        val operations: List<OperationResponse>
-    )
-
-    private fun MoneyDto.toDomain() = Money(amount = this.amount, currency = this.currency)
-    private fun Money.toDto() = MoneyDto(amount = this.amount, currency = this.currency)
 }

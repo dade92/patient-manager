@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS OPERATION (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     estimated_cost DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+    info TEXT,
     INDEX idx_patient_id (patient_id),
     INDEX idx_operation_id (operation_id)
     );

@@ -8,5 +8,8 @@
   "additionalNotes": [],
   "createdAt": "01/01/2025 10:00",
   "updatedAt": "02/01/2025 09:00",
-  "estimatedCost": {"amount": 2500.00, "currency": "EUR"}
+  "estimatedCost": {"amount": 2500.00, "currency": "EUR"},
+  "patientOperationInfo": {
+    "details": []
+  }
 }

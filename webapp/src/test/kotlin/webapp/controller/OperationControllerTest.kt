@@ -3,10 +3,13 @@ package webapp.controller
 import domain.exceptions.PatientNotFoundException
 import domain.model.Money.Companion.EUR
 import domain.model.MoneyBuilder.aMoney
+import domain.model.OperationBuilder.aCreateOperationRequest
 import domain.model.OperationBuilder.aPatientOperation
+import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
 import domain.model.OperationType
+import domain.model.Patient
 import domain.model.PatientBuilder.aPatientId
 import domain.operation.CreateOperationRequest
 import domain.operation.OperationService
@@ -25,6 +28,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import utils.FixtureLoader.readFile
+import webapp.adapter.PatientOperationInfoAdapter
+import webapp.adapter.PatientOperationResponseAdapter
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -32,10 +37,11 @@ class OperationControllerTest {
 
     private lateinit var mockMvc: MockMvc
     private val operationService = mockk<OperationService>()
+    private val patientOperationResponseAdapter = PatientOperationResponseAdapter(PatientOperationInfoAdapter())
 
     @BeforeEach
     fun setUp() {
-        val controller = OperationController(operationService)
+        val controller = OperationController(operationService, patientOperationResponseAdapter)
         mockMvc = MockMvcBuilders
             .standaloneSetup(controller)
             .setControllerAdvice(GlobalExceptionHandler())
@@ -114,12 +120,13 @@ class OperationControllerTest {
 
     @Test
     fun `createOperation returns 201 and delegates to service`() {
-        val expectedRequest = CreateOperationRequest(
+        val expectedRequest = aCreateOperationRequest(
             patientId = PATIENT_ID,
             type = OperationType.SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
-            estimatedCost = aMoney(AMOUNT, EUR)
+            estimatedCost = aMoney(AMOUNT, EUR),
+            patientOperationInfo = PATIENT_OPERATION_INFO
         )
         val created = aPatientOperation(
             id = OPERATION_ID,
@@ -131,7 +138,8 @@ class OperationControllerTest {
             additionalNotes = emptyList(),
             creationDateTime = CREATED_AT,
             lastUpdate = UPDATED_AT,
-            estimatedCost = aMoney(AMOUNT, EUR)
+            estimatedCost = aMoney(AMOUNT, EUR),
+            info = PATIENT_OPERATION_INFO
         )
 
         every { operationService.createOperation(expectedRequest) } returns created
@@ -283,5 +291,6 @@ class OperationControllerTest {
         private val UPDATED_AT = LocalDateTime.of(2025, 1, 2, 9, 0, 0)
         private val AMOUNT = BigDecimal("2500.00")
         private val FILE_CONTENT = byteArrayOf(1, 2, 3)
+        private val PATIENT_OPERATION_INFO = aPatientOperationInfo()
     }
 }

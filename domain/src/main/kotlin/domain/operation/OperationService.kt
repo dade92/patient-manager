@@ -32,7 +32,8 @@ class OperationService(
                 executor = request.executor,
                 creationDateTime = now,
                 lastUpdate = now,
-                estimatedCost = request.estimatedCost
+                estimatedCost = request.estimatedCost,
+                info = request.patientOperationInfo
             )
         )
     }
@@ -75,5 +76,6 @@ data class CreateOperationRequest(
     val type: OperationType,
     val description: String,
     val executor: String,
-    val estimatedCost: Money
+    val estimatedCost: Money,
+    val patientOperationInfo: PatientOperationInfo
 )
