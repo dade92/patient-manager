@@ -1,10 +1,6 @@
 package webapp.adapter
 
-data class InvoicesPerOperationResponse(
-    val invoices: List<InvoiceResponse>
-)
-
-data class InvoicesPerPatientResponse(
+data class Invoices(
     val invoices: List<InvoiceResponse>
 )
 

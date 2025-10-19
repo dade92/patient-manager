@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import webapp.adapter.*
-import java.time.format.DateTimeFormatter
 
 @RestController
 @RequestMapping("/api/invoice")
@@ -52,21 +51,21 @@ class InvoiceController(
         } ?: ResponseEntity(HttpStatus.NOT_FOUND)
 
     @GetMapping("/operation/{operationId}")
-    fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<InvoicesPerOperationResponse> =
+    fun getInvoicesForOperation(@PathVariable operationId: String): ResponseEntity<Invoices> =
         invoiceService.getInvoicesForOperation(OperationId(operationId))
             .let { invoices ->
                 ResponseEntity(
-                    InvoicesPerOperationResponse(invoices = invoices.map { invoiceResponseAdapter.adapt(it) }),
+                    Invoices(invoices = invoices.map { invoiceResponseAdapter.adapt(it) }),
                     HttpStatus.OK
                 )
             }
 
     @GetMapping("/patient/{patientId}")
-    fun getInvoicesForPatient(@PathVariable patientId: String): ResponseEntity<InvoicesPerPatientResponse> =
+    fun getInvoicesForPatient(@PathVariable patientId: String): ResponseEntity<Invoices> =
         invoiceService.getInvoicesForPatient(PatientId(patientId))
             .let { invoices ->
                 ResponseEntity(
-                    InvoicesPerPatientResponse(invoices = invoices.map { invoiceResponseAdapter.adapt(it) }),
+                    Invoices(invoices = invoices.map { invoiceResponseAdapter.adapt(it) }),
                     HttpStatus.OK
                 )
             }
