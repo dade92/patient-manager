@@ -86,8 +86,8 @@ class JdbcPatientRepository(
                 statement.setString(7, patient.nationality)
                 statement.setDate(8, Date.valueOf(patient.birthDate))
                 statement.setString(9, patient.taxCode)
-                statement.setString(10, patient.medicalHistory)
-                statement.setTimestamp(11, Timestamp.valueOf(now))
+                statement.setTimestamp(10, Timestamp.valueOf(now))
+                statement.setString(11, patient.medicalHistory)
 
                 statement.executeUpdate()
             }
