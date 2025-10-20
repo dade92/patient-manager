@@ -46,7 +46,8 @@ class JdbcPatientRepositoryTest {
             cityOfResidence = CITY,
             nationality = NATIONALITY,
             birthDate = BIRTH,
-            taxCode = TAX
+            taxCode = TAX,
+            medicalHistory = MEDICAL_HISTORY
         )
 
         assertEquals(expected, result)
@@ -74,7 +75,8 @@ class JdbcPatientRepositoryTest {
             cityOfResidence = CITY,
             nationality = NATIONALITY,
             birthDate = BIRTH,
-            taxCode = TAX
+            taxCode = TAX,
+            medicalHistory = MEDICAL_HISTORY
         )
 
         assertEquals(listOf(expected), result)
@@ -91,7 +93,8 @@ class JdbcPatientRepositoryTest {
             cityOfResidence = CITY,
             nationality = NATIONALITY,
             birthDate = BIRTH,
-            taxCode = TAX
+            taxCode = TAX,
+            medicalHistory = MEDICAL_HISTORY
         )
 
         val saved = repository.save(newPatient)
@@ -112,7 +115,8 @@ class JdbcPatientRepositoryTest {
             cityOfResidence = CITY,
             nationality = NATIONALITY,
             birthDate = BIRTH,
-            taxCode = TAX
+            taxCode = TAX,
+            medicalHistory = MEDICAL_HISTORY
         )
 
         val saved = repository.save(updatedPatient)
@@ -136,5 +140,6 @@ class JdbcPatientRepositoryTest {
         private const val NATIONALITY = "Italian"
         private val BIRTH: LocalDate = LocalDate.of(1990, 1, 1)
         private const val TAX = "TAXCODE123"
+        private const val MEDICAL_HISTORY = "medical history"
     }
 }

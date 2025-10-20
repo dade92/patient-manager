@@ -37,7 +37,8 @@ class PatientController(
                 cityOfResidence = request.cityOfResidence,
                 nationality = request.nationality,
                 birthDate = request.birthDate,
-                taxCode = request.taxCode
+                taxCode = request.taxCode,
+                medicalHistory = request.medicalHistory
             )
         ).let {
             ResponseEntity.status(HttpStatus.CREATED).body(it)
@@ -51,7 +52,8 @@ class PatientController(
         val cityOfResidence: String? = null,
         val nationality: String? = null,
         val birthDate: LocalDate,
-        val taxCode: String
+        val taxCode: String,
+        val medicalHistory: String
     )
 
     data class SearchPatientsResponse(

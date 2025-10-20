@@ -6,5 +6,6 @@
   "cityOfResidence": "Springfield",
   "nationality": "Italian",
   "birthDate": "1990-01-01",
-  "taxCode": "TAXCODE123"
+  "taxCode": "TAXCODE123",
+  "medicalHistory": "medical history"
 }

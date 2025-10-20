@@ -16,7 +16,8 @@ CREATE TABLE `PATIENT` (
     `nationality` VARCHAR(100),
     `birth_date` DATE NOT NULL,
     `tax_code` VARCHAR(100) NOT NULL,
-    `creation_date` TIMESTAMP NOT NULL
+    `creation_date` TIMESTAMP NOT NULL,
+    `medical_history` TEXT
 );
 
 -- Operation main table

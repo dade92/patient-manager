@@ -18,7 +18,7 @@ class JdbcPatientRepository(
             """SELECT
                 | $COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, 
                 | $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, 
-                | $COL_BIRTH_DATE, $COL_TAX_CODE 
+                | $COL_BIRTH_DATE, $COL_TAX_CODE, $COL_MEDICAL_HISTORY
                 | FROM `$TABLE_PATIENT` 
                 | WHERE $COL_PATIENT_ID = ?
             """.trimMargin()
@@ -49,7 +49,7 @@ class JdbcPatientRepository(
 
     override fun searchByName(name: String): List<Patient> {
         val sql =
-            """SELECT $COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, $COL_BIRTH_DATE, $COL_TAX_CODE FROM `$TABLE_PATIENT` WHERE $COL_NAME LIKE ?"""
+            """SELECT $COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, $COL_BIRTH_DATE, $COL_TAX_CODE, $COL_MEDICAL_HISTORY FROM `$TABLE_PATIENT` WHERE $COL_NAME LIKE ?"""
         val patients = mutableListOf<Patient>()
 
         dataSource.connection.use { connection ->
@@ -69,8 +69,8 @@ class JdbcPatientRepository(
     private fun insertPatient(patient: Patient): Patient {
         val sql = """
             INSERT INTO `$TABLE_PATIENT` (
-            | $COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, $COL_BIRTH_DATE, $COL_TAX_CODE, $COL_CREATION_DATE) 
-            | VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            | $COL_PATIENT_ID, $COL_NAME, $COL_EMAIL, $COL_PHONE, $COL_ADDRESS, $COL_CITY, $COL_NATIONALITY, $COL_BIRTH_DATE, $COL_TAX_CODE, $COL_CREATION_DATE, $COL_MEDICAL_HISTORY) 
+            | VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """.trimMargin()
 
         val now = LocalDateTime.now()
@@ -87,6 +87,7 @@ class JdbcPatientRepository(
                 statement.setDate(8, Date.valueOf(patient.birthDate))
                 statement.setString(9, patient.taxCode)
                 statement.setTimestamp(10, Timestamp.valueOf(now))
+                statement.setString(11, patient.medicalHistory)
 
                 statement.executeUpdate()
             }
@@ -98,7 +99,7 @@ class JdbcPatientRepository(
     private fun updatePatient(patient: Patient): Patient {
         val sql = """
             UPDATE `$TABLE_PATIENT` 
-            SET $COL_NAME = ?, $COL_EMAIL = ?, $COL_PHONE = ?, $COL_ADDRESS = ?, $COL_CITY = ?, $COL_NATIONALITY = ?, $COL_BIRTH_DATE = ?, $COL_TAX_CODE = ? 
+            SET $COL_NAME = ?, $COL_EMAIL = ?, $COL_PHONE = ?, $COL_ADDRESS = ?, $COL_CITY = ?, $COL_NATIONALITY = ?, $COL_BIRTH_DATE = ?, $COL_TAX_CODE = ?, $COL_MEDICAL_HISTORY = ? 
             WHERE $COL_PATIENT_ID = ?
         """.trimIndent()
 
@@ -112,7 +113,8 @@ class JdbcPatientRepository(
                 statement.setString(6, patient.nationality)
                 statement.setDate(7, Date.valueOf(patient.birthDate))
                 statement.setString(8, patient.taxCode)
-                statement.setString(9, patient.id.value)
+                statement.setString(9, patient.medicalHistory)
+                statement.setString(10, patient.id.value)
 
                 statement.executeUpdate()
             }
@@ -131,7 +133,8 @@ class JdbcPatientRepository(
             cityOfResidence = resultSet.getString(COL_CITY),
             nationality = resultSet.getString(COL_NATIONALITY),
             birthDate = resultSet.getDate(COL_BIRTH_DATE).toLocalDate(),
-            taxCode = resultSet.getString(COL_TAX_CODE)
+            taxCode = resultSet.getString(COL_TAX_CODE),
+            medicalHistory = resultSet.getString(COL_MEDICAL_HISTORY)
         )
 
     private companion object {
@@ -145,6 +148,7 @@ class JdbcPatientRepository(
         const val COL_NATIONALITY = "nationality"
         const val COL_BIRTH_DATE = "birth_date"
         const val COL_TAX_CODE = "tax_code"
+        const val COL_MEDICAL_HISTORY = "medical_history"
         const val COL_CREATION_DATE = "creation_date"
     }
 }

@@ -56,6 +56,10 @@ export const PatientDetailCard: React.FC<Props> = ({patient}) =>
                         <Typography variant="subtitle2" color="textSecondary">Birth Date</Typography>
                         <Typography variant="body1" gutterBottom>{formatDate(patient.birthDate)}</Typography>
                     </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Typography variant="subtitle2" color="textSecondary">Medical History</Typography>
+                        <Typography variant="body1" gutterBottom>{patient.medicalHistory}</Typography>
+                    </Grid>
                 </Grid>
             </CardContent>
         </Card>

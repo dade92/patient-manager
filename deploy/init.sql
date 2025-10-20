@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `PATIENT` (
     `birth_date` DATE NOT NULL,
     `tax_code` VARCHAR(50) NOT NULL,
     `creation_date` DATETIME NOT NULL,
+    `medical_history` TEXT,
     INDEX `idx_patient_id` (`patient_id`),
     INDEX `idx_name` (`name`)
     );
