@@ -9,7 +9,8 @@
       "cityOfResidence": "Springfield",
       "nationality": "Italian",
       "birthDate": [1990, 1, 1],
-      "taxCode": "TAXCODE123"
+      "taxCode": "TAXCODE123",
+      "medicalHistory": "medical history"
     },
     {
       "id": "PAT-456",
@@ -20,7 +21,8 @@
       "cityOfResidence": "Springfield",
       "nationality": "Italian",
       "birthDate": [1990, 1, 1],
-      "taxCode": "TAXCODE123"
+      "taxCode": "TAXCODE123",
+      "medicalHistory": "medical history"
     }
   ]
 }

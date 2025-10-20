@@ -16,7 +16,8 @@ object PatientBuilder {
         cityOfResidence: String? = null,
         nationality: String? = null,
         birthDate: LocalDate = LocalDate.of(1990, 1, 1),
-        taxCode: String = "TAXCODE123"
+        taxCode: String = "TAXCODE123",
+        medicalHistory: String = ""
     ) = Patient(
         id = id,
         name = name,
@@ -26,7 +27,8 @@ object PatientBuilder {
         cityOfResidence = cityOfResidence,
         nationality = nationality,
         birthDate = birthDate,
-        taxCode = taxCode
+        taxCode = taxCode,
+        medicalHistory = medicalHistory
     )
 
     fun aCreatePatientRequest(
@@ -37,7 +39,8 @@ object PatientBuilder {
         cityOfResidence: String? = null,
         nationality: String? = null,
         birthDate: LocalDate = LocalDate.of(1990, 1, 1),
-        taxCode: String = "TAXCODE123"
+        taxCode: String = "TAXCODE123",
+        medicalHistory: String = ""
     ) = CreatePatientRequest(
         name = name,
         email = email,
@@ -46,6 +49,7 @@ object PatientBuilder {
         cityOfResidence = cityOfResidence,
         nationality = nationality,
         birthDate = birthDate,
-        taxCode = taxCode
+        taxCode = taxCode,
+        medicalHistory = medicalHistory
     )
 }

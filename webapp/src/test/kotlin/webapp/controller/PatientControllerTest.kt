@@ -44,7 +44,8 @@ class PatientControllerTest {
             cityOfResidence = CITY,
             nationality = NATIONALITY,
             birthDate = BIRTH_DATE,
-            taxCode = TAX_CODE
+            taxCode = TAX_CODE,
+            medicalHistory = MEDICAL_HISTORY
         )
 
         every { patientService.retrievePatient(PATIENT_ID) } returns patient
@@ -78,7 +79,8 @@ class PatientControllerTest {
             cityOfResidence = CITY,
             nationality = NATIONALITY,
             birthDate = BIRTH_DATE,
-            taxCode = TAX_CODE
+            taxCode = TAX_CODE,
+            medicalHistory = MEDICAL_HISTORY
         )
         val p2 = aPatient(
             id = ANOTHER_PATIENT_ID,
@@ -89,7 +91,8 @@ class PatientControllerTest {
             cityOfResidence = CITY,
             nationality = NATIONALITY,
             birthDate = BIRTH_DATE,
-            taxCode = TAX_CODE
+            taxCode = TAX_CODE,
+            medicalHistory = MEDICAL_HISTORY
         )
         every { patientService.searchPatientsByName(NAME_QUERY) } returns listOf(p1, p2)
 
@@ -113,7 +116,8 @@ class PatientControllerTest {
             cityOfResidence = CITY,
             nationality = NATIONALITY,
             birthDate = BIRTH_DATE,
-            taxCode = TAX_CODE
+            taxCode = TAX_CODE,
+            medicalHistory = MEDICAL_HISTORY
         )
         val created =
             aPatient(
@@ -125,7 +129,8 @@ class PatientControllerTest {
                 CITY,
                 NATIONALITY,
                 BIRTH_DATE,
-                TAX_CODE
+                TAX_CODE,
+                MEDICAL_HISTORY
             )
 
         every { patientService.createPatient(expectedRequest) } returns created
@@ -167,5 +172,6 @@ class PatientControllerTest {
         private const val NATIONALITY = "Italian"
         private val BIRTH_DATE = LocalDate.of(1990, 1, 1)
         private const val TAX_CODE = "TAXCODE123"
+        private const val MEDICAL_HISTORY = "medical history"
     }
 }

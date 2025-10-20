@@ -23,7 +23,8 @@ class PatientService(
                 cityOfResidence = request.cityOfResidence,
                 nationality = request.nationality,
                 birthDate = request.birthDate,
-                taxCode = request.taxCode
+                taxCode = request.taxCode,
+                medicalHistory = request.medicalHistory
             )
         )
 
@@ -38,5 +39,6 @@ data class CreatePatientRequest(
     val cityOfResidence: String? = null,
     val nationality: String? = null,
     val birthDate: LocalDate,
-    val taxCode: String
+    val taxCode: String,
+    val medicalHistory: String
 )

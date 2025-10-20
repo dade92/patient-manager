@@ -131,7 +131,8 @@ class JdbcPatientRepository(
             cityOfResidence = resultSet.getString(COL_CITY),
             nationality = resultSet.getString(COL_NATIONALITY),
             birthDate = resultSet.getDate(COL_BIRTH_DATE).toLocalDate(),
-            taxCode = resultSet.getString(COL_TAX_CODE)
+            taxCode = resultSet.getString(COL_TAX_CODE),
+            medicalHistory = resultSet.getString(COL_MEDICAL_HISTORY)
         )
 
     private companion object {
@@ -145,6 +146,7 @@ class JdbcPatientRepository(
         const val COL_NATIONALITY = "nationality"
         const val COL_BIRTH_DATE = "birth_date"
         const val COL_TAX_CODE = "tax_code"
+        const val COL_MEDICAL_HISTORY = "medical_history"
         const val COL_CREATION_DATE = "creation_date"
     }
 }
