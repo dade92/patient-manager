@@ -22,7 +22,7 @@ export const PatientOperations: React.FC<Props> = ({patientId, refreshTrigger}) 
 
     const fetchOperations = async () => {
         const cachedOperations = getCachedOperationsForPatient(patientId);
-        if (cachedOperations && cachedOperations.length > 0) {
+        if (cachedOperations) {
             setOperations(cachedOperations);
             setLoading(false);
             return;

@@ -28,7 +28,7 @@ export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) =>
 
     const fetchInvoices = async () => {
         const cachedInvoices = getCachedInvoicesForPatient(patientId);
-        if (cachedInvoices && cachedInvoices.length > 0) {
+        if (cachedInvoices) {
             setInvoices(cachedInvoices);
             setLoading(false);
             return;
