@@ -94,7 +94,6 @@ export const CreateOperationDialog: React.FC<Props> = ({
         setIsSubmitting(true);
 
         try {
-            // Convert tooth details to the format expected by the API
             const formattedToothDetails = toothDetails
                 .filter(detail => detail.toothNumber !== null && detail.amount.trim() !== '')
                 .map(detail => ({

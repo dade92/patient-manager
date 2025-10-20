@@ -17,12 +17,12 @@ interface ToothDetail {
     amount: string;
 }
 
-interface ToothSelectionFormProps {
+interface Props {
     onSelectionChange: (details: ToothDetail[]) => void;
     onTotalAmountChange: (totalAmount: number) => void;
 }
 
-export const ToothSelectionForm: React.FC<ToothSelectionFormProps> = ({
+export const ToothSelectionForm: React.FC<Props> = ({
     onSelectionChange,
     onTotalAmountChange
 }) => {
