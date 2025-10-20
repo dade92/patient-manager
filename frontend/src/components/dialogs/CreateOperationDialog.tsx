@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useState, useCallback} from 'react';
 import {
     Alert,
     Box,
@@ -13,18 +13,25 @@ import {
     MenuItem,
     Select,
     SelectChangeEvent,
-    TextField
+    TextField,
+    Divider
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import {Operation, OperationType} from '../../types/operation';
+import {Operation, OperationType, PatientOperationInfo} from '../../types/operation';
 import {RestClient} from '../../utils/restClient';
 import { Money } from '../../types/Money';
+import { ToothSelectionForm } from '../forms/ToothSelectionForm';
 
 interface Props {
     open: boolean;
     onClose: () => void;
     patientId: string;
     onOperationCreated: (operation: Operation) => void;
+}
+
+interface ToothDetail {
+    toothNumber: number | null;
+    amount: string;
 }
 
 export const CreateOperationDialog: React.FC<Props> = ({
@@ -40,11 +47,19 @@ export const CreateOperationDialog: React.FC<Props> = ({
         executor: '',
         estimatedCost: ''
     });
+    const [toothDetails, setToothDetails] = useState<ToothDetail[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [autoUpdateCost, setAutoUpdateCost] = useState(true);
 
     const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
+
+        // If manually editing the estimated cost, disable auto-updates
+        if (name === 'estimatedCost') {
+            setAutoUpdateCost(false);
+        }
+
         setFormData(prev => ({
             ...prev,
             [name]: value
@@ -59,19 +74,43 @@ export const CreateOperationDialog: React.FC<Props> = ({
         }));
     };
 
+    const handleToothSelectionChange = (details: ToothDetail[]) => {
+        setToothDetails(details);
+    };
+
+    // Update estimated cost when tooth amounts change
+    const handleTotalAmountChange = useCallback((totalAmount: number) => {
+        if (autoUpdateCost) {
+            setFormData(prev => ({
+                ...prev,
+                estimatedCost: totalAmount > 0 ? totalAmount.toFixed(2) : ''
+            }));
+        }
+    }, [autoUpdateCost]);
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setError(null);
         setIsSubmitting(true);
 
         try {
+            // Convert tooth details to the format expected by the API
+            const formattedToothDetails = toothDetails
+                .filter(detail => detail.toothNumber !== null && detail.amount.trim() !== '')
+                .map(detail => ({
+                    toothNumber: detail.toothNumber,
+                    amount: parseFloat(detail.amount) || 0
+                }));
+
             const operationPayload = {
                 ...formData,
                 estimatedCost: {
                     amount: parseFloat(formData.estimatedCost) || 0,
                     currency: 'EUR'
                 } as Money,
-                patientOperationInfo: { details: [] }
+                patientOperationInfo: {
+                    details: formattedToothDetails
+                }
             };
 
             const newOperation = await RestClient.post<Operation>(
@@ -81,6 +120,8 @@ export const CreateOperationDialog: React.FC<Props> = ({
             onOperationCreated(newOperation);
             onClose();
             setFormData({type: '' as OperationType, patientId: patientId, description: '', executor: '', estimatedCost: ''});
+            setToothDetails([]);
+            setAutoUpdateCost(true);
         } catch (err: any) {
             setError('An error occurred while creating the operation');
         } finally {
@@ -90,12 +131,14 @@ export const CreateOperationDialog: React.FC<Props> = ({
 
     const handleClose = () => {
         setFormData({type: '' as OperationType, patientId: patientId, description: '', executor: '', estimatedCost: ''});
+        setToothDetails([]);
         setError(null);
+        setAutoUpdateCost(true);
         onClose();
     };
 
     return (
-        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+        <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
             <DialogTitle sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 Create New Operation
                 <IconButton onClick={handleClose}>
@@ -156,6 +199,14 @@ export const CreateOperationDialog: React.FC<Props> = ({
                             inputProps={{ step: '0.01', min: '0' }}
                             value={formData.estimatedCost}
                             onChange={handleTextChange}
+                            helperText={autoUpdateCost ? "Auto-updating based on tooth amounts" : "Manually set (auto-update disabled)"}
+                        />
+
+                        <Divider sx={{ my: 1 }} />
+
+                        <ToothSelectionForm
+                            onSelectionChange={handleToothSelectionChange}
+                            onTotalAmountChange={handleTotalAmountChange}
                         />
                     </Box>
                 </DialogContent>
