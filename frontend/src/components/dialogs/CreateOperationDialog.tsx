@@ -20,18 +20,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import {Operation, OperationType, PatientOperationInfo} from '../../types/operation';
 import {RestClient} from '../../utils/restClient';
 import { Money } from '../../types/Money';
-import { ToothSelectionForm } from '../forms/ToothSelectionForm';
+import {ToothDetail, ToothSelectionForm} from '../forms/ToothSelectionForm';
 
 interface Props {
     open: boolean;
     onClose: () => void;
     patientId: string;
     onOperationCreated: (operation: Operation) => void;
-}
-
-interface ToothDetail {
-    toothNumber: number | null;
-    amount: string;
 }
 
 export const CreateOperationDialog: React.FC<Props> = ({
@@ -96,7 +91,10 @@ export const CreateOperationDialog: React.FC<Props> = ({
                 .filter(detail => detail.toothNumber !== null && detail.amount.trim() !== '')
                 .map(detail => ({
                     toothNumber: detail.toothNumber,
-                    amount: parseFloat(detail.amount) || 0
+                    estimatedCost: {
+                        amount: parseFloat(detail.amount) || 0,
+                        currency: 'EUR'
+                    }
                 }));
 
             const operationPayload = {
