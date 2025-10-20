@@ -49,7 +49,7 @@ export function makeServer({ environment = 'development' } = {}) {
         const patient = schema.create('patient', {
           ...attrs,
           id: `PAT-${Math.floor(Math.random() * 10000)}`,
-          medicalHistory: attrs.medicalHistory || ""
+          medicalHistory: attrs.medicalHistory
         });
 
         return patient.attrs;
