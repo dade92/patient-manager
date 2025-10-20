@@ -12,6 +12,7 @@ import { formatAmount } from '../../utils/currencyUtils';
 import { ExpandableChip } from '../atoms/ExpandableChip';
 import { OperationAssets } from '../lists/OperationAssets';
 import { OperationNotes } from '../lists/OperationNotes';
+import { ToothDetailsList } from '../lists/ToothDetailsList';
 
 interface Props {
     operation: Operation;
@@ -75,6 +76,10 @@ export const OperationDetailCard: React.FC<Props> = ({
                             )}
                         </Typography>
                     </Grid>
+
+                    <ToothDetailsList
+                        details={operation.patientOperationInfo.details}
+                    />
 
                     <OperationAssets
                         assets={operation.assets}

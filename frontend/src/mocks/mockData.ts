@@ -54,7 +54,9 @@ export const mockOperations = [
         createdAt: '2025-06-01T10:00:00',
         updatedAt: '2025-06-01T10:30:00',
         estimatedCost: { amount: 50.00, currency: 'EUR' },
-        patientOperationInfo: { details: [] }
+        patientOperationInfo: {
+            details: []
+        }
     },
     {
         id: 'OP-1002',
@@ -72,6 +74,58 @@ export const mockOperations = [
         createdAt: '2025-06-15T14:00:00',
         updatedAt: '2025-06-15T14:45:00',
         estimatedCost: { amount: 120.00, currency: 'EUR' },
-        patientOperationInfo: { details: [] }
+        patientOperationInfo: {
+            details: []
+        }
+    },
+    {
+        id: 'OP-1003',
+        patientId: '22222222-2222-2222-2222',
+        type: 'TREATMENT',
+        description: 'Dental treatment including root canal and fillings',
+        executor: 'Dr. Rodriguez',
+        assets: ['dental_xray.jpg', 'treatment_plan.pdf'],
+        additionalNotes: [
+            {
+                content: 'Root canal performed on tooth 12',
+                createdAt: '2025-07-10T09:30:00'
+            },
+            {
+                content: 'Filling applied to tooth 15',
+                createdAt: '2025-07-10T10:15:00'
+            }
+        ],
+        createdAt: '2025-07-10T09:00:00',
+        updatedAt: '2025-07-10T11:00:00',
+        estimatedCost: { amount: 350.00, currency: 'EUR' },
+        patientOperationInfo: {
+            details: [
+                { toothNumber: 12, amount: { amount: 220.00, currency: 'EUR' } },
+                { toothNumber: 15, amount: { amount: 130.00, currency: 'EUR' } }
+            ]
+        }
+    },
+    {
+        id: 'OP-1004',
+        patientId: '33333333-3333-3333-3333',
+        type: 'SURGERY',
+        description: 'Wisdom tooth extraction',
+        executor: 'Dr. Davis',
+        assets: ['pre_surgery_scan.jpg'],
+        additionalNotes: [
+            {
+                content: 'Patient cleared for surgery',
+                createdAt: '2025-08-05T14:00:00'
+            }
+        ],
+        createdAt: '2025-08-05T15:00:00',
+        updatedAt: '2025-08-05T16:30:00',
+        estimatedCost: { amount: 480.00, currency: 'EUR' },
+        patientOperationInfo: {
+            details: [
+                { toothNumber: 18, amount: { amount: 240.00, currency: 'EUR' } },
+                { toothNumber: 28, amount: { amount: 240.00, currency: 'EUR' } }
+            ]
+        }
     }
 ];

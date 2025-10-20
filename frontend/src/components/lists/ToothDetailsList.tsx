@@ -1,0 +1,61 @@
+import React from 'react';
+import {
+    Box,
+    Grid,
+    List,
+    ListItem,
+    ListItemText,
+    Paper,
+    Typography
+} from '@mui/material';
+import { formatAmount } from '../../utils/currencyUtils';
+import { Money } from '../../types/Money';
+
+interface ToothDetail {
+    toothNumber: number;
+    amount: Money;
+}
+
+interface Props {
+    details: ToothDetail[];
+}
+
+export const ToothDetailsList: React.FC<Props> = ({ details }) => {
+    if (!details || details.length === 0) {
+        return (
+            <Grid item xs={12}>
+                <Typography variant="subtitle1" color="textSecondary">Tooth Details</Typography>
+                <Typography variant="body1" color="text.secondary">No tooth details available</Typography>
+            </Grid>
+        );
+    }
+
+    const totalAmount = details.reduce((sum, detail) => sum + detail.amount.amount, 0);
+    const currency = details.length > 0 ? details[0].amount.currency : 'EUR';
+
+    return (
+        <Grid item xs={12}>
+            <Typography variant="subtitle1" color="textSecondary">Tooth Details</Typography>
+            <Paper variant="outlined" sx={{ mt: 1, mb: 2 }}>
+                <List dense>
+                    {details.map((detail, index) => (
+                        <ListItem key={index} divider={index < details.length - 1}>
+                            <ListItemText
+                                primary={`Tooth #${detail.toothNumber}`}
+                                secondary={formatAmount(detail.amount.amount, detail.amount.currency)}
+                            />
+                        </ListItem>
+                    ))}
+                    <ListItem sx={{ backgroundColor: 'rgba(0, 0, 0, 0.04)' }}>
+                        <ListItemText
+                            primary="Total"
+                            secondary={formatAmount(totalAmount, currency)}
+                            primaryTypographyProps={{ fontWeight: 'bold' }}
+                            secondaryTypographyProps={{ fontWeight: 'bold' }}
+                        />
+                    </ListItem>
+                </List>
+            </Paper>
+        </Grid>
+    );
+};
