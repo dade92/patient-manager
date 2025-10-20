@@ -8,5 +8,5 @@ export interface Patient {
     nationality: string;
     birthDate: string;
     taxCode: string;
+    medicalHistory: string;
 }
-

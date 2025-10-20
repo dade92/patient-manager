@@ -12,6 +12,7 @@ interface NewPatientForm {
     nationality: string;
     birthDate: string;
     taxCode: string;
+    medicalHistory: string;
 }
 
 const initialForm: NewPatientForm = {
@@ -22,7 +23,8 @@ const initialForm: NewPatientForm = {
     cityOfResidence: '',
     nationality: '',
     birthDate: '',
-    taxCode: ''
+    taxCode: '',
+    medicalHistory: ''
 };
 
 export const NewPatient: React.FC = () => {
@@ -147,6 +149,16 @@ export const NewPatient: React.FC = () => {
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    label="Medical History"
+                                    name="medicalHistory"
+                                    value={form.medicalHistory}
+                                    onChange={handleChange}
                                 />
                             </Grid>
                             <Grid item xs={12}>
