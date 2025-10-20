@@ -55,7 +55,6 @@ export const CreateOperationDialog: React.FC<Props> = ({
     const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
 
-        // If manually editing the estimated cost, disable auto-updates
         if (name === 'estimatedCost') {
             setAutoUpdateCost(false);
         }
@@ -78,7 +77,6 @@ export const CreateOperationDialog: React.FC<Props> = ({
         setToothDetails(details);
     };
 
-    // Update estimated cost when tooth amounts change
     const handleTotalAmountChange = useCallback((totalAmount: number) => {
         if (autoUpdateCost) {
             setFormData(prev => ({

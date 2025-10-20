@@ -31,7 +31,6 @@ export const ToothSelectionForm: React.FC<Props> = ({
         amount: ''
     }]);
 
-    // Calculate total amount whenever tooth details change
     useEffect(() => {
         const totalAmount = toothDetails.reduce((sum, detail) => {
             const amount = parseFloat(detail.amount) || 0;
