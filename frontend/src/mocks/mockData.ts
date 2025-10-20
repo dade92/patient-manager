@@ -8,7 +8,8 @@ export const mockPatients = [
         cityOfResidence: "New York",
         nationality: "American",
         birthDate: "1990-05-15",
-        taxCode: "TAX1234567890"
+        taxCode: "TAX1234567890",
+        medicalHistory: "Chronic back pain since 2023. Allergic to penicillin."
     },
     {
         id: "22222222-2222-2222-2222",
@@ -19,7 +20,8 @@ export const mockPatients = [
         cityOfResidence: "Boston",
         nationality: "Canadian",
         birthDate: "1988-09-23",
-        taxCode: "TAX0987654321"
+        taxCode: "TAX0987654321",
+        medicalHistory: "Asthma since childhood. No known allergies."
     },
     {
         id: "33333333-3333-3333-3333",
@@ -30,7 +32,8 @@ export const mockPatients = [
         cityOfResidence: "Chicago",
         nationality: "British",
         birthDate: "1995-12-10",
-        taxCode: "TAX1122334455"
+        taxCode: "TAX1122334455",
+        medicalHistory: "Type 2 diabetes diagnosed in 2024. Seasonal allergies."
     }
 ];
 
