@@ -48,7 +48,8 @@ export function makeServer({ environment = 'development' } = {}) {
         const attrs = JSON.parse(request.requestBody);
         const patient = schema.create('patient', {
           ...attrs,
-          id: `PAT-${Math.floor(Math.random() * 10000)}`
+          id: `PAT-${Math.floor(Math.random() * 10000)}`,
+          medicalHistory: attrs.medicalHistory || ""
         });
 
         return patient.attrs;
