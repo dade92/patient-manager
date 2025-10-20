@@ -70,7 +70,8 @@ export const CreateOperationDialog: React.FC<Props> = ({
                 estimatedCost: {
                     amount: parseFloat(formData.estimatedCost) || 0,
                     currency: 'EUR'
-                } as Money
+                } as Money,
+                patientOperationInfo: { details: [] }
             };
 
             const newOperation = await RestClient.post<Operation>(

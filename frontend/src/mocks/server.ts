@@ -90,7 +90,8 @@ export function makeServer({ environment = 'development' } = {}) {
           additionalNotes: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          estimatedCost: attrs.estimatedCost
+          estimatedCost: attrs.estimatedCost,
+          patientOperationInfo: attrs.patientOperationInfo || { details: [] }
         });
 
         return new Response(201, {}, operation.attrs);
