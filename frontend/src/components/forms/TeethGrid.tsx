@@ -7,20 +7,25 @@ interface Props {
   onToothSelect: (toothNumber: number) => void;
 }
 
-const TeethGrid: React.FC<Props> = ({
+enum TeethType {
+    PERMANENT = 'permanent',
+    DECIDUOUS = 'deciduous'
+}
+
+const PERMANENT_TEETH = generateFdiTeethNumbers();
+const DECIDUOUS_TEETH = generateFdiDeciduousTeethNumbers();
+
+export const TeethGrid: React.FC<Props> = ({
   selectedTooth,
   onToothSelect
 }) => {
-    const [teethType, setTeethType] = useState<'permanent' | 'deciduous'>('permanent');
+    const [teethType, setTeethType] = useState<TeethType>(TeethType.PERMANENT);
 
-    const permanentTeeth = generateFdiTeethNumbers();
-    const deciduousTeeth = generateFdiDeciduousTeethNumbers();
-
-    const teeth = teethType === 'permanent' ? permanentTeeth : deciduousTeeth;
+    const teeth = teethType === TeethType.PERMANENT ? PERMANENT_TEETH : DECIDUOUS_TEETH;
 
     const handleTeethTypeChange = (
         event: React.MouseEvent<HTMLElement>,
-        newTeethType: 'permanent' | 'deciduous' | null
+        newTeethType: TeethType
     ) => {
         if (newTeethType !== null) {
             setTeethType(newTeethType);
@@ -44,10 +49,10 @@ const TeethGrid: React.FC<Props> = ({
                     aria-label="teeth type"
                     size="small"
                 >
-                    <ToggleButton value="permanent" aria-label="permanent teeth">
+                    <ToggleButton value={TeethType.PERMANENT} aria-label="permanent teeth">
                         Permanent
                     </ToggleButton>
-                    <ToggleButton value="deciduous" aria-label="deciduous teeth">
+                    <ToggleButton value={TeethType.DECIDUOUS} aria-label="deciduous teeth">
                         Baby
                     </ToggleButton>
                 </ToggleButtonGroup>
@@ -83,5 +88,3 @@ const TeethGrid: React.FC<Props> = ({
         </Box>
     );
 };
-
-export default TeethGrid;

@@ -10,7 +10,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { generateFdiTeethNumbers } from '../../utils/teethUtils';
-import TeethGrid from './TeethGrid';
+import {TeethGrid} from "./TeethGrid";
 
 export interface ToothDetail {
     toothNumber: number | null;
