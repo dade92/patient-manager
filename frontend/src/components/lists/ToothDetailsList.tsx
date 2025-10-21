@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    Box,
     Grid,
     List,
     ListItem,
@@ -9,12 +8,7 @@ import {
     Typography
 } from '@mui/material';
 import { formatAmount } from '../../utils/currencyUtils';
-import { Money } from '../../types/Money';
-
-interface ToothDetail {
-    toothNumber: number;
-    amount: Money;
-}
+import {ToothDetail} from "../../types/operation";
 
 interface Props {
     details: ToothDetail[];

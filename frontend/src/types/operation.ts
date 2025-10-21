@@ -1,9 +1,5 @@
 import { Money } from './Money';
 
-export interface PatientOperationInfo {
-    details: any[];
-}
-
 export interface Operation {
     id: string;
     patientId: string;
@@ -16,6 +12,15 @@ export interface Operation {
     updatedAt: string;
     estimatedCost: Money;
     patientOperationInfo: PatientOperationInfo;
+}
+
+export interface PatientOperationInfo {
+    details: ToothDetail[];
+}
+
+export interface ToothDetail {
+    toothNumber: number;
+    amount: Money;
 }
 
 export interface OperationNote {
