@@ -40,8 +40,6 @@ export const ToothSelectionForm: React.FC<Props> = ({
         onTotalAmountChange(totalAmount);
     }, [toothDetails, onTotalAmountChange]);
 
-    const teeth = generateFdiTeethNumbers();
-
     const handleToothSelection = (detailIndex: number, toothNumber: number) => {
         const updatedDetails = [...toothDetails];
         updatedDetails[detailIndex].toothNumber = toothNumber;
