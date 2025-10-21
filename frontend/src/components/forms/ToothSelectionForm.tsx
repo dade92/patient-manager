@@ -96,7 +96,6 @@ export const ToothSelectionForm: React.FC<Props> = ({
                             Select tooth number:
                         </Typography>
                         <TeethGrid
-                            teeth={teeth}
                             selectedTooth={detail.toothNumber}
                             onToothSelect={(toothNumber) => handleToothSelection(detailIndex, toothNumber)}
                         />
