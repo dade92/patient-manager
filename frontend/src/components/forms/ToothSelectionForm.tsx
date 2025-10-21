@@ -2,16 +2,15 @@ import React, { useState, useEffect } from 'react';
 import {
     Box,
     Button,
-    Grid,
-    IconButton,
     TextField,
     Typography,
     Paper,
-    Tooltip
+    IconButton,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { generateFdiTeethNumbers } from '../../utils/teethUtils';
+import TeethGrid from './TeethGrid';
 
 export interface ToothDetail {
     toothNumber: number | null;
@@ -96,26 +95,11 @@ export const ToothSelectionForm: React.FC<Props> = ({
                         <Typography variant="body2" color="textSecondary" gutterBottom>
                             Select tooth number:
                         </Typography>
-                        <Grid container spacing={1} sx={{ maxHeight: '120px', overflowY: 'auto' }}>
-                            {teeth.map((tooth) => (
-                                <Grid item key={tooth}>
-                                    <Tooltip title={`Tooth ${tooth}`}>
-                                        <Button
-                                            variant={detail.toothNumber === tooth ? "contained" : "outlined"}
-                                            size="small"
-                                            onClick={() => handleToothSelection(detailIndex, tooth)}
-                                            sx={{
-                                                minWidth: '36px',
-                                                height: '36px',
-                                                p: 0
-                                            }}
-                                        >
-                                            {tooth}
-                                        </Button>
-                                    </Tooltip>
-                                </Grid>
-                            ))}
-                        </Grid>
+                        <TeethGrid
+                            teeth={teeth}
+                            selectedTooth={detail.toothNumber}
+                            onToothSelect={(toothNumber) => handleToothSelection(detailIndex, toothNumber)}
+                        />
                     </Box>
 
                     <TextField
