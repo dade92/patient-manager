@@ -14,6 +14,7 @@ import {TeethGrid} from "./TeethGrid";
 export interface ToothDetail {
     toothNumber: number | null;
     amount: string;
+    toothType: string;
 }
 
 interface Props {
@@ -27,7 +28,8 @@ export const ToothSelectionForm: React.FC<Props> = ({
 }) => {
     const [toothDetails, setToothDetails] = useState<ToothDetail[]>([{
         toothNumber: null,
-        amount: ''
+        amount: '',
+        toothType: ''
     }]);
 
     useEffect(() => {
@@ -54,7 +56,7 @@ export const ToothSelectionForm: React.FC<Props> = ({
     };
 
     const addToothDetail = () => {
-        setToothDetails([...toothDetails, { toothNumber: null, amount: '' }]);
+        setToothDetails([...toothDetails, { toothNumber: null, amount: '' , toothType: ''}]);
     };
 
     const removeToothDetail = (index: number) => {

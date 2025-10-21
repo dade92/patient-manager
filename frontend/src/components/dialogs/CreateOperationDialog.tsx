@@ -93,9 +93,10 @@ export const CreateOperationDialog: React.FC<Props> = ({
         try {
             const formattedToothDetails = toothDetails
                 .filter(detail => detail.toothNumber !== null && detail.amount.trim() !== '')
-                .map(detail => ({
+                .map((detail: ToothDetail) => ({
                     toothNumber: detail.toothNumber,
-                    estimatedCost: toMoney(detail.amount)
+                    estimatedCost: toMoney(detail.amount),
+                    toothType: detail.toothType
                 }));
 
             const operationPayload = {
