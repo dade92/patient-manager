@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState, useCallback} from 'react';
+import React, {ChangeEvent, useCallback, useState} from 'react';
 import {
     Alert,
     Box,
@@ -7,19 +7,19 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Divider,
     FormControl,
     IconButton,
     InputLabel,
     MenuItem,
     Select,
     SelectChangeEvent,
-    TextField,
-    Divider
+    TextField
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import {Operation, OperationType, PatientOperationInfo} from '../../types/operation';
+import {Operation, OperationType} from '../../types/operation';
 import {RestClient} from '../../utils/restClient';
-import { Money } from '../../types/Money';
+import {Money} from '../../types/Money';
 import {ToothDetail, ToothSelectionForm} from '../forms/ToothSelectionForm';
 
 interface Props {
@@ -28,6 +28,12 @@ interface Props {
     patientId: string;
     onOperationCreated: (operation: Operation) => void;
 }
+
+const ESTIMATED_COST_FIELD_NAME = "estimatedCost";
+const toMoney = (amount: string): Money => ({
+    amount: parseFloat(amount),
+    currency: 'EUR'
+})
 
 export const CreateOperationDialog: React.FC<Props> = ({
     open,
@@ -49,11 +55,9 @@ export const CreateOperationDialog: React.FC<Props> = ({
 
     const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
-
-        if (name === 'estimatedCost') {
+        if (name === ESTIMATED_COST_FIELD_NAME) {
             setAutoUpdateCost(false);
         }
-
         setFormData(prev => ({
             ...prev,
             [name]: value
@@ -91,18 +95,12 @@ export const CreateOperationDialog: React.FC<Props> = ({
                 .filter(detail => detail.toothNumber !== null && detail.amount.trim() !== '')
                 .map(detail => ({
                     toothNumber: detail.toothNumber,
-                    estimatedCost: {
-                        amount: parseFloat(detail.amount) || 0,
-                        currency: 'EUR'
-                    }
+                    estimatedCost: toMoney(detail.amount)
                 }));
 
             const operationPayload = {
                 ...formData,
-                estimatedCost: {
-                    amount: parseFloat(formData.estimatedCost) || 0,
-                    currency: 'EUR'
-                } as Money,
+                estimatedCost: toMoney(formData.estimatedCost),
                 patientOperationInfo: {
                     details: formattedToothDetails
                 }
@@ -189,7 +187,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
                             required
                             fullWidth
                             label="Estimated Cost"
-                            name="estimatedCost"
+                            name={ESTIMATED_COST_FIELD_NAME}
                             type="number"
                             inputProps={{ step: '0.01', min: '0' }}
                             value={formData.estimatedCost}
