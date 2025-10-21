@@ -21,7 +21,7 @@ class PatientOperationResponseAdapterTest {
 
     @Test
     fun adapt() {
-        val info = PatientOperationInfoResponse(emptyList())
+        val info = PatientOperationInfoJson(emptyList())
         val patientOperation = aPatientOperation(
             id = anOperationId(OPERATION_ID),
             patientId = aPatientId(PATIENT_ID),

@@ -1,24 +1,27 @@
 package webapp.adapter
 
 import domain.model.PatientOperationInfo
+import domain.model.ToothType
 
 class PatientOperationInfoAdapter {
-    fun adapt(patientOperationInfo: PatientOperationInfo): PatientOperationInfoResponse =
-        PatientOperationInfoResponse(
+    fun adapt(patientOperationInfo: PatientOperationInfo): PatientOperationInfoJson =
+        PatientOperationInfoJson(
             details = patientOperationInfo.details.map {
                 DetailResponse(
                     toothNumber = it.toothNumber,
-                    estimatedCost = it.estimatedCost.toDto()
+                    estimatedCost = it.estimatedCost.toDto(),
+                    toothType = it.toothType.name
                 )
             }
         )
 
-    fun adapt(patientOperationInfoResponse: PatientOperationInfoResponse): PatientOperationInfo =
+    fun adapt(patientOperationInfoJson: PatientOperationInfoJson): PatientOperationInfo =
         PatientOperationInfo(
-            details = patientOperationInfoResponse.details.map {
+            details = patientOperationInfoJson.details.map {
                 PatientOperationInfo.Detail(
                     toothNumber = it.toothNumber,
-                    estimatedCost = it.estimatedCost.toDomain()
+                    estimatedCost = it.estimatedCost.toDomain(),
+                    toothType = ToothType.valueOf(it.toothType)
                 )
             }
         )

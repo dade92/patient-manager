@@ -2,6 +2,7 @@ package webapp.adapter
 
 import domain.model.OperationType
 import domain.model.PatientOperationInfo
+import domain.model.ToothType
 
 data class OperationResponse(
     val id: String,
@@ -14,7 +15,7 @@ data class OperationResponse(
     val createdAt: String,
     val updatedAt: String,
     val estimatedCost: MoneyDto,
-    val patientOperationInfo: PatientOperationInfoResponse
+    val patientOperationInfo: PatientOperationInfoJson
 )
 
 data class OperationNoteResponse(
@@ -26,19 +27,21 @@ data class PatientOperationsResponse(
     val operations: List<OperationResponse>
 )
 
-data class PatientOperationInfoResponse(
+data class PatientOperationInfoJson(
     val details: List<DetailResponse>
 )
 
-fun PatientOperationInfoResponse.toDomain() =
+fun PatientOperationInfoJson.toDomain() =
     PatientOperationInfo(details = this.details.map {
         PatientOperationInfo.Detail(
             toothNumber = it.toothNumber,
-            estimatedCost = it.estimatedCost.toDomain()
+            estimatedCost = it.estimatedCost.toDomain(),
+            toothType = ToothType.valueOf(it.toothType)
         )
     })
 
 data class DetailResponse(
     val toothNumber: Int,
-    val estimatedCost: MoneyDto
+    val estimatedCost: MoneyDto,
+    val toothType: String
 )
