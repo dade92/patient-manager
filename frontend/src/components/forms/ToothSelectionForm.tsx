@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { generateFdiTeethNumbers } from '../../utils/teethUtils';
 
 export interface ToothDetail {
     toothNumber: number | null;
@@ -40,7 +41,7 @@ export const ToothSelectionForm: React.FC<Props> = ({
         onTotalAmountChange(totalAmount);
     }, [toothDetails, onTotalAmountChange]);
 
-    const teeth = Array.from({ length: 32 }, (_, i) => i + 1);
+    const teeth = generateFdiTeethNumbers();
 
     const handleToothSelection = (detailIndex: number, toothNumber: number) => {
         const updatedDetails = [...toothDetails];
