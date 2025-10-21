@@ -28,24 +28,39 @@ const TeethGrid: React.FC<Props> = ({
     };
 
     return (
-        <Box>
-            <ToggleButtonGroup
-                value={teethType}
-                exclusive
-                onChange={handleTeethTypeChange}
-                aria-label="teeth type"
-                size="small"
-                sx={{ mb: 1, display: 'flex', justifyContent: 'center' }}
-            >
-                <ToggleButton value="permanent" aria-label="permanent teeth">
-                    Permanent
-                </ToggleButton>
-                <ToggleButton value="deciduous" aria-label="deciduous teeth">
-                    Baby
-                </ToggleButton>
-            </ToggleButtonGroup>
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2
+        }}>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'flex-end'
+            }}>
+                <ToggleButtonGroup
+                    value={teethType}
+                    exclusive
+                    onChange={handleTeethTypeChange}
+                    aria-label="teeth type"
+                    size="small"
+                >
+                    <ToggleButton value="permanent" aria-label="permanent teeth">
+                        Permanent
+                    </ToggleButton>
+                    <ToggleButton value="deciduous" aria-label="deciduous teeth">
+                        Baby
+                    </ToggleButton>
+                </ToggleButtonGroup>
+            </Box>
 
-            <Grid container spacing={1} sx={{maxHeight: '120px', overflowY: 'auto'}}>
+            <Grid
+                container
+                spacing={1}
+                sx={{
+                    maxHeight: '120px',
+                    overflowY: 'auto'
+                }}
+            >
                 {teeth.map((tooth) => (
                     <Grid item key={tooth}>
                         <Tooltip title={`Tooth ${tooth}`}>
