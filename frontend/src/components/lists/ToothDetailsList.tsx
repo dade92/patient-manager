@@ -25,8 +25,8 @@ export const ToothDetailsList: React.FC<Props> = ({ details }) => {
         );
     }
 
-    const totalAmount = details.reduce((sum, detail) => sum + detail.amount.amount, 0);
-    const currency = details.length > 0 ? details[0].amount.currency : 'EUR';
+    const totalAmount = details.reduce((sum, detail) => sum + detail.estimatedCost.amount, 0);
+    const currency = details.length > 0 ? details[0].estimatedCost.currency : 'EUR';
 
     return (
         <Grid item xs={12}>

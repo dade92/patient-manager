@@ -13,6 +13,6 @@ export const ToothDetailListItem: FC<Props> = ({detail, index, isLast}) =>
     <ListItem key={index} divider={!isLast}>
         <ListItemText
             primary={`Tooth #${detail.toothNumber}`}
-            secondary={formatAmount(detail.amount.amount, detail.amount.currency)}
+            secondary={formatAmount(detail.estimatedCost.amount, detail.estimatedCost.currency)}
         />
     </ListItem>

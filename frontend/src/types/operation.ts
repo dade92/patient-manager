@@ -20,7 +20,7 @@ export interface PatientOperationInfo {
 
 export interface ToothDetail {
     toothNumber: number;
-    amount: Money;
+    estimatedCost: Money;
 }
 
 export interface OperationNote {
