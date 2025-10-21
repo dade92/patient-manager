@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { formatAmount } from '../../utils/currencyUtils';
 import {ToothDetail} from "../../types/operation";
+import {ToothDetailListItem} from "./ToothDetailListItem";
 
 interface Props {
     details: ToothDetail[];
@@ -33,12 +34,7 @@ export const ToothDetailsList: React.FC<Props> = ({ details }) => {
             <Paper variant="outlined" sx={{ mt: 1, mb: 2 }}>
                 <List dense>
                     {details.map((detail, index) => (
-                        <ListItem key={index} divider={index < details.length - 1}>
-                            <ListItemText
-                                primary={`Tooth #${detail.toothNumber}`}
-                                secondary={formatAmount(detail.amount.amount, detail.amount.currency)}
-                            />
-                        </ListItem>
+                        <ToothDetailListItem detail={detail} index={index} isLast={index < details.length - 1} />
                     ))}
                     <ListItem sx={{ backgroundColor: 'rgba(0, 0, 0, 0.04)' }}>
                         <ListItemText
