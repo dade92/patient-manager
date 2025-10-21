@@ -5,7 +5,7 @@ import {ToothType} from "../../types/operation";
 
 interface Props {
   selectedTooth: number | null;
-  onToothSelect: (toothNumber: number) => void;
+  onToothSelect: (toothNumber: number, toothType: ToothType) => void;
 }
 
 
@@ -69,7 +69,7 @@ export const TeethGrid: React.FC<Props> = ({
                             <Button
                                 variant={selectedTooth === tooth ? "contained" : "outlined"}
                                 size="small"
-                                onClick={() => onToothSelect(tooth)}
+                                onClick={() => onToothSelect(tooth, teethType)}
                                 sx={{
                                     minWidth: '36px',
                                     height: '36px',

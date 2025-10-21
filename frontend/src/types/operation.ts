@@ -25,8 +25,8 @@ export interface ToothDetail {
 }
 
 export enum ToothType {
-    PERMANENT = 'permanent',
-    DECIDUOUS = 'deciduous'
+    PERMANENT = 'PERMANENT',
+    DECIDUOUS = 'DECIDUOUS'
 }
 
 export interface OperationNote {
