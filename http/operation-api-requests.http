@@ -19,7 +19,8 @@ Content-Type: application/json
         "estimatedCost": {
             "amount": 75.00,
             "currency": "USD"
-        }
+        },
+        "toothType": "PERMANENT"
       }
     ]
   }

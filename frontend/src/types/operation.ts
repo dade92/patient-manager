@@ -21,6 +21,12 @@ export interface PatientOperationInfo {
 export interface ToothDetail {
     toothNumber: number;
     estimatedCost: Money;
+    toothType: ToothType;
+}
+
+export enum ToothType {
+    PERMANENT = 'permanent',
+    DECIDUOUS = 'deciduous'
 }
 
 export interface OperationNote {
