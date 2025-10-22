@@ -9,6 +9,7 @@ export const adaptOperationPayload = (formData: OperationForm) => ({
     patientId: formData.patientId,
     description: formData.description,
     estimatedCost: toMoney(formData.estimatedCost),
+    executor: formData.executor,
     patientOperationInfo: {
         details: adaptToothDetails(formData.toothDetails)
     }
