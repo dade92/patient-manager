@@ -1,5 +1,6 @@
 package domain.operation.validator
 
+import domain.exceptions.validator.EstimatedAmountDifferentFromDetailsSumException
 import domain.model.round
 import domain.operation.CreateOperationRequest
 
@@ -12,5 +13,3 @@ class EstimatedAmountEqualToDetailsSumValidator : OperationRequestValidator {
         }
     }
 }
-
-data class EstimatedAmountDifferentFromDetailsSumException(override val message: String) : RuntimeException(message)

@@ -9,11 +9,9 @@ import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
 import domain.model.OperationType
-import domain.model.Patient
 import domain.model.PatientBuilder.aPatientId
-import domain.operation.CreateOperationRequest
 import domain.operation.OperationService
-import domain.operation.validator.EstimatedAmountDifferentFromDetailsSumException
+import domain.exceptions.validator.EstimatedAmountDifferentFromDetailsSumException
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach

@@ -1,11 +1,11 @@
 package domain.operation.validator
 
+import domain.exceptions.validator.EstimatedAmountDifferentFromDetailsSumException
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aCreateOperationRequest
 import domain.model.OperationBuilder.aDetail
 import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.PatientOperationInfo
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

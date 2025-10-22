@@ -2,7 +2,7 @@ package webapp.controller
 
 import domain.exceptions.OperationNotFoundException
 import domain.exceptions.PatientNotFoundException
-import domain.operation.validator.EstimatedAmountDifferentFromDetailsSumException
+import domain.exceptions.validator.EstimatedAmountDifferentFromDetailsSumException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
