@@ -8,7 +8,6 @@ interface Props {
   onToothSelect: (toothNumber: number, toothType: ToothType) => void;
 }
 
-
 const PERMANENT_TEETH = generateFdiTeethNumbers();
 const DECIDUOUS_TEETH = generateFdiDeciduousTeethNumbers();
 

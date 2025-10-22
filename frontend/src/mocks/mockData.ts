@@ -55,7 +55,16 @@ export const mockOperations = [
         updatedAt: '2025-06-01T10:30:00',
         estimatedCost: { amount: 50.00, currency: 'EUR' },
         patientOperationInfo: {
-            details: []
+            details: [
+                {
+                    "toothNumber": 12,
+                    "estimatedCost": {
+                        "amount": 100.00,
+                        "currency": "EUR"
+                    },
+                    "toothType": "PERMANENT",
+                }
+            ]
         }
     },
     {
@@ -75,7 +84,24 @@ export const mockOperations = [
         updatedAt: '2025-06-15T14:45:00',
         estimatedCost: { amount: 120.00, currency: 'EUR' },
         patientOperationInfo: {
-            details: []
+            details: [
+                {
+                    "toothNumber": 12,
+                    "estimatedCost": {
+                        "amount": 100,
+                        "currency": "EUR"
+                    },
+                    "toothType": "DECIDUOUS",
+                },
+                {
+                    "toothNumber": 14,
+                    "estimatedCost": {
+                        "amount": 200,
+                        "currency": "EUR"
+                    },
+                    "toothType": "DECIDUOUS",
+                }
+            ]
         }
     },
     {
@@ -100,8 +126,8 @@ export const mockOperations = [
         estimatedCost: { amount: 350.00, currency: 'EUR' },
         patientOperationInfo: {
             details: [
-                { toothNumber: 12, amount: { amount: 220.00, currency: 'EUR' } },
-                { toothNumber: 15, amount: { amount: 130.00, currency: 'EUR' } }
+                { toothNumber: 12, estimatedCost: { amount: 220.00, currency: 'EUR' }, "toothType": "PERMANENT" },
+                { toothNumber: 15, estimatedCost: { amount: 130.00, currency: 'EUR' }, "toothType": "PERMANENT" }
             ]
         }
     },
@@ -122,10 +148,7 @@ export const mockOperations = [
         updatedAt: '2025-08-05T16:30:00',
         estimatedCost: { amount: 480.00, currency: 'EUR' },
         patientOperationInfo: {
-            details: [
-                { toothNumber: 18, amount: { amount: 240.00, currency: 'EUR' } },
-                { toothNumber: 28, amount: { amount: 240.00, currency: 'EUR' } }
-            ]
+            details: []
         }
     }
 ];
