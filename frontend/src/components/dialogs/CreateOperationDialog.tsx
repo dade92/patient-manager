@@ -113,7 +113,6 @@ export const CreateOperationDialog: React.FC<Props> = ({
             );
             onOperationCreated(newOperation);
             onClose();
-            resetForm();
         } catch (err: any) {
             setError('An error occurred while creating the operation');
         } finally {
@@ -121,13 +120,9 @@ export const CreateOperationDialog: React.FC<Props> = ({
         }
     };
 
-    const resetForm = () => {
+    const handleClose = () => {
         setFormData(EMPTY_OPERATION_FORM);
         setAutoUpdateCost(true);
-    };
-
-    const handleClose = () => {
-        resetForm();
         setError(null);
         onClose();
     };
@@ -191,10 +186,6 @@ export const CreateOperationDialog: React.FC<Props> = ({
                             label="Estimated Cost"
                             name={ESTIMATED_COST_FIELD_NAME}
                             type="text"
-                            inputProps={{
-                                pattern: '[0-9]*(\.[0-9]+)?',
-                                inputMode: 'decimal'
-                            }}
                             value={formData.estimatedCost}
                             onChange={handleTextChange}
                             helperText={autoUpdateCost ? "Auto-updating based on tooth amounts" : "Manually set (auto-update disabled)"}
