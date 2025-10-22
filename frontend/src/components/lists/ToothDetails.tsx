@@ -15,7 +15,7 @@ interface Props {
     details: ToothDetail[];
 }
 
-export const ToothDetailsList: React.FC<Props> = ({ details }) => {
+export const ToothDetails: React.FC<Props> = ({ details }) => {
     if (!details || details.length === 0) {
         return (
             <Grid item xs={12}>
