@@ -17,8 +17,8 @@ import domain.storage.StorageService
 import domain.storage.UploadFileRequest
 import domain.utils.DateTimeProvider
 import io.mockk.*
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.io.InputStream
@@ -90,6 +90,22 @@ class OperationServiceTest {
         }
 
         verify(exactly = 1) { patientRepository.retrieve(PATIENT_ID) }
+        verify { operationRepository wasNot Called }
+    }
+
+    @Test
+    fun `create operations throws exception if validation fails`() {
+        val request = aCreateOperationRequest()
+
+        every { operationRequestValidator.validate(request) } throws RuntimeException()
+
+        assertThrows(RuntimeException::class.java) {
+            operationService.createOperation(request)
+        }
+
+        verify { patientRepository wasNot Called }
+        verify { operationIdGenerator wasNot Called }
+        verify { dateTimeProvider wasNot Called }
         verify { operationRepository wasNot Called }
     }
 
