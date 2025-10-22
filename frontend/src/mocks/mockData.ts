@@ -57,12 +57,12 @@ export const mockOperations = [
         patientOperationInfo: {
             details: [
                 {
-                    "toothNumber": 12,
+                    "toothNumber": 51,
                     "estimatedCost": {
                         "amount": 100.00,
                         "currency": "EUR"
                     },
-                    "toothType": "PERMANENT",
+                    "toothType": "DECIDUOUS",
                 }
             ]
         }
@@ -91,7 +91,7 @@ export const mockOperations = [
                         "amount": 100,
                         "currency": "EUR"
                     },
-                    "toothType": "DECIDUOUS",
+                    "toothType": "PERMANENT",
                 },
                 {
                     "toothNumber": 14,
@@ -99,7 +99,7 @@ export const mockOperations = [
                         "amount": 200,
                         "currency": "EUR"
                     },
-                    "toothType": "DECIDUOUS",
+                    "toothType": "PERMANENT",
                 }
             ]
         }
