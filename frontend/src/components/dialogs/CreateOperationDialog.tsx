@@ -19,8 +19,9 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import {Operation, OperationType} from '../../types/operation';
 import {RestClient} from '../../utils/restClient';
-import {Money} from '../../types/Money';
-import {ToothDetail, ToothSelectionForm} from '../forms/ToothSelectionForm';
+import {ToothDetailForm, ToothSelectionForm} from '../forms/ToothSelectionForm';
+import {toMoney} from "../../utils/AmountToMoneyConverter";
+import {adaptToothDetails} from "../../utils/AdaptToothDetails";
 
 interface Props {
     open: boolean;
@@ -30,10 +31,6 @@ interface Props {
 }
 
 const ESTIMATED_COST_FIELD_NAME = "estimatedCost";
-const toMoney = (amount: string): Money => ({
-    amount: parseFloat(amount),
-    currency: 'EUR'
-})
 
 export const CreateOperationDialog: React.FC<Props> = ({
     open,
@@ -48,7 +45,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
         executor: '',
         estimatedCost: ''
     });
-    const [toothDetails, setToothDetails] = useState<ToothDetail[]>([]);
+    const [toothDetailsForm, setToothDetailsForm] = useState<ToothDetailForm[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [autoUpdateCost, setAutoUpdateCost] = useState(true);
@@ -72,8 +69,8 @@ export const CreateOperationDialog: React.FC<Props> = ({
         }));
     };
 
-    const handleToothSelectionChange = (details: ToothDetail[]) => {
-        setToothDetails(details);
+    const handleToothSelectionChange = (details: ToothDetailForm[]) => {
+        setToothDetailsForm(details);
     };
 
     const handleTotalAmountChange = useCallback((totalAmount: number) => {
@@ -91,19 +88,13 @@ export const CreateOperationDialog: React.FC<Props> = ({
         setIsSubmitting(true);
 
         try {
-            const formattedToothDetails = toothDetails
-                .filter(detail => detail.toothNumber !== null && detail.amount.trim() !== '')
-                .map((detail: ToothDetail) => ({
-                    toothNumber: detail.toothNumber,
-                    estimatedCost: toMoney(detail.amount),
-                    toothType: detail.toothType
-                }));
+            const toothDetails = adaptToothDetails(toothDetailsForm)
 
             const operationPayload = {
                 ...formData,
                 estimatedCost: toMoney(formData.estimatedCost),
                 patientOperationInfo: {
-                    details: formattedToothDetails
+                    details: toothDetails
                 }
             };
 
@@ -114,7 +105,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
             onOperationCreated(newOperation);
             onClose();
             setFormData({type: '' as OperationType, patientId: patientId, description: '', executor: '', estimatedCost: ''});
-            setToothDetails([]);
+            setToothDetailsForm([]);
             setAutoUpdateCost(true);
         } catch (err: any) {
             setError('An error occurred while creating the operation');
@@ -125,7 +116,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
 
     const handleClose = () => {
         setFormData({type: '' as OperationType, patientId: patientId, description: '', executor: '', estimatedCost: ''});
-        setToothDetails([]);
+        setToothDetailsForm([]);
         setError(null);
         setAutoUpdateCost(true);
         onClose();

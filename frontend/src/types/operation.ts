@@ -1,4 +1,5 @@
 import { Money } from './Money';
+import {ToothDetail} from "./ToothDetail";
 
 export interface Operation {
     id: string;
@@ -16,17 +17,6 @@ export interface Operation {
 
 export interface PatientOperationInfo {
     details: ToothDetail[];
-}
-
-export interface ToothDetail {
-    toothNumber: number;
-    estimatedCost: Money;
-    toothType: ToothType;
-}
-
-export enum ToothType {
-    PERMANENT = 'PERMANENT',
-    DECIDUOUS = 'DECIDUOUS'
 }
 
 export interface OperationNote {

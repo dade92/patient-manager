@@ -10,16 +10,16 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {TeethGrid} from "./TeethGrid";
-import {ToothType} from "../../types/operation";
+import {ToothType} from "../../types/ToothDetail";
 
-export interface ToothDetail {
-    toothNumber: number | null;
+export interface ToothDetailForm {
+    toothNumber: number;
     amount: string;
     toothType: string;
 }
 
 interface Props {
-    onSelectionChange: (details: ToothDetail[]) => void;
+    onSelectionChange: (details: ToothDetailForm[]) => void;
     onTotalAmountChange: (totalAmount: number) => void;
 }
 
@@ -27,8 +27,8 @@ export const ToothSelectionForm: React.FC<Props> = ({
     onSelectionChange,
     onTotalAmountChange
 }) => {
-    const [toothDetails, setToothDetails] = useState<ToothDetail[]>([{
-        toothNumber: null,
+    const [toothDetails, setToothDetails] = useState<ToothDetailForm[]>([{
+        toothNumber: 0,
         amount: '',
         toothType: ''
     }]);
@@ -58,7 +58,7 @@ export const ToothSelectionForm: React.FC<Props> = ({
     };
 
     const addToothDetail = () => {
-        setToothDetails([...toothDetails, { toothNumber: null, amount: '' , toothType: ''}]);
+        setToothDetails([...toothDetails, { toothNumber: 0, amount: '' , toothType: ''}]);
     };
 
     const removeToothDetail = (index: number) => {
