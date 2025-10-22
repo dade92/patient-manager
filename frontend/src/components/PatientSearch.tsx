@@ -51,6 +51,10 @@ export const PatientSearch: React.FC = () => {
                     onChange={(e) => setSearchInput(e.target.value)}
                     onFocus={() => setShowResults(true)}
                     sx={{mb: 2}}
+                    InputProps={{
+                        autoComplete: 'off',
+                    }}
+                    autoComplete="off"
                 />
                 {errorMessage && (
                     <Box sx={{ color: 'error.main', mb: 1 }}>
