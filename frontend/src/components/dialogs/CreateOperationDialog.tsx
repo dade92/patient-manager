@@ -20,14 +20,22 @@ import CloseIcon from '@mui/icons-material/Close';
 import {Operation, OperationType} from '../../types/operation';
 import {RestClient} from '../../utils/restClient';
 import {ToothDetailForm, ToothSelectionForm} from '../forms/ToothSelectionForm';
-import {toMoney} from "../../utils/AmountToMoneyConverter";
-import {adaptToothDetails} from "../../utils/AdaptToothDetails";
+import {adaptOperationPayload} from "../../utils/CreateOperationPayloadAdapter";
 
 interface Props {
     open: boolean;
     onClose: () => void;
     patientId: string;
     onOperationCreated: (operation: Operation) => void;
+}
+
+interface OperationFormData {
+    type: OperationType;
+    patientId: string;
+    description: string;
+    executor: string;
+    estimatedCost: string;
+    toothDetails: ToothDetailForm[];
 }
 
 const ESTIMATED_COST_FIELD_NAME = "estimatedCost";
@@ -88,17 +96,9 @@ export const CreateOperationDialog: React.FC<Props> = ({
         setIsSubmitting(true);
 
         try {
-            const operationPayload = {
-                ...formData,
-                estimatedCost: toMoney(formData.estimatedCost),
-                patientOperationInfo: {
-                    details: adaptToothDetails(toothDetailsForm)
-                }
-            };
-
             const newOperation = await RestClient.post<Operation>(
                 '/api/operation',
-                operationPayload
+                adaptOperationPayload(formData, toothDetailsForm)
             );
             onOperationCreated(newOperation);
             onClose();
