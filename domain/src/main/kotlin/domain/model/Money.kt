@@ -1,6 +1,7 @@
 package domain.model
 
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 data class Money(
     val amount: BigDecimal,
@@ -12,3 +13,5 @@ data class Money(
         const val EUR = "EUR"
     }
 }
+
+fun BigDecimal.round(): BigDecimal = this.setScale(2, RoundingMode.HALF_UP)
