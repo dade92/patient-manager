@@ -105,10 +105,13 @@ export const ToothSelectionForm: React.FC<Props> = ({
                     <TextField
                         fullWidth
                         label="Amount"
-                        type="number"
+                        type="text"
                         value={detail.amount}
                         onChange={(e) => handleAmountChange(detailIndex, e.target.value)}
-                        inputProps={{ step: '0.01', min: '0' }}
+                        inputProps={{
+                            pattern: '[0-9]*(\.[0-9]+)?',
+                            inputMode: 'decimal'
+                        }}
                         sx={{ mb: 1 }}
                     />
                 </Paper>

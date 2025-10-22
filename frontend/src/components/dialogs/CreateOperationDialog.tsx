@@ -190,8 +190,11 @@ export const CreateOperationDialog: React.FC<Props> = ({
                             fullWidth
                             label="Estimated Cost"
                             name={ESTIMATED_COST_FIELD_NAME}
-                            type="number"
-                            inputProps={{ step: '0.01', min: '0' }}
+                            type="text"
+                            inputProps={{
+                                pattern: '[0-9]*(\.[0-9]+)?',
+                                inputMode: 'decimal'
+                            }}
                             value={formData.estimatedCost}
                             onChange={handleTextChange}
                             helperText={autoUpdateCost ? "Auto-updating based on tooth amounts" : "Manually set (auto-update disabled)"}
