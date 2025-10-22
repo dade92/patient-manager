@@ -88,13 +88,11 @@ export const CreateOperationDialog: React.FC<Props> = ({
         setIsSubmitting(true);
 
         try {
-            const toothDetails = adaptToothDetails(toothDetailsForm)
-
             const operationPayload = {
                 ...formData,
                 estimatedCost: toMoney(formData.estimatedCost),
                 patientOperationInfo: {
-                    details: toothDetails
+                    details: adaptToothDetails(toothDetailsForm)
                 }
             };
 
