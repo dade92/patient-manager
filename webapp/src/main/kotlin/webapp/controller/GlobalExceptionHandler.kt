@@ -41,10 +41,10 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(EstimatedAmountDifferentFromDetailsSumException::class)
     fun handleEstimatedAmountValidationException(ex: EstimatedAmountDifferentFromDetailsSumException): ResponseEntity<ErrorResponse> {
-        logger.error("Operation not found", ex)
+        logger.error("Validation error:", ex)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body(ErrorResponse("Operation not found: ${ex.message}"))
+            .body(ErrorResponse("Validation error: ${ex.message}"))
     }
 
     data class ErrorResponse(
