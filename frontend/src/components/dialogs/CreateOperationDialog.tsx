@@ -39,14 +39,6 @@ export interface OperationForm {
 }
 
 const ESTIMATED_COST_FIELD_NAME = "estimatedCost";
-const EMPTY_OPERATION_FORM: OperationForm = {
-    type: '' as OperationType,
-    patientId: '',
-    description: '',
-    executor: '',
-    estimatedCost: '',
-    toothDetails: []
-};
 
 export const CreateOperationDialog: React.FC<Props> = ({
     open,
@@ -54,6 +46,14 @@ export const CreateOperationDialog: React.FC<Props> = ({
     patientId,
     onOperationCreated
 }) => {
+    const EMPTY_OPERATION_FORM: OperationForm = {
+        type: '' as OperationType,
+        patientId: patientId,
+        description: '',
+        executor: '',
+        estimatedCost: '',
+        toothDetails: []
+    };
     const [formData, setFormData] = useState<OperationForm>(EMPTY_OPERATION_FORM);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -122,10 +122,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
     };
 
     const resetForm = () => {
-        setFormData({
-            ...EMPTY_OPERATION_FORM,
-            patientId: patientId
-        });
+        setFormData(EMPTY_OPERATION_FORM);
         setAutoUpdateCost(true);
     };
 
