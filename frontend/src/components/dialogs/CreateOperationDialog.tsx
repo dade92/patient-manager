@@ -29,7 +29,7 @@ interface Props {
     onOperationCreated: (operation: Operation) => void;
 }
 
-export interface OperationFormData {
+export interface OperationForm {
     type: OperationType;
     patientId: string;
     description: string;
@@ -39,7 +39,7 @@ export interface OperationFormData {
 }
 
 const ESTIMATED_COST_FIELD_NAME = "estimatedCost";
-const EMPTY_OPERATION_FORM: OperationFormData = {
+const EMPTY_OPERATION_FORM: OperationForm = {
     type: '' as OperationType,
     patientId: '',
     description: '',
@@ -54,7 +54,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
     patientId,
     onOperationCreated
 }) => {
-    const [formData, setFormData] = useState<OperationFormData>(EMPTY_OPERATION_FORM);
+    const [formData, setFormData] = useState<OperationForm>(EMPTY_OPERATION_FORM);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [autoUpdateCost, setAutoUpdateCost] = useState(true);
@@ -109,7 +109,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
         try {
             const newOperation = await RestClient.post<Operation>(
                 '/api/operation',
-                adaptOperationPayload(formData, formData.toothDetails)
+                adaptOperationPayload(formData)
             );
             onOperationCreated(newOperation);
             onClose();
