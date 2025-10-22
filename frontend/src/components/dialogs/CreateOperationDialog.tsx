@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {
     Alert,
     Box,
@@ -29,7 +29,7 @@ interface Props {
     onOperationCreated: (operation: Operation) => void;
 }
 
-interface OperationFormData {
+export interface OperationFormData {
     type: OperationType;
     patientId: string;
     description: string;
@@ -39,6 +39,14 @@ interface OperationFormData {
 }
 
 const ESTIMATED_COST_FIELD_NAME = "estimatedCost";
+const EMPTY_OPERATION_FORM: OperationFormData = {
+    type: '' as OperationType,
+    patientId: '',
+    description: '',
+    executor: '',
+    estimatedCost: '',
+    toothDetails: []
+};
 
 export const CreateOperationDialog: React.FC<Props> = ({
     open,
@@ -46,17 +54,17 @@ export const CreateOperationDialog: React.FC<Props> = ({
     patientId,
     onOperationCreated
 }) => {
-    const [formData, setFormData] = useState({
-        type: '' as OperationType,
-        patientId: patientId,
-        description: '',
-        executor: '',
-        estimatedCost: ''
-    });
-    const [toothDetailsForm, setToothDetailsForm] = useState<ToothDetailForm[]>([]);
+    const [formData, setFormData] = useState<OperationFormData>(EMPTY_OPERATION_FORM);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [autoUpdateCost, setAutoUpdateCost] = useState(true);
+
+    useEffect(() => {
+        setFormData(prev => ({
+            ...prev,
+            patientId: patientId
+        }));
+    }, [patientId]);
 
     const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
@@ -78,7 +86,10 @@ export const CreateOperationDialog: React.FC<Props> = ({
     };
 
     const handleToothSelectionChange = (details: ToothDetailForm[]) => {
-        setToothDetailsForm(details);
+        setFormData(prev => ({
+            ...prev,
+            toothDetails: details
+        }));
     };
 
     const handleTotalAmountChange = useCallback((totalAmount: number) => {
@@ -98,13 +109,11 @@ export const CreateOperationDialog: React.FC<Props> = ({
         try {
             const newOperation = await RestClient.post<Operation>(
                 '/api/operation',
-                adaptOperationPayload(formData, toothDetailsForm)
+                adaptOperationPayload(formData, formData.toothDetails)
             );
             onOperationCreated(newOperation);
             onClose();
-            setFormData({type: '' as OperationType, patientId: patientId, description: '', executor: '', estimatedCost: ''});
-            setToothDetailsForm([]);
-            setAutoUpdateCost(true);
+            resetForm();
         } catch (err: any) {
             setError('An error occurred while creating the operation');
         } finally {
@@ -112,11 +121,17 @@ export const CreateOperationDialog: React.FC<Props> = ({
         }
     };
 
-    const handleClose = () => {
-        setFormData({type: '' as OperationType, patientId: patientId, description: '', executor: '', estimatedCost: ''});
-        setToothDetailsForm([]);
-        setError(null);
+    const resetForm = () => {
+        setFormData({
+            ...EMPTY_OPERATION_FORM,
+            patientId: patientId
+        });
         setAutoUpdateCost(true);
+    };
+
+    const handleClose = () => {
+        resetForm();
+        setError(null);
         onClose();
     };
 

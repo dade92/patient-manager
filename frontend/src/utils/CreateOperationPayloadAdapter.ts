@@ -2,17 +2,14 @@ import {OperationType} from "../types/operation";
 import {ToothDetailForm} from "../components/forms/ToothSelectionForm";
 import {toMoney} from "./AmountToMoneyConverter";
 import {adaptToothDetails} from "./AdaptToothDetails";
+import {OperationFormData} from "../components/dialogs/CreateOperationDialog";
 
-export const adaptOperationPayload = (formData: {
-    type: OperationType,
-    patientId: string,
-    description: string,
-    executor: string,
-    estimatedCost: string
-}, toothDetailsForm: ToothDetailForm[]) => ({
-    ...formData,
+export const adaptOperationPayload = (formData: OperationFormData, toothDetailsForm: ToothDetailForm[]) => ({
+    type: formData.type as OperationType,
+    patientId: formData.patientId,
+    description: formData.description,
     estimatedCost: toMoney(formData.estimatedCost),
     patientOperationInfo: {
-        details: adaptToothDetails(toothDetailsForm)
+        details: adaptToothDetails(formData.toothDetails)
     }
 });
