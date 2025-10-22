@@ -59,13 +59,6 @@ export const CreateOperationDialog: React.FC<Props> = ({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [autoUpdateCost, setAutoUpdateCost] = useState(true);
 
-    useEffect(() => {
-        setFormData(prev => ({
-            ...prev,
-            patientId: patientId
-        }));
-    }, [patientId]);
-
     const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
         if (name === ESTIMATED_COST_FIELD_NAME) {
