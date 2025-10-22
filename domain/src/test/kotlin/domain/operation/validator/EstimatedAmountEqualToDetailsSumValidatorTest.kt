@@ -5,6 +5,8 @@ import domain.model.OperationBuilder.aCreateOperationRequest
 import domain.model.OperationBuilder.aDetail
 import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.PatientOperationInfo
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -45,16 +47,15 @@ class EstimatedAmountEqualToDetailsSumValidatorTest {
             validator.validate(request)
         }
 
-        assert(exception.message == "Estimated amount does not equal to sum of details estimated costs")
+        assertEquals("Estimated amount does not equal to sum of details estimated costs", exception.message)
     }
 
     @Test
     fun `validate with empty details list does not throw exception`() {
         val emptyDetails = emptyList<PatientOperationInfo.Detail>()
-        val nonZeroAmount = BigDecimal("10.00")
 
         val request = aCreateOperationRequest(
-            estimatedCost = aMoney(amount = nonZeroAmount),
+            estimatedCost = aMoney(amount = BigDecimal("10.00")),
             patientOperationInfo = aPatientOperationInfo(details = emptyDetails)
         )
 
