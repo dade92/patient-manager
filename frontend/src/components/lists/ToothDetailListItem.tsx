@@ -1,7 +1,7 @@
 import {ListItem, ListItemText} from "@mui/material";
 import {formatAmount} from "../../utils/currencyUtils";
 import React, {FC} from "react";
-import {ToothDetail} from "../../types/operation";
+import {ToothDetail} from "../../types/ToothDetail";
 
 interface Props {
     detail: ToothDetail;

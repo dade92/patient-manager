@@ -8,8 +8,8 @@ import {
     Typography
 } from '@mui/material';
 import { formatAmount } from '../../utils/currencyUtils';
-import {ToothDetail} from "../../types/operation";
 import {ToothDetailListItem} from "./ToothDetailListItem";
+import {ToothDetail} from "../../types/ToothDetail";
 
 interface Props {
     details: ToothDetail[];

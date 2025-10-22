@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, Button, Tooltip, Box, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { generateFdiTeethNumbers, generateFdiDeciduousTeethNumbers } from '../../utils/teethUtils';
-import {ToothType} from "../../types/operation";
+import {ToothType} from "../../types/ToothDetail";
 
 interface Props {
   selectedTooth: number | null;
