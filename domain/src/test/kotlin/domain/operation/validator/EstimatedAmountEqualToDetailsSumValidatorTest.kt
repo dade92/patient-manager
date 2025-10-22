@@ -41,7 +41,7 @@ class EstimatedAmountEqualToDetailsSumValidatorTest {
             patientOperationInfo = aPatientOperationInfo(details = details)
         )
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<EstimatedAmountDifferentFromDetailsSumException> {
             validator.validate(request)
         }
 

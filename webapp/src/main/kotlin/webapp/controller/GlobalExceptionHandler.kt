@@ -2,6 +2,7 @@ package webapp.controller
 
 import domain.exceptions.OperationNotFoundException
 import domain.exceptions.PatientNotFoundException
+import domain.operation.validator.EstimatedAmountDifferentFromDetailsSumException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -35,6 +36,14 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         logger.error("Operation not found", ex)
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
+            .body(ErrorResponse("Operation not found: ${ex.message}"))
+    }
+
+    @ExceptionHandler(EstimatedAmountDifferentFromDetailsSumException::class)
+    fun handleEstimatedAmountValidationException(ex: EstimatedAmountDifferentFromDetailsSumException): ResponseEntity<ErrorResponse> {
+        logger.error("Operation not found", ex)
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
             .body(ErrorResponse("Operation not found: ${ex.message}"))
     }
 

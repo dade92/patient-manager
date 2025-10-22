@@ -7,7 +7,9 @@ class EstimatedAmountEqualToDetailsSumValidator : OperationRequestValidator {
         if (request.patientOperationInfo.details.isNotEmpty() &&
             request.patientOperationInfo.details.sumOf { it.estimatedCost.amount } != request.estimatedCost.amount
         ) {
-            throw IllegalArgumentException("Estimated amount does not equal to sum of details estimated costs")
+            throw EstimatedAmountDifferentFromDetailsSumException("Estimated amount does not equal to sum of details estimated costs")
         }
     }
 }
+
+data class EstimatedAmountDifferentFromDetailsSumException(override val message: String) : RuntimeException(message)
