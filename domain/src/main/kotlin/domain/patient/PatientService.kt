@@ -34,10 +34,10 @@ class PatientService(
 data class CreatePatientRequest(
     val name: String,
     val email: String,
-    val phoneNumber: String? = null,
-    val address: String? = null,
-    val cityOfResidence: String? = null,
-    val nationality: String? = null,
+    val phoneNumber: String?,
+    val address: String?,
+    val cityOfResidence: String?,
+    val nationality: String?,
     val birthDate: LocalDate,
     val taxCode: String,
     val medicalHistory: String
