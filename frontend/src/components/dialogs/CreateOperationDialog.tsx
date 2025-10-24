@@ -162,6 +162,9 @@ export const CreateOperationDialog: React.FC<Props> = ({
                             rows={4}
                             value={formData.description}
                             onChange={handleTextChange}
+                            InputProps={{
+                                autoComplete: 'off',
+                            }}
                         />
 
                         <TextField
