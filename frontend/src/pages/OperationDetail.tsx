@@ -127,7 +127,7 @@ export const OperationDetail: React.FC = () => {
             <AddNoteDialog
                 open={dialogOpen}
                 onClose={() => setDialogOpen(false)}
-                operationId={operationId || ''}
+                operationId={operationId!}
                 onNoteAdded={(updatedOperation: Operation) => {
                     if (!operationId) return;
                     setOperation(updatedOperation);
@@ -148,6 +148,7 @@ export const OperationDetail: React.FC = () => {
                         addCachedInvoiceForPatient(operation.patientId, createdInvoice);
                     }
                 }}
+                estimatedCost={operation!.estimatedCost}
             />
 
             <Snackbar
