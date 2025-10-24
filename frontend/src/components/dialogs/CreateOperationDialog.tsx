@@ -162,9 +162,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
                             rows={4}
                             value={formData.description}
                             onChange={handleTextChange}
-                            InputProps={{
-                                autoComplete: 'off',
-                            }}
+                            autoComplete="off"
                         />
 
                         <TextField
@@ -174,6 +172,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
                             name="executor"
                             value={formData.executor}
                             onChange={handleTextChange}
+                            autoComplete="off"
                         />
 
                         <TextField
@@ -185,6 +184,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
                             value={formData.estimatedCost}
                             onChange={handleTextChange}
                             helperText={autoUpdateCost ? "Auto-updating based on tooth amounts" : "Manually set (auto-update disabled)"}
+                            autoComplete="off"
                         />
 
                         <Divider sx={{ my: 1 }} />
