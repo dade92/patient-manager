@@ -8,20 +8,17 @@ import domain.model.OperationBuilder.aDetail
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
-import domain.model.OperationType
 import domain.model.OperationType.SURGERY
 import domain.model.PatientBuilder.aPatient
 import domain.model.PatientBuilder.aPatientId
+import domain.operation.validator.OperationRequestValidator
 import domain.patient.PatientRepository
 import domain.storage.StorageService
 import domain.storage.UploadFileRequest
 import domain.utils.DateTimeProvider
-import io.mockk.Called
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
+import io.mockk.*
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.io.InputStream
@@ -34,13 +31,15 @@ class OperationServiceTest {
     private val operationIdGenerator = mockk<OperationIdGenerator>()
     private val dateTimeProvider = mockk<DateTimeProvider>()
     private val storageService = mockk<StorageService>()
+    private val operationRequestValidator = mockk<OperationRequestValidator>()
 
     private val operationService = OperationService(
         patientRepository = patientRepository,
         operationRepository = operationRepository,
         operationIdGenerator = operationIdGenerator,
         dateTimeProvider = dateTimeProvider,
-        storageService = storageService
+        storageService = storageService,
+        operationRequestValidator = operationRequestValidator
     )
 
     @Test
@@ -66,6 +65,7 @@ class OperationServiceTest {
             info = PATIENT_OPERATION_INFO
         )
 
+        every { operationRequestValidator.validate(request) } just Runs
         every { patientRepository.retrieve(PATIENT_ID) } returns PATIENT
         every { operationIdGenerator.get() } returns OPERATION_ID
         every { dateTimeProvider.now() } returns NOW
@@ -82,6 +82,7 @@ class OperationServiceTest {
             patientId = PATIENT_ID,
         )
 
+        every { operationRequestValidator.validate(request) } just Runs
         every { patientRepository.retrieve(PATIENT_ID) } returns null
 
         assertThrows(PatientNotFoundException::class.java) {
@@ -89,6 +90,22 @@ class OperationServiceTest {
         }
 
         verify(exactly = 1) { patientRepository.retrieve(PATIENT_ID) }
+        verify { operationRepository wasNot Called }
+    }
+
+    @Test
+    fun `create operations throws exception if validation fails`() {
+        val request = aCreateOperationRequest()
+
+        every { operationRequestValidator.validate(request) } throws RuntimeException()
+
+        assertThrows(RuntimeException::class.java) {
+            operationService.createOperation(request)
+        }
+
+        verify { patientRepository wasNot Called }
+        verify { operationIdGenerator wasNot Called }
+        verify { dateTimeProvider wasNot Called }
         verify { operationRepository wasNot Called }
     }
 

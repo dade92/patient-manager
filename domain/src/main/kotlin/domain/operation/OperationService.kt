@@ -3,6 +3,7 @@ package domain.operation
 import domain.exceptions.PatientNotFoundException
 import domain.generator.OperationIdGenerator
 import domain.model.*
+import domain.operation.validator.OperationRequestValidator
 import domain.patient.PatientRepository
 import domain.storage.StorageService
 import domain.storage.UploadFileRequest
@@ -14,10 +15,13 @@ class OperationService(
     private val operationRepository: OperationRepository,
     private val operationIdGenerator: OperationIdGenerator,
     private val dateTimeProvider: DateTimeProvider,
-    private val storageService: StorageService
+    private val storageService: StorageService,
+    private val operationRequestValidator: OperationRequestValidator
 ) {
 
     fun createOperation(request: CreateOperationRequest): PatientOperation {
+        operationRequestValidator.validate(request)
+
         patientRepository.retrieve(request.patientId)
             ?: throw PatientNotFoundException(request.patientId)
 

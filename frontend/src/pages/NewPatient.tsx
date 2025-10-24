@@ -15,13 +15,15 @@ interface NewPatientForm {
     medicalHistory: string;
 }
 
+const DEFAULT_NATIONALITY = 'ITA';
+
 const initialForm: NewPatientForm = {
     name: '',
     email: '',
     phoneNumber: '',
     address: '',
     cityOfResidence: '',
-    nationality: '',
+    nationality: DEFAULT_NATIONALITY,
     birthDate: '',
     taxCode: '',
     medicalHistory: ''
@@ -135,6 +137,7 @@ export const NewPatient: React.FC = () => {
                                     name="nationality"
                                     value={form.nationality}
                                     onChange={handleChange}
+                                    select={false}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>

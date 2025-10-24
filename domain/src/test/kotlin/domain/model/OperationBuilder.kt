@@ -65,9 +65,11 @@ object OperationBuilder {
 
     fun aDetail(
         toothNumber: Int = 1,
-        estimatedCost: Money = aMoney()
+        estimatedCost: Money = aMoney(),
+        toothType: ToothType = ToothType.PERMANENT
     ): PatientOperationInfo.Detail = PatientOperationInfo.Detail(
         toothNumber = toothNumber,
-        estimatedCost = estimatedCost
+        estimatedCost = estimatedCost,
+        toothType = toothType
     )
 }

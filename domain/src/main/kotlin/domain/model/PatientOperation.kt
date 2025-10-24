@@ -26,8 +26,14 @@ data class PatientOperationInfo(
 ) {
     data class Detail(
         val toothNumber: Int,
-        val estimatedCost: Money
+        val estimatedCost: Money,
+        val toothType: ToothType
     )
+}
+
+enum class ToothType {
+    PERMANENT,
+    DECIDUOUS,
 }
 
 enum class OperationType {

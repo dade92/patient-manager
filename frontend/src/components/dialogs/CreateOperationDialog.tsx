@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {
     Alert,
     Box,
@@ -7,6 +7,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Divider,
     FormControl,
     IconButton,
     InputLabel,
@@ -18,7 +19,8 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import {Operation, OperationType} from '../../types/operation';
 import {RestClient} from '../../utils/restClient';
-import { Money } from '../../types/Money';
+import {ToothDetailForm, ToothSelectionForm} from '../forms/ToothSelectionForm';
+import {adaptOperationPayload} from "../../utils/CreateOperationPayloadAdapter";
 
 interface Props {
     open: boolean;
@@ -27,24 +29,41 @@ interface Props {
     onOperationCreated: (operation: Operation) => void;
 }
 
+export interface OperationForm {
+    type: OperationType;
+    patientId: string;
+    description: string;
+    executor: string;
+    estimatedCost: string;
+    toothDetails: ToothDetailForm[];
+}
+
+const ESTIMATED_COST_FIELD_NAME = "estimatedCost";
+
 export const CreateOperationDialog: React.FC<Props> = ({
     open,
     onClose,
     patientId,
     onOperationCreated
 }) => {
-    const [formData, setFormData] = useState({
+    const EMPTY_OPERATION_FORM: OperationForm = {
         type: '' as OperationType,
         patientId: patientId,
         description: '',
         executor: '',
-        estimatedCost: ''
-    });
+        estimatedCost: '',
+        toothDetails: []
+    };
+    const [formData, setFormData] = useState<OperationForm>(EMPTY_OPERATION_FORM);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [autoUpdateCost, setAutoUpdateCost] = useState(true);
 
     const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
+        if (name === ESTIMATED_COST_FIELD_NAME) {
+            setAutoUpdateCost(false);
+        }
         setFormData(prev => ({
             ...prev,
             [name]: value
@@ -59,28 +78,34 @@ export const CreateOperationDialog: React.FC<Props> = ({
         }));
     };
 
+    const handleToothSelectionChange = (details: ToothDetailForm[]) => {
+        setFormData(prev => ({
+            ...prev,
+            toothDetails: details
+        }));
+    };
+
+    const handleTotalAmountChange = useCallback((totalAmount: number) => {
+        if (autoUpdateCost) {
+            setFormData(prev => ({
+                ...prev,
+                estimatedCost: totalAmount > 0 ? totalAmount.toFixed(2) : ''
+            }));
+        }
+    }, [autoUpdateCost]);
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setError(null);
         setIsSubmitting(true);
 
         try {
-            const operationPayload = {
-                ...formData,
-                estimatedCost: {
-                    amount: parseFloat(formData.estimatedCost) || 0,
-                    currency: 'EUR'
-                } as Money,
-                patientOperationInfo: { details: [] }
-            };
-
             const newOperation = await RestClient.post<Operation>(
                 '/api/operation',
-                operationPayload
+                adaptOperationPayload(formData)
             );
             onOperationCreated(newOperation);
             onClose();
-            setFormData({type: '' as OperationType, patientId: patientId, description: '', executor: '', estimatedCost: ''});
         } catch (err: any) {
             setError('An error occurred while creating the operation');
         } finally {
@@ -89,13 +114,14 @@ export const CreateOperationDialog: React.FC<Props> = ({
     };
 
     const handleClose = () => {
-        setFormData({type: '' as OperationType, patientId: patientId, description: '', executor: '', estimatedCost: ''});
+        setFormData(EMPTY_OPERATION_FORM);
+        setAutoUpdateCost(true);
         setError(null);
         onClose();
     };
 
     return (
-        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+        <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
             <DialogTitle sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 Create New Operation
                 <IconButton onClick={handleClose}>
@@ -136,6 +162,7 @@ export const CreateOperationDialog: React.FC<Props> = ({
                             rows={4}
                             value={formData.description}
                             onChange={handleTextChange}
+                            autoComplete="off"
                         />
 
                         <TextField
@@ -145,17 +172,26 @@ export const CreateOperationDialog: React.FC<Props> = ({
                             name="executor"
                             value={formData.executor}
                             onChange={handleTextChange}
+                            autoComplete="off"
                         />
 
                         <TextField
                             required
                             fullWidth
                             label="Estimated Cost"
-                            name="estimatedCost"
-                            type="number"
-                            inputProps={{ step: '0.01', min: '0' }}
+                            name={ESTIMATED_COST_FIELD_NAME}
+                            type="text"
                             value={formData.estimatedCost}
                             onChange={handleTextChange}
+                            helperText={autoUpdateCost ? "Auto-updating based on tooth amounts" : "Manually set (auto-update disabled)"}
+                            autoComplete="off"
+                        />
+
+                        <Divider sx={{ my: 1 }} />
+
+                        <ToothSelectionForm
+                            onSelectionChange={handleToothSelectionChange}
+                            onTotalAmountChange={handleTotalAmountChange}
                         />
                     </Box>
                 </DialogContent>

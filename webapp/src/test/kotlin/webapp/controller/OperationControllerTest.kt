@@ -9,10 +9,9 @@ import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
 import domain.model.OperationType
-import domain.model.Patient
 import domain.model.PatientBuilder.aPatientId
-import domain.operation.CreateOperationRequest
 import domain.operation.OperationService
+import domain.exceptions.validator.EstimatedAmountDifferentFromDetailsSumException
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
@@ -167,6 +166,17 @@ class OperationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(readFile("/fixtures/operation/create-operation.json"))
         ).andExpect(status().isInternalServerError)
+    }
+
+    @Test
+    fun `createOperation returns 400 when service throws an EstimatedAmountDifferentFromDetailsSumException`() {
+        every { operationService.createOperation(any()) } throws EstimatedAmountDifferentFromDetailsSumException("Database connection failed")
+
+        mockMvc.perform(
+            post("/api/operation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(readFile("/fixtures/operation/create-operation.json"))
+        ).andExpect(status().isBadRequest)
     }
 
     @Test

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     Alert,
     Box,
@@ -14,6 +14,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import {Invoice} from '../../types/invoice';
 import {RestClient} from '../../utils/restClient';
+import {Money} from "../../types/Money";
 
 interface Props {
     open: boolean;
@@ -21,6 +22,7 @@ interface Props {
     operationId: string;
     patientId: string;
     onInvoiceCreated: (invoice: Invoice) => void;
+    estimatedCost: Money;
 }
 
 export const CreateInvoiceDialog: React.FC<Props> = ({
@@ -28,11 +30,16 @@ export const CreateInvoiceDialog: React.FC<Props> = ({
      onClose,
      operationId,
      patientId,
-     onInvoiceCreated
+     onInvoiceCreated,
+     estimatedCost
  }) => {
     const [amount, setAmount] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        setAmount(estimatedCost.amount.toString());
+    }, [open, estimatedCost]);
 
     const handleSubmit = async () => {
         if (!amount || parseFloat(amount) <= 0) {

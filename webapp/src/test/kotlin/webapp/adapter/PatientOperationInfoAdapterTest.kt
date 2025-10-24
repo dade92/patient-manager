@@ -3,6 +3,7 @@ package webapp.adapter
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aDetail
 import domain.model.OperationBuilder.aPatientOperationInfo
+import domain.model.ToothType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -15,20 +16,22 @@ class PatientOperationInfoAdapterTest {
     fun `from domain to response`() {
         val patientOperationInfo = aPatientOperationInfo(
             details = listOf(
-                aDetail(toothNumber = 1, estimatedCost = aMoney(BigDecimal(AMOUNT_1), CURRENCY_1)),
-                aDetail(toothNumber = 2, estimatedCost = aMoney(BigDecimal(AMOUNT_2), CURRENCY_2))
+                aDetail(toothNumber = 1, estimatedCost = aMoney(BigDecimal(AMOUNT_1), CURRENCY_1), toothType = ToothType.PERMANENT),
+                aDetail(toothNumber = 2, estimatedCost = aMoney(BigDecimal(AMOUNT_2), CURRENCY_2), toothType = ToothType.DECIDUOUS)
             )
         )
 
-        val expected = PatientOperationInfoResponse(
+        val expected = PatientOperationInfoJson(
             details = listOf(
                 DetailResponse(
                     toothNumber = 1,
-                    estimatedCost = MoneyDto(BigDecimal(AMOUNT_1), CURRENCY_1)
+                    estimatedCost = MoneyDto(BigDecimal(AMOUNT_1), CURRENCY_1),
+                    toothType = "PERMANENT"
                 ),
                 DetailResponse(
                     toothNumber = 2,
-                    estimatedCost = MoneyDto(BigDecimal(AMOUNT_2), CURRENCY_2)
+                    estimatedCost = MoneyDto(BigDecimal(AMOUNT_2), CURRENCY_2),
+                    toothType = "DECIDUOUS"
                 )
             )
         )
@@ -40,23 +43,25 @@ class PatientOperationInfoAdapterTest {
 
     @Test
     fun `from response to domain`() {
-        val response = PatientOperationInfoResponse(
+        val response = PatientOperationInfoJson(
             details = listOf(
                 DetailResponse(
                     toothNumber = 1,
-                    estimatedCost = MoneyDto(BigDecimal(AMOUNT_1), CURRENCY_1)
+                    estimatedCost = MoneyDto(BigDecimal(AMOUNT_1), CURRENCY_1),
+                    toothType = "PERMANENT"
                 ),
                 DetailResponse(
                     toothNumber = 2,
-                    estimatedCost = MoneyDto(BigDecimal(AMOUNT_2), CURRENCY_2)
+                    estimatedCost = MoneyDto(BigDecimal(AMOUNT_2), CURRENCY_2),
+                    toothType = "DECIDUOUS"
                 )
             )
         )
 
         val expected = aPatientOperationInfo(
             details = listOf(
-                aDetail(toothNumber = 1, estimatedCost = aMoney(BigDecimal(AMOUNT_1), CURRENCY_1)),
-                aDetail(toothNumber = 2, estimatedCost = aMoney(BigDecimal(AMOUNT_2), CURRENCY_2))
+                aDetail(toothNumber = 1, estimatedCost = aMoney(BigDecimal(AMOUNT_1), CURRENCY_1), toothType = ToothType.PERMANENT),
+                aDetail(toothNumber = 2, estimatedCost = aMoney(BigDecimal(AMOUNT_2), CURRENCY_2), toothType = ToothType.DECIDUOUS)
             )
         )
 

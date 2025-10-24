@@ -17,9 +17,10 @@ Content-Type: application/json
       {
         "toothNumber": 2,
         "estimatedCost": {
-            "amount": 75.00,
+            "amount": 150,
             "currency": "USD"
-        }
+        },
+        "toothType": "PERMANENT"
       }
     ]
   }
