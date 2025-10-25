@@ -77,8 +77,9 @@ class OperationController(
                     contentLength = file.size,
                     contentType = file.contentType ?: "application/octet-stream",
                     inputStream = file.inputStream
-                )?.let { ResponseEntity.ok(patientOperationResponseAdapter.adapt(it)) } ?: ResponseEntity.notFound()
-                    .build()
+                )?.let {
+                    ResponseEntity.ok(patientOperationResponseAdapter.adapt(it))
+                } ?: ResponseEntity.notFound().build()
             } ?: ResponseEntity.badRequest().build()
 
     data class CreateOperationJsonRequest(

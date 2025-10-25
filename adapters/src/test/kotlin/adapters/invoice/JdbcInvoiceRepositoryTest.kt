@@ -116,7 +116,6 @@ class JdbcInvoiceRepositoryTest {
         val newInvoiceId = anInvoiceId("INV-003")
         val newInvoice = anInvoice(
             id = newInvoiceId,
-            operationId = OPERATION_ID,
         )
 
         val saved = repository.save(newInvoice, PATIENT_ID)

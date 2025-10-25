@@ -4,6 +4,8 @@ import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationBuilder.aDetail
 import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.ToothType
+import domain.model.ToothType.DECIDUOUS
+import domain.model.ToothType.PERMANENT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -16,8 +18,16 @@ class PatientOperationInfoAdapterTest {
     fun `from domain to response`() {
         val patientOperationInfo = aPatientOperationInfo(
             details = listOf(
-                aDetail(toothNumber = 1, estimatedCost = aMoney(BigDecimal(AMOUNT_1), CURRENCY_1), toothType = ToothType.PERMANENT),
-                aDetail(toothNumber = 2, estimatedCost = aMoney(BigDecimal(AMOUNT_2), CURRENCY_2), toothType = ToothType.DECIDUOUS)
+                aDetail(
+                    toothNumber = 1,
+                    estimatedCost = aMoney(BigDecimal(AMOUNT_1), CURRENCY_1),
+                    toothType = PERMANENT
+                ),
+                aDetail(
+                    toothNumber = 2,
+                    estimatedCost = aMoney(BigDecimal(AMOUNT_2), CURRENCY_2),
+                    toothType = DECIDUOUS
+                )
             )
         )
 
@@ -60,8 +70,16 @@ class PatientOperationInfoAdapterTest {
 
         val expected = aPatientOperationInfo(
             details = listOf(
-                aDetail(toothNumber = 1, estimatedCost = aMoney(BigDecimal(AMOUNT_1), CURRENCY_1), toothType = ToothType.PERMANENT),
-                aDetail(toothNumber = 2, estimatedCost = aMoney(BigDecimal(AMOUNT_2), CURRENCY_2), toothType = ToothType.DECIDUOUS)
+                aDetail(
+                    toothNumber = 1,
+                    estimatedCost = aMoney(BigDecimal(AMOUNT_1), CURRENCY_1),
+                    toothType = PERMANENT
+                ),
+                aDetail(
+                    toothNumber = 2,
+                    estimatedCost = aMoney(BigDecimal(AMOUNT_2), CURRENCY_2),
+                    toothType = DECIDUOUS
+                )
             )
         )
 
