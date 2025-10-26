@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Button, Tooltip, Box, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { Button, Tooltip, Box, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { generateFdiTeethNumbers, generateFdiDeciduousTeethNumbers } from '../../utils/teethUtils';
 import {ToothType} from "../../types/ToothDetail";
 
@@ -54,33 +54,36 @@ export const TeethGrid: React.FC<Props> = ({
                 </ToggleButtonGroup>
             </Box>
 
-            <Grid
-                container
-                spacing={1}
+            <Box
                 sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
                     maxHeight: '120px',
                     overflowY: 'auto'
                 }}
             >
-                {teeth.map((tooth) => (
-                    <Grid item key={tooth}>
-                        <Tooltip title={`Tooth ${tooth}`}>
-                            <Button
-                                variant={selectedTooth === tooth ? "contained" : "outlined"}
-                                size="small"
-                                onClick={() => onToothSelect(tooth, teethType)}
-                                sx={{
-                                    minWidth: '36px',
-                                    height: '36px',
-                                    p: 0
-                                }}
-                            >
-                                {tooth}
-                            </Button>
-                        </Tooltip>
-                    </Grid>
+                {teeth.map((row, rowIndex) => (
+                    <Box key={rowIndex} sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+                        {row.map((tooth) => (
+                            <Tooltip key={tooth} title={`Tooth ${tooth}`}>
+                                <Button
+                                    variant={selectedTooth === tooth ? "contained" : "outlined"}
+                                    size="small"
+                                    onClick={() => onToothSelect(tooth, teethType)}
+                                    sx={{
+                                        minWidth: '36px',
+                                        height: '36px',
+                                        p: 0
+                                    }}
+                                >
+                                    {tooth}
+                                </Button>
+                            </Tooltip>
+                        ))}
+                    </Box>
                 ))}
-            </Grid>
+            </Box>
         </Box>
     );
 };
