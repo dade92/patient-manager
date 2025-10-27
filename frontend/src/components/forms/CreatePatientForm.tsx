@@ -56,7 +56,7 @@ export const CreatePatientForm: React.FC<Props> = ({
         setIsSubmitting(true);
 
         try {
-            const patient = await RestClient.post<any>('/api/patient', form);
+            const patient = await RestClient.post<Patient>('/api/patient', form);
             onPatientCreated(patient);
         } catch (err: any) {
             setError('Failed to create patient. Please try again.');
