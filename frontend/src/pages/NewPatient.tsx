@@ -2,11 +2,12 @@ import React from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Box, Card, CardContent, Typography} from '@mui/material';
 import {CreatePatientForm} from '../components/forms/CreatePatientForm';
+import {Patient} from "../types/patient";
 
 export const NewPatient: React.FC = () => {
     const navigate = useNavigate();
 
-    const handlePatientCreated = (patient: any) => {
+    const handlePatientCreated = (patient: Patient) => {
         navigate(`/patient/${patient.id}`);
     };
 

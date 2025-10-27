@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Alert, Box, Button, Grid, TextField} from '@mui/material';
 import {RestClient} from '../../utils/restClient';
+import {Patient} from "../../types/patient";
 
 export interface NewPatientForm {
     name: string;
@@ -15,7 +16,7 @@ export interface NewPatientForm {
 }
 
 interface Props {
-    onPatientCreated: (patient: any) => void;
+    onPatientCreated: (patient: Patient) => void;
     onCancel: () => void;
 }
 
