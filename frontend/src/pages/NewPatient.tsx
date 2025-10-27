@@ -1,57 +1,18 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Alert, Box, Button, Card, CardContent, Grid, TextField, Typography} from '@mui/material';
-import {RestClient} from '../utils/restClient';
-
-interface NewPatientForm {
-    name: string;
-    email: string;
-    phoneNumber: string;
-    address: string;
-    cityOfResidence: string;
-    nationality: string;
-    birthDate: string;
-    taxCode: string;
-    medicalHistory: string;
-}
-
-const DEFAULT_NATIONALITY = 'ITA';
-
-const initialForm: NewPatientForm = {
-    name: '',
-    email: '',
-    phoneNumber: '',
-    address: '',
-    cityOfResidence: '',
-    nationality: DEFAULT_NATIONALITY,
-    birthDate: '',
-    taxCode: '',
-    medicalHistory: ''
-};
+import {Box, Card, CardContent, Typography} from '@mui/material';
+import {CreatePatientForm} from '../components/forms/CreatePatientForm';
+import {Patient} from "../types/patient";
 
 export const NewPatient: React.FC = () => {
-    const [form, setForm] = useState<NewPatientForm>(initialForm);
-    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
-        setForm(prev => ({
-            ...prev,
-            [name]: value
-        }));
+    const handlePatientCreated = (patient: Patient) => {
+        navigate(`/patient/${patient.id}`);
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
-
-        try {
-            const patient = await RestClient.post<any>('/api/patient', form);
-            navigate(`/patient/${patient.id}`);
-        } catch (err: any) {
-            setError('Failed to create patient. Please try again.');
-        }
+    const handleCancel = () => {
+        navigate(-1);
     };
 
     return (
@@ -61,128 +22,10 @@ export const NewPatient: React.FC = () => {
                     <Typography variant="h5" gutterBottom>
                         New Patient
                     </Typography>
-                    {error && (
-                        <Alert severity="error" sx={{mb: 2}}>
-                            {error}
-                        </Alert>
-                    )}
-                    <form onSubmit={handleSubmit}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    label="Name"
-                                    name="name"
-                                    value={form.name}
-                                    onChange={handleChange}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    label="Email"
-                                    name="email"
-                                    type="email"
-                                    value={form.email}
-                                    onChange={handleChange}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    label="taxCode"
-                                    name="taxCode"
-                                    value={form.taxCode}
-                                    onChange={handleChange}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    label="Phone Number"
-                                    name="phoneNumber"
-                                    value={form.phoneNumber}
-                                    onChange={handleChange}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    label="Address"
-                                    name="address"
-                                    value={form.address}
-                                    onChange={handleChange}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    label="City"
-                                    name="cityOfResidence"
-                                    value={form.cityOfResidence}
-                                    onChange={handleChange}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    label="Nationality"
-                                    name="nationality"
-                                    value={form.nationality}
-                                    onChange={handleChange}
-                                    select={false}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    label="Birth Date"
-                                    name="birthDate"
-                                    type="date"
-                                    value={form.birthDate}
-                                    onChange={handleChange}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    label="Medical History"
-                                    name="medicalHistory"
-                                    value={form.medicalHistory}
-                                    onChange={handleChange}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Box sx={{display: 'flex', gap: 2, justifyContent: 'flex-end'}}>
-                                    <Button
-                                        variant="outlined"
-                                        onClick={() => navigate(-1)}
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        color="primary"
-                                    >
-                                        Create Patient
-                                    </Button>
-                                </Box>
-                            </Grid>
-                        </Grid>
-                    </form>
+                    <CreatePatientForm
+                        onPatientCreated={handlePatientCreated}
+                        onCancel={handleCancel}
+                    />
                 </CardContent>
             </Card>
         </Box>

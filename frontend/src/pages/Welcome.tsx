@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Link, Route, Routes} from 'react-router-dom';
 import {AppBar, Box, Container, Toolbar, Typography} from '@mui/material';
-import {PatientSearch} from '../components/PatientSearch';
+import {PatientSearch} from './PatientSearch';
 import {PatientDetail} from './PatientDetail';
 import {NewPatient} from './NewPatient';
 import {OperationDetail} from './OperationDetail';

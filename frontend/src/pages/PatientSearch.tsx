@@ -3,7 +3,7 @@ import {Box, List, Paper, TextField} from '@mui/material';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import {useNavigate} from 'react-router-dom';
 import {Patient} from '../types/patient';
-import {PatientListItem} from './lists/PatientListItem';
+import {PatientListItem} from '../components/lists/PatientListItem';
 import { RestClient } from '../utils/restClient';
 
 const SEARCH_TIMEOUT = 400;
