@@ -9,7 +9,7 @@ class EstimatedAmountEqualToDetailsSumValidator : OperationRequestValidator {
         if (request.patientOperationInfo.details.isNotEmpty() &&
             request.patientOperationInfo.details.sumOf { it.estimatedCost.amount.round() } != request.estimatedCost.amount.round()
         ) {
-            throw EstimatedAmountDifferentFromDetailsSumException("Estimated amount does not equal to sum of details estimated costs")
+            throw EstimatedAmountDifferentFromDetailsSumException("Estimated amount is not equal to sum of details estimated costs")
         }
     }
 }

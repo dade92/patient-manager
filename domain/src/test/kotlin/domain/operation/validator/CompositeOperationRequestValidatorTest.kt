@@ -22,6 +22,8 @@ class CompositeOperationRequestValidatorTest {
         every { validator2.validate(any()) } returns Unit
 
         compositeOperationRequestValidator.validate(request)
+        verify { validator1.validate(request) }
+        verify { validator2.validate(request) }
     }
 
     @Test
