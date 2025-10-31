@@ -12,7 +12,7 @@ import {PatientDetailCard} from '../components/cards/PatientDetailCard';
 import {useCache} from '../context/CacheContext';
 import {BackButton} from '../components/atoms/BackButton';
 import {Operation} from "../types/operation";
-import { RestClient } from '../utils/restClient';
+import {RestClient} from '../utils/restClient';
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();
@@ -105,7 +105,7 @@ export const PatientDetail: React.FC = () => {
         <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
                 <BackButton onClick={handleBack}/>
-                <Box sx={{ display: 'flex', gap: 2 }}>
+                <Box sx={{display: 'flex', gap: 2}}>
                     <Button
                         variant="outlined"
                         color="error"
@@ -134,19 +134,19 @@ export const PatientDetail: React.FC = () => {
             ) : patient ? (
                 <>
                     {deleteError && (
-                        <Alert severity="error" sx={{ mb: 2 }}>
+                        <Alert severity="error" sx={{mb: 2}}>
                             {deleteError}
                         </Alert>
                     )}
 
-                    <PatientDetailCard patient={patient} />
+                    <PatientDetailCard patient={patient}/>
 
                     <PatientOperations
                         patientId={patientId!}
                         refreshTrigger={refreshKey}
                     />
 
-                    <Box sx={{ mt: 3 }}>
+                    <Box sx={{mt: 3}}>
                         <PatientInvoices
                             patientId={patientId!}
                             refreshTrigger={refreshKey}
@@ -170,8 +170,6 @@ export const PatientDetail: React.FC = () => {
                         onConfirm={handleDeleteConfirm}
                         title="Delete Patient Permanently"
                         message={`Are you sure you want to permanently delete patient "${patient.name}" along with all their operations and invoices? This action cannot be undone.`}
-                        confirmButtonText="Delete Permanently"
-                        cancelButtonText="Cancel"
                         isLoading={isDeleting}
                     />
                 </>

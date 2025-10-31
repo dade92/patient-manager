@@ -16,8 +16,6 @@ interface Props {
     onConfirm: () => void;
     title: string;
     message: string;
-    confirmButtonText?: string;
-    cancelButtonText?: string;
     isLoading?: boolean;
 }
 
@@ -27,8 +25,6 @@ export const ConfirmationDialog: React.FC<Props> = ({
     onConfirm,
     title,
     message,
-    confirmButtonText = 'Confirm',
-    cancelButtonText = 'Cancel',
     isLoading = false
 }) => {
     return (
@@ -59,7 +55,7 @@ export const ConfirmationDialog: React.FC<Props> = ({
                     onClick={onClose}
                     disabled={isLoading}
                 >
-                    {cancelButtonText}
+                    Cancel
                 </Button>
                 <Button
                     onClick={onConfirm}
@@ -67,7 +63,7 @@ export const ConfirmationDialog: React.FC<Props> = ({
                     color="error"
                     disabled={isLoading}
                 >
-                    {confirmButtonText}
+                    Confirm
                 </Button>
             </DialogActions>
         </Dialog>
