@@ -1,6 +1,8 @@
 package webapp.configuration
 
 import domain.generator.PatientIdGenerator
+import domain.invoice.InvoiceRepository
+import domain.operation.OperationRepository
 import domain.patient.PatientRepository
 import domain.patient.PatientService
 import org.springframework.context.annotation.Bean
@@ -15,9 +17,13 @@ class PatientConfiguration {
     @Bean
     fun patientService(
         patientRepository: PatientRepository,
-        patientIdGenerator: PatientIdGenerator
+        patientIdGenerator: PatientIdGenerator,
+        operationRepository: OperationRepository,
+        invoiceRepository: InvoiceRepository
     ): PatientService = PatientService(
         patientRepository,
-        patientIdGenerator
+        patientIdGenerator,
+        operationRepository,
+        invoiceRepository
     )
 }

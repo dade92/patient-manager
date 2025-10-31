@@ -1,13 +1,17 @@
 package domain.patient
 
 import domain.generator.PatientIdGenerator
+import domain.invoice.InvoiceRepository
 import domain.model.Patient
 import domain.model.PatientId
+import domain.operation.OperationRepository
 import java.time.LocalDate
 
 class PatientService(
     private val patientRepository: PatientRepository,
-    private val patientIdGenerator: PatientIdGenerator
+    private val patientIdGenerator: PatientIdGenerator,
+    private val operationRepository: OperationRepository,
+    private val invoiceRepository: InvoiceRepository
 ) {
 
     fun retrievePatient(patientId: PatientId): Patient? = patientRepository.retrieve(patientId)
@@ -30,7 +34,19 @@ class PatientService(
 
     fun searchPatientsByName(name: String): List<Patient> = patientRepository.searchByName(name)
 
-    fun delete(patientId: PatientId) = patientRepository.delete(patientId)
+    fun delete(patientId: PatientId) {
+        val invoices = invoiceRepository.findByPatientId(patientId)
+        invoices.forEach { invoice ->
+            invoiceRepository.delete(invoice.id)
+        }
+
+        val operations = operationRepository.findByPatientId(patientId)
+        operations.forEach { operation ->
+            operationRepository.delete(operation.id)
+        }
+
+        patientRepository.delete(patientId)
+    }
 }
 
 data class CreatePatientRequest(
