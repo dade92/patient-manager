@@ -33,6 +33,10 @@ export const PatientDetail: React.FC = () => {
         getCachedOperationsForPatient
     } = useCache();
 
+    useEffect(() => {
+        fetchPatient();
+    }, [patientId, getCachedPatient, setCachedPatient]);
+
     const fetchPatient = async () => {
         const cachedPatient = getCachedPatient(patientId!);
         if (cachedPatient) {
@@ -59,15 +63,6 @@ export const PatientDetail: React.FC = () => {
         }
     };
 
-    const handleBack = () => {
-        navigate(-1);
-    };
-
-    const handleDeleteClick = () => {
-        setShowDeleteConfirmation(true);
-        setDeleteError(null);
-    };
-
     const handleDeleteConfirm = async () => {
         setIsDeleting(true);
         try {
@@ -81,14 +76,19 @@ export const PatientDetail: React.FC = () => {
         }
     };
 
+    const handleBack = () => {
+        navigate(-1);
+    };
+
+    const handleDeleteClick = () => {
+        setShowDeleteConfirmation(true);
+        setDeleteError(null);
+    };
+
     const handleDeleteCancel = () => {
         setShowDeleteConfirmation(false);
         setDeleteError(null);
     };
-
-    useEffect(() => {
-        fetchPatient();
-    }, [patientId, getCachedPatient, setCachedPatient]);
 
     if (loading) {
         return (
