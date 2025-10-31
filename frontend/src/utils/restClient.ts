@@ -16,6 +16,14 @@ export class RestClient {
                 body: undefined,
             };
         }
+
+        const contentLength = response.headers.get('content-length');
+        const contentType = response.headers.get('content-type');
+
+        if (contentLength === '0' || (!contentType || !contentType.includes('application/json'))) {
+            return {} as T;
+        }
+
         return response.json();
     }
 
@@ -38,6 +46,14 @@ export class RestClient {
                 body: undefined,
             };
         }
+
+        const contentLength = response.headers.get('content-length');
+        const contentType = response.headers.get('content-type');
+
+        if (contentLength === '0' || (!contentType || !contentType.includes('application/json'))) {
+            return {} as T;
+        }
+
         return response.json();
     }
 }
