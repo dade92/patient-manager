@@ -67,7 +67,14 @@ class JdbcPatientRepository(
     }
 
     override fun delete(patientId: PatientId) {
-        TODO("Not yet implemented")
+        val sql = "DELETE FROM `$TABLE_PATIENT` WHERE $COL_PATIENT_ID = ?"
+
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(sql).use { statement ->
+                statement.setString(1, patientId.value)
+                statement.executeUpdate()
+            }
+        }
     }
 
     private fun insertPatient(patient: Patient): Patient {
