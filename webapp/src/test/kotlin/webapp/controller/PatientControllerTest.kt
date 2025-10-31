@@ -166,7 +166,7 @@ class PatientControllerTest {
         every { patientService.delete(PATIENT_ID) } returns Unit
 
         mockMvc.perform(post("/api/patient/delete/PAT-123"))
-            .andExpect(status().isOk)
+            .andExpect(status().isNoContent)
 
         verify { patientService.delete(PATIENT_ID) }
     }
