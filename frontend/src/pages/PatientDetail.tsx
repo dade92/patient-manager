@@ -109,10 +109,17 @@ export const PatientDetail: React.FC = () => {
                     <Button
                         variant="outlined"
                         color="error"
-                        startIcon={<DeleteIcon/>}
                         onClick={handleDeleteClick}
+                        sx={{
+                            minWidth: 48,
+                            minHeight: 48,
+                            padding: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
                     >
-                        Delete Patient
+                        <DeleteIcon />
                     </Button>
                     <Button
                         variant="contained"
