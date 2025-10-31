@@ -66,6 +66,10 @@ class JdbcPatientRepository(
         return patients
     }
 
+    override fun delete(patientId: PatientId) {
+        TODO("Not yet implemented")
+    }
+
     private fun insertPatient(patient: Patient): Patient {
         val sql = """
             INSERT INTO `$TABLE_PATIENT` (

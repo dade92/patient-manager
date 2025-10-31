@@ -29,6 +29,8 @@ class PatientService(
         )
 
     fun searchPatientsByName(name: String): List<Patient> = patientRepository.searchByName(name)
+
+    fun delete(patientId: PatientId) = patientRepository.delete(patientId)
 }
 
 data class CreatePatientRequest(

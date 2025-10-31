@@ -6,6 +6,7 @@ import domain.model.PatientBuilder.aPatientId
 import domain.patient.PatientService
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
@@ -158,6 +159,16 @@ class PatientControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(readFile("/fixtures/patient/create-patient.json"))
         ).andExpect(status().isInternalServerError)
+    }
+
+    @Test
+    fun `deletePatient returns 200 and delegates to service`() {
+        every { patientService.delete(PATIENT_ID) } returns Unit
+
+        mockMvc.perform(post("/api/patient/delete/PAT-123"))
+            .andExpect(status().isOk)
+
+        verify { patientService.delete(PATIENT_ID) }
     }
 
     companion object {

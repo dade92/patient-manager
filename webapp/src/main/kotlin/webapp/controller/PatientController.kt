@@ -44,6 +44,12 @@ class PatientController(
             ResponseEntity.status(HttpStatus.CREATED).body(it)
         }
 
+    @PostMapping("/delete/{patientId}")
+    fun deletePatient(@PathVariable patientId: String): ResponseEntity<Void> {
+        patientService.delete(PatientId(patientId))
+        return ResponseEntity.ok().build()
+    }
+
     data class CreatePatientRequest(
         val name: String,
         val email: String,
