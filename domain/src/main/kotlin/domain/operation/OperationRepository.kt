@@ -10,4 +10,5 @@ interface OperationRepository {
     fun findByPatientId(patientId: PatientId): List<PatientOperation>
     fun addNote(operationId: OperationId, note: String): PatientOperation?
     fun addAsset(operationId: OperationId, assetName: String): PatientOperation?
+    fun delete(operationId: OperationId)
 }

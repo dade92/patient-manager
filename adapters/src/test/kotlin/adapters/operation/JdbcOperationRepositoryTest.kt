@@ -172,6 +172,17 @@ class JdbcOperationRepositoryTest {
         assertNull(repository.addAsset(nonExistentOperationId, asset))
     }
 
+    @Test
+    fun `delete removes operation when exists`() {
+        repository.addAsset(OPERATION_ID, "test-asset.pdf")
+        repository.addNote(OPERATION_ID, "test note")
+
+        repository.delete(OPERATION_ID)
+
+        val retrieved = repository.retrieve(OPERATION_ID)
+        assertNull(retrieved)
+    }
+
     companion object {
         private const val DB_URL = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL"
         private const val SCHEMA_SQL = "/sql/schema.sql"

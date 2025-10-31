@@ -132,6 +132,31 @@ class JdbcOperationRepository(
         return retrieve(operationId)
     }
 
+    override fun delete(operationId: OperationId) {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(
+                """DELETE FROM OPERATION_NOTE WHERE operation_id = ?"""
+            ).use { statement ->
+                statement.setString(1, operationId.value)
+                statement.executeUpdate()
+            }
+
+            connection.prepareStatement(
+                """DELETE FROM OPERATION_ASSET WHERE operation_id = ?"""
+            ).use { statement ->
+                statement.setString(1, operationId.value)
+                statement.executeUpdate()
+            }
+
+            connection.prepareStatement(
+                """DELETE FROM OPERATION WHERE operation_id = ?"""
+            ).use { statement ->
+                statement.setString(1, operationId.value)
+                statement.executeUpdate()
+            }
+        }
+    }
+
     private fun insertOperation(operation: PatientOperation): PatientOperation {
         dataSource.connection.use { connection ->
             connection.prepareStatement(
