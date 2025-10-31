@@ -35,13 +35,10 @@ class PatientService(
     fun searchPatientsByName(name: String): List<Patient> = patientRepository.searchByName(name)
 
     fun delete(patientId: PatientId) {
-        val invoices = invoiceRepository.findByPatientId(patientId)
-        invoices.forEach { invoice ->
+        invoiceRepository.findByPatientId(patientId).forEach { invoice ->
             invoiceRepository.delete(invoice.id)
         }
-
-        val operations = operationRepository.findByPatientId(patientId)
-        operations.forEach { operation ->
+        operationRepository.findByPatientId(patientId).forEach { operation ->
             operationRepository.delete(operation.id)
         }
 

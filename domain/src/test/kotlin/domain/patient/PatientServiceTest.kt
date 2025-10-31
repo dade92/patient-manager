@@ -117,7 +117,6 @@ class PatientServiceTest {
         private val OPERATION_ID_2 = anOperationId("OP-002")
         private val INVOICE_ID_1 = anInvoiceId("INV-001")
         private val INVOICE_ID_2 = anInvoiceId("INV-002")
-        private val INVOICE_ID_3 = anInvoiceId("INV-003")
         private const val NAME = "Jane Roe"
         private const val EMAIL = "jane.roe@example.com"
         private const val PHONE = "9876543210"
