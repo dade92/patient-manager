@@ -2,8 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Alert, Box, Button, CircularProgress} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {Patient} from '../types/patient';
 import {CreateOperationDialog} from '../components/dialogs/CreateOperationDialog';
+import {ConfirmationDialog} from '../components/dialogs/ConfirmationDialog';
 import {PatientOperations} from '../components/lists/PatientOperations';
 import {PatientInvoices} from '../components/lists/PatientInvoices';
 import {PatientDetailCard} from '../components/cards/PatientDetailCard';
@@ -20,6 +22,9 @@ export const PatientDetail: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [isCreateOperationOpen, setIsCreateOperationOpen] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
 
     const {
         getCachedPatient,
@@ -58,6 +63,29 @@ export const PatientDetail: React.FC = () => {
         navigate(-1);
     };
 
+    const handleDeleteClick = () => {
+        setShowDeleteConfirmation(true);
+        setDeleteError(null);
+    };
+
+    const handleDeleteConfirm = async () => {
+        setIsDeleting(true);
+        try {
+            await RestClient.post(`/api/patient/delete/${patient!.id}`, {});
+            navigate('/');
+        } catch (error: any) {
+            setDeleteError(error.message || 'Failed to delete patient');
+        } finally {
+            setIsDeleting(false);
+            setShowDeleteConfirmation(false);
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setShowDeleteConfirmation(false);
+        setDeleteError(null);
+    };
+
     useEffect(() => {
         fetchPatient();
     }, [patientId, getCachedPatient, setCachedPatient]);
@@ -77,16 +105,26 @@ export const PatientDetail: React.FC = () => {
         <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
                 <BackButton onClick={handleBack}/>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<AddIcon/>}
-                    onClick={() => {
-                        setIsCreateOperationOpen(true);
-                    }}
-                >
-                    New Operation
-                </Button>
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        startIcon={<DeleteIcon/>}
+                        onClick={handleDeleteClick}
+                    >
+                        Delete Patient
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<AddIcon/>}
+                        onClick={() => {
+                            setIsCreateOperationOpen(true);
+                        }}
+                    >
+                        New Operation
+                    </Button>
+                </Box>
             </Box>
 
             {error ? (
@@ -95,6 +133,12 @@ export const PatientDetail: React.FC = () => {
                 </Alert>
             ) : patient ? (
                 <>
+                    {deleteError && (
+                        <Alert severity="error" sx={{ mb: 2 }}>
+                            {deleteError}
+                        </Alert>
+                    )}
+
                     <PatientDetailCard patient={patient} />
 
                     <PatientOperations
@@ -118,6 +162,17 @@ export const PatientDetail: React.FC = () => {
                             setCachedOperationsForPatient(patientId!, [newOperation, ...cachedOperations]);
                             setRefreshKey(prev => prev + 1);
                         }}
+                    />
+
+                    <ConfirmationDialog
+                        open={showDeleteConfirmation}
+                        onClose={handleDeleteCancel}
+                        onConfirm={handleDeleteConfirm}
+                        title="Delete Patient Permanently"
+                        message={`Are you sure you want to permanently delete patient "${patient.name}" along with all their operations and invoices? This action cannot be undone.`}
+                        confirmButtonText="Delete Permanently"
+                        cancelButtonText="Cancel"
+                        isLoading={isDeleting}
                     />
                 </>
             ) : null}

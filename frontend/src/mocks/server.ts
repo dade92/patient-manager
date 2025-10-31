@@ -22,7 +22,7 @@ export function makeServer({ environment = 'development' } = {}) {
     },
 
     routes() {
-      this.namespace = 'api';
+      this.namespace = '/api';
 
       this.get('/patient/:id', (schema, request) => {
         const patient = schema.findBy('patient', { id: request.params.id });
@@ -52,6 +52,32 @@ export function makeServer({ environment = 'development' } = {}) {
         });
 
         return patient.attrs;
+      });
+
+      // Delete patient and all associated operations and invoices
+      this.post('/patient/delete/:id', (schema, request) => {
+        const patientId = request.params.id;
+
+        // Check if patient exists
+        const patient = schema.findBy('patient', { id: patientId });
+        if (!patient) {
+          return new Response(404, {}, { message: 'Patient not found' });
+        }
+
+        // Delete all operations associated with this patient
+        const operations = (schema.all('operation').models as any[])
+          .filter(operation => operation.attrs.patientId === patientId);
+
+        operations.forEach(operation => {
+          operation.destroy();
+        });
+
+        // Delete the patient
+        patient.destroy();
+
+        return new Response(200, {}, {
+          message: `Patient ${patientId} and all associated data deleted successfully`
+        });
       });
 
       // Get operations by patient ID
