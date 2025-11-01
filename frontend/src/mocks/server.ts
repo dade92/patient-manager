@@ -54,17 +54,14 @@ export function makeServer({ environment = 'development' } = {}) {
         return patient.attrs;
       });
 
-      // Delete patient and all associated operations and invoices
       this.post('/patient/delete/:id', (schema, request) => {
         const patientId = request.params.id;
 
-        // Check if patient exists
         const patient = schema.findBy('patient', { id: patientId });
         if (!patient) {
           return new Response(404, {}, { message: 'Patient not found' });
         }
 
-        // Delete all operations associated with this patient
         const operations = (schema.all('operation').models as any[])
           .filter(operation => operation.attrs.patientId === patientId);
 
@@ -72,7 +69,6 @@ export function makeServer({ environment = 'development' } = {}) {
           operation.destroy();
         });
 
-        // Delete the patient
         patient.destroy();
 
         return new Response(200, {}, {
@@ -171,21 +167,17 @@ export function makeServer({ environment = 'development' } = {}) {
         return new Response(200, {}, operation.attrs);
       });
 
-      // Create invoice
       this.post('/invoice', (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
 
-        // Validate required fields
         if (!attrs.operationId || !attrs.patientId || !attrs.amount) {
           return new Response(400, {}, { message: 'Missing required fields' });
         }
 
-        // Validate amount
         if (!attrs.amount.amount || attrs.amount.amount <= 0) {
           return new Response(400, {}, { message: 'Invalid amount' });
         }
 
-        // Validate that operation exists
         const operation = (schema.all('operation').models as any[])
           .find(op => op.attrs.id === attrs.operationId);
 
@@ -193,13 +185,11 @@ export function makeServer({ environment = 'development' } = {}) {
           return new Response(404, {}, { message: 'Operation not found' });
         }
 
-        // Validate that patient exists
         const patient = schema.findBy('patient', { id: attrs.patientId });
         if (!patient) {
           return new Response(404, {}, { message: 'Patient not found' });
         }
 
-        // Create mock invoice
         const invoice = {
           id: `INV-${Math.floor(Math.random() * 10000)}-${new Date().getFullYear()}`,
           operationId: attrs.operationId,
@@ -215,22 +205,18 @@ export function makeServer({ environment = 'development' } = {}) {
         return new Response(201, {}, invoice);
       });
 
-      // Get invoices by patient ID
       this.get('/invoice/patient/:patientId', (schema, request) => {
         const patientId = request.params.patientId;
 
-        // Validate that patient exists
         const patient = schema.findBy('patient', { id: patientId });
         if (!patient) {
           return new Response(404, {}, { message: 'Patient not found' });
         }
 
-        // Get all operations for this patient first
         const patientOperations = (schema.all('operation').models as any[])
           .filter(operation => operation.attrs.patientId === patientId)
           .map(op => op.attrs.id);
 
-        // Create mock invoices for this patient
         const mockInvoices = [
           {
             id: `INV-001-2025`,
@@ -270,24 +256,19 @@ export function makeServer({ environment = 'development' } = {}) {
         return { invoices: mockInvoices };
       });
 
-      // Update invoice status
       this.post('/invoice/:invoiceId/status', (schema, request) => {
         const invoiceId = request.params.invoiceId;
         const attrs = JSON.parse(request.requestBody);
 
-        // Validate required fields
         if (!attrs.status) {
           return new Response(400, {}, { message: 'Status is required' });
         }
 
-        // Validate status value
         const validStatuses = ['PENDING', 'PAID', 'CANCELLED'];
         if (!validStatuses.includes(attrs.status)) {
           return new Response(400, {}, { message: 'Invalid status value' });
         }
 
-        // For mock purposes, we'll create a mock updated invoice
-        // In a real implementation, you'd find and update the actual invoice
         const updatedInvoice = {
           id: invoiceId,
           operationId: 'OP-1001', // Mock operation ID
