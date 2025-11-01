@@ -7,3 +7,13 @@ CREATE TABLE IF NOT EXISTS OPERATION_TYPE (
     INDEX idx_operation_type (operation_type)
 );
 
+-- Insert sample operation types
+INSERT IGNORE INTO OPERATION_TYPE (operation_type, estimated_base_cost, estimated_base_cost_currency, description)
+VALUES
+    ('CONSULTATION', 100.00, 'EUR', 'Standard consultation with doctor'),
+    ('SURGERY', 1500.00, 'EUR', 'Complex surgical procedure'),
+    ('DIAGNOSTIC', 250.00, 'EUR', 'Diagnostic examination and tests'),
+    ('TREATMENT', 300.00, 'EUR', 'Medical treatment session'),
+    ('FOLLOW_UP', 75.00, 'EUR', 'Follow-up appointment'),
+    ('EMERGENCY', 500.00, 'EUR', 'Emergency medical intervention'),
+    ('PREVENTIVE', 150.00, 'EUR', 'Preventive care and checkup');
