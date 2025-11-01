@@ -109,6 +109,6 @@ class JdbcOperationTypeRepositoryTest {
     companion object {
         private const val DB_URL = "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=-1"
         private const val SCHEMA_SQL = "/sql/schema.sql"
-        private const val DATA_SQL = "/sql/operationtype/data.sql"
+        private const val DATA_SQL = "/sql/data.sql"
     }
 }

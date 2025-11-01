@@ -16,3 +16,12 @@ INSERT INTO `OPERATION_NOTE` (operation_id, content, created_at) VALUES
 INSERT INTO `INVOICE` (invoice_id, operation_id, patient_id, amount, currency, status, created_at, updated_at) VALUES
 ('INV-001', 'OP-001', 'PAT-001', 100.00, 'EUR', 'PENDING', TIMESTAMP '2025-01-01 12:00:00', TIMESTAMP '2025-01-01 12:00:00'),
 ('INV-002', 'OP-001', 'PAT-001', 150.50, 'EUR', 'PAID',    TIMESTAMP '2025-01-02 09:00:00', TIMESTAMP '2025-01-02 09:00:00');
+
+-- Test data for operation type repository tests
+INSERT INTO OPERATION_TYPE (operation_type, estimated_base_cost, estimated_base_cost_currency, description)
+VALUES
+    ('CONSULTATION', 100.00, 'EUR', 'Standard consultation'),
+    ('SURGERY', 1500.00, 'EUR', 'Complex surgical procedure'),
+    ('DIAGNOSTIC', 250.00, 'EUR', 'Diagnostic examination'),
+    ('TREATMENT', 300.00, 'EUR', 'Medical treatment');
+
