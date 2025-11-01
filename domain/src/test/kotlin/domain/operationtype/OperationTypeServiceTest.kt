@@ -16,12 +16,11 @@ class OperationTypeServiceTest {
 
     @Test
     fun `save delegates to repository`() {
-        val operationType = anOperationType(type = SURGERY)
         val savedOperationType = anOperationType(type = SURGERY)
 
-        every { operationTypeRepository.save(operationType) } returns savedOperationType
+        every { operationTypeRepository.save(OPERATION_TYPE) } returns savedOperationType
 
-        val result = operationTypeService.save(operationType)
+        val result = operationTypeService.save(OPERATION_TYPE)
 
         assertEquals(savedOperationType, result)
     }
@@ -29,8 +28,7 @@ class OperationTypeServiceTest {
     @Test
     fun `retrieve delegates to repository`() {
         val operationTypes = listOf(
-            anOperationType(type = SURGERY),
-            anOperationType()
+            OPERATION_TYPE,
         )
 
         every { operationTypeRepository.retrieveAll() } returns operationTypes
@@ -42,12 +40,14 @@ class OperationTypeServiceTest {
 
     @Test
     fun `save propagates exception when operation type already exists`() {
-        val operationType = anOperationType(type = SURGERY)
-
-        every { operationTypeRepository.save(operationType) } throws OperationTypeAlreadyExistsException(SURGERY)
+        every { operationTypeRepository.save(OPERATION_TYPE) } throws OperationTypeAlreadyExistsException(SURGERY)
 
         assertThrows<OperationTypeAlreadyExistsException> {
-            operationTypeService.save(operationType)
+            operationTypeService.save(OPERATION_TYPE)
         }
+    }
+
+    companion object {
+        private val OPERATION_TYPE = anOperationType(type = SURGERY)
     }
 }
