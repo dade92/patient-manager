@@ -72,7 +72,13 @@ export const OperationAssets: React.FC<Props> = ({assets, onAddAsset}) => {
                     No assets attached
                 </Typography>
             ) : (
-                <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 1}}>
+                <Box sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, max-content))',
+                    gap: 0.5,
+                    alignItems: 'start',
+                    justifyContent: 'start'
+                }}>
                     {assets.map((asset, index) => (
                         <AssetListItem
                             key={index}
