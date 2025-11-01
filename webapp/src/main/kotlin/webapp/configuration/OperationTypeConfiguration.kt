@@ -15,6 +15,6 @@ class OperationTypeConfiguration {
         OperationTypeService(JdbcOperationTypeRepository(dataSource))
 
     @Bean
-    fun operationTypeResponseAdapter() = OperationTypeResponseAdapter()
+    fun operationTypeResponseAdapter(): OperationTypeResponseAdapter = OperationTypeResponseAdapter()
 
 }
