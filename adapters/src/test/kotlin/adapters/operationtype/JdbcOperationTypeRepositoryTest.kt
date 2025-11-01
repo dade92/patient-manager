@@ -100,10 +100,10 @@ class JdbcOperationTypeRepositoryTest {
             estimatedBaseCost = aMoney(BigDecimal("300.00"), "EUR")
         )
 
-        assertEquals(consultation, result[0]) // CONSULTATION
-        assertEquals(diagnostic, result[1])   // DIAGNOSTIC
-        assertEquals(surgery, result[2])      // SURGERY
-        assertEquals(treatment, result[3])    // TREATMENT
+        assertEquals(consultation, result[0])
+        assertEquals(diagnostic, result[1])
+        assertEquals(surgery, result[2])
+        assertEquals(treatment, result[3])
     }
 
     companion object {
