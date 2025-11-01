@@ -4,7 +4,6 @@ import domain.model.OperationTypeBuilder.anOperationType
 import domain.model.PatientOperation.Type.Companion.SURGERY
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

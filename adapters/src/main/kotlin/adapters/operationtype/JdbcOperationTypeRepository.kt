@@ -1,4 +1,4 @@
-package adapters
+package adapters.operationtype
 
 import domain.model.OperationType
 import domain.operationtype.OperationTypeRepository

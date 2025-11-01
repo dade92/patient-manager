@@ -1,6 +1,6 @@
 package webapp.configuration
 
-import adapters.JdbcOperationTypeRepository
+import adapters.operationtype.JdbcOperationTypeRepository
 import domain.operationtype.OperationTypeService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
