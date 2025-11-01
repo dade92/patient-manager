@@ -44,7 +44,7 @@ export const mockOperations = [
         type: 'CONSULTATION',
         description: 'Initial consultation for back pain',
         executor: 'Dr. Smith',
-        assets: ['consultation_notes.pdf', 'patient_form.pdf'],
+        assets: ['consultation_notes.pdf', 'patient_form.pdf', 'patient_form2.pdf', 'patient_form3.pdf', 'patient_form4.pdf', 'patient_form4.pdf'],
         additionalNotes: [
             {
                 content: 'Patient reports lower back pain for 2 weeks',
@@ -53,7 +53,7 @@ export const mockOperations = [
         ],
         createdAt: '2025-06-01T10:00:00',
         updatedAt: '2025-06-01T10:30:00',
-        estimatedCost: { amount: 50.00, currency: 'EUR' },
+        estimatedCost: {amount: 50.00, currency: 'EUR'},
         patientOperationInfo: {
             details: [
                 {
@@ -82,7 +82,7 @@ export const mockOperations = [
         ],
         createdAt: '2025-06-15T14:00:00',
         updatedAt: '2025-06-15T14:45:00',
-        estimatedCost: { amount: 120.00, currency: 'EUR' },
+        estimatedCost: {amount: 120.00, currency: 'EUR'},
         patientOperationInfo: {
             details: [
                 {
@@ -123,11 +123,11 @@ export const mockOperations = [
         ],
         createdAt: '2025-07-10T09:00:00',
         updatedAt: '2025-07-10T11:00:00',
-        estimatedCost: { amount: 350.00, currency: 'EUR' },
+        estimatedCost: {amount: 350.00, currency: 'EUR'},
         patientOperationInfo: {
             details: [
-                { toothNumber: 12, estimatedCost: { amount: 220.00, currency: 'EUR' }, "toothType": "PERMANENT" },
-                { toothNumber: 15, estimatedCost: { amount: 130.00, currency: 'EUR' }, "toothType": "PERMANENT" }
+                {toothNumber: 12, estimatedCost: {amount: 220.00, currency: 'EUR'}, "toothType": "PERMANENT"},
+                {toothNumber: 15, estimatedCost: {amount: 130.00, currency: 'EUR'}, "toothType": "PERMANENT"}
             ]
         }
     },
@@ -146,7 +146,7 @@ export const mockOperations = [
         ],
         createdAt: '2025-08-05T15:00:00',
         updatedAt: '2025-08-05T16:30:00',
-        estimatedCost: { amount: 480.00, currency: 'EUR' },
+        estimatedCost: {amount: 480.00, currency: 'EUR'},
         patientOperationInfo: {
             details: []
         }

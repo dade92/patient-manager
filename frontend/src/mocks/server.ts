@@ -80,7 +80,6 @@ export function makeServer({ environment = 'development' } = {}) {
         });
       });
 
-      // Get operations by patient ID
       this.get('/operation/patient/:patientId', (schema, request) => {
         const allOperations = schema.all('operation');
         const operations = (allOperations.models as any[])
@@ -89,7 +88,6 @@ export function makeServer({ environment = 'development' } = {}) {
         return { operations };
       });
 
-      // Get operation by ID
       this.get('/operation/:id', (schema, request) => {
         const operation = (schema.all('operation').models as any[])
           .find(op => op.attrs.id === request.params.id);
