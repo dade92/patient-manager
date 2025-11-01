@@ -1,9 +1,7 @@
--- Drop operation-related tables first to avoid FK issues if present
 DROP TABLE IF EXISTS `OPERATION_NOTE`;
 DROP TABLE IF EXISTS `OPERATION_ASSET`;
 DROP TABLE IF EXISTS `OPERATION`;
 
--- Existing patient table
 DROP TABLE IF EXISTS `PATIENT`;
 
 CREATE TABLE `PATIENT` (
@@ -20,7 +18,6 @@ CREATE TABLE `PATIENT` (
     `medical_history` TEXT
 );
 
--- Operation main table
 CREATE TABLE `OPERATION` (
     `operation_id` VARCHAR(255) PRIMARY KEY,
     `patient_id` VARCHAR(255) NOT NULL,
@@ -33,20 +30,17 @@ CREATE TABLE `OPERATION` (
     `info` TEXT
 );
 
--- Operation assets table
 CREATE TABLE `OPERATION_ASSET` (
     `operation_id` VARCHAR(255) NOT NULL,
     `asset_name` VARCHAR(512) NOT NULL
 );
 
--- Operation notes table
 CREATE TABLE `OPERATION_NOTE` (
     `operation_id` VARCHAR(255) NOT NULL,
     `content` VARCHAR(2048) NOT NULL,
     `created_at` TIMESTAMP NOT NULL
 );
 
--- Operation type table
 DROP TABLE IF EXISTS `OPERATION_TYPE`;
 CREATE TABLE `OPERATION_TYPE` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,7 +50,6 @@ CREATE TABLE `OPERATION_TYPE` (
     `description` VARCHAR(512) NOT NULL
 );
 
--- Invoice table
 DROP TABLE IF EXISTS `INVOICE`;
 CREATE TABLE `INVOICE` (
     `invoice_id` VARCHAR(255) PRIMARY KEY,

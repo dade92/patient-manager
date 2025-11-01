@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS OPERATION_TYPE (
     INDEX idx_operation_type (operation_type)
 );
 
--- Insert sample operation types
 INSERT IGNORE INTO OPERATION_TYPE (operation_type, estimated_base_cost, estimated_base_cost_currency, description)
 VALUES
     ('CONSULTATION', 100.00, 'EUR', 'Standard consultation with doctor'),
