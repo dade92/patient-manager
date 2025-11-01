@@ -1,11 +1,13 @@
 package domain.operationtype
 
+import domain.exceptions.OperationTypeAlreadyExistsException
 import domain.model.OperationTypeBuilder.anOperationType
 import domain.model.PatientOperation.Type.Companion.SURGERY
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class OperationTypeServiceTest {
 
@@ -36,5 +38,16 @@ class OperationTypeServiceTest {
         val result = operationTypeService.retrieve()
 
         assertEquals(operationTypes, result)
+    }
+
+    @Test
+    fun `save propagates exception when operation type already exists`() {
+        val operationType = anOperationType(type = SURGERY)
+
+        every { operationTypeRepository.save(operationType) } throws OperationTypeAlreadyExistsException(SURGERY)
+
+        assertThrows<OperationTypeAlreadyExistsException> {
+            operationTypeService.save(operationType)
+        }
     }
 }

@@ -1,6 +1,7 @@
 package adapters.operationtype
 
 import adapters.Utils.runSql
+import domain.exceptions.OperationTypeAlreadyExistsException
 import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationTypeBuilder.anOperationType
 import domain.model.PatientOperation
@@ -9,6 +10,7 @@ import domain.model.PatientOperation.Type.Companion.SURGERY
 import org.h2.jdbcx.JdbcDataSource
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -55,22 +57,19 @@ class JdbcOperationTypeRepositoryTest {
     }
 
     @Test
-    fun `save updates existing operation type when already exists`() {
-        val updatedOperationType = anOperationType(
+    fun `save throws exception when operation type already exists`() {
+        val duplicateOperationType = anOperationType(
             type = CONSULTATION,
             description = "Extended consultation",
             estimatedBaseCost = aMoney(BigDecimal("150.00"), "EUR")
         )
 
-        val result = repository.save(updatedOperationType)
+        val exception = assertThrows(OperationTypeAlreadyExistsException::class.java) {
+            repository.save(duplicateOperationType)
+        }
 
-        assertEquals(updatedOperationType, result)
-
-        val retrieved = repository.retrieveAll()
-        assertEquals(4, retrieved.size)
-
-        val consultation = retrieved.find { it.type.type == "CONSULTATION" }
-        assertEquals(updatedOperationType, consultation)
+        assertEquals(CONSULTATION, exception.operationType)
+        assertEquals("Operation type already exists: CONSULTATION", exception.message)
     }
 
     @Test

@@ -1,5 +1,6 @@
 package adapters.operationtype
 
+import domain.exceptions.OperationTypeAlreadyExistsException
 import domain.model.Money
 import domain.model.OperationType
 import domain.model.PatientOperation
@@ -14,11 +15,11 @@ class JdbcOperationTypeRepository(
     override fun save(operationType: OperationType): OperationType {
         val existingOperationType = findByType(operationType.type)
 
-        return if (existingOperationType == null) {
-            insertOperationType(operationType)
-        } else {
-            updateOperationType(operationType)
+        if (existingOperationType != null) {
+            throw OperationTypeAlreadyExistsException(operationType.type)
         }
+
+        return insertOperationType(operationType)
     }
 
     override fun retrieveAll(): List<OperationType> {
@@ -76,26 +77,6 @@ class JdbcOperationTypeRepository(
                 statement.setBigDecimal(2, operationType.estimatedBaseCost.amount)
                 statement.setString(3, operationType.estimatedBaseCost.currency)
                 statement.setString(4, operationType.description)
-                statement.executeUpdate()
-            }
-        }
-
-        return operationType
-    }
-
-    private fun updateOperationType(operationType: OperationType): OperationType {
-        val sql = """
-            UPDATE OPERATION_TYPE 
-            SET estimated_base_cost = ?, estimated_base_cost_currency = ?, description = ?
-            WHERE operation_type = ?
-        """.trimIndent()
-
-        dataSource.connection.use { connection ->
-            connection.prepareStatement(sql).use { statement ->
-                statement.setBigDecimal(1, operationType.estimatedBaseCost.amount)
-                statement.setString(2, operationType.estimatedBaseCost.currency)
-                statement.setString(3, operationType.description)
-                statement.setString(4, operationType.type.type)
                 statement.executeUpdate()
             }
         }
