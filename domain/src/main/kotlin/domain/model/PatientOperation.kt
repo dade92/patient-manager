@@ -7,7 +7,8 @@ value class OperationId(val value: String) {
     override fun toString(): String = value
 }
 
-data class OperationType(val type: String) {
+@JvmInline
+value class OperationType(val type: String) {
     override fun toString(): String = type
 
     companion object {
