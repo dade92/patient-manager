@@ -46,6 +46,16 @@ CREATE TABLE `OPERATION_NOTE` (
     `created_at` TIMESTAMP NOT NULL
 );
 
+-- Operation type table
+DROP TABLE IF EXISTS `OPERATION_TYPE`;
+CREATE TABLE `OPERATION_TYPE` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `operation_type` VARCHAR(50) NOT NULL UNIQUE,
+    `estimated_base_cost` DECIMAL(19,2) NOT NULL,
+    `estimated_base_cost_currency` VARCHAR(10) NOT NULL,
+    `description` VARCHAR(512) NOT NULL
+);
+
 -- Invoice table
 DROP TABLE IF EXISTS `INVOICE`;
 CREATE TABLE `INVOICE` (
