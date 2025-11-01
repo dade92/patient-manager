@@ -7,23 +7,10 @@ value class OperationId(val value: String) {
     override fun toString(): String = value
 }
 
-@JvmInline
-value class OperationType(val type: String) {
-    override fun toString(): String = type
-
-    companion object {
-        val CONSULTATION = OperationType("CONSULTATION")
-        val SURGERY = OperationType("SURGERY")
-        val TREATMENT = OperationType("TREATMENT")
-        val FOLLOW_UP = OperationType("FOLLOW_UP")
-        val DIAGNOSTIC = OperationType("DIAGNOSTIC")
-    }
-}
-
 data class PatientOperation(
     val id: OperationId,
     val patientId: PatientId,
-    val type: OperationType,
+    val type: Type,
     val description: String,
     val executor: String,
     val assets: List<String>,
@@ -32,7 +19,21 @@ data class PatientOperation(
     val lastUpdate: LocalDateTime,
     val estimatedCost: Money,
     val info: PatientOperationInfo
-)
+) {
+    @JvmInline
+    value class Type(val type: String) {
+        override fun toString(): String = type
+
+        companion object {
+            val CONSULTATION = Type("CONSULTATION")
+            val SURGERY = Type("SURGERY")
+            val TREATMENT = Type("TREATMENT")
+            val FOLLOW_UP = Type("FOLLOW_UP")
+            val DIAGNOSTIC = Type("DIAGNOSTIC")
+        }
+    }
+
+}
 
 data class PatientOperationInfo(
     val details: List<Detail>

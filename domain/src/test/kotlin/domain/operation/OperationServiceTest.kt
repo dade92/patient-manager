@@ -8,10 +8,9 @@ import domain.model.OperationBuilder.aDetail
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
-import domain.model.OperationType
-import domain.model.OperationType.Companion.SURGERY
 import domain.model.PatientBuilder.aPatient
 import domain.model.PatientBuilder.aPatientId
+import domain.model.PatientOperation.Type.Companion.SURGERY
 import domain.operation.validator.OperationRequestValidator
 import domain.patient.PatientRepository
 import domain.storage.StorageService

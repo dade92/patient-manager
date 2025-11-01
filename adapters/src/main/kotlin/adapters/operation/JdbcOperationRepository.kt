@@ -252,7 +252,7 @@ class JdbcOperationRepository(
         return PatientOperation(
             id = operationId,
             patientId = PatientId(resultSet.getString("patient_id")),
-            type = OperationType(resultSet.getString("type")),
+            type = PatientOperation.Type(resultSet.getString("type")),
             description = resultSet.getString("description"),
             executor = resultSet.getString("executor"),
             assets = assets,

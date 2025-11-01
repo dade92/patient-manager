@@ -8,10 +8,10 @@ import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
-import domain.model.OperationType
 import domain.model.PatientBuilder.aPatientId
 import domain.operation.OperationService
 import domain.exceptions.validator.EstimatedAmountDifferentFromDetailsSumException
+import domain.model.PatientOperation.Type.Companion.SURGERY
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
@@ -52,7 +52,7 @@ class OperationControllerTest {
         val operation = aPatientOperation(
             id = OPERATION_ID,
             patientId = PATIENT_ID,
-            type = OperationType.SURGERY,
+            type = SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
             assets = listOf(ORIGINAL_FILENAME_1),
@@ -87,7 +87,7 @@ class OperationControllerTest {
         val operation = aPatientOperation(
             id = OPERATION_ID,
             patientId = PATIENT_ID,
-            type = OperationType.SURGERY,
+            type = SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
             assets = listOf(ORIGINAL_FILENAME_1),
@@ -121,7 +121,7 @@ class OperationControllerTest {
     fun `createOperation returns 201 and delegates to service`() {
         val expectedRequest = aCreateOperationRequest(
             patientId = PATIENT_ID,
-            type = OperationType.SURGERY,
+            type = SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
             estimatedCost = aMoney(AMOUNT, EUR),
@@ -130,7 +130,7 @@ class OperationControllerTest {
         val created = aPatientOperation(
             id = OPERATION_ID,
             patientId = PATIENT_ID,
-            type = OperationType.SURGERY,
+            type = SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
             assets = emptyList(),
@@ -184,7 +184,7 @@ class OperationControllerTest {
         val updated = aPatientOperation(
             id = OPERATION_ID,
             patientId = PATIENT_ID,
-            type = OperationType.SURGERY,
+            type = SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
             assets = listOf(ORIGINAL_FILENAME_1),
@@ -226,7 +226,7 @@ class OperationControllerTest {
         val updated = aPatientOperation(
             id = OPERATION_ID,
             patientId = PATIENT_ID,
-            type = OperationType.SURGERY,
+            type = SURGERY,
             description = DESCRIPTION,
             executor = EXECUTOR,
             assets = listOf(ORIGINAL_FILENAME_1, ORIGINAL_FILENAME_2),
