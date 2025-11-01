@@ -11,13 +11,13 @@ import webapp.adapter.OperationTypeResponseAdapter
 import webapp.adapter.toDomain
 
 @RestController
-@RequestMapping("/api/operation-type")
+@RequestMapping("/api")
 class OperationTypeController(
     private val operationTypeService: OperationTypeService,
     private val operationTypeResponseAdapter: OperationTypeResponseAdapter
 ) {
 
-    @PostMapping
+    @PostMapping("/operation-type")
     fun createOperationType(
         @RequestBody request: CreateOperationTypeRequest
     ): ResponseEntity<OperationTypeResponse> =
@@ -32,7 +32,7 @@ class OperationTypeController(
                 .body(operationTypeResponseAdapter.adapt(it))
         }
 
-    @GetMapping
+    @GetMapping("/operation-types")
     fun getAll(): ResponseEntity<List<OperationTypeResponse>> =
         ResponseEntity.ok(
             operationTypeResponseAdapter.adaptAll(operationTypeService.retrieve())
