@@ -1,19 +1,20 @@
-[
-  {
-    "type": "SURGERY",
-    "description": "Complex surgical procedure",
-    "estimatedBaseCost": {
-      "amount": 1500.00,
-      "currency": "EUR"
+{
+  "types": [
+    {
+      "type": "SURGERY",
+      "description": "Complex surgical procedure",
+      "estimatedBaseCost": {
+        "amount": 1500.00,
+        "currency": "EUR"
+      }
+    },
+    {
+      "type": "CONSULTATION",
+      "description": "Standard consultation",
+      "estimatedBaseCost": {
+        "amount": 100.00,
+        "currency": "EUR"
+      }
     }
-  },
-  {
-    "type": "CONSULTATION",
-    "description": "Standard consultation",
-    "estimatedBaseCost": {
-      "amount": 100.00,
-      "currency": "EUR"
-    }
-  }
-]
-
+  ]
+}

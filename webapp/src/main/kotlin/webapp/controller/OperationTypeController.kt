@@ -5,10 +5,7 @@ import domain.operationtype.OperationTypeService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import webapp.adapter.CreateOperationTypeRequest
-import webapp.adapter.OperationTypeResponse
-import webapp.adapter.OperationTypeResponseAdapter
-import webapp.adapter.toDomain
+import webapp.adapter.*
 
 @RestController
 @RequestMapping("/api")
@@ -33,9 +30,13 @@ class OperationTypeController(
         }
 
     @GetMapping("/operation-types")
-    fun getAll(): ResponseEntity<List<OperationTypeResponse>> =
+    fun getAll(): ResponseEntity<OperationTypeListResponse> =
         ResponseEntity.ok(
-            operationTypeResponseAdapter.adaptAll(operationTypeService.retrieve())
+            OperationTypeListResponse(
+                operationTypeResponseAdapter.adaptAll(
+                    operationTypeService.retrieve()
+                )
+            )
         )
 }
 

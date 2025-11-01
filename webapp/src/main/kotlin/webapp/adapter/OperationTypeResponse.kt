@@ -13,3 +13,7 @@ data class OperationTypeResponse(
     val description: String,
     val estimatedBaseCost: MoneyDto
 )
+
+data class OperationTypeListResponse(
+    val types: List<OperationTypeResponse>
+)
