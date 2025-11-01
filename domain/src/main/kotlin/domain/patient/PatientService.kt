@@ -37,17 +37,20 @@ class PatientService(
     fun searchPatientsByName(name: String): List<Patient> = patientRepository.searchByName(name)
 
     fun delete(patientId: PatientId) {
+        val assets = operationRepository.findByPatientId(patientId)
+            .flatMap { it.assets }
+
         invoiceRepository.findByPatientId(patientId).forEach { invoice ->
             invoiceRepository.delete(invoice.id)
         }
         operationRepository.findByPatientId(patientId).forEach { operation ->
-            operation.assets.forEach { assetKey ->
-                storageService.deleteFile(assetKey)
-            }
             operationRepository.delete(operation.id)
         }
-
         patientRepository.delete(patientId)
+
+        assets.forEach { assetKey ->
+            storageService.deleteFile(assetKey)
+        }
     }
 }
 

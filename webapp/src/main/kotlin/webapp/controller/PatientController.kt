@@ -5,6 +5,7 @@ import domain.model.PatientId
 import domain.patient.PatientService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 import domain.patient.CreatePatientRequest as DomainCreatePatientRequest
@@ -45,6 +46,7 @@ class PatientController(
         }
 
     @PostMapping("/delete/{patientId}")
+    @Transactional
     fun deletePatient(@PathVariable patientId: String): ResponseEntity<Void> {
         patientService.delete(PatientId(patientId))
         return ResponseEntity.noContent().build()
