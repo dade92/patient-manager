@@ -8,7 +8,8 @@ import domain.model.OperationBuilder.aDetail
 import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
-import domain.model.OperationType.SURGERY
+import domain.model.OperationType
+import domain.model.OperationType.Companion.SURGERY
 import domain.model.PatientBuilder.aPatient
 import domain.model.PatientBuilder.aPatientId
 import domain.operation.validator.OperationRequestValidator
@@ -17,7 +18,6 @@ import domain.storage.StorageService
 import domain.storage.UploadFileRequest
 import domain.utils.DateTimeProvider
 import io.mockk.*
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

@@ -7,6 +7,18 @@ value class OperationId(val value: String) {
     override fun toString(): String = value
 }
 
+data class OperationType(val type: String) {
+    override fun toString(): String = type
+
+    companion object {
+        val CONSULTATION = OperationType("CONSULTATION")
+        val SURGERY = OperationType("SURGERY")
+        val TREATMENT = OperationType("TREATMENT")
+        val FOLLOW_UP = OperationType("FOLLOW_UP")
+        val DIAGNOSTIC = OperationType("DIAGNOSTIC")
+    }
+}
+
 data class PatientOperation(
     val id: OperationId,
     val patientId: PatientId,
@@ -34,14 +46,6 @@ data class PatientOperationInfo(
 enum class ToothType {
     PERMANENT,
     DECIDUOUS,
-}
-
-enum class OperationType {
-    CONSULTATION,
-    SURGERY,
-    TREATMENT,
-    FOLLOW_UP,
-    DIAGNOSTIC
 }
 
 data class OperationNote(
