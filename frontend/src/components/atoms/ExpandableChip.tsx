@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 
 const StyledChip = styled(Chip)(() => ({
   maxWidth: '150px',
+  minWidth: '150px',
   transition: 'max-width 0.3s ease-in-out',
   overflow: 'hidden',
   whiteSpace: 'nowrap',

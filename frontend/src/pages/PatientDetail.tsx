@@ -2,15 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Alert, Box, Button, CircularProgress} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {Patient} from '../types/patient';
 import {CreateOperationDialog} from '../components/dialogs/CreateOperationDialog';
+import {ConfirmationDialog} from '../components/dialogs/ConfirmationDialog';
 import {PatientOperations} from '../components/lists/PatientOperations';
 import {PatientInvoices} from '../components/lists/PatientInvoices';
 import {PatientDetailCard} from '../components/cards/PatientDetailCard';
 import {useCache} from '../context/CacheContext';
 import {BackButton} from '../components/atoms/BackButton';
 import {Operation} from "../types/operation";
-import { RestClient } from '../utils/restClient';
+import {RestClient} from '../utils/restClient';
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();
@@ -20,6 +22,9 @@ export const PatientDetail: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [isCreateOperationOpen, setIsCreateOperationOpen] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
 
     const {
         getCachedPatient,
@@ -27,6 +32,10 @@ export const PatientDetail: React.FC = () => {
         setCachedOperationsForPatient,
         getCachedOperationsForPatient
     } = useCache();
+
+    useEffect(() => {
+        fetchPatient();
+    }, [patientId, getCachedPatient, setCachedPatient]);
 
     const fetchPatient = async () => {
         const cachedPatient = getCachedPatient(patientId!);
@@ -54,13 +63,32 @@ export const PatientDetail: React.FC = () => {
         }
     };
 
+    const handleDeleteConfirm = async () => {
+        setIsDeleting(true);
+        try {
+            await RestClient.post(`/api/patient/delete/${patient!.id}`, {});
+            navigate('/');
+        } catch (error: any) {
+            setDeleteError(error.message || 'Failed to delete patient');
+        } finally {
+            setIsDeleting(false);
+            setShowDeleteConfirmation(false);
+        }
+    };
+
     const handleBack = () => {
         navigate(-1);
     };
 
-    useEffect(() => {
-        fetchPatient();
-    }, [patientId, getCachedPatient, setCachedPatient]);
+    const handleDeleteClick = () => {
+        setShowDeleteConfirmation(true);
+        setDeleteError(null);
+    };
+
+    const handleDeleteCancel = () => {
+        setShowDeleteConfirmation(false);
+        setDeleteError(null);
+    };
 
     if (loading) {
         return (
@@ -77,16 +105,33 @@ export const PatientDetail: React.FC = () => {
         <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
                 <BackButton onClick={handleBack}/>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<AddIcon/>}
-                    onClick={() => {
-                        setIsCreateOperationOpen(true);
-                    }}
-                >
-                    New Operation
-                </Button>
+                <Box sx={{display: 'flex', gap: 2}}>
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={handleDeleteClick}
+                        sx={{
+                            minWidth: 48,
+                            minHeight: 48,
+                            padding: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                    >
+                        <DeleteIcon />
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<AddIcon/>}
+                        onClick={() => {
+                            setIsCreateOperationOpen(true);
+                        }}
+                    >
+                        New Operation
+                    </Button>
+                </Box>
             </Box>
 
             {error ? (
@@ -95,14 +140,20 @@ export const PatientDetail: React.FC = () => {
                 </Alert>
             ) : patient ? (
                 <>
-                    <PatientDetailCard patient={patient} />
+                    {deleteError && (
+                        <Alert severity="error" sx={{mb: 2}}>
+                            {deleteError}
+                        </Alert>
+                    )}
+
+                    <PatientDetailCard patient={patient}/>
 
                     <PatientOperations
                         patientId={patientId!}
                         refreshTrigger={refreshKey}
                     />
 
-                    <Box sx={{ mt: 3 }}>
+                    <Box sx={{mt: 3}}>
                         <PatientInvoices
                             patientId={patientId!}
                             refreshTrigger={refreshKey}
@@ -118,6 +169,15 @@ export const PatientDetail: React.FC = () => {
                             setCachedOperationsForPatient(patientId!, [newOperation, ...cachedOperations]);
                             setRefreshKey(prev => prev + 1);
                         }}
+                    />
+
+                    <ConfirmationDialog
+                        open={showDeleteConfirmation}
+                        onClose={handleDeleteCancel}
+                        onConfirm={handleDeleteConfirm}
+                        title="Delete Patient Permanently"
+                        message={`Are you sure you want to permanently delete patient "${patient.name}" along with all their operations and invoices? This action cannot be undone.`}
+                        isLoading={isDeleting}
                     />
                 </>
             ) : null}

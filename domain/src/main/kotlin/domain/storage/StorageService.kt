@@ -5,6 +5,7 @@ import java.io.InputStream
 interface StorageService {
     fun uploadFile(request: UploadFileRequest)
     fun getFile(key: String): InputStream
+    fun deleteFile(key: String)
 }
 
 data class UploadFileRequest(

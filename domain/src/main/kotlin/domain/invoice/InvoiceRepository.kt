@@ -12,4 +12,5 @@ interface InvoiceRepository {
     fun findByOperationId(operationId: OperationId): List<Invoice>
     fun findByPatientId(patientId: PatientId): List<Invoice>
     fun updateStatus(invoiceId: InvoiceId, status: InvoiceStatus): Invoice?
+    fun delete(invoiceId: InvoiceId)
 }

@@ -166,6 +166,14 @@ class JdbcInvoiceRepositoryTest {
         assertNull(repository.updateStatus(nonExistentInvoiceId, PAID))
     }
 
+    @Test
+    fun `delete removes invoice when exists`() {
+        repository.delete(INVOICE_ID)
+
+        val retrieved = repository.retrieve(INVOICE_ID)
+        assertNull(retrieved)
+    }
+
     companion object {
         private const val DB_URL = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL"
         private const val SCHEMA_SQL = "/sql/schema.sql"

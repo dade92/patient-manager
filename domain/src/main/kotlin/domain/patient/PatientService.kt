@@ -1,13 +1,19 @@
 package domain.patient
 
 import domain.generator.PatientIdGenerator
+import domain.invoice.InvoiceRepository
 import domain.model.Patient
 import domain.model.PatientId
+import domain.operation.OperationRepository
+import domain.storage.StorageService
 import java.time.LocalDate
 
 class PatientService(
     private val patientRepository: PatientRepository,
-    private val patientIdGenerator: PatientIdGenerator
+    private val patientIdGenerator: PatientIdGenerator,
+    private val operationRepository: OperationRepository,
+    private val invoiceRepository: InvoiceRepository,
+    private val storageService: StorageService
 ) {
 
     fun retrievePatient(patientId: PatientId): Patient? = patientRepository.retrieve(patientId)
@@ -29,6 +35,23 @@ class PatientService(
         )
 
     fun searchPatientsByName(name: String): List<Patient> = patientRepository.searchByName(name)
+
+    fun delete(patientId: PatientId) {
+        val assets = operationRepository.findByPatientId(patientId)
+            .flatMap { it.assets }
+
+        invoiceRepository.findByPatientId(patientId).forEach { invoice ->
+            invoiceRepository.delete(invoice.id)
+        }
+        operationRepository.findByPatientId(patientId).forEach { operation ->
+            operationRepository.delete(operation.id)
+        }
+        patientRepository.delete(patientId)
+
+        assets.forEach { assetKey ->
+            storageService.deleteFile(assetKey)
+        }
+    }
 }
 
 data class CreatePatientRequest(

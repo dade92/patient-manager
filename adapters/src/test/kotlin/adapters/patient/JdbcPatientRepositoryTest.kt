@@ -126,6 +126,21 @@ class JdbcPatientRepositoryTest {
         assertEquals(updatedPatient, retrieved)
     }
 
+    @Test
+    fun `delete removes patient when exists`() {
+        repository.delete(PATIENT_ID)
+
+        val retrieved = repository.retrieve(PATIENT_ID)
+        assertNull(retrieved)
+    }
+
+    @Test
+    fun `delete does nothing when patient does not exist`() {
+        val nonExistentPatientId = aPatientId("PAT-999")
+
+        repository.delete(nonExistentPatientId)
+    }
+
     companion object {
         private const val DB_URL = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL"
         private const val SCHEMA_SQL = "/sql/schema.sql"

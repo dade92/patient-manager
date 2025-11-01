@@ -4,6 +4,7 @@ import domain.storage.StorageService
 import domain.storage.UploadFileRequest
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest
 import software.amazon.awssdk.services.s3.model.GetObjectRequest
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import java.io.InputStream
@@ -32,5 +33,13 @@ class MinioStorageService(
             .build()
 
         return s3Client.getObject(getRequest)
+    }
+
+    override fun deleteFile(key: String) {
+        val deleteRequest = DeleteObjectRequest.builder()
+            .bucket(bucketName)
+            .key(key)
+            .build()
+        s3Client.deleteObject(deleteRequest)
     }
 }

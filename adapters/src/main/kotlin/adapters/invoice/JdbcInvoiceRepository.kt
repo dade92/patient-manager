@@ -122,6 +122,17 @@ class JdbcInvoiceRepository(
         return updateInvoice(updatedInvoice)
     }
 
+    override fun delete(invoiceId: InvoiceId) {
+        val sql = "DELETE FROM INVOICE WHERE invoice_id = ?"
+
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(sql).use { statement ->
+                statement.setString(1, invoiceId.value)
+                statement.executeUpdate()
+            }
+        }
+    }
+
     private fun insertInvoice(invoice: Invoice, patientId: PatientId): Invoice {
         val sql = """
             INSERT INTO INVOICE (invoice_id, operation_id, patient_id, amount, currency, status, created_at, updated_at)
