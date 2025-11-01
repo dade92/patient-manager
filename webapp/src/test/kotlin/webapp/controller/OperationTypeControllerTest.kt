@@ -76,7 +76,7 @@ class OperationTypeControllerTest {
 
         every { operationTypeService.retrieve() } returns operationTypes
 
-        mockMvc.perform(get("/api/operation-type"))
+        mockMvc.perform(get("/api/operation-types"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
