@@ -16,14 +16,18 @@ minIO blob storage, and `PATIENT_DB_USERNAME` and `PATIENT_DB_PASSWORD` for the 
 (`PATIENT_DB_PASSWORD` is used as root password at the moment).
 At the first run, you need also to execute manually the script `init.sql` inside the same folder. 
 If you want to connect to the minio instance, go to `localhost:9000` and use the credentials you set in the environment
-variables. Remeber to create a bucket named `patient-manager-bucket`.
+variables. 
+
+IMPORTANT: the first time, login into minio console and create a bucket named `patient-manager-bucket`.
 
 ## Local testing
 
 You can run the spring boot application locally after you have done the following steps:
-- run the script `run-local-env.sh`: it will run an instance of
+- Run the script `run-local-env.sh`: it will run an instance of
 minIO locally and a fresh mysql instance with all the tables initialized with sample values.
-- run a `mvn clean install` that will generate the static files for the UI.
+- Run a `mvn clean install` that will generate the static files for the UI (You can also run this command
+inside the `frontend` folder).
+- Finally, run the java application
 
 ### Local testing with UI
 
