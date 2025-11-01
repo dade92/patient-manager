@@ -6,7 +6,9 @@ import domain.model.MoneyBuilder.aMoney
 import domain.model.OperationTypeBuilder.anOperationType
 import domain.model.PatientOperation
 import domain.model.PatientOperation.Type.Companion.CONSULTATION
+import domain.model.PatientOperation.Type.Companion.DIAGNOSTIC
 import domain.model.PatientOperation.Type.Companion.SURGERY
+import domain.model.PatientOperation.Type.Companion.TREATMENT
 import org.h2.jdbcx.JdbcDataSource
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -40,9 +42,9 @@ class JdbcOperationTypeRepositoryTest {
     @Test
     fun `save inserts new operation type when not existing`() {
         val operationType = anOperationType(
-            type = PatientOperation.Type("FOLLOW_UP"),
-            description = "Follow-up appointment",
-            estimatedBaseCost = aMoney(BigDecimal("75.00"), "EUR")
+            type = PatientOperation.Type(TYPE),
+            description = DESCRIPTION,
+            estimatedBaseCost = ESTIMATED_BASE_COST
         )
 
         val result = repository.save(operationType)
@@ -52,8 +54,8 @@ class JdbcOperationTypeRepositoryTest {
         val retrieved = repository.retrieveAll()
         assertEquals(5, retrieved.size)
 
-        val followUp = retrieved.find { it.type.type == "FOLLOW_UP" }
-        assertEquals(operationType, followUp)
+        val inserted = retrieved.find { it.type.type == TYPE }
+        assertEquals(operationType, inserted)
     }
 
     @Test
@@ -84,7 +86,7 @@ class JdbcOperationTypeRepositoryTest {
             estimatedBaseCost = aMoney(BigDecimal("100.00"), "EUR")
         )
         val diagnostic = anOperationType(
-            type = PatientOperation.Type("DIAGNOSTIC"),
+            type = DIAGNOSTIC,
             description = "Diagnostic examination",
             estimatedBaseCost = aMoney(BigDecimal("250.00"), "EUR")
         )
@@ -94,7 +96,7 @@ class JdbcOperationTypeRepositoryTest {
             estimatedBaseCost = aMoney(BigDecimal("1500.00"), "EUR")
         )
         val treatment = anOperationType(
-            type = PatientOperation.Type("TREATMENT"),
+            type = TREATMENT,
             description = "Medical treatment",
             estimatedBaseCost = aMoney(BigDecimal("300.00"), "EUR")
         )
@@ -109,5 +111,8 @@ class JdbcOperationTypeRepositoryTest {
         private const val DB_URL = "jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=-1"
         private const val SCHEMA_SQL = "/sql/schema.sql"
         private const val DATA_SQL = "/sql/data.sql"
+        private const val TYPE = "FOLLOW_UP"
+        private const val DESCRIPTION = "Follow-up appointment"
+        private val ESTIMATED_BASE_COST = aMoney(BigDecimal("75.00"), "EUR")
     }
 }

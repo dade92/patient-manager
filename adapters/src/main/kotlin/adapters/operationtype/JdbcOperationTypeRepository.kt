@@ -19,7 +19,7 @@ class JdbcOperationTypeRepository(
             throw OperationTypeAlreadyExistsException(operationType.type)
         }
 
-        return insertOperationType(operationType)
+        return insert(operationType)
     }
 
     override fun retrieveAll(): List<OperationType> {
@@ -65,7 +65,7 @@ class JdbcOperationTypeRepository(
         return null
     }
 
-    private fun insertOperationType(operationType: OperationType): OperationType {
+    private fun insert(operationType: OperationType): OperationType {
         val sql = """
             INSERT INTO OPERATION_TYPE (operation_type, estimated_base_cost, estimated_base_cost_currency, description)
             VALUES (?, ?, ?, ?)
