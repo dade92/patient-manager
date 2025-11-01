@@ -5,6 +5,7 @@ import domain.invoice.InvoiceRepository
 import domain.operation.OperationRepository
 import domain.patient.PatientRepository
 import domain.patient.PatientService
+import domain.storage.StorageService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -19,11 +20,13 @@ class PatientConfiguration {
         patientRepository: PatientRepository,
         patientIdGenerator: PatientIdGenerator,
         operationRepository: OperationRepository,
-        invoiceRepository: InvoiceRepository
+        invoiceRepository: InvoiceRepository,
+        storageService: StorageService
     ): PatientService = PatientService(
         patientRepository,
         patientIdGenerator,
         operationRepository,
-        invoiceRepository
+        invoiceRepository,
+        storageService
     )
 }

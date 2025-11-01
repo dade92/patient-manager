@@ -5,13 +5,15 @@ import domain.invoice.InvoiceRepository
 import domain.model.Patient
 import domain.model.PatientId
 import domain.operation.OperationRepository
+import domain.storage.StorageService
 import java.time.LocalDate
 
 class PatientService(
     private val patientRepository: PatientRepository,
     private val patientIdGenerator: PatientIdGenerator,
     private val operationRepository: OperationRepository,
-    private val invoiceRepository: InvoiceRepository
+    private val invoiceRepository: InvoiceRepository,
+    private val storageService: StorageService
 ) {
 
     fun retrievePatient(patientId: PatientId): Patient? = patientRepository.retrieve(patientId)
@@ -39,6 +41,9 @@ class PatientService(
             invoiceRepository.delete(invoice.id)
         }
         operationRepository.findByPatientId(patientId).forEach { operation ->
+            operation.assets.forEach { assetKey ->
+                storageService.deleteFile(assetKey)
+            }
             operationRepository.delete(operation.id)
         }
 

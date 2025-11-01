@@ -10,6 +10,7 @@ import domain.model.PatientBuilder.aCreatePatientRequest
 import domain.model.PatientBuilder.aPatient
 import domain.model.PatientBuilder.aPatientId
 import domain.operation.OperationRepository
+import domain.storage.StorageService
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -22,12 +23,14 @@ class PatientServiceTest {
     private val patientIdGenerator = mockk<PatientIdGenerator>()
     private val operationRepository = mockk<OperationRepository>()
     private val invoiceRepository = mockk<InvoiceRepository>()
+    private val storageService = mockk<StorageService>()
 
     private val patientService = PatientService(
         patientRepository = patientRepository,
         patientIdGenerator = patientIdGenerator,
         operationRepository = operationRepository,
-        invoiceRepository = invoiceRepository
+        invoiceRepository = invoiceRepository,
+        storageService = storageService
     )
 
     @Test
@@ -89,8 +92,8 @@ class PatientServiceTest {
 
     @Test
     fun `delete removes all invoices, operations and then patient in correct order`() {
-        val operation1 = aPatientOperation(id = OPERATION_ID_1, patientId = PATIENT_ID)
-        val operation2 = aPatientOperation(id = OPERATION_ID_2, patientId = PATIENT_ID)
+        val operation1 = aPatientOperation(id = OPERATION_ID_1, patientId = PATIENT_ID, assets = listOf(ASSET_1, ASSET_2))
+        val operation2 = aPatientOperation(id = OPERATION_ID_2, patientId = PATIENT_ID, assets = listOf(ASSET_3))
         val operations = listOf(operation1, operation2)
         val invoice1 = anInvoice(id = INVOICE_ID_1, operationId = OPERATION_ID_1)
         val invoice2 = anInvoice(id = INVOICE_ID_2, operationId = OPERATION_ID_1)
@@ -100,11 +103,15 @@ class PatientServiceTest {
         every { invoiceRepository.delete(any()) } returns Unit
         every { operationRepository.delete(any()) } returns Unit
         every { patientRepository.delete(PATIENT_ID) } returns Unit
+        every { storageService.deleteFile(any()) } returns Unit
 
         patientService.delete(PATIENT_ID)
 
         verify { invoiceRepository.delete(INVOICE_ID_1) }
         verify { invoiceRepository.delete(INVOICE_ID_2) }
+        verify { storageService.deleteFile(ASSET_1) }
+        verify { storageService.deleteFile(ASSET_2) }
+        verify { storageService.deleteFile(ASSET_3) }
         verify { operationRepository.delete(OPERATION_ID_1) }
         verify { operationRepository.delete(OPERATION_ID_2) }
         verify { patientRepository.delete(PATIENT_ID) }
@@ -117,6 +124,9 @@ class PatientServiceTest {
         private val OPERATION_ID_2 = anOperationId("OP-002")
         private val INVOICE_ID_1 = anInvoiceId("INV-001")
         private val INVOICE_ID_2 = anInvoiceId("INV-002")
+        private const val ASSET_1 = "asset1.jpg"
+        private const val ASSET_2 = "asset2.pdf"
+        private const val ASSET_3 = "asset3.png"
         private const val NAME = "Jane Roe"
         private const val EMAIL = "jane.roe@example.com"
         private const val PHONE = "9876543210"
