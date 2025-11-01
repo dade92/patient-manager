@@ -79,7 +79,7 @@ class OperationService(
 
 data class CreateOperationRequest(
     val patientId: PatientId,
-    val type: OperationType,
+    val type: PatientOperation.Type,
     val description: String,
     val executor: String,
     val estimatedCost: Money,

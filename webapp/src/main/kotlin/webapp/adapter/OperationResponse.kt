@@ -1,13 +1,13 @@
 package webapp.adapter
 
-import domain.model.OperationType
+import domain.model.PatientOperation
 import domain.model.PatientOperationInfo
 import domain.model.ToothType
 
 data class OperationResponse(
     val id: String,
     val patientId: String,
-    val type: OperationType,
+    val type: PatientOperation.Type,
     val description: String,
     val executor: String,
     val assets: List<String>,

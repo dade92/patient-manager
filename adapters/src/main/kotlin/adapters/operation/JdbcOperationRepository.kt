@@ -4,7 +4,6 @@ import domain.model.*
 import domain.operation.OperationRepository
 import domain.utils.DateTimeProvider
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.Timestamp
@@ -167,7 +166,7 @@ class JdbcOperationRepository(
             ).use { statement ->
                 statement.setString(1, operation.id.value)
                 statement.setString(2, operation.patientId.value)
-                statement.setString(3, operation.type.name)
+                statement.setString(3, operation.type.type)
                 statement.setString(4, operation.description)
                 statement.setString(5, operation.executor)
                 statement.setTimestamp(6, Timestamp.valueOf(operation.creationDateTime))
@@ -211,7 +210,7 @@ class JdbcOperationRepository(
                 WHERE operation_id = ?
                 """
             ).use { statement ->
-                statement.setString(1, operation.type.name)
+                statement.setString(1, operation.type.type)
                 statement.setString(2, operation.description)
                 statement.setString(3, operation.executor)
                 statement.setTimestamp(4, Timestamp.valueOf(operation.lastUpdate))
@@ -253,7 +252,7 @@ class JdbcOperationRepository(
         return PatientOperation(
             id = operationId,
             patientId = PatientId(resultSet.getString("patient_id")),
-            type = OperationType.valueOf(resultSet.getString("type")),
+            type = PatientOperation.Type(resultSet.getString("type")),
             description = resultSet.getString("description"),
             executor = resultSet.getString("executor"),
             assets = assets,

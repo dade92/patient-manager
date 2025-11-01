@@ -5,8 +5,8 @@ import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
-import domain.model.OperationType
 import domain.model.PatientBuilder.aPatientId
+import domain.model.PatientOperation
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -25,7 +25,7 @@ class PatientOperationResponseAdapterTest {
         val patientOperation = aPatientOperation(
             id = anOperationId(OPERATION_ID),
             patientId = aPatientId(PATIENT_ID),
-            type = OperationType.DIAGNOSTIC,
+            type = PatientOperation.Type.DIAGNOSTIC,
             description = DESCRIPTION,
             executor = EXECUTOR,
             assets = listOf(ASSET_1, ASSET_2),
@@ -43,7 +43,7 @@ class PatientOperationResponseAdapterTest {
         val expected = OperationResponse(
             id = OPERATION_ID,
             patientId = PATIENT_ID,
-            type = OperationType.DIAGNOSTIC,
+            type = PatientOperation.Type.DIAGNOSTIC,
             description = DESCRIPTION,
             executor = EXECUTOR,
             assets = listOf(ASSET_1, ASSET_2),
