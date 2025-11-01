@@ -48,13 +48,13 @@ class OperationTypeControllerTest {
         mockMvc.perform(
             post("/api/operation-type")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(readFile("/fixtures/operation-type/create-operation-type.json"))
+                .content(readFile("/fixtures/operation-type/createOperationTypeRequest.json"))
         )
             .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    readFile("/fixtures/operation-type/create-operation-type-response.json")
+                    readFile("/fixtures/operation-type/createOperationTypeResponse.json")
                 )
             )
     }
@@ -81,7 +81,7 @@ class OperationTypeControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 content().json(
-                    readFile("/fixtures/operation-type/get-all-operation-types.json")
+                    readFile("/fixtures/operation-type/getAll.json")
                 )
             )
     }
