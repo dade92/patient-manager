@@ -4,7 +4,7 @@ import {ToothDetail} from "./ToothDetail";
 export interface Operation {
     id: string;
     patientId: string;
-    type: OperationType;
+    type: string;
     description: string;
     executor: string;
     assets: string[];
@@ -22,12 +22,4 @@ export interface PatientOperationInfo {
 export interface OperationNote {
     content: string;
     createdAt: string;
-}
-
-export enum OperationType {
-    CONSULTATION = 'CONSULTATION',
-    DIAGNOSTIC = 'DIAGNOSTIC',
-    SURGERY = 'SURGERY',
-    TREATMENT = 'TREATMENT',
-    FOLLOW_UP = 'FOLLOW_UP'
 }

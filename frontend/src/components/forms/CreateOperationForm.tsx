@@ -13,13 +13,13 @@ import {
     SelectChangeEvent,
     TextField
 } from '@mui/material';
-import {Operation, OperationType} from '../../types/operation';
+import {Operation} from '../../types/operation';
 import {RestClient} from '../../utils/restClient';
 import {ToothDetailForm, ToothSelectionForm} from './ToothSelectionForm';
 import {adaptOperationPayload} from "../../utils/CreateOperationPayloadAdapter";
 
 export interface OperationForm {
-    type: OperationType;
+    type: string;
     patientId: string;
     description: string;
     executor: string;
@@ -41,7 +41,7 @@ export const CreateOperationForm: React.FC<Props> = ({
     onCancel
 }) => {
     const EMPTY_OPERATION_FORM: OperationForm = {
-        type: '' as OperationType,
+        type: '',
         patientId: patientId,
         description: '',
         executor: '',
@@ -124,7 +124,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                             label="Operation Type"
                             onChange={handleSelectChange}
                         >
-                            {Object.values(OperationType).map(type => (
+                            {Object.values(["CONSULTATION", "CHECK"]).map(type => (
                                 <MenuItem key={type} value={type}>
                                     {type}
                                 </MenuItem>
