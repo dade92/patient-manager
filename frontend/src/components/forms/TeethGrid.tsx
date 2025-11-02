@@ -4,7 +4,7 @@ import { generateFdiTeethNumbers, generateFdiDeciduousTeethNumbers } from '../..
 import {ToothType} from "../../types/ToothDetail";
 
 interface Props {
-  selectedTooth: number | null;
+  selectedTooth: number;
   onToothSelect: (toothNumber: number, toothType: ToothType) => void;
 }
 
