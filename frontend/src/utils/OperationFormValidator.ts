@@ -9,7 +9,7 @@ export class OperationValidationError extends Error {
 
 export const validateOperationForm = (formData: OperationForm): void => {
     const invalidToothDetails = formData.toothDetails.filter(
-        detail => !detail.toothNumber || detail.toothNumber === 0
+        detail => detail.toothNumber === 0
     );
 
     if (invalidToothDetails.length > 0) {
@@ -17,7 +17,7 @@ export const validateOperationForm = (formData: OperationForm): void => {
     }
 
     const invalidAmounts = formData.toothDetails.filter(
-        detail => !detail.amount || parseFloat(detail.amount) <= 0
+        detail => parseFloat(detail.amount) <= 0
     );
 
     if (invalidAmounts.length > 0) {
