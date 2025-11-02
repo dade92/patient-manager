@@ -191,6 +191,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                         onChange={handleTextChange}
                         helperText={"Auto-updating based on tooth amounts"}
                         autoComplete="off"
+                        disabled
                     />
 
                     <Divider sx={{ my: 1 }} />
