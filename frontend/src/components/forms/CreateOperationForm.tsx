@@ -19,7 +19,6 @@ import {RestClient} from '../../utils/restClient';
 import {ToothDetailForm, ToothSelectionForm} from './ToothSelectionForm';
 import {adaptOperationPayload} from "../../utils/CreateOperationPayloadAdapter";
 
-
 export interface OperationForm {
     type: string;
     patientId: string;
@@ -53,7 +52,6 @@ export const CreateOperationForm: React.FC<Props> = ({
     const [formData, setFormData] = useState<OperationForm>(EMPTY_OPERATION_FORM);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [autoUpdateCost, setAutoUpdateCost] = useState(true);
     const [operationTypes, setOperationTypes] = useState<OperationType[]>([]);
     const [toothSelectionKey, setToothSelectionKey] = useState(0);
     const estimatedCost = operationTypes.find(ot => ot.type === formData.type)?.estimatedBaseCost.amount || 0;
@@ -88,11 +86,25 @@ export const CreateOperationForm: React.FC<Props> = ({
         }
     };
 
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        setError(null);
+        setIsSubmitting(true);
+        try {
+            const newOperation = await RestClient.post<Operation>(
+                '/api/operation',
+                adaptOperationPayload(formData)
+            );
+            onOperationCreated(newOperation);
+        } catch (err: any) {
+            setError('An error occurred while creating the operation');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
-        if (name === ESTIMATED_COST_FIELD_NAME) {
-            setAutoUpdateCost(false);
-        }
         setFormData(prev => ({
             ...prev,
             [name]: value
@@ -114,30 +126,11 @@ export const CreateOperationForm: React.FC<Props> = ({
         }));
     };
 
-    const handleTotalAmountChange = useCallback((totalAmount: number) => {
-        if (autoUpdateCost) {
+    const handleTotalAmountChange = (totalAmount: number) => {
             setFormData(prev => ({
                 ...prev,
                 estimatedCost: totalAmount.toFixed(2)
             }));
-        }
-    }, [autoUpdateCost]);
-
-    const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
-        setError(null);
-        setIsSubmitting(true);
-        try {
-            const newOperation = await RestClient.post<Operation>(
-                '/api/operation',
-                adaptOperationPayload(formData)
-            );
-            onOperationCreated(newOperation);
-        } catch (err: any) {
-            setError('An error occurred while creating the operation');
-        } finally {
-            setIsSubmitting(false);
-        }
     };
 
     return (
@@ -196,7 +189,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                         type="text"
                         value={formData.estimatedCost}
                         onChange={handleTextChange}
-                        helperText={autoUpdateCost ? "Auto-updating based on tooth amounts" : "Manually set (auto-update disabled)"}
+                        helperText={"Auto-updating based on tooth amounts"}
                         autoComplete="off"
                     />
 
