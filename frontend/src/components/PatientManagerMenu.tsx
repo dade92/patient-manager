@@ -44,6 +44,13 @@ export const PatientManagerMenu: React.FC = () => {
                 >
                     New Patient
                 </MenuItem>
+                <MenuItem
+                    component={Link}
+                    to="/new-operation-type"
+                    onClick={handleClose}
+                >
+                    New Operation Type
+                </MenuItem>
                 {/* Add more menu items here in the future */}
             </Menu>
         </>
