@@ -283,6 +283,94 @@ export function makeServer({ environment = 'development' } = {}) {
 
         return new Response(200, {}, updatedInvoice);
       });
+
+      // Operation Types API
+      this.get('/operation-type', () => {
+        const operationTypes = [
+          {
+            type: 'CONSULTATION',
+            description: 'Standard consultation with doctor',
+            estimatedBaseCost: {
+              amount: 100.00,
+              currency: 'EUR'
+            }
+          },
+          {
+            type: 'SURGERY',
+            description: 'Complex surgical procedure',
+            estimatedBaseCost: {
+              amount: 1500.00,
+              currency: 'EUR'
+            }
+          },
+          {
+            type: 'DIAGNOSTIC',
+            description: 'Diagnostic examination and tests',
+            estimatedBaseCost: {
+              amount: 250.00,
+              currency: 'EUR'
+            }
+          },
+          {
+            type: 'TREATMENT',
+            description: 'Medical treatment session',
+            estimatedBaseCost: {
+              amount: 300.00,
+              currency: 'EUR'
+            }
+          },
+          {
+            type: 'FOLLOW_UP',
+            description: 'Follow-up appointment',
+            estimatedBaseCost: {
+              amount: 75.00,
+              currency: 'EUR'
+            }
+          },
+          {
+            type: 'EMERGENCY',
+            description: 'Emergency medical intervention',
+            estimatedBaseCost: {
+              amount: 500.00,
+              currency: 'EUR'
+            }
+          },
+          {
+            type: 'PREVENTIVE',
+            description: 'Preventive care and checkup',
+            estimatedBaseCost: {
+              amount: 150.00,
+              currency: 'EUR'
+            }
+          }
+        ];
+
+        return { types: operationTypes };
+      });
+
+      this.post('/operation-type', (schema, request) => {
+        const attrs = JSON.parse(request.requestBody);
+
+        if (!attrs.type || !attrs.description || !attrs.estimatedBaseCost) {
+          return new Response(400, {}, { message: 'Missing required fields' });
+        }
+
+        if (!attrs.estimatedBaseCost.amount || attrs.estimatedBaseCost.amount <= 0) {
+          return new Response(400, {}, { message: 'Invalid estimated base cost' });
+        }
+
+        // Mock response for creating operation type
+        const newOperationType = {
+          type: attrs.type,
+          description: attrs.description,
+          estimatedBaseCost: {
+            amount: attrs.estimatedBaseCost.amount,
+            currency: attrs.estimatedBaseCost.currency || 'EUR'
+          }
+        };
+
+        return new Response(201, {}, newOperationType);
+      });
     },
   });
 }

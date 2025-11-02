@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {
     Alert,
     Box,
@@ -14,9 +14,11 @@ import {
     TextField
 } from '@mui/material';
 import {Operation} from '../../types/operation';
+import {OperationType} from '../../types/OperationType';
 import {RestClient} from '../../utils/restClient';
 import {ToothDetailForm, ToothSelectionForm} from './ToothSelectionForm';
 import {adaptOperationPayload} from "../../utils/CreateOperationPayloadAdapter";
+
 
 export interface OperationForm {
     type: string;
@@ -52,6 +54,25 @@ export const CreateOperationForm: React.FC<Props> = ({
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [autoUpdateCost, setAutoUpdateCost] = useState(true);
+    const [operationTypes, setOperationTypes] = useState<OperationType[]>([]);
+    const [loadingOperationTypes, setLoadingOperationTypes] = useState(true);
+
+    useEffect(() => {
+        const fetchOperationTypes = async () => {
+            try {
+                setLoadingOperationTypes(true);
+                const response = await RestClient.get<{types: OperationType[]}>('/api/operation-type');
+                setOperationTypes(response.types);
+            } catch (err) {
+                console.error('Failed to fetch operation types:', err);
+                setError('Failed to load operation types. Please try again.');
+            } finally {
+                setLoadingOperationTypes(false);
+            }
+        };
+
+        fetchOperationTypes();
+    }, []);
 
     const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
@@ -123,10 +144,11 @@ export const CreateOperationForm: React.FC<Props> = ({
                             value={formData.type}
                             label="Operation Type"
                             onChange={handleSelectChange}
+                            disabled={loadingOperationTypes}
                         >
-                            {Object.values(["CONSULTATION", "CHECK"]).map(type => (
-                                <MenuItem key={type} value={type}>
-                                    {type}
+                            {operationTypes.map(operationType => (
+                                <MenuItem key={operationType.type} value={operationType.type}>
+                                    {operationType.type}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -171,6 +193,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                     <ToothSelectionForm
                         onSelectionChange={handleToothSelectionChange}
                         onTotalAmountChange={handleTotalAmountChange}
+                        estimatedCost={formData.type ? operationTypes.find(ot => ot.type === formData.type)?.estimatedBaseCost.amount : undefined}
                     />
                 </Box>
             </DialogContent>
