@@ -62,13 +62,10 @@ export const CreateOperationForm: React.FC<Props> = ({
         fetchOperationTypes();
     }, []);
 
-    // Update tooth details when operation type changes
     useEffect(() => {
         if (formData.type && estimatedCost > 0) {
-            // Force re-render of ToothSelectionForm to update amounts
             setToothSelectionKey(prev => prev + 1);
 
-            // Update existing tooth details with new estimated cost
             const updatedToothDetails = formData.toothDetails.map(detail => ({
                 ...detail,
                 amount: estimatedCost.toString()
@@ -121,7 +118,7 @@ export const CreateOperationForm: React.FC<Props> = ({
         if (autoUpdateCost) {
             setFormData(prev => ({
                 ...prev,
-                estimatedCost: totalAmount > 0 ? totalAmount.toFixed(2) : ''
+                estimatedCost: totalAmount.toFixed(2)
             }));
         }
     }, [autoUpdateCost]);
