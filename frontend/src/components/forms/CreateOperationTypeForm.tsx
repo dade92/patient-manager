@@ -9,6 +9,7 @@ import {
     InputAdornment
 } from '@mui/material';
 import { RestClient } from '../../utils/restClient';
+import { adaptCreateOperationTypePayload } from '../../utils/CreateOperationTypeAdapter';
 
 export interface CreateOperationTypeForm {
     type: string;
@@ -51,26 +52,7 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
         setIsSubmitting(true);
 
         try {
-            // Validate form
-            if (!formData.type.trim()) {
-                throw new Error('Operation type name is required');
-            }
-            if (!formData.description.trim()) {
-                throw new Error('Description is required');
-            }
-            if (!formData.amount || parseFloat(formData.amount) <= 0) {
-                throw new Error('Amount must be a positive number');
-            }
-
-            const payload = {
-                type: formData.type.trim().toUpperCase(),
-                description: formData.description.trim(),
-                estimatedBaseCost: {
-                    amount: parseFloat(formData.amount),
-                    currency: formData.currency
-                }
-            };
-
+            const payload = adaptCreateOperationTypePayload(formData);
             const newOperationType = await RestClient.post('/api/operation-type', payload);
             onOperationTypeCreated(newOperationType);
         } catch (err: any) {
@@ -104,7 +86,6 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
                     name="type"
                     value={formData.type}
                     onChange={handleChange}
-                    placeholder="e.g., SURGERY, CLEANING, ROOT_CANAL"
                     helperText="Use uppercase letters and underscores (will be converted automatically)"
                     sx={{ mb: 3 }}
                 />
