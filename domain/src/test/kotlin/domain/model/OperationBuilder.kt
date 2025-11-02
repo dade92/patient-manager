@@ -12,7 +12,7 @@ object OperationBuilder {
     fun aPatientOperation(
         id: OperationId = anOperationId(),
         patientId: PatientId = aPatientId(),
-        type: OperationType = OperationType.CONSULTATION,
+        type: PatientOperation.Type = aPatientOperationType(),
         description: String = "",
         executor: String = "",
         assets: List<String> = emptyList(),
@@ -36,9 +36,11 @@ object OperationBuilder {
             info = info
         )
 
+    fun aPatientOperationType(type: String = "CONSULTATION") = PatientOperation.Type(type)
+
     fun aCreateOperationRequest(
         patientId: PatientId = aPatientId(),
-        type: OperationType = OperationType.CONSULTATION,
+        type: PatientOperation.Type = PatientOperation.Type.CONSULTATION,
         description: String = "",
         executor: String = "",
         estimatedCost: Money = aMoney(),

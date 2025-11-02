@@ -5,6 +5,7 @@ import {PatientSearch} from './PatientSearch';
 import {PatientDetail} from './PatientDetail';
 import {NewPatient} from './NewPatient';
 import {OperationDetail} from './OperationDetail';
+import {NewOperationType} from './NewOperationType';
 import {CacheProvider} from '../context/CacheContext';
 import {PatientManagerMenu} from '../components/PatientManagerMenu';
 
@@ -34,6 +35,7 @@ const Welcome: React.FC = () =>
                     }/>
                     <Route path="/patient/:patientId" element={<PatientDetail/>}/>
                     <Route path="/new-patient" element={<NewPatient/>}/>
+                    <Route path="/new-operation-type" element={<NewOperationType/>}/>
                     <Route path="/operation/:operationId" element={<OperationDetail/>}/>
                 </Routes>
             </Container>

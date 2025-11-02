@@ -1,0 +1,18 @@
+### Create a new operation type
+
+POST {{host}}/api/operation-type
+Content-Type: application/json
+
+{
+    "type": "CHECK",
+    "description": "Surgical removal of the appendix",
+    "estimatedBaseCost": {
+        "amount": 700,
+        "currency": "USD"
+    }
+}
+
+### Get all operation types
+
+GET {{host}}/api/operation-types
+Content-Type: application/json

@@ -1,0 +1,9 @@
+{
+  "type": "SURGERY",
+  "description": "description",
+  "estimatedBaseCost": {
+    "amount": 1500.00,
+    "currency": "EUR"
+  }
+}
+

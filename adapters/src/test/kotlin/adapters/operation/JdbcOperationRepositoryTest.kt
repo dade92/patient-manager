@@ -9,8 +9,8 @@ import domain.model.OperationBuilder.aPatientOperation
 import domain.model.OperationBuilder.aPatientOperationInfo
 import domain.model.OperationBuilder.anOperationId
 import domain.model.OperationBuilder.anOperationNote
-import domain.model.OperationType.SURGERY
 import domain.model.PatientBuilder.aPatientId
+import domain.model.PatientOperation.Type.Companion.SURGERY
 import domain.utils.DateTimeProvider
 import io.mockk.every
 import io.mockk.mockk
@@ -43,10 +43,6 @@ class JdbcOperationRepositoryTest {
         )
 
         every { dateTimeProvider.now() } returns NOW
-    }
-
-    @AfterEach
-    fun tearDown() {
     }
 
     @Test

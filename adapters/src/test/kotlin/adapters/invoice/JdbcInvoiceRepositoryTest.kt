@@ -38,11 +38,7 @@ class JdbcInvoiceRepositoryTest {
 
         every { dateTimeProvider.now() } returns NOW
     }
-
-    @AfterEach
-    fun tearDown() {
-    }
-
+    
     @Test
     fun `retrieve returns invoice when present`() {
         val result = repository.retrieve(INVOICE_ID)

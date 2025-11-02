@@ -1,0 +1,20 @@
+{
+  "types": [
+    {
+      "type": "SURGERY",
+      "description": "description",
+      "estimatedBaseCost": {
+        "amount": 1500.00,
+        "currency": "EUR"
+      }
+    },
+    {
+      "type": "CONSULTATION",
+      "description": "description 2",
+      "estimatedBaseCost": {
+        "amount": 100.00,
+        "currency": "EUR"
+      }
+    }
+  ]
+}

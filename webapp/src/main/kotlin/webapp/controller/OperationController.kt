@@ -1,8 +1,8 @@
 package webapp.controller
 
 import domain.model.OperationId
-import domain.model.OperationType
 import domain.model.PatientId
+import domain.model.PatientOperation
 import domain.operation.CreateOperationRequest
 import domain.operation.OperationService
 import org.springframework.http.HttpStatus
@@ -84,7 +84,7 @@ class OperationController(
 
     data class CreateOperationJsonRequest(
         val patientId: String,
-        val type: OperationType,
+        val type: PatientOperation.Type,
         val description: String,
         val executor: String,
         val estimatedCost: MoneyDto,

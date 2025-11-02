@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import {
     Alert,
     Box,
@@ -13,17 +13,17 @@ import {
     SelectChangeEvent,
     TextField
 } from '@mui/material';
-import {Operation, OperationType} from '../../types/operation';
+import {Operation} from '../../types/operation';
+import {OperationType} from '../../types/OperationType';
 import {RestClient} from '../../utils/restClient';
 import {ToothDetailForm, ToothSelectionForm} from './ToothSelectionForm';
 import {adaptOperationPayload} from "../../utils/CreateOperationPayloadAdapter";
 
 export interface OperationForm {
-    type: OperationType;
+    type: string;
     patientId: string;
     description: string;
     executor: string;
-    estimatedCost: string;
     toothDetails: ToothDetailForm[];
 }
 
@@ -33,60 +33,54 @@ interface Props {
     onCancel: () => void;
 }
 
-const ESTIMATED_COST_FIELD_NAME = "estimatedCost";
-
 export const CreateOperationForm: React.FC<Props> = ({
     patientId,
     onOperationCreated,
     onCancel
 }) => {
     const EMPTY_OPERATION_FORM: OperationForm = {
-        type: '' as OperationType,
+        type: '',
         patientId: patientId,
         description: '',
         executor: '',
-        estimatedCost: '',
         toothDetails: []
     };
     const [formData, setFormData] = useState<OperationForm>(EMPTY_OPERATION_FORM);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [autoUpdateCost, setAutoUpdateCost] = useState(true);
+    const [operationTypes, setOperationTypes] = useState<OperationType[]>([]);
+    const [toothSelectionKey, setToothSelectionKey] = useState(0);
+    const estimatedCost = operationTypes.find(ot => ot.type === formData.type)?.estimatedBaseCost.amount || 0;
 
-    const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const {name, value} = e.target;
-        if (name === ESTIMATED_COST_FIELD_NAME) {
-            setAutoUpdateCost(false);
-        }
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
+    useEffect(() => {
+        fetchOperationTypes();
+    }, []);
 
-    const handleSelectChange = (e: SelectChangeEvent) => {
-        const {name, value} = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
+    useEffect(() => {
+        if (formData.type && estimatedCost > 0) {
+            setToothSelectionKey(prev => prev + 1);
 
-    const handleToothSelectionChange = (details: ToothDetailForm[]) => {
-        setFormData(prev => ({
-            ...prev,
-            toothDetails: details
-        }));
-    };
+            const updatedToothDetails = formData.toothDetails.map(detail => ({
+                ...detail,
+                amount: estimatedCost.toString()
+            }));
 
-    const handleTotalAmountChange = useCallback((totalAmount: number) => {
-        if (autoUpdateCost) {
             setFormData(prev => ({
                 ...prev,
-                estimatedCost: totalAmount > 0 ? totalAmount.toFixed(2) : ''
+                toothDetails: updatedToothDetails
             }));
         }
-    }, [autoUpdateCost]);
+    }, [formData.type, estimatedCost]);
+
+    const fetchOperationTypes = async () => {
+        try {
+            const response = await RestClient.get<{types: OperationType[]}>('/api/operation-types');
+            setOperationTypes(response.types);
+        } catch (err) {
+            console.error('Failed to fetch operation types:', err);
+            setError('Failed to load operation types. Please try again.');
+        }
+    };
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -100,10 +94,25 @@ export const CreateOperationForm: React.FC<Props> = ({
             );
             onOperationCreated(newOperation);
         } catch (err: any) {
-            setError('An error occurred while creating the operation');
+            setError(err.message);
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
+        const {name, value} = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleToothSelectionChange = (details: ToothDetailForm[]) => {
+        setFormData(prev => ({
+            ...prev,
+            toothDetails: details
+        }));
     };
 
     return (
@@ -122,11 +131,11 @@ export const CreateOperationForm: React.FC<Props> = ({
                             name="type"
                             value={formData.type}
                             label="Operation Type"
-                            onChange={handleSelectChange}
+                            onChange={handleChange}
                         >
-                            {Object.values(OperationType).map(type => (
-                                <MenuItem key={type} value={type}>
-                                    {type}
+                            {operationTypes.map(operationType => (
+                                <MenuItem key={operationType.type} value={operationType.type}>
+                                    {operationType.type}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -140,7 +149,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                         multiline
                         rows={4}
                         value={formData.description}
-                        onChange={handleTextChange}
+                        onChange={handleChange}
                         autoComplete="off"
                     />
 
@@ -150,27 +159,17 @@ export const CreateOperationForm: React.FC<Props> = ({
                         label="Executor"
                         name="executor"
                         value={formData.executor}
-                        onChange={handleTextChange}
+                        onChange={handleChange}
                         autoComplete="off"
                     />
 
-                    <TextField
-                        required
-                        fullWidth
-                        label="Estimated Cost"
-                        name={ESTIMATED_COST_FIELD_NAME}
-                        type="text"
-                        value={formData.estimatedCost}
-                        onChange={handleTextChange}
-                        helperText={autoUpdateCost ? "Auto-updating based on tooth amounts" : "Manually set (auto-update disabled)"}
-                        autoComplete="off"
-                    />
 
                     <Divider sx={{ my: 1 }} />
 
                     <ToothSelectionForm
+                        key={toothSelectionKey}
                         onSelectionChange={handleToothSelectionChange}
-                        onTotalAmountChange={handleTotalAmountChange}
+                        estimatedCost={estimatedCost}
                     />
                 </Box>
             </DialogContent>

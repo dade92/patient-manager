@@ -10,7 +10,7 @@ value class OperationId(val value: String) {
 data class PatientOperation(
     val id: OperationId,
     val patientId: PatientId,
-    val type: OperationType,
+    val type: Type,
     val description: String,
     val executor: String,
     val assets: List<String>,
@@ -19,7 +19,21 @@ data class PatientOperation(
     val lastUpdate: LocalDateTime,
     val estimatedCost: Money,
     val info: PatientOperationInfo
-)
+) {
+    @JvmInline
+    value class Type(val type: String) {
+        override fun toString(): String = type
+
+        companion object {
+            val CONSULTATION = Type("CONSULTATION")
+            val SURGERY = Type("SURGERY")
+            val TREATMENT = Type("TREATMENT")
+            val FOLLOW_UP = Type("FOLLOW_UP")
+            val DIAGNOSTIC = Type("DIAGNOSTIC")
+        }
+    }
+
+}
 
 data class PatientOperationInfo(
     val details: List<Detail>
@@ -34,14 +48,6 @@ data class PatientOperationInfo(
 enum class ToothType {
     PERMANENT,
     DECIDUOUS,
-}
-
-enum class OperationType {
-    CONSULTATION,
-    SURGERY,
-    TREATMENT,
-    FOLLOW_UP,
-    DIAGNOSTIC
 }
 
 data class OperationNote(
