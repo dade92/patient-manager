@@ -33,18 +33,16 @@ export const ToothSelectionForm: React.FC<Props> = ({
         toothType: ''
     }]);
 
-
-
     useEffect(() => {
         if (estimatedCost && estimatedCost > 0) {
             const updatedDetails = toothDetails.map(detail => ({
                 ...detail,
-                amount: detail.amount || estimatedCost.toString()
+                amount: estimatedCost.toString()
             }));
             setToothDetails(updatedDetails);
             onSelectionChange(updatedDetails);
         }
-    }, [estimatedCost, onSelectionChange]);
+    }, [estimatedCost]);
 
     const handleToothSelection = (detailIndex: number, toothNumber: number, toothType: ToothType) => {
         const updatedDetails = [...toothDetails];

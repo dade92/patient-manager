@@ -70,7 +70,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                 toothDetails: updatedToothDetails
             }));
         }
-    }, [formData.type]);
+    }, [formData.type, estimatedCost]);
 
     const fetchOperationTypes = async () => {
         try {
@@ -121,7 +121,6 @@ export const CreateOperationForm: React.FC<Props> = ({
             toothDetails: details
         }));
     };
-
 
     return (
         <form onSubmit={handleSubmit}>
