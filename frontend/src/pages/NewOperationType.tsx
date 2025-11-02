@@ -1,38 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
     Container,
-    Typography,
     Paper,
     Grid
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { CreateOperationTypeForm } from '../components/forms/CreateOperationTypeForm';
 import { OperationTypePriceList } from '../components/OperationTypePriceList';
-import { OperationType } from '../types/OperationType';
-import { RestClient } from '../utils/restClient';
+import { useOperationTypes } from '../hooks/useOperationTypes';
 
 export const NewOperationType: React.FC = () => {
     const navigate = useNavigate();
-    const [operationTypes, setOperationTypes] = useState<OperationType[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        fetchOperationTypes();
-    }, []);
-
-    const fetchOperationTypes = async () => {
-        try {
-            setLoading(true);
-            const response = await RestClient.get<{types: OperationType[]}>('/api/operation-types');
-            setOperationTypes(response.types);
-        } catch (err) {
-            console.error('Failed to fetch operation types:', err);
-            setError('Failed to load operation types');
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { operationTypes, loading, error} = useOperationTypes();
 
     const handleOperationTypeCreated = () => {
         navigate('/');
