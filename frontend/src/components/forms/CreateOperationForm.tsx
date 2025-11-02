@@ -99,15 +99,7 @@ export const CreateOperationForm: React.FC<Props> = ({
         }
     };
 
-    const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const {name, value} = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleSelectChange = (e: SelectChangeEvent) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
         const {name, value} = e.target;
         setFormData(prev => ({
             ...prev,
@@ -138,7 +130,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                             name="type"
                             value={formData.type}
                             label="Operation Type"
-                            onChange={handleSelectChange}
+                            onChange={handleChange}
                         >
                             {operationTypes.map(operationType => (
                                 <MenuItem key={operationType.type} value={operationType.type}>
@@ -156,7 +148,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                         multiline
                         rows={4}
                         value={formData.description}
-                        onChange={handleTextChange}
+                        onChange={handleChange}
                         autoComplete="off"
                     />
 
@@ -166,7 +158,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                         label="Executor"
                         name="executor"
                         value={formData.executor}
-                        onChange={handleTextChange}
+                        onChange={handleChange}
                         autoComplete="off"
                     />
 
