@@ -86,6 +86,7 @@ export const CreateOperationForm: React.FC<Props> = ({
         event.preventDefault();
         setError(null);
         setIsSubmitting(true);
+
         try {
             const newOperation = await RestClient.post<Operation>(
                 '/api/operation',
@@ -93,7 +94,7 @@ export const CreateOperationForm: React.FC<Props> = ({
             );
             onOperationCreated(newOperation);
         } catch (err: any) {
-            setError('An error occurred while creating the operation');
+            setError(err.message);
         } finally {
             setIsSubmitting(false);
         }

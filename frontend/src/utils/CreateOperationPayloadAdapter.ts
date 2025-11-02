@@ -2,8 +2,11 @@ import {ToothDetailForm} from "../components/forms/ToothSelectionForm";
 import {toMoney} from "./AmountToMoneyConverter";
 import {ToothDetail, ToothType} from "../types/ToothDetail";
 import {OperationForm} from "../components/forms/CreateOperationForm";
+import {validateOperationForm} from "./OperationFormValidator";
 
 export const adaptOperationPayload = (formData: OperationForm) => {
+    validateOperationForm(formData);
+
     const totalEstimatedCost = formData.toothDetails.reduce((sum, detail) => {
         const amount = parseFloat(detail.amount) || 0;
         return sum + amount;
