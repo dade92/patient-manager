@@ -55,24 +55,41 @@ export const CreateOperationForm: React.FC<Props> = ({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [autoUpdateCost, setAutoUpdateCost] = useState(true);
     const [operationTypes, setOperationTypes] = useState<OperationType[]>([]);
-    const [loadingOperationTypes, setLoadingOperationTypes] = useState(true);
+    const [toothSelectionKey, setToothSelectionKey] = useState(0);
+    const estimatedCost = operationTypes.find(ot => ot.type === formData.type)?.estimatedBaseCost.amount || 0;
 
     useEffect(() => {
-        const fetchOperationTypes = async () => {
-            try {
-                setLoadingOperationTypes(true);
-                const response = await RestClient.get<{types: OperationType[]}>('/api/operation-type');
-                setOperationTypes(response.types);
-            } catch (err) {
-                console.error('Failed to fetch operation types:', err);
-                setError('Failed to load operation types. Please try again.');
-            } finally {
-                setLoadingOperationTypes(false);
-            }
-        };
-
         fetchOperationTypes();
     }, []);
+
+    // Update tooth details when operation type changes
+    useEffect(() => {
+        if (formData.type && estimatedCost > 0) {
+            // Force re-render of ToothSelectionForm to update amounts
+            setToothSelectionKey(prev => prev + 1);
+
+            // Update existing tooth details with new estimated cost
+            const updatedToothDetails = formData.toothDetails.map(detail => ({
+                ...detail,
+                amount: estimatedCost.toString()
+            }));
+
+            setFormData(prev => ({
+                ...prev,
+                toothDetails: updatedToothDetails
+            }));
+        }
+    }, [formData.type, estimatedCost]);
+
+    const fetchOperationTypes = async () => {
+        try {
+            const response = await RestClient.get<{types: OperationType[]}>('/api/operation-type');
+            setOperationTypes(response.types);
+        } catch (err) {
+            console.error('Failed to fetch operation types:', err);
+            setError('Failed to load operation types. Please try again.');
+        }
+    };
 
     const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
@@ -113,7 +130,6 @@ export const CreateOperationForm: React.FC<Props> = ({
         event.preventDefault();
         setError(null);
         setIsSubmitting(true);
-
         try {
             const newOperation = await RestClient.post<Operation>(
                 '/api/operation',
@@ -144,7 +160,6 @@ export const CreateOperationForm: React.FC<Props> = ({
                             value={formData.type}
                             label="Operation Type"
                             onChange={handleSelectChange}
-                            disabled={loadingOperationTypes}
                         >
                             {operationTypes.map(operationType => (
                                 <MenuItem key={operationType.type} value={operationType.type}>
@@ -191,9 +206,10 @@ export const CreateOperationForm: React.FC<Props> = ({
                     <Divider sx={{ my: 1 }} />
 
                     <ToothSelectionForm
+                        key={toothSelectionKey}
                         onSelectionChange={handleToothSelectionChange}
                         onTotalAmountChange={handleTotalAmountChange}
-                        estimatedCost={formData.type ? operationTypes.find(ot => ot.type === formData.type)?.estimatedBaseCost.amount : undefined}
+                        estimatedCost={estimatedCost}
                     />
                 </Box>
             </DialogContent>

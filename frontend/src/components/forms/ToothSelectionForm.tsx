@@ -21,7 +21,7 @@ export interface ToothDetailForm {
 interface Props {
     onSelectionChange: (details: ToothDetailForm[]) => void;
     onTotalAmountChange: (totalAmount: number) => void;
-    estimatedCost?: number;
+    estimatedCost: number;
 }
 
 export const ToothSelectionForm: React.FC<Props> = ({
