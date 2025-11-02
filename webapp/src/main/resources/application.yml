@@ -8,6 +8,10 @@ spring:
     username: ${PATIENT_DB_USERNAME}
     password: ${PATIENT_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  cache:
+    type: caffeine
+    caffeine:
+      spec: expireAfterWrite=1m,maximumSize=100
 
 bucket:
   host: localhost
