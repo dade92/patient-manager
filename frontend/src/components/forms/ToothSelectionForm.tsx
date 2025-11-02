@@ -20,13 +20,11 @@ export interface ToothDetailForm {
 
 interface Props {
     onSelectionChange: (details: ToothDetailForm[]) => void;
-    onTotalAmountChange: (totalAmount: number) => void;
-    estimatedCost: number;
+    estimatedCost?: number;
 }
 
 export const ToothSelectionForm: React.FC<Props> = ({
     onSelectionChange,
-    onTotalAmountChange,
     estimatedCost
 }) => {
     const [toothDetails, setToothDetails] = useState<ToothDetailForm[]>([{
@@ -35,23 +33,18 @@ export const ToothSelectionForm: React.FC<Props> = ({
         toothType: ''
     }]);
 
-    useEffect(() => {
-        const totalAmount = toothDetails.reduce((sum, detail) => {
-            const amount = parseFloat(detail.amount) || 0;
-            return sum + amount;
-        }, 0);
 
-        onTotalAmountChange(totalAmount);
-    }, [toothDetails, onTotalAmountChange]);
 
     useEffect(() => {
-        const updatedDetails = toothDetails.map(detail => ({
-            ...detail,
-            amount: detail.amount || estimatedCost.toString()
-        }));
-        setToothDetails(updatedDetails);
-        onSelectionChange(updatedDetails);
-    }, [estimatedCost]);
+        if (estimatedCost && estimatedCost > 0) {
+            const updatedDetails = toothDetails.map(detail => ({
+                ...detail,
+                amount: detail.amount || estimatedCost.toString()
+            }));
+            setToothDetails(updatedDetails);
+            onSelectionChange(updatedDetails);
+        }
+    }, [estimatedCost, onSelectionChange]);
 
     const handleToothSelection = (detailIndex: number, toothNumber: number, toothType: ToothType) => {
         const updatedDetails = [...toothDetails];

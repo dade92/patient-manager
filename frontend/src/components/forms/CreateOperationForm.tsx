@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import {
     Alert,
     Box,
@@ -24,7 +24,6 @@ export interface OperationForm {
     patientId: string;
     description: string;
     executor: string;
-    estimatedCost: string;
     toothDetails: ToothDetailForm[];
 }
 
@@ -33,8 +32,6 @@ interface Props {
     onOperationCreated: (operation: Operation) => void;
     onCancel: () => void;
 }
-
-const ESTIMATED_COST_FIELD_NAME = "estimatedCost";
 
 export const CreateOperationForm: React.FC<Props> = ({
     patientId,
@@ -46,7 +43,6 @@ export const CreateOperationForm: React.FC<Props> = ({
         patientId: patientId,
         description: '',
         executor: '',
-        estimatedCost: '',
         toothDetails: []
     };
     const [formData, setFormData] = useState<OperationForm>(EMPTY_OPERATION_FORM);
@@ -74,7 +70,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                 toothDetails: updatedToothDetails
             }));
         }
-    }, [formData.type, estimatedCost]);
+    }, [formData.type]);
 
     const fetchOperationTypes = async () => {
         try {
@@ -126,12 +122,6 @@ export const CreateOperationForm: React.FC<Props> = ({
         }));
     };
 
-    const handleTotalAmountChange = (totalAmount: number) => {
-            setFormData(prev => ({
-                ...prev,
-                estimatedCost: totalAmount.toFixed(2)
-            }));
-    };
 
     return (
         <form onSubmit={handleSubmit}>
@@ -181,25 +171,12 @@ export const CreateOperationForm: React.FC<Props> = ({
                         autoComplete="off"
                     />
 
-                    <TextField
-                        required
-                        fullWidth
-                        label="Estimated Cost"
-                        name={ESTIMATED_COST_FIELD_NAME}
-                        type="text"
-                        value={formData.estimatedCost}
-                        onChange={handleTextChange}
-                        helperText={"Auto-updating based on tooth amounts"}
-                        autoComplete="off"
-                        disabled
-                    />
 
                     <Divider sx={{ my: 1 }} />
 
                     <ToothSelectionForm
                         key={toothSelectionKey}
                         onSelectionChange={handleToothSelectionChange}
-                        onTotalAmountChange={handleTotalAmountChange}
                         estimatedCost={estimatedCost}
                     />
                 </Box>
