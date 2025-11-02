@@ -39,7 +39,7 @@ class OperationTypeControllerTest {
     fun `createOperationType returns 201 and delegates to service`() {
         val operationType = anOperationType(
             type = SURGERY,
-            description = "Complex surgical procedure",
+            description = "description",
             estimatedBaseCost = aMoney(BigDecimal("1500.00"))
         )
 
@@ -64,12 +64,12 @@ class OperationTypeControllerTest {
         val operationTypes = listOf(
             anOperationType(
                 type = SURGERY,
-                description = "Complex surgical procedure",
+                description = "description",
                 estimatedBaseCost = aMoney(BigDecimal("1500.00"))
             ),
             anOperationType(
                 type = CONSULTATION,
-                description = "Standard consultation",
+                description = "description 2",
                 estimatedBaseCost = aMoney(BigDecimal("100.00"))
             )
         )
