@@ -284,8 +284,7 @@ export function makeServer({ environment = 'development' } = {}) {
         return new Response(200, {}, updatedInvoice);
       });
 
-      // Operation Types API
-      this.get('/operation-type', () => {
+      this.get('/operation-types', () => {
         const operationTypes = [
           {
             type: 'CONSULTATION',

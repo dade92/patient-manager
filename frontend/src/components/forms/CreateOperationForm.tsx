@@ -74,7 +74,7 @@ export const CreateOperationForm: React.FC<Props> = ({
 
     const fetchOperationTypes = async () => {
         try {
-            const response = await RestClient.get<{types: OperationType[]}>('/api/operation-type');
+            const response = await RestClient.get<{types: OperationType[]}>('/api/operation-types');
             setOperationTypes(response.types);
         } catch (err) {
             console.error('Failed to fetch operation types:', err);
