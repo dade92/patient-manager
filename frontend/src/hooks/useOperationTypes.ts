@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { OperationType } from '../types/OperationType';
 import { RestClient } from '../utils/restClient';
 
-interface UseOperationTypesReturn {
+interface OperationTypesStatus {
     operationTypes: OperationType[];
     loading: boolean;
     error: string | null;
     refetch: () => Promise<void>;
 }
 
-export const useOperationTypes = (): UseOperationTypesReturn => {
+export const useOperationTypes = (): OperationTypesStatus => {
     const [operationTypes, setOperationTypes] = useState<OperationType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
