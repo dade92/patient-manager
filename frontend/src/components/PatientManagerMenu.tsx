@@ -49,7 +49,7 @@ export const PatientManagerMenu: React.FC = () => {
                     to="/new-operation-type"
                     onClick={handleClose}
                 >
-                    New Operation Type
+                    Operation types
                 </MenuItem>
                 {/* Add more menu items here in the future */}
             </Menu>
