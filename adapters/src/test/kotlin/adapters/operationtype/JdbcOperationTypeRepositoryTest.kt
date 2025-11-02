@@ -35,10 +35,6 @@ class JdbcOperationTypeRepositoryTest {
         repository = JdbcOperationTypeRepository(dataSource)
     }
 
-    @AfterEach
-    fun tearDown() {
-    }
-
     @Test
     fun `save inserts new operation type when not existing`() {
         val operationType = anOperationType(
@@ -75,7 +71,7 @@ class JdbcOperationTypeRepositoryTest {
     }
 
     @Test
-    fun `retrieveAll returns all operation types ordered by type`() {
+    fun `retrieveAll returns all operation types alphabetically ordered by type`() {
         val result = repository.retrieveAll()
 
         assertEquals(4, result.size)

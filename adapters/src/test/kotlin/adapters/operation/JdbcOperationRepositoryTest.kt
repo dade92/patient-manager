@@ -45,10 +45,6 @@ class JdbcOperationRepositoryTest {
         every { dateTimeProvider.now() } returns NOW
     }
 
-    @AfterEach
-    fun tearDown() {
-    }
-
     @Test
     fun `save inserts when operation not existing`() {
         val newOperationId = anOperationId("OP-002")

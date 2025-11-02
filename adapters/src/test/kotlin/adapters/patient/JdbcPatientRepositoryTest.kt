@@ -29,10 +29,6 @@ class JdbcPatientRepositoryTest {
         repository = JdbcPatientRepository(dataSource)
     }
 
-    @AfterEach
-    fun tearDown() {
-    }
-
     @Test
     fun `retrieve returns patient when present`() {
         val result = repository.retrieve(PATIENT_ID)
