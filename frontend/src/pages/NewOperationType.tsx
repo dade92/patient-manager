@@ -1,13 +1,12 @@
 import React from 'react';
-import {Box, Button, Container, Typography} from '@mui/material';
+import {Container} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {CreateOperationTypeForm} from '../components/forms/CreateOperationTypeForm';
 
 export const NewOperationType: React.FC = () => {
     const navigate = useNavigate();
 
-    const handleOperationTypeCreated = (operationType: any) => {
+    const handleOperationTypeCreated = () => {
         navigate('/');
     };
 
