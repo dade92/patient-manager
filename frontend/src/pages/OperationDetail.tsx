@@ -16,9 +16,9 @@ export const OperationDetail: React.FC = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-    const { operation, loading, error, updateOperation } = useOperation(operationId!);
     const { addCachedInvoiceForPatient } = useCache();
 
+    const { operation, loading, error, updateOperation } = useOperation(operationId!);
     const { uploadFile } = useFileUpload({
         onSuccess: (updatedOperation) => {
             updateOperation(updatedOperation);
