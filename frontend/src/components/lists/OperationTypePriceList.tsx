@@ -6,7 +6,7 @@ import {
     ListItemText,
     Divider,
     Alert,
-    CircularProgress,
+    Skeleton,
     Typography
 } from '@mui/material';
 import { OperationType } from '../../types/OperationType';
@@ -24,9 +24,22 @@ export const OperationTypePriceList: React.FC<Props> = ({
 }) => {
     if (loading) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
-                <CircularProgress />
-            </Box>
+            <List>
+                {Array.from({ length: 3 }, (_, index) => (
+                    <React.Fragment key={index}>
+                        <ListItem>
+                            <ListItemText
+                                primary={<Skeleton variant="text" width="60%" />}
+                                secondary={<Skeleton variant="text" width="80%" />}
+                            />
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                                <Skeleton variant="text" width={80} height={32} />
+                            </Box>
+                        </ListItem>
+                        {index < 2 && <Divider />}
+                    </React.Fragment>
+                ))}
+            </List>
         );
     }
 
