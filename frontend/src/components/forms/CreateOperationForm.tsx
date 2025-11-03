@@ -14,10 +14,10 @@ import {
     TextField
 } from '@mui/material';
 import {Operation} from '../../types/operation';
-import {OperationType} from '../../types/OperationType';
 import {RestClient} from '../../utils/restClient';
 import {ToothDetailForm, ToothSelectionForm} from './ToothSelectionForm';
 import {adaptOperationPayload} from "../../utils/CreateOperationPayloadAdapter";
+import {useOperationTypes} from "../../hooks/useOperationTypes";
 
 export interface OperationForm {
     type: string;
@@ -48,13 +48,9 @@ export const CreateOperationForm: React.FC<Props> = ({
     const [formData, setFormData] = useState<OperationForm>(EMPTY_OPERATION_FORM);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [operationTypes, setOperationTypes] = useState<OperationType[]>([]);
     const [toothSelectionKey, setToothSelectionKey] = useState(0);
+    const { operationTypes, loading: loadingOperationTypes, error: operationTypesError } = useOperationTypes();
     const estimatedCost = operationTypes.find(ot => ot.type === formData.type)?.estimatedBaseCost.amount || 0;
-
-    useEffect(() => {
-        fetchOperationTypes();
-    }, []);
 
     useEffect(() => {
         if (formData.type && estimatedCost > 0) {
@@ -71,16 +67,6 @@ export const CreateOperationForm: React.FC<Props> = ({
             }));
         }
     }, [formData.type, estimatedCost]);
-
-    const fetchOperationTypes = async () => {
-        try {
-            const response = await RestClient.get<{types: OperationType[]}>('/api/operation-types');
-            setOperationTypes(response.types);
-        } catch (err) {
-            console.error('Failed to fetch operation types:', err);
-            setError('Failed to load operation types. Please try again.');
-        }
-    };
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -118,9 +104,9 @@ export const CreateOperationForm: React.FC<Props> = ({
     return (
         <form onSubmit={handleSubmit}>
             <DialogContent>
-                {error && (
+                {(error || operationTypesError) && (
                     <Alert severity="error" sx={{mb: 2}}>
-                        {error}
+                        {error || operationTypesError}
                     </Alert>
                 )}
                 <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
@@ -132,6 +118,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                             value={formData.type}
                             label="Operation Type"
                             onChange={handleChange}
+                            disabled={loadingOperationTypes}
                         >
                             {operationTypes.map(operationType => (
                                 <MenuItem key={operationType.type} value={operationType.type}>
@@ -192,4 +179,3 @@ export const CreateOperationForm: React.FC<Props> = ({
         </form>
     );
 };
-

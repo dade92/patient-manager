@@ -2,6 +2,8 @@ package webapp.controller
 
 import domain.model.OperationType
 import domain.operationtype.OperationTypeService
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -15,6 +17,7 @@ class OperationTypeController(
 ) {
 
     @PostMapping("/operation-type")
+    @CacheEvict(value = ["operation-types"], allEntries = true)
     fun createOperationType(
         @RequestBody request: CreateOperationTypeRequest
     ): ResponseEntity<OperationTypeResponse> =
@@ -30,6 +33,7 @@ class OperationTypeController(
         }
 
     @GetMapping("/operation-types")
+    @Cacheable(value = ["operation-types"])
     fun getAll(): ResponseEntity<OperationTypeListResponse> =
         ResponseEntity.ok(
             OperationTypeListResponse(
