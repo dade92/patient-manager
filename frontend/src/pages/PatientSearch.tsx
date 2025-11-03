@@ -6,10 +6,10 @@ import {PatientListItem} from '../components/lists/PatientListItem';
 import { usePatientSearch } from '../hooks/usePatientSearch';
 
 export const PatientSearch: React.FC = () => {
+    const navigate = useNavigate();
     const [searchInput, setSearchInput] = useState('');
     const [showResults, setShowResults] = useState(false);
     const { patients, error, searchPatients } = usePatientSearch();
-    const navigate = useNavigate();
 
     const handleSearchChange = (value: string) => {
         setSearchInput(value);
