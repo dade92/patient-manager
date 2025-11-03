@@ -7,42 +7,25 @@ import {AddNoteDialog} from '../components/dialogs/AddNoteDialog';
 import {CreateInvoiceDialog} from '../components/dialogs/CreateInvoiceDialog';
 import {OperationDetailCard} from '../components/cards/OperationDetailCard';
 import {BackButton} from '../components/atoms/BackButton';
-import { useOperation } from '../hooks/useOperation';
+import {useOperation} from '../hooks/useOperation';
+import {useFileUpload} from '../hooks/useFileUpload';
 
 export const OperationDetail: React.FC = () => {
-    const {operationId} = useParams();
     const navigate = useNavigate();
-    const { operation, loading, error, updateOperation } = useOperation(operationId);
+    const {operationId} = useParams();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const { operation, loading, error, updateOperation } = useOperation(operationId);
 
     const { addCachedInvoiceForPatient } = useCache();
 
-    const handleFileUpload = async (file: File) => {
-        if (!operationId || !operation) return;
-
-        const formData = new FormData();
-        formData.append('file', file);
-
-        try {
-            const response = await fetch(`/api/operation/${operationId}/assets`, {
-                method: 'POST',
-                body: formData
-            });
-
-            if (response.ok) {
-                const updatedOperation = await response.json();
-                updateOperation(updatedOperation);
-            } else {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to upload file');
-            }
-        } catch (error) {
-            throw error;
-        }
-    };
-
+    const { uploadFile } = useFileUpload({
+        onSuccess: (updatedOperation) => {
+            updateOperation(updatedOperation);
+        },
+        onError: () => {}
+    });
 
     if (loading) {
         return (
@@ -66,7 +49,9 @@ export const OperationDetail: React.FC = () => {
             ) : operation ? (
                 <OperationDetailCard
                     operation={operation}
-                    onAddAsset={handleFileUpload}
+                    onAddAsset={async (file: File) => {
+                        await uploadFile(operationId!, file);
+                    }}
                     onAddNote={() => setDialogOpen(true)}
                     onCreateInvoice={() => setInvoiceDialogOpen(true)}
                     onPatientIdClick={(patientId: string) => navigate(`/patient/${patientId}`)}

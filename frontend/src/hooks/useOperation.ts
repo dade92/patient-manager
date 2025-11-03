@@ -4,7 +4,7 @@ import { useCache } from '../context/CacheContext';
 import { RestClient } from '../utils/restClient';
 
 interface OperationStatus {
-    operation: Operation | null;
+    operation: Operation | null | undefined;
     loading: boolean;
     error: string | null;
     refetch: () => Promise<void>;
@@ -12,7 +12,7 @@ interface OperationStatus {
 }
 
 export const useOperation = (operationId: string | undefined): OperationStatus => {
-    const [operation, setOperation] = useState<Operation | null>(null);
+    const [operation, setOperation] = useState<Operation | null>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -69,10 +69,8 @@ export const useOperation = (operationId: string | undefined): OperationStatus =
     };
 
     const updateOperation = (updatedOperation: Operation) => {
-        if (!operationId) return;
-
         setOperation(updatedOperation);
-        setCachedOperation(operationId, updatedOperation);
+        setCachedOperation(operationId!, updatedOperation);
         updateOperationInPatientCache(updatedOperation);
     };
 
