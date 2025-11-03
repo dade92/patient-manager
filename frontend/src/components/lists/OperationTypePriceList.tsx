@@ -9,7 +9,7 @@ import {
     CircularProgress,
     Typography
 } from '@mui/material';
-import { OperationType } from '../types/OperationType';
+import { OperationType } from '../../types/OperationType';
 
 interface Props {
     operationTypes: OperationType[];
@@ -57,7 +57,7 @@ export const OperationTypePriceList: React.FC<Props> = ({
                             primaryTypographyProps={{ fontWeight: 'medium' }}
                         />
                         <Typography variant="h6" color="primary">
-                            €{operationType.estimatedBaseCost.amount.toFixed(2)}
+                            {operationType.estimatedBaseCost.currency} {operationType.estimatedBaseCost.amount.toFixed(2)}
                         </Typography>
                     </ListItem>
                     {index < operationTypes.length - 1 && <Divider />}
