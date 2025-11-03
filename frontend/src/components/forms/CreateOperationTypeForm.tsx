@@ -8,9 +8,7 @@ import {
     Paper,
     InputAdornment
 } from '@mui/material';
-import { RestClient } from '../../utils/restClient';
-import { adaptCreateOperationTypePayload } from '../../utils/CreateOperationTypeAdapter';
-import {OperationType} from "../../types/OperationType";
+import { useCreateOperationType } from '../../hooks/useCreateOperationType';
 
 export interface CreateOperationTypeForm {
     type: string;
@@ -36,8 +34,11 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
     onCancel
 }) => {
     const [formData, setFormData] = useState<CreateOperationTypeForm>(EMPTY_FORM);
-    const [error, setError] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const { createOperationType, isSubmitting, error } = useCreateOperationType({
+        onSuccess: onOperationTypeCreated,
+        onError: () => {}
+    });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -49,17 +50,11 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        setError(null);
-        setIsSubmitting(true);
 
         try {
-            const payload = adaptCreateOperationTypePayload(formData);
-            await RestClient.post<OperationType>('/api/operation-type', payload);
-            onOperationTypeCreated();
-        } catch (err: any) {
-            setError(err.message || 'An error occurred while creating the operation type');
-        } finally {
-            setIsSubmitting(false);
+            await createOperationType(formData);
+        } catch {
+            // Error is handled by the hook
         }
     };
 
