@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Patient } from '../types/patient';
-import { useCache } from '../context/CacheContext';
-import { RestClient } from '../utils/restClient';
+import {useEffect, useState} from 'react';
+import {Patient} from '../types/patient';
+import {useCache} from '../context/CacheContext';
+import {RestClient} from '../utils/restClient';
 
 interface PatientStatus {
     patient: Patient | undefined;
@@ -14,7 +14,7 @@ export const usePatient = (patientId: string | undefined): PatientStatus => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const { getCachedPatient, setCachedPatient } = useCache();
+    const {getCachedPatient, setCachedPatient} = useCache();
 
     const fetchPatient = async () => {
         if (!patientId) {
@@ -44,13 +44,6 @@ export const usePatient = (patientId: string | undefined): PatientStatus => {
         } finally {
             setLoading(false);
         }
-    };
-
-    const updatePatient = (updatedPatient: Patient) => {
-        if (!patientId) return;
-
-        setPatient(updatedPatient);
-        setCachedPatient(patientId, updatedPatient);
     };
 
     useEffect(() => {
