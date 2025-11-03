@@ -7,8 +7,6 @@ interface PatientStatus {
     patient: Patient | undefined;
     loading: boolean;
     error: string | null;
-    refetch: () => Promise<void>;
-    updatePatient: (updatedPatient: Patient) => void;
 }
 
 export const usePatient = (patientId: string | undefined): PatientStatus => {
@@ -63,7 +61,5 @@ export const usePatient = (patientId: string | undefined): PatientStatus => {
         patient,
         loading,
         error,
-        refetch: fetchPatient,
-        updatePatient
     };
 };
