@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { RestClient } from '../utils/restClient';
+import {useState} from 'react';
+import {RestClient} from '../utils/restClient';
 
-interface UseDeletePatientProps {
-    onSuccess?: () => void;
-    onError?: (error: string) => void;
+interface Props {
+    onSuccess: () => void;
+    onError: (error: string) => void;
 }
 
-interface UseDeletePatientReturn {
+interface DeletePatientStatus {
     deletePatient: (patientId: string) => Promise<void>;
     isDeleting: boolean;
     error: string | null;
 }
 
-export const useDeletePatient = ({ onSuccess, onError }: UseDeletePatientProps = {}): UseDeletePatientReturn => {
+export const useDeletePatient = ({onSuccess, onError}: Props): DeletePatientStatus => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

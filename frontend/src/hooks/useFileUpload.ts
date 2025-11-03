@@ -5,13 +5,13 @@ interface Props {
     onError: (error: Error) => void;
 }
 
-interface UseFileUploadReturn {
+interface FileUploadStatus {
     uploading: boolean;
     error: string | null;
     uploadFile: (operationId: string, file: File) => Promise<void>;
 }
 
-export const useFileUpload = ({ onSuccess, onError }: Props): UseFileUploadReturn => {
+export const useFileUpload = ({ onSuccess, onError }: Props): FileUploadStatus => {
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

@@ -4,14 +4,14 @@ import { RestClient } from '../utils/restClient';
 
 const SEARCH_TIMEOUT = 400;
 
-interface UsePatientSearchReturn {
+interface PatientSeatchStatus {
     patients: Patient[];
     loading: boolean;
     error: string | null;
     searchPatients: (query: string) => void;
 }
 
-export const usePatientSearch = (): UsePatientSearchReturn => {
+export const usePatientSearch = (): PatientSeatchStatus => {
     const [searchQuery, setSearchQuery] = useState('');
     const [patients, setPatients] = useState<Patient[]>([]);
     const [loading, setLoading] = useState(false);
