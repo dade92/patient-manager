@@ -4,15 +4,15 @@ import { useCache } from '../context/CacheContext';
 import { RestClient } from '../utils/restClient';
 
 interface OperationStatus {
-    operation: Operation | null | undefined;
+    operation: Operation | undefined;
     loading: boolean;
     error: string | null;
     refetch: () => Promise<void>;
     updateOperation: (updatedOperation: Operation) => void;
 }
 
-export const useOperation = (operationId: string | undefined): OperationStatus => {
-    const [operation, setOperation] = useState<Operation | null>();
+export const useOperation = (operationId: string): OperationStatus => {
+    const [operation, setOperation] = useState<Operation>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -59,7 +59,6 @@ export const useOperation = (operationId: string | undefined): OperationStatus =
         } catch (error: any) {
             if (error && error.status === 404) {
                 setError(`Operation with ID ${operationId} was not found`);
-                setOperation(null);
             } else {
                 setError('An error occurred while fetching the operation data');
             }

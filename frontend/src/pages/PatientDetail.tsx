@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Alert, Box, Button, CircularProgress} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {Patient} from '../types/patient';
 import {CreateOperationDialog} from '../components/dialogs/CreateOperationDialog';
 import {ConfirmationDialog} from '../components/dialogs/ConfirmationDialog';
 import {PatientOperations} from '../components/lists/PatientOperations';
@@ -13,55 +12,22 @@ import {useCache} from '../context/CacheContext';
 import {BackButton} from '../components/atoms/BackButton';
 import {Operation} from "../types/operation";
 import {RestClient} from '../utils/restClient';
+import {usePatient} from '../hooks/usePatient';
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();
     const navigate = useNavigate();
-    const [patient, setPatient] = useState<Patient | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const [isCreateOperationOpen, setIsCreateOperationOpen] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState<string | null>(null);
+    const { patient, loading, error } = usePatient(patientId);
 
     const {
-        getCachedPatient,
-        setCachedPatient,
         setCachedOperationsForPatient,
         getCachedOperationsForPatient
     } = useCache();
-
-    useEffect(() => {
-        fetchPatient();
-    }, [patientId, getCachedPatient, setCachedPatient]);
-
-    const fetchPatient = async () => {
-        const cachedPatient = getCachedPatient(patientId!);
-        if (cachedPatient) {
-            setPatient(cachedPatient);
-            setLoading(false);
-            return;
-        }
-
-        try {
-            setLoading(true);
-            setError(null);
-            const data = await RestClient.get<Patient>(`/api/patient/${patientId}`);
-            setPatient(data);
-            setCachedPatient(patientId!, data);
-        } catch (error: any) {
-            if (error && error.status === 404) {
-                setError(`Patient with ID ${patientId} was not found`);
-                setPatient(null);
-            } else {
-                setError('An error occurred while fetching the patient data');
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleDeleteConfirm = async () => {
         setIsDeleting(true);
