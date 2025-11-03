@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { RestClient } from '../../utils/restClient';
 import { adaptCreateOperationTypePayload } from '../../utils/CreateOperationTypeAdapter';
+import {OperationType} from "../../types/OperationType";
 
 export interface CreateOperationTypeForm {
     type: string;
@@ -19,7 +20,7 @@ export interface CreateOperationTypeForm {
 }
 
 interface Props {
-    onOperationTypeCreated: (operationType: any) => void;
+    onOperationTypeCreated: () => void;
     onCancel: () => void;
 }
 
@@ -53,8 +54,8 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
 
         try {
             const payload = adaptCreateOperationTypePayload(formData);
-            const newOperationType = await RestClient.post('/api/operation-type', payload);
-            onOperationTypeCreated(newOperationType);
+            await RestClient.post<OperationType>('/api/operation-type', payload);
+            onOperationTypeCreated();
         } catch (err: any) {
             setError(err.message || 'An error occurred while creating the operation type');
         } finally {
