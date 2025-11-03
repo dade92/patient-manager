@@ -11,8 +11,8 @@ import {PatientDetailCard} from '../components/cards/PatientDetailCard';
 import {useCache} from '../context/CacheContext';
 import {BackButton} from '../components/atoms/BackButton';
 import {Operation} from "../types/operation";
-import {RestClient} from '../utils/restClient';
 import {usePatient} from '../hooks/usePatient';
+import {useDeletePatient} from '../hooks/useDeletePatient';
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();
@@ -20,25 +20,28 @@ export const PatientDetail: React.FC = () => {
     const [isCreateOperationOpen, setIsCreateOperationOpen] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
-    const [deleteError, setDeleteError] = useState<string | null>(null);
-    const { patient, loading, error } = usePatient(patientId);
+    const {patient, loading, error} = usePatient(patientId);
 
     const {
         setCachedOperationsForPatient,
         getCachedOperationsForPatient
     } = useCache();
 
-    const handleDeleteConfirm = async () => {
-        setIsDeleting(true);
-        try {
-            await RestClient.post(`/api/patient/delete/${patient!.id}`, {});
+    const {deletePatient, isDeleting, error: deleteError} = useDeletePatient({
+        onSuccess: () => {
             navigate('/');
-        } catch (error: any) {
-            setDeleteError(error.message || 'Failed to delete patient');
-        } finally {
-            setIsDeleting(false);
             setShowDeleteConfirmation(false);
+        },
+        onError: () => {
+        }
+    });
+
+    const handleDeleteConfirm = async () => {
+        if (patient) {
+            try {
+                await deletePatient(patient.id);
+            } catch {
+            }
         }
     };
 
@@ -48,12 +51,10 @@ export const PatientDetail: React.FC = () => {
 
     const handleDeleteClick = () => {
         setShowDeleteConfirmation(true);
-        setDeleteError(null);
     };
 
     const handleDeleteCancel = () => {
         setShowDeleteConfirmation(false);
-        setDeleteError(null);
     };
 
     if (loading) {
@@ -85,7 +86,7 @@ export const PatientDetail: React.FC = () => {
                             justifyContent: 'center'
                         }}
                     >
-                        <DeleteIcon />
+                        <DeleteIcon/>
                     </Button>
                     <Button
                         variant="contained"
