@@ -26,7 +26,7 @@ export const useCreateOperationType = ({onSuccess, onError}: Props): CreateOpera
         try {
             const payload = adaptCreateOperationTypePayload(formData);
             await RestClient.post<OperationType>('/api/operation-type', payload);
-            onSuccess?.();
+            onSuccess();
         } catch (err: any) {
             const errorMessage = err.message || 'An error occurred while creating the operation type';
             setError(errorMessage);

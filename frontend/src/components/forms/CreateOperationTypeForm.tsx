@@ -50,12 +50,7 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-
-        try {
-            await createOperationType(formData);
-        } catch {
-            // Error is handled by the hook
-        }
+        await createOperationType(formData);
     };
 
     return (

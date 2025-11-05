@@ -33,7 +33,7 @@ export const useFileUpload = ({ onSuccess, onError }: Props): FileUploadStatus =
                 const errorMessage = errorData.message || 'Failed to upload file';
                 const uploadError = new Error(errorMessage);
                 setError(errorMessage);
-                onError?.(uploadError);
+                onError(uploadError);
                 throw uploadError;
             }
         } catch (error) {

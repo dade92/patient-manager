@@ -3,7 +3,6 @@ import {RestClient} from '../utils/restClient';
 
 interface Props {
     onSuccess: () => void;
-    onError: (error: string) => void;
 }
 
 interface DeletePatientStatus {
@@ -12,7 +11,7 @@ interface DeletePatientStatus {
     error: string | null;
 }
 
-export const useDeletePatient = ({onSuccess, onError}: Props): DeletePatientStatus => {
+export const useDeletePatient = ({onSuccess}: Props): DeletePatientStatus => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -22,11 +21,10 @@ export const useDeletePatient = ({onSuccess, onError}: Props): DeletePatientStat
 
         try {
             await RestClient.post(`/api/patient/delete/${patientId}`, {});
-            onSuccess?.();
+            onSuccess();
         } catch (error: any) {
             const errorMessage = error.message || 'Failed to delete patient';
             setError(errorMessage);
-            onError?.(errorMessage);
             throw error;
         } finally {
             setIsDeleting(false);

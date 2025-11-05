@@ -31,8 +31,6 @@ export const PatientDetail: React.FC = () => {
         onSuccess: () => {
             navigate('/');
             setShowDeleteConfirmation(false);
-        },
-        onError: () => {
         }
     });
 
