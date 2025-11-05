@@ -24,7 +24,6 @@ export const usePatientSearch = (): PatientSeatchStatus => {
             setLoading(false);
             return;
         }
-
         try {
             setLoading(true);
             setError(null);

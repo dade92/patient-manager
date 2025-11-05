@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { OperationType } from '../types/OperationType';
-import { RestClient } from '../utils/restClient';
+import {useEffect, useState} from 'react';
+import {OperationType} from '../types/OperationType';
+import {RestClient} from '../utils/restClient';
 
 interface OperationTypesStatus {
     operationTypes: OperationType[];
@@ -18,10 +18,9 @@ export const useOperationTypes = (): OperationTypesStatus => {
         try {
             setLoading(true);
             setError(null);
-            const response = await RestClient.get<{types: OperationType[]}>('/api/operation-types');
+            const response = await RestClient.get<{ types: OperationType[] }>('/api/operation-types');
             setOperationTypes(response.types);
         } catch (err) {
-            console.error('Failed to fetch operation types:', err);
             setError('Failed to load operation types');
         } finally {
             setLoading(false);

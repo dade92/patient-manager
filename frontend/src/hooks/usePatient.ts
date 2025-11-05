@@ -9,7 +9,7 @@ interface PatientStatus {
     error: string | null;
 }
 
-export const usePatient = (patientId: string | undefined): PatientStatus => {
+export const usePatient = (patientId: string): PatientStatus => {
     const [patient, setPatient] = useState<Patient>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -17,11 +17,6 @@ export const usePatient = (patientId: string | undefined): PatientStatus => {
     const {getCachedPatient, setCachedPatient} = useCache();
 
     const fetchPatient = async () => {
-        if (!patientId) {
-            setLoading(false);
-            return;
-        }
-
         const cachedPatient = getCachedPatient(patientId);
         if (cachedPatient) {
             setPatient(cachedPatient);

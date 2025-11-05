@@ -20,7 +20,7 @@ export const PatientDetail: React.FC = () => {
     const [isCreateOperationOpen, setIsCreateOperationOpen] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const {patient, loading, error} = usePatient(patientId);
+    const {patient, loading, error} = usePatient(patientId!);
 
     const {
         setCachedOperationsForPatient,

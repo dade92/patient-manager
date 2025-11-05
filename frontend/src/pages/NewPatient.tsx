@@ -7,14 +7,6 @@ import {Patient} from "../types/patient";
 export const NewPatient: React.FC = () => {
     const navigate = useNavigate();
 
-    const handlePatientCreated = (patient: Patient) => {
-        navigate(`/patient/${patient.id}`);
-    };
-
-    const handleCancel = () => {
-        navigate(-1);
-    };
-
     return (
         <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
             <Card>
@@ -23,8 +15,12 @@ export const NewPatient: React.FC = () => {
                         New Patient
                     </Typography>
                     <CreatePatientForm
-                        onPatientCreated={handlePatientCreated}
-                        onCancel={handleCancel}
+                        onPatientCreated={(patient: Patient) => {
+                            navigate(`/patient/${patient.id}`);
+                        }}
+                        onCancel={() => {
+                            navigate(-1);
+                        }}
                     />
                 </CardContent>
             </Card>
