@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 interface Props {
     onSuccess: (data: any) => void;
-    onError: (error: Error) => void;
 }
 
 interface FileUploadStatus {
@@ -11,7 +10,7 @@ interface FileUploadStatus {
     uploadFile: (operationId: string, file: File) => Promise<void>;
 }
 
-export const useFileUpload = ({ onSuccess, onError }: Props): FileUploadStatus => {
+export const useFileUpload = ({ onSuccess }: Props): FileUploadStatus => {
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -33,13 +32,11 @@ export const useFileUpload = ({ onSuccess, onError }: Props): FileUploadStatus =
                 const errorMessage = errorData.message || 'Failed to upload file';
                 const uploadError = new Error(errorMessage);
                 setError(errorMessage);
-                onError(uploadError);
                 throw uploadError;
             }
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Failed to upload file';
             setError(errorMessage);
-            onError?.(error as Error);
             throw error;
         } finally {
             setUploading(false);

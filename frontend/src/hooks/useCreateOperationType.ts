@@ -6,7 +6,6 @@ import {CreateOperationTypeForm} from '../components/forms/CreateOperationTypeFo
 
 interface Props {
     onSuccess: () => void;
-    onError: (error: string) => void;
 }
 
 interface CreateOperationTypeStatus {
@@ -15,7 +14,7 @@ interface CreateOperationTypeStatus {
     error: string | null;
 }
 
-export const useCreateOperationType = ({onSuccess, onError}: Props): CreateOperationTypeStatus => {
+export const useCreateOperationType = ({onSuccess}: Props): CreateOperationTypeStatus => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +29,6 @@ export const useCreateOperationType = ({onSuccess, onError}: Props): CreateOpera
         } catch (err: any) {
             const errorMessage = err.message || 'An error occurred while creating the operation type';
             setError(errorMessage);
-            onError?.(errorMessage);
             throw err;
         } finally {
             setIsSubmitting(false);

@@ -23,7 +23,6 @@ export const OperationDetail: React.FC = () => {
         onSuccess: (updatedOperation) => {
             updateOperation(updatedOperation);
         },
-        onError: () => {}
     });
 
     if (loading) {

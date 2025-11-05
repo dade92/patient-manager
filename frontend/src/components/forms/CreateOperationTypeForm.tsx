@@ -37,7 +37,6 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
 
     const { createOperationType, isSubmitting, error } = useCreateOperationType({
         onSuccess: onOperationTypeCreated,
-        onError: () => {}
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
