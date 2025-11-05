@@ -27,7 +27,7 @@ export const useCreateOperationType = ({onSuccess}: Props): CreateOperationTypeS
             await RestClient.post<OperationType>('/api/operation-type', payload);
             onSuccess();
         } catch (err: any) {
-            const errorMessage = err.message || 'An error occurred while creating the operation type';
+            const errorMessage = 'An error occurred while creating the operation type';
             setError(errorMessage);
             throw err;
         } finally {
