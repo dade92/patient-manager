@@ -28,7 +28,7 @@ export const OperationDetail: React.FC = () => {
     if (loading) {
         return (
             <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
-                <BackButton onClick={() => navigate(-1)} sx={{mb: 2}}/>
+                <BackButton sx={{mb: 2}}/>
                 <Box display="flex" justifyContent="center">
                     <CircularProgress/>
                 </Box>
@@ -38,7 +38,7 @@ export const OperationDetail: React.FC = () => {
 
     return (
         <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
-            <BackButton onClick={() => navigate(-1)} sx={{mb: 2}}/>
+            <BackButton sx={{mb: 2}}/>
 
             {error ? (
                 <Alert severity="error" sx={{mb: 2}}>

@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Alert, Box, Card, CardContent, CircularProgress, Collapse, List, Typography} from '@mui/material';
-import {Invoice, InvoiceStatus} from '../../types/invoice';
 import {InvoiceListItem} from './InvoiceListItem';
 import {PatientInvoicesHeader} from '../headers/PatientInvoicesHeader';
-import {useCache} from '../../context/CacheContext';
-import {RestClient} from '../../utils/restClient';
+import {usePatientInvoices} from '../../hooks/usePatientInvoices';
+import {InvoiceStatus} from "../../types/invoice";
 
 interface Props {
     patientId: string;
@@ -12,82 +11,22 @@ interface Props {
 }
 
 export const PatientInvoices: React.FC<Props> = ({patientId, refreshTrigger}) => {
-    const [invoices, setInvoices] = useState<Invoice[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const [expanded, setExpanded] = useState(false);
-    const [updatingPaidInvoice, setUpdatingPaidInvoice] = useState<string>('');
-    const [updatingCancelledInvoice, setUpdatingCancelledInvoice] = useState<string>('');
-
-    const {getCachedInvoicesForPatient, setCachedInvoicesForPatient} = useCache();
-
-    const pendingInvoicesCount =
-        invoices
-            .filter(invoice => invoice.status === InvoiceStatus.PENDING)
-            .length;
-
-    const fetchInvoices = async () => {
-        const cachedInvoices = getCachedInvoicesForPatient(patientId);
-        if (cachedInvoices) {
-            setInvoices(cachedInvoices);
-            setLoading(false);
-            return;
-        }
-
-        try {
-            setLoading(true);
-            setError(null);
-            const data = await RestClient.get<{ invoices: Invoice[] }>(`/api/invoice/patient/${patientId}`);
-            if (data.invoices) {
-                setInvoices(data.invoices);
-                setCachedInvoicesForPatient(patientId, data.invoices);
-            } else {
-                setInvoices([]);
-            }
-        } catch (error: any) {
-            setError('An error occurred while fetching invoices');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const setUpdatingInvoiceStatus = (invoiceId: string, status: InvoiceStatus) => {
-        if (status === InvoiceStatus.PAID) {
-            setUpdatingPaidInvoice(invoiceId);
-            setUpdatingCancelledInvoice('');
-        } else if (status === InvoiceStatus.CANCELLED) {
-            setUpdatingCancelledInvoice(invoiceId);
-            setUpdatingPaidInvoice('');
-        }
-    }
-
-    const changeInvoiceStatus = async (invoiceId: string, status: InvoiceStatus) => {
-        setUpdatingInvoiceStatus(invoiceId, status);
-
-        try {
-            const updatedInvoice = await RestClient.post<Invoice>(`/api/invoice/${invoiceId}/status`, { status });
-            const updatedInvoices = invoices.map(invoice =>
-                invoice.id === updatedInvoice.id ? updatedInvoice : invoice
-            );
-            setInvoices(updatedInvoices);
-            setCachedInvoicesForPatient(patientId, updatedInvoices);
-        } catch (err: any) {
-            setError('An error occurred while updating the invoice');
-        } finally {
-            setUpdatingPaidInvoice('');
-        }
-    };
-
-    useEffect(() => {
-        fetchInvoices();
-    }, [patientId, refreshTrigger]);
+    const {
+        invoices,
+        loading,
+        error,
+        updatingPaidInvoice,
+        updatingCancelledInvoice,
+        changeInvoiceStatus
+    } = usePatientInvoices(patientId, refreshTrigger);
 
     return (
         <Card>
             <CardContent>
                 <PatientInvoicesHeader
                     expanded={expanded}
-                    pendingInvoicesCount={pendingInvoicesCount}
+                    pendingInvoicesCount={invoices.filter(invoice => invoice.status === InvoiceStatus.PENDING).length}
                     onToggleExpanded={() => setExpanded(!expanded)}
                 />
 

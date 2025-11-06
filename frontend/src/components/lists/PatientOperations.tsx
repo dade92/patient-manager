@@ -1,11 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Alert, Box, Card, CardContent, CircularProgress, Collapse, List, Typography} from '@mui/material';
-import {Operation} from '../../types/operation';
-import {useCache} from '../../context/CacheContext';
 import {OperationListItem} from './OperationListItem';
 import {PatientOperationsHeader} from '../headers/PatientOperationsHeader';
-import {RestClient} from '../../utils/restClient';
+import {usePatientOperations} from '../../hooks/usePatientOperations';
 
 interface Props {
     patientId: string;
@@ -14,44 +12,8 @@ interface Props {
 
 export const PatientOperations: React.FC<Props> = ({patientId, refreshTrigger}) => {
     const navigate = useNavigate();
-    const [operations, setOperations] = useState<Operation[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const [expanded, setExpanded] = useState(false);
-    const {getCachedOperationsForPatient, setCachedOperationsForPatient} = useCache();
-
-    const fetchOperations = async () => {
-        const cachedOperations = getCachedOperationsForPatient(patientId);
-        if (cachedOperations) {
-            setOperations(cachedOperations);
-            setLoading(false);
-            return;
-        }
-
-        try {
-            setLoading(true);
-            setError(null);
-            const data = await RestClient.get<{ operations: Operation[] }>(`/api/operation/patient/${patientId}`);
-            if (data.operations) {
-                setCachedOperationsForPatient(patientId, data.operations);
-                setOperations(data.operations);
-            } else {
-                setOperations([]);
-            }
-        } catch (error: any) {
-            if (error && error.status === 404) {
-                setOperations([]);
-            } else {
-                setError('An error occurred while fetching operations');
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchOperations();
-    }, [patientId, refreshTrigger]);
+    const { operations, loading, error } = usePatientOperations(patientId, refreshTrigger);
 
     return (
         <Card>

@@ -34,31 +34,10 @@ export const PatientDetail: React.FC = () => {
         }
     });
 
-    const handleDeleteConfirm = async () => {
-        if (patient) {
-            try {
-                await deletePatient(patient.id);
-            } catch {
-            }
-        }
-    };
-
-    const handleBack = () => {
-        navigate(-1);
-    };
-
-    const handleDeleteClick = () => {
-        setShowDeleteConfirmation(true);
-    };
-
-    const handleDeleteCancel = () => {
-        setShowDeleteConfirmation(false);
-    };
-
     if (loading) {
         return (
             <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
-                <BackButton onClick={handleBack} sx={{mb: 2}}/>
+                <BackButton sx={{mb: 2}}/>
                 <Box display="flex" justifyContent="center">
                     <CircularProgress/>
                 </Box>
@@ -69,12 +48,14 @@ export const PatientDetail: React.FC = () => {
     return (
         <Box sx={{maxWidth: 800, mx: 'auto', mt: 4, px: 2}}>
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
-                <BackButton onClick={handleBack}/>
+                <BackButton/>
                 <Box sx={{display: 'flex', gap: 2}}>
                     <Button
                         variant="outlined"
                         color="error"
-                        onClick={handleDeleteClick}
+                        onClick={() => {
+                            setShowDeleteConfirmation(true);
+                        }}
                         sx={{
                             minWidth: 48,
                             minHeight: 48,
@@ -138,8 +119,12 @@ export const PatientDetail: React.FC = () => {
 
                     <ConfirmationDialog
                         open={showDeleteConfirmation}
-                        onClose={handleDeleteCancel}
-                        onConfirm={handleDeleteConfirm}
+                        onClose={() => {
+                            setShowDeleteConfirmation(false);
+                        }}
+                        onConfirm={() => {
+                            deletePatient(patient!.id);
+                        }}
                         title="Delete Patient Permanently"
                         message={`Are you sure you want to permanently delete patient "${patient.name}" along with all their operations and invoices? This action cannot be undone.`}
                         isLoading={isDeleting}
