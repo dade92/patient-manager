@@ -25,7 +25,7 @@ export const OperationTypePriceList: React.FC<Props> = ({
     if (loading) {
         return (
             <List>
-                {Array.from({ length: 3 }, (_, index) => (
+                {Array.from({ length: 2 }, (_, index) => (
                     <React.Fragment key={index}>
                         <ListItem>
                             <ListItemText
@@ -36,7 +36,7 @@ export const OperationTypePriceList: React.FC<Props> = ({
                                 <Skeleton variant="text" width={80} height={32} />
                             </Box>
                         </ListItem>
-                        {index < 2 && <Divider />}
+                        {index < 1 && <Divider />}
                     </React.Fragment>
                 ))}
             </List>
