@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { useCreateOperationType } from '../../hooks/useCreateOperationType';
 
-export interface CreateOperationTypeForm {
+export interface CreateOperationTypeFormData {
     type: string;
     description: string;
     amount: string;
@@ -22,7 +22,7 @@ interface Props {
     onCancel: () => void;
 }
 
-const EMPTY_FORM: CreateOperationTypeForm = {
+const EMPTY_FORM = {
     type: '',
     description: '',
     amount: '',
@@ -33,7 +33,7 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
     onOperationTypeCreated,
     onCancel
 }) => {
-    const [formData, setFormData] = useState<CreateOperationTypeForm>(EMPTY_FORM);
+    const [formData, setFormData] = useState<CreateOperationTypeFormData>(EMPTY_FORM);
 
     const { createOperationType, isSubmitting, error } = useCreateOperationType({
         onSuccess: onOperationTypeCreated,

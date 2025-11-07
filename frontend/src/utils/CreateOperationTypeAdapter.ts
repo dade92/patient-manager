@@ -1,7 +1,7 @@
-import {CreateOperationTypeForm} from '../components/forms/CreateOperationTypeForm';
+import {CreateOperationTypeFormData} from '../components/forms/CreateOperationTypeForm';
 import {validateCreateOperationTypeForm} from './CreateOperationTypeValidator';
 
-export const adaptCreateOperationTypePayload = (formData: CreateOperationTypeForm) => {
+export const adaptCreateOperationTypePayload = (formData: CreateOperationTypeFormData) => {
     validateCreateOperationTypeForm(formData);
 
     return {
