@@ -6,7 +6,6 @@ interface OperationTypesStatus {
     operationTypes: OperationType[];
     loading: boolean;
     error: string | null;
-    refetch: () => Promise<void>;
 }
 
 export const useOperationTypes = (): OperationTypesStatus => {
@@ -35,6 +34,5 @@ export const useOperationTypes = (): OperationTypesStatus => {
         operationTypes,
         loading,
         error,
-        refetch: fetchOperationTypes
     };
 };
