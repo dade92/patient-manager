@@ -28,7 +28,7 @@ jobs:
         run: mvn -B package -DskipTests --file pom.xml
 
       -
-        name: Test
+        name: BE Test
         run: mvn verify
 
       - name: FE Test
