@@ -1,12 +1,12 @@
 import {adaptCreateOperationTypePayload} from '../../utils/CreateOperationTypeAdapter';
 import {CreateOperationTypeFormData} from '../../components/forms/CreateOperationTypeForm';
 import {Builder} from "builder-pattern";
-
-const {validateCreateOperationTypeForm} = require('../../utils/CreateOperationTypeValidator');
+import {validateCreateOperationTypeForm} from "../../utils/CreateOperationTypeValidator";
 
 jest.mock('../../utils/CreateOperationTypeValidator', () => ({
     validateCreateOperationTypeForm: jest.fn(),
 }));
+const validateCreateOperationTypeFormMock = validateCreateOperationTypeForm as jest.Mock;
 
 describe('CreateOperationTypeAdapter', () => {
     beforeEach(() => {
@@ -32,7 +32,7 @@ describe('CreateOperationTypeAdapter', () => {
             }
         });
 
-        expect(validateCreateOperationTypeForm).toHaveBeenCalledWith(formData);
-        expect(validateCreateOperationTypeForm).toHaveBeenCalledTimes(1);
+        expect(validateCreateOperationTypeFormMock).toHaveBeenCalledWith(formData);
+        expect(validateCreateOperationTypeFormMock).toHaveBeenCalledTimes(1);
     });
 });

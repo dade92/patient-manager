@@ -15,41 +15,41 @@ describe('CreateOperationTypeValidator', () => {
     });
 
     it('should throw error when type is empty or whitespace only', () => {
-        const formDataEmptyType = Builder<CreateOperationTypeFormData>()
+        const formDataWithEmptyType = Builder<CreateOperationTypeFormData>()
             .type('')
             .description('Valid description')
             .amount('150.00')
             .currency('EUR')
             .build();
 
-        const formDataWhitespaceType = Builder<CreateOperationTypeFormData>()
+        const formDataWithWhitespaceType = Builder<CreateOperationTypeFormData>()
             .type('   ')
             .description('Valid description')
             .amount('150.00')
             .currency('EUR')
             .build();
 
-        expect(() => validateCreateOperationTypeForm(formDataEmptyType)).toThrow(Error);
-        expect(() => validateCreateOperationTypeForm(formDataWhitespaceType)).toThrow(Error);
+        expect(() => validateCreateOperationTypeForm(formDataWithEmptyType)).toThrow(Error);
+        expect(() => validateCreateOperationTypeForm(formDataWithWhitespaceType)).toThrow(Error);
     });
 
     it('should throw error when description is empty or whitespace only', () => {
-        const formDataEmptyDescription = Builder<CreateOperationTypeFormData>()
+        const formDataWithEmptyDescription = Builder<CreateOperationTypeFormData>()
             .type('CLEANING')
             .description('')
             .amount('150.00')
             .currency('EUR')
             .build();
 
-        const formDataWhitespaceDescription = Builder<CreateOperationTypeFormData>()
+        const formDataWithWhitespaceDescription = Builder<CreateOperationTypeFormData>()
             .type('CLEANING')
             .description('   ')
             .amount('150.00')
             .currency('EUR')
             .build();
 
-        expect(() => validateCreateOperationTypeForm(formDataEmptyDescription)).toThrow(Error);
-        expect(() => validateCreateOperationTypeForm(formDataWhitespaceDescription)).toThrow(Error);
+        expect(() => validateCreateOperationTypeForm(formDataWithEmptyDescription)).toThrow(Error);
+        expect(() => validateCreateOperationTypeForm(formDataWithWhitespaceDescription)).toThrow(Error);
     });
 
     it('should accept type and description with leading/trailing whitespace (gets trimmed)', () => {
