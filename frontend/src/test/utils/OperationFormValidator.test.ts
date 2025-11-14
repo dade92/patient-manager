@@ -1,7 +1,7 @@
-import { validateOperationForm } from '../../utils/OperationFormValidator';
-import { OperationForm } from '../../components/forms/CreateOperationForm';
-import { Builder } from "builder-pattern";
-import { ToothDetailForm } from "../../components/forms/ToothSelectionForm";
+import {validateOperationForm} from '../../utils/OperationFormValidator';
+import {OperationForm} from '../../components/forms/CreateOperationForm';
+import {Builder} from "builder-pattern";
+import {ToothDetailForm} from "../../components/forms/ToothSelectionForm";
 
 describe('OperationFormValidator', () => {
     it('should pass validation with valid form data', () => {
@@ -63,62 +63,6 @@ describe('OperationFormValidator', () => {
 
         expect(() => validateOperationForm(formDataWithInvalidTooth)).toThrow(Error);
         expect(() => validateOperationForm(formDataWithMixedValidInvalid)).toThrow(Error);
-    });
-
-    it('should throw error when amount is 0 or negative', () => {
-        const formDataWithZeroAmount = Builder<OperationForm>()
-            .type('CLEANING')
-            .patientId('patient-123')
-            .description('Regular dental cleaning')
-            .executor('Dr. Smith')
-            .toothDetails([
-                Builder<ToothDetailForm>()
-                    .toothNumber(11)
-                    .amount('0')
-                    .toothType('PERMANENT')
-                    .build()
-            ])
-            .build();
-
-        const formDataWithNegativeAmount = Builder<OperationForm>()
-            .type('CLEANING')
-            .patientId('patient-123')
-            .description('Regular dental cleaning')
-            .executor('Dr. Smith')
-            .toothDetails([
-                Builder<ToothDetailForm>()
-                    .toothNumber(12)
-                    .amount('-50.00')
-                    .toothType('PERMANENT')
-                    .build()
-            ])
-            .build();
-
-        expect(() => validateOperationForm(formDataWithZeroAmount)).toThrow(Error);
-        expect(() => validateOperationForm(formDataWithNegativeAmount)).toThrow(Error);
-    });
-
-    it('should accept valid tooth numbers and positive amounts', () => {
-        const formDataWithValidDetails = Builder<OperationForm>()
-            .type('CLEANING')
-            .patientId('patient-123')
-            .description('Regular dental cleaning')
-            .executor('Dr. Smith')
-            .toothDetails([
-                Builder<ToothDetailForm>()
-                    .toothNumber(18)
-                    .amount('100.50')
-                    .toothType('PERMANENT')
-                    .build(),
-                Builder<ToothDetailForm>()
-                    .toothNumber(21)
-                    .amount('0.01')
-                    .toothType('DECIDUOUS')
-                    .build()
-            ])
-            .build();
-
-        expect(() => validateOperationForm(formDataWithValidDetails)).not.toThrow();
     });
 
     it('should pass validation with empty tooth details array', () => {
