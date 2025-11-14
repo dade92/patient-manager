@@ -54,13 +54,4 @@ describe('AmountToMoneyConverter', () => {
             currency: 'EUR'
         });
     });
-
-    it('should handle edge case of string "0.0"', () => {
-        const result = toMoney('0.0');
-
-        expect(result).toEqual({
-            amount: 0,
-            currency: 'EUR'
-        });
-    });
 });

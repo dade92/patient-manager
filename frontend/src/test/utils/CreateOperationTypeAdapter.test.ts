@@ -24,10 +24,10 @@ describe('CreateOperationTypeAdapter', () => {
         const result = adaptCreateOperationTypePayload(formData);
 
         expect(result).toEqual({
-            type: 'TEETH CLEANING',  // Should be trimmed and uppercased
-            description: 'Professional dental cleaning procedure',  // Should be trimmed
+            type: 'TEETH CLEANING',
+            description: 'Professional dental cleaning procedure',
             estimatedBaseCost: {
-                amount: 150.75,  // Should be parsed as float
+                amount: 150.75,
                 currency: 'EUR'
             }
         });

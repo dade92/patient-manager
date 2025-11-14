@@ -20,13 +20,12 @@ jest.mock('../../utils/OperationFormValidator', () => ({
 
 describe('CreateOperationPayloadAdapter', () => {
     beforeEach(() => {
-        // Reset mocks before each test
         jest.clearAllMocks();
 
         (toMoney as jest.Mock)
-            .mockReturnValueOnce({ amount: 125.5, currency: 'EUR' })  // First call - total estimated cost
-            .mockReturnValueOnce({ amount: 50.0, currency: 'EUR' })   // Second call - first tooth detail
-            .mockReturnValueOnce({ amount: 75.5, currency: 'EUR' });  // Third call - second tooth detail
+            .mockReturnValueOnce({ amount: 125.5, currency: 'EUR' })
+            .mockReturnValueOnce({ amount: 50.0, currency: 'EUR' })
+            .mockReturnValueOnce({ amount: 75.5, currency: 'EUR' });
     });
 
     it('should correctly adapt operation form data', () => {
