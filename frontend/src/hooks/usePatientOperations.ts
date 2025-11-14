@@ -3,14 +3,14 @@ import { Operation } from '../types/operation';
 import { useCache } from '../context/CacheContext';
 import { RestClient } from '../utils/restClient';
 
-interface UsePatientOperationsResult {
+interface PatientOperationsStatus {
     operations: Operation[];
     loading: boolean;
     error: string | null;
     refetch: () => Promise<void>;
 }
 
-export const usePatientOperations = (patientId: string, refreshTrigger?: number): UsePatientOperationsResult => {
+export const usePatientOperations = (patientId: string, refreshTrigger?: number): PatientOperationsStatus => {
     const [operations, setOperations] = useState<Operation[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
