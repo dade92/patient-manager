@@ -8,7 +8,10 @@ const {toMoney} = require('../utils/AmountToMoneyConverter');
 const {validateOperationForm} = require('../utils/OperationFormValidator');
 
 jest.mock('../utils/AmountToMoneyConverter', () => ({
-    toMoney: jest.fn()
+    toMoney: jest.fn().mockImplementation((amount: string) => ({
+        amount: parseFloat(amount),
+        currency: 'EUR'
+    }))
 }));
 
 jest.mock('../utils/OperationFormValidator', () => ({
@@ -16,6 +19,16 @@ jest.mock('../utils/OperationFormValidator', () => ({
 }));
 
 describe('CreateOperationPayloadAdapter', () => {
+    beforeEach(() => {
+        // Reset mocks before each test
+        jest.clearAllMocks();
+
+        (toMoney as jest.Mock)
+            .mockReturnValueOnce({ amount: 125.5, currency: 'EUR' })  // First call - total estimated cost
+            .mockReturnValueOnce({ amount: 50.0, currency: 'EUR' })   // Second call - first tooth detail
+            .mockReturnValueOnce({ amount: 75.5, currency: 'EUR' });  // Third call - second tooth detail
+    });
+
     it('should correctly adapt operation form data', () => {
         const formData = Builder<OperationForm>()
             .type('CLEANING')
