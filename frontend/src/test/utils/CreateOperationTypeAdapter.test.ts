@@ -3,9 +3,10 @@ import {CreateOperationTypeFormData} from '../../components/forms/CreateOperatio
 import {Builder} from "builder-pattern";
 import {validateCreateOperationTypeForm} from "../../utils/CreateOperationTypeValidator";
 
-jest.mock('../../utils/CreateOperationTypeValidator', () => ({
-    validateCreateOperationTypeForm: jest.fn(),
-}));
+jest.mock(
+    '../../utils/CreateOperationTypeValidator',
+    () => ({validateCreateOperationTypeForm: jest.fn()})
+);
 const validateCreateOperationTypeFormMock = validateCreateOperationTypeForm as jest.Mock;
 
 describe('CreateOperationTypeAdapter', () => {

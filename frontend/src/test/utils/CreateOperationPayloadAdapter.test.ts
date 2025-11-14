@@ -6,12 +6,14 @@ import {ToothDetailForm} from "../../components/forms/ToothSelectionForm";
 import {toMoney} from "../../utils/AmountToMoneyConverter";
 import {validateOperationForm} from "../../utils/OperationFormValidator";
 
-jest.mock('../../utils/AmountToMoneyConverter', () => ({
-    toMoney: jest.fn(),
-}));
-jest.mock('../../utils/OperationFormValidator', () => ({
-    validateOperationForm: jest.fn(),
-}));
+jest.mock(
+    '../../utils/AmountToMoneyConverter',
+    () => ({toMoney: jest.fn()})
+);
+jest.mock(
+    '../../utils/OperationFormValidator',
+    () => ({validateOperationForm: jest.fn()})
+);
 const toMoneyMock = toMoney as jest.Mock;
 const validateOperationFormMock = validateOperationForm as jest.Mock;
 
