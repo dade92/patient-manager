@@ -1,4 +1,4 @@
-import {generateFdiTeethNumbers, generateFdiDeciduousTeethNumbers} from '../utils/teethUtils';
+import {generateFdiTeethNumbers, generateFdiDeciduousTeethNumbers} from '../../utils/teethUtils';
 
 describe('teethUtils', () => {
     it('should generate correct PERMANENT teeth numbers', () => {

@@ -1,5 +1,5 @@
-import {validateCreateOperationTypeForm} from '../utils/CreateOperationTypeValidator';
-import {CreateOperationTypeFormData} from '../components/forms/CreateOperationTypeForm';
+import {validateCreateOperationTypeForm} from '../../utils/CreateOperationTypeValidator';
+import {CreateOperationTypeFormData} from '../../components/forms/CreateOperationTypeForm';
 import {Builder} from "builder-pattern";
 
 describe('CreateOperationTypeValidator', () => {

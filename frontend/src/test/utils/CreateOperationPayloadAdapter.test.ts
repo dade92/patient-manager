@@ -1,20 +1,20 @@
-import {adaptOperationPayload} from '../utils/CreateOperationPayloadAdapter';
-import {OperationForm} from '../components/forms/CreateOperationForm';
-import {ToothType} from '../types/ToothDetail';
+import {adaptOperationPayload} from '../../utils/CreateOperationPayloadAdapter';
+import {OperationForm} from '../../components/forms/CreateOperationForm';
+import {ToothType} from '../../types/ToothDetail';
 import {Builder} from "builder-pattern";
-import {ToothDetailForm} from "../components/forms/ToothSelectionForm";
+import {ToothDetailForm} from "../../components/forms/ToothSelectionForm";
 
-const {toMoney} = require('../utils/AmountToMoneyConverter');
-const {validateOperationForm} = require('../utils/OperationFormValidator');
+const {toMoney} = require('../../utils/AmountToMoneyConverter');
+const {validateOperationForm} = require('../../utils/OperationFormValidator');
 
-jest.mock('../utils/AmountToMoneyConverter', () => ({
+jest.mock('../../utils/AmountToMoneyConverter', () => ({
     toMoney: jest.fn().mockImplementation((amount: string) => ({
         amount: parseFloat(amount),
         currency: 'EUR'
     }))
 }));
 
-jest.mock('../utils/OperationFormValidator', () => ({
+jest.mock('../../utils/OperationFormValidator', () => ({
     validateOperationForm: jest.fn(),
 }));
 

@@ -1,4 +1,4 @@
-import {toMoney} from '../utils/AmountToMoneyConverter';
+import {toMoney} from '../../utils/AmountToMoneyConverter';
 
 describe('AmountToMoneyConverter', () => {
     it('should convert valid string amount to Money', () => {

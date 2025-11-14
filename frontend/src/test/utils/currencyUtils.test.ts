@@ -1,4 +1,4 @@
-import {formatAmount} from '../utils/currencyUtils';
+import {formatAmount} from '../../utils/currencyUtils';
 
 describe('currencyUtils', () => {
     it('should format EUR currency correctly with Italian locale', () => {

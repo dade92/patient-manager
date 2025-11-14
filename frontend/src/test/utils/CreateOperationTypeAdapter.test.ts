@@ -1,10 +1,10 @@
-import {adaptCreateOperationTypePayload} from '../utils/CreateOperationTypeAdapter';
-import {CreateOperationTypeFormData} from '../components/forms/CreateOperationTypeForm';
+import {adaptCreateOperationTypePayload} from '../../utils/CreateOperationTypeAdapter';
+import {CreateOperationTypeFormData} from '../../components/forms/CreateOperationTypeForm';
 import {Builder} from "builder-pattern";
 
-const {validateCreateOperationTypeForm} = require('../utils/CreateOperationTypeValidator');
+const {validateCreateOperationTypeForm} = require('../../utils/CreateOperationTypeValidator');
 
-jest.mock('../utils/CreateOperationTypeValidator', () => ({
+jest.mock('../../utils/CreateOperationTypeValidator', () => ({
     validateCreateOperationTypeForm: jest.fn(),
 }));
 
