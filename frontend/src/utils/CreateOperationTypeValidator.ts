@@ -1,4 +1,4 @@
-import { CreateOperationTypeForm } from '../components/forms/CreateOperationTypeForm';
+import { CreateOperationTypeFormData } from '../components/forms/CreateOperationTypeForm';
 
 export class CreateOperationTypeValidationError extends Error {
     constructor(message: string) {
@@ -7,7 +7,7 @@ export class CreateOperationTypeValidationError extends Error {
     }
 }
 
-export const validateCreateOperationTypeForm = (formData: CreateOperationTypeForm): void => {
+export const validateCreateOperationTypeForm = (formData: CreateOperationTypeFormData): void => {
     if (!formData.type.trim()) {
         throw new CreateOperationTypeValidationError('Operation type name is required');
     }

@@ -28,8 +28,11 @@ jobs:
     - name: Build
       run: mvn -B package -DskipTests --file pom.xml
 
-    - name: Test
+    - name: BE Test
       run: mvn verify
+
+    - name: FE Test
+      run: cd ./frontend && npm run test
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3

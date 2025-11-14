@@ -7,7 +7,6 @@ interface OperationStatus {
     operation: Operation | undefined;
     loading: boolean;
     error: string | null;
-    refetch: () => Promise<void>;
     updateOperation: (updatedOperation: Operation) => void;
 }
 
@@ -81,7 +80,6 @@ export const useOperation = (operationId: string): OperationStatus => {
         operation,
         loading,
         error,
-        refetch: fetchOperation,
         updateOperation
     };
 };

@@ -16,11 +16,13 @@ import {useDeletePatient} from '../hooks/useDeletePatient';
 
 export const PatientDetail: React.FC = () => {
     const {patientId} = useParams();
+    if(!patientId) return null;
+
     const navigate = useNavigate();
     const [isCreateOperationOpen, setIsCreateOperationOpen] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const {patient, loading, error} = usePatient(patientId!);
+    const {patient, loading, error} = usePatient(patientId);
 
     const {
         setCachedOperationsForPatient,
@@ -111,8 +113,8 @@ export const PatientDetail: React.FC = () => {
                         onClose={() => setIsCreateOperationOpen(false)}
                         patientId={patient.id}
                         onOperationCreated={(newOperation: Operation) => {
-                            const cachedOperations = getCachedOperationsForPatient(patientId!) || [];
-                            setCachedOperationsForPatient(patientId!, [newOperation, ...cachedOperations]);
+                            const cachedOperations = getCachedOperationsForPatient(patientId) || [];
+                            setCachedOperationsForPatient(patientId, [newOperation, ...cachedOperations]);
                             setRefreshKey(prev => prev + 1);
                         }}
                     />
@@ -123,7 +125,7 @@ export const PatientDetail: React.FC = () => {
                             setShowDeleteConfirmation(false);
                         }}
                         onConfirm={() => {
-                            deletePatient(patient!.id);
+                            deletePatient(patient.id);
                         }}
                         title="Delete Patient Permanently"
                         message={`Are you sure you want to permanently delete patient "${patient.name}" along with all their operations and invoices? This action cannot be undone.`}

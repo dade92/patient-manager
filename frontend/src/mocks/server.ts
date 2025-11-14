@@ -285,66 +285,70 @@ export function makeServer({ environment = 'development' } = {}) {
       });
 
       this.get('/operation-types', () => {
-        const operationTypes = [
-          {
-            type: 'CONSULTATION',
-            description: 'Standard consultation with doctor',
-            estimatedBaseCost: {
-              amount: 100.00,
-              currency: 'EUR'
-            }
-          },
-          {
-            type: 'SURGERY',
-            description: 'Complex surgical procedure',
-            estimatedBaseCost: {
-              amount: 1500.00,
-              currency: 'EUR'
-            }
-          },
-          {
-            type: 'DIAGNOSTIC',
-            description: 'Diagnostic examination and tests',
-            estimatedBaseCost: {
-              amount: 250.00,
-              currency: 'EUR'
-            }
-          },
-          {
-            type: 'TREATMENT',
-            description: 'Medical treatment session',
-            estimatedBaseCost: {
-              amount: 300.00,
-              currency: 'EUR'
-            }
-          },
-          {
-            type: 'FOLLOW_UP',
-            description: 'Follow-up appointment',
-            estimatedBaseCost: {
-              amount: 75.00,
-              currency: 'EUR'
-            }
-          },
-          {
-            type: 'EMERGENCY',
-            description: 'Emergency medical intervention',
-            estimatedBaseCost: {
-              amount: 500.00,
-              currency: 'EUR'
-            }
-          },
-          {
-            type: 'PREVENTIVE',
-            description: 'Preventive care and checkup',
-            estimatedBaseCost: {
-              amount: 150.00,
-              currency: 'EUR'
-            }
-          }
-        ];
+        return new Promise(resolve => {
+          setTimeout(() => {
+            const operationTypes = [
+              {
+                type: 'CONSULTATION',
+                description: 'Standard consultation with doctor',
+                estimatedBaseCost: {
+                  amount: 100.00,
+                  currency: 'EUR'
+                }
+              },
+              {
+                type: 'SURGERY',
+                description: 'Complex surgical procedure',
+                estimatedBaseCost: {
+                  amount: 1500.00,
+                  currency: 'EUR'
+                }
+              },
+              {
+                type: 'DIAGNOSTIC',
+                description: 'Diagnostic examination and tests',
+                estimatedBaseCost: {
+                  amount: 250.00,
+                  currency: 'EUR'
+                }
+              },
+              {
+                type: 'TREATMENT',
+                description: 'Medical treatment session',
+                estimatedBaseCost: {
+                  amount: 300.00,
+                  currency: 'EUR'
+                }
+              },
+              {
+                type: 'FOLLOW_UP',
+                description: 'Follow-up appointment',
+                estimatedBaseCost: {
+                  amount: 75.00,
+                  currency: 'EUR'
+                }
+              },
+              {
+                type: 'EMERGENCY',
+                description: 'Emergency medical intervention',
+                estimatedBaseCost: {
+                  amount: 500.00,
+                  currency: 'EUR'
+                }
+              },
+              {
+                type: 'PREVENTIVE',
+                description: 'Preventive care and checkup',
+                estimatedBaseCost: {
+                  amount: 150.00,
+                  currency: 'EUR'
+                }
+              }
+            ];
 
-        return { types: operationTypes };
+            resolve({ types: operationTypes });
+          }, 2000);
+        });
       });
 
       this.post('/operation-type', (schema, request) => {

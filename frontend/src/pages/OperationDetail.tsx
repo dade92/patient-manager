@@ -11,14 +11,16 @@ import {useOperation} from '../hooks/useOperation';
 import {useFileUpload} from '../hooks/useFileUpload';
 
 export const OperationDetail: React.FC = () => {
-    const navigate = useNavigate();
     const {operationId} = useParams();
+    if(!operationId) return null;
+
+    const navigate = useNavigate();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const { addCachedInvoiceForPatient } = useCache();
 
-    const { operation, loading, error, updateOperation } = useOperation(operationId!);
+    const { operation, loading, error, updateOperation } = useOperation(operationId);
     const { uploadFile } = useFileUpload({
         onSuccess: (updatedOperation) => {
             updateOperation(updatedOperation);
@@ -48,7 +50,7 @@ export const OperationDetail: React.FC = () => {
                 <OperationDetailCard
                     operation={operation}
                     onAddAsset={async (file: File) => {
-                        await uploadFile(operationId!, file);
+                        await uploadFile(operationId, file);
                     }}
                     onAddNote={() => setDialogOpen(true)}
                     onCreateInvoice={() => setInvoiceDialogOpen(true)}
@@ -59,7 +61,7 @@ export const OperationDetail: React.FC = () => {
             <AddNoteDialog
                 open={dialogOpen}
                 onClose={() => setDialogOpen(false)}
-                operationId={operationId!}
+                operationId={operationId}
                 onNoteAdded={(updatedOperation: Operation) => {
                     updateOperation(updatedOperation);
                 }}

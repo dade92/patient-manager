@@ -2,14 +2,14 @@ import {useState} from 'react';
 import {RestClient} from '../utils/restClient';
 import {adaptCreateOperationTypePayload} from '../utils/CreateOperationTypeAdapter';
 import {OperationType} from '../types/OperationType';
-import {CreateOperationTypeForm} from '../components/forms/CreateOperationTypeForm';
+import {CreateOperationTypeFormData} from '../components/forms/CreateOperationTypeForm';
 
 interface Props {
     onSuccess: () => void;
 }
 
 interface CreateOperationTypeStatus {
-    createOperationType: (formData: CreateOperationTypeForm) => Promise<void>;
+    createOperationType: (formData: CreateOperationTypeFormData) => Promise<void>;
     isSubmitting: boolean;
     error: string | null;
 }
@@ -18,7 +18,7 @@ export const useCreateOperationType = ({onSuccess}: Props): CreateOperationTypeS
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const createOperationType = async (formData: CreateOperationTypeForm) => {
+    const createOperationType = async (formData: CreateOperationTypeFormData) => {
         setError(null);
         setIsSubmitting(true);
 

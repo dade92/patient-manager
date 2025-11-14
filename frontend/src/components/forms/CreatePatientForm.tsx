@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Alert, Box, Button, Grid, TextField} from '@mui/material';
-import {RestClient} from '../../utils/restClient';
 import {Patient} from "../../types/patient";
+import {useCreatePatient} from "../../hooks/useCreatePatient";
 
 export interface NewPatientForm {
     name: string;
@@ -22,7 +22,7 @@ interface Props {
 
 const DEFAULT_NATIONALITY = 'ITA';
 
-const INITIAL_FORM: NewPatientForm = {
+const INITIAL_FORM = {
     name: '',
     email: '',
     phoneNumber: '',
@@ -39,8 +39,7 @@ export const CreatePatientForm: React.FC<Props> = ({
     onCancel
 }) => {
     const [form, setForm] = useState<NewPatientForm>(INITIAL_FORM);
-    const [error, setError] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { createPatient, error, isSubmitting } = useCreatePatient();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
@@ -52,16 +51,9 @@ export const CreatePatientForm: React.FC<Props> = ({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(null);
-        setIsSubmitting(true);
-
-        try {
-            const patient = await RestClient.post<Patient>('/api/patient', form);
+        const patient = await createPatient(form);
+        if (patient) {
             onPatientCreated(patient);
-        } catch (err: any) {
-            setError('Failed to create patient. Please try again.');
-        } finally {
-            setIsSubmitting(false);
         }
     };
 
