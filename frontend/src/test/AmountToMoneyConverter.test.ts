@@ -1,7 +1,7 @@
 import {toMoney} from '../utils/AmountToMoneyConverter';
 
 describe('AmountToMoneyConverter', () => {
-    test('should convert valid string amount to Money', () => {
+    it('should convert valid string amount to Money', () => {
         const result = toMoney('123.45');
 
         expect(result).toEqual({
@@ -10,7 +10,7 @@ describe('AmountToMoneyConverter', () => {
         });
     });
 
-    test('should handle integer string amounts', () => {
+    it('should handle integer string amounts', () => {
         const result = toMoney('100');
 
         expect(result).toEqual({
@@ -19,7 +19,7 @@ describe('AmountToMoneyConverter', () => {
         });
     });
 
-    test('should handle decimal string amounts with multiple decimal places', () => {
+    it('should handle decimal string amounts with multiple decimal places', () => {
         const result = toMoney('99.999');
 
         expect(result).toEqual({
@@ -28,7 +28,7 @@ describe('AmountToMoneyConverter', () => {
         });
     });
 
-    test('should handle zero amount', () => {
+    it('should handle zero amount', () => {
         const result = toMoney('0');
 
         expect(result).toEqual({
@@ -37,7 +37,7 @@ describe('AmountToMoneyConverter', () => {
         });
     });
 
-    test('should handle negative amounts', () => {
+    it('should handle negative amounts', () => {
         const result = toMoney('-50.25');
 
         expect(result).toEqual({
@@ -46,7 +46,7 @@ describe('AmountToMoneyConverter', () => {
         });
     });
 
-    test('should handle string with spaces', () => {
+    it('should handle string with spaces', () => {
         const result = toMoney(' 123.45 ');
 
         expect(result).toEqual({
@@ -55,7 +55,7 @@ describe('AmountToMoneyConverter', () => {
         });
     });
 
-    test('should handle edge case of string "0.0"', () => {
+    it('should handle edge case of string "0.0"', () => {
         const result = toMoney('0.0');
 
         expect(result).toEqual({

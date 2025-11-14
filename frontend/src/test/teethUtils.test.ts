@@ -1,7 +1,7 @@
 import {generateFdiTeethNumbers, generateFdiDeciduousTeethNumbers} from '../utils/teethUtils';
 
 describe('teethUtils', () => {
-    test('should generate correct PERMANENT teeth numbers', () => {
+    it('should generate correct PERMANENT teeth numbers', () => {
         const result = generateFdiTeethNumbers();
         const upperJaw = result[0];
         const lowerJaw = result[1];
@@ -18,7 +18,7 @@ describe('teethUtils', () => {
         expect(totalTeeth).toBe(32);
     });
 
-    test('should generate correct DECIDUOUS teeth numbers', () => {
+    it('should generate correct DECIDUOUS teeth numbers', () => {
         const result = generateFdiDeciduousTeethNumbers();
         const upperJaw = result[0];
         const lowerJaw = result[1];
