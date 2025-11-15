@@ -12,6 +12,7 @@ export const BackButton: React.FC<Props> = ({sx}) => {
     return (
         <Tooltip title="Go back">
             <Button
+                data-testid="back-button"
                 startIcon={<ArrowBackIcon/>}
                 onClick={() => navigate(-1)}
                 sx={sx}

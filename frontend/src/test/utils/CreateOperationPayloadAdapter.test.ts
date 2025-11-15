@@ -92,6 +92,19 @@ describe('CreateOperationPayloadAdapter', () => {
         expect(toMoneyMock).toHaveBeenCalledTimes(3);
     });
 
+    it('should throw an error if validation fails', () => {
+        const formData = Builder<OperationForm>().build();
+
+        const error = new Error('Validation failed');
+        validateOperationFormMock.mockImplementation(() => {
+            throw error
+        });
+
+        expect(
+            () => adaptOperationPayload(formData)
+        ).toThrow(error);
+    });
+
     const TYPE = 'CLEANING';
     const PATIENT_ID = 'patient-123';
     const DESCRIPTION = 'Regular dental cleaning';
