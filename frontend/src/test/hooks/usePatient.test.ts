@@ -23,7 +23,7 @@ describe('usePatient', () => {
         });
     });
 
-    it('should successfully fetch and return patient data', async () => {
+    it('should successfully fetch and cache the retrieved patient', async () => {
         const patient = Builder<Patient>().build();
 
         mockGetCachedPatient.mockReturnValue(undefined);
@@ -47,7 +47,9 @@ describe('usePatient', () => {
 
         expect(result.current).toEqual(expected);
         expect(mockGetCachedPatient).toHaveBeenCalledWith(PATIENT_ID);
+        expect(mockGetCachedPatient).toHaveBeenCalledTimes(1);
         expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/patient/${PATIENT_ID}`);
+        expect(mockedRestClient.get).toHaveBeenCalledTimes(1);
         expect(mockSetCachedPatient).toHaveBeenCalledWith(PATIENT_ID, patient);
     });
 
@@ -75,13 +77,11 @@ describe('usePatient', () => {
     });
 
     it('should handle 404 error with specific message', async () => {
-        const error = {
-            name: 'ApiError',
+        mockGetCachedPatient.mockReturnValue(undefined);
+        mockedRestClient.get.mockRejectedValue({
             status: 404,
             message: 'Patient not found'
-        };
-        mockGetCachedPatient.mockReturnValue(undefined);
-        mockedRestClient.get.mockRejectedValue(error);
+        });
 
         const {result} = renderHook(() => usePatient(PATIENT_ID));
 
@@ -149,8 +149,11 @@ describe('usePatient', () => {
 
         const {result} = renderHook(() => usePatient(PATIENT_ID));
 
-        expect(result.current.loading).toBe(true);
-        expect(result.current.error).toBeNull();
+        expect(result.current).toEqual({
+            patient: undefined,
+            loading: true,
+            error: null
+        });
 
         resolvePromise!();
 
@@ -158,8 +161,13 @@ describe('usePatient', () => {
             await promise;
         });
 
-        expect(result.current.loading).toBe(false);
-        expect(result.current.patient).toEqual(patient);
+        const expected = {
+            patient: patient,
+            loading: false,
+            error: null
+        }
+
+        expect(result.current).toEqual(expected);
     });
 
     const PATIENT_ID = 'PAT-001';

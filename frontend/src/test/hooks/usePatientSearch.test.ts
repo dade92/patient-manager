@@ -22,13 +22,11 @@ describe('usePatientSearch', () => {
     it('should start with empty patients array and no error', () => {
         const {result} = renderHook(() => usePatientSearch());
 
-        const expected = {
+        expect(result.current).toEqual({
             patients: [],
             error: null,
             searchPatients: expect.any(Function)
-        };
-
-        expect(result.current).toEqual(expected);
+        });
     });
 
     it('should successfully search and return patients after debounce timeout', async () => {
@@ -36,8 +34,6 @@ describe('usePatientSearch', () => {
             createPatient(PATIENT_ID, 'John Doe'),
             createPatient('PAT-002', 'John Smith')
         ];
-        const query = 'John';
-
         const apiResponse = {patients};
         mockedRestClient.get.mockResolvedValue(apiResponse);
 
@@ -84,13 +80,8 @@ describe('usePatientSearch', () => {
     });
 
     it('should handle 404 error by setting empty patients array', async () => {
-        const error = {
-            name: 'ApiError',
-            status: 404,
-            message: 'Patients not found'
-        };
         const query = 'NonExistent';
-        mockedRestClient.get.mockRejectedValue(error);
+        mockedRestClient.get.mockRejectedValue({status: 404, message: 'Patients not found'});
 
         const {result} = renderHook(() => usePatientSearch());
 
@@ -118,7 +109,6 @@ describe('usePatientSearch', () => {
     it('should debounce search requests and only call API once', async () => {
         const patients: Patient[] = [createPatient(PATIENT_ID, 'John Doe')];
         mockedRestClient.get.mockResolvedValue({patients});
-        const query = 'John';
         const {result} = renderHook(() => usePatientSearch());
 
         act(() => {
@@ -151,7 +141,6 @@ describe('usePatientSearch', () => {
     it('should handle empty search results', async () => {
         const apiResponse = {patients: []};
         mockedRestClient.get.mockResolvedValue(apiResponse);
-        const query = 'Unknown';
         const {result} = renderHook(() => usePatientSearch());
 
         act(() => {
@@ -170,6 +159,7 @@ describe('usePatientSearch', () => {
     });
 
     const PATIENT_ID = 'PAT-001';
+    const query = 'John';
     const createPatient = (id: string, name: string): Patient =>
         Builder<Patient>()
             .id(id)
