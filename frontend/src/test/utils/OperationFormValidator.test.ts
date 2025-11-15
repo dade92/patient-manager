@@ -29,10 +29,6 @@ describe('OperationFormValidator', () => {
 
     it('should pass validation with empty tooth details array', () => {
         const formDataWithEmptyDetails = Builder<OperationForm>()
-            .type('CLEANING')
-            .patientId('patient-123')
-            .description('Regular dental cleaning')
-            .executor('Dr. Smith')
             .toothDetails([])
             .build();
 
@@ -49,10 +45,6 @@ describe('OperationFormValidator', () => {
 
     it('should throw error when multiple tooth details have invalid values', () => {
         const formDataWithMultipleInvalid = Builder<OperationForm>()
-            .type('CLEANING')
-            .patientId('patient-123')
-            .description('Regular dental cleaning')
-            .executor('Dr. Smith')
             .toothDetails([
                 Builder<ToothDetailForm>().toothNumber(0).build(),
                 Builder<ToothDetailForm>().amount('-25.00').build()
