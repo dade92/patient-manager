@@ -26,8 +26,8 @@ describe('usePatientOperations', () => {
     it('should successfully fetch and save in cache', async () => {
         const patientId = 'PAT-001';
         const operations: Operation[] = [
-            createMockOperation('OP-001', patientId),
-            createMockOperation('OP-002', patientId)
+            createOperation('OP-001', patientId),
+            createOperation('OP-002', patientId)
         ];
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValue({operations});
@@ -59,7 +59,7 @@ describe('usePatientOperations', () => {
     it('should return cached operations when available', async () => {
         const patientId = 'PAT-002';
         const cachedOperations: Operation[] = [
-            createMockOperation('OP-003', patientId)
+            createOperation('OP-003', patientId)
         ];
         mockGetCachedOperationsForPatient.mockReturnValue(cachedOperations);
 
@@ -145,8 +145,8 @@ describe('usePatientOperations', () => {
         const firstPatientId = 'PAT-001';
         const secondPatientId = 'PAT-002';
 
-        const firstOperations: Operation[] = [createMockOperation('OP-001', firstPatientId)];
-        const secondOperations: Operation[] = [createMockOperation('OP-002', secondPatientId)];
+        const firstOperations: Operation[] = [createOperation('OP-001', firstPatientId)];
+        const secondOperations: Operation[] = [createOperation('OP-002', secondPatientId)];
 
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValueOnce({operations: firstOperations});
@@ -178,7 +178,7 @@ describe('usePatientOperations', () => {
 
     it('should refetch when refreshTrigger changes', async () => {
         const patientId = 'PAT-001';
-        const operations: Operation[] = [createMockOperation('OP-001', patientId)];
+        const operations: Operation[] = [createOperation('OP-001', patientId)];
 
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValue({operations});
@@ -209,7 +209,7 @@ describe('usePatientOperations', () => {
 
     it('should set loading to true when starting to fetch and false after completion', async () => {
         const patientId = 'PAT-001';
-        const operations: Operation[] = [createMockOperation('OP-001', patientId)];
+        const operations: Operation[] = [createOperation('OP-001', patientId)];
 
         let resolvePromise: () => void;
         const promise = new Promise<{ operations: Operation[] }>((resolve) => {
@@ -239,7 +239,7 @@ describe('usePatientOperations', () => {
         expect(result.current.error).toBeNull();
     });
 
-    const createMockOperation = (id: string, patientId: string): Operation =>
+    const createOperation = (id: string, patientId: string): Operation =>
         Builder<Operation>()
             .id(id)
             .patientId(patientId)

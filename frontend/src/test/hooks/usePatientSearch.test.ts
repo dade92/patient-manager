@@ -33,8 +33,8 @@ describe('usePatientSearch', () => {
 
     it('should successfully search and return patients after debounce timeout', async () => {
         const patients: Patient[] = [
-            createMockPatient('PAT-001', 'John Doe'),
-            createMockPatient('PAT-002', 'John Smith')
+            createPatient('PAT-001', 'John Doe'),
+            createPatient('PAT-002', 'John Smith')
         ];
 
         const apiResponse = {patients};
@@ -85,7 +85,7 @@ describe('usePatientSearch', () => {
     });
 
     it('should clear patients array when query becomes less than 2 characters', async () => {
-        const patients: Patient[] = [createMockPatient('PAT-001', 'John Doe')];
+        const patients: Patient[] = [createPatient('PAT-001', 'John Doe')];
         mockedRestClient.get.mockResolvedValue({patients});
 
         const {result} = renderHook(() => usePatientSearch());
@@ -178,7 +178,7 @@ describe('usePatientSearch', () => {
     });
 
     it('should debounce search requests and only call API once', async () => {
-        const patients: Patient[] = [createMockPatient('PAT-001', 'John Doe')];
+        const patients: Patient[] = [createPatient('PAT-001', 'John Doe')];
         mockedRestClient.get.mockResolvedValue({patients});
 
         const {result} = renderHook(() => usePatientSearch());
@@ -284,8 +284,8 @@ describe('usePatientSearch', () => {
     });
 
     it('should handle rapid query changes correctly', async () => {
-        const firstPatients: Patient[] = [createMockPatient('PAT-001', 'Alice')];
-        const secondPatients: Patient[] = [createMockPatient('PAT-002', 'Bob')];
+        const firstPatients: Patient[] = [createPatient('PAT-001', 'Alice')];
+        const secondPatients: Patient[] = [createPatient('PAT-002', 'Bob')];
 
         mockedRestClient.get.mockResolvedValueOnce({patients: firstPatients});
         mockedRestClient.get.mockResolvedValueOnce({patients: secondPatients});
@@ -323,7 +323,7 @@ describe('usePatientSearch', () => {
         expect(mockedRestClient.get).toHaveBeenNthCalledWith(2, '/api/patient/search?name=Bob');
     });
 
-    const createMockPatient = (id: string, name: string): Patient => {
+    const createPatient = (id: string, name: string): Patient => {
         return Builder<Patient>()
             .id(id)
             .name(name)
