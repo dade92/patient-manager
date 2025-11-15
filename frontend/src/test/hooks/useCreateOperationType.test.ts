@@ -51,7 +51,7 @@ describe('useCreateOperationType', () => {
         expect(result.current).toEqual(expected);
         expect(mockedAdaptCreateOperationTypePayload).toHaveBeenCalledWith(formData);
         expect(mockedRestClient.post).toHaveBeenCalledWith('/api/operation-type', adaptedPayload);
-        expect(mockOnSuccess).toHaveBeenCalled();
+        expect(mockOnSuccess).toHaveBeenCalledTimes(1);
     });
 
     it('should handle error when creating operation type fails', async () => {

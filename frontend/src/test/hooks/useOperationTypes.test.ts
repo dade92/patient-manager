@@ -14,18 +14,7 @@ describe('useOperationTypes', () => {
     });
 
     it('should successfully fetch and return operation types data', async () => {
-        const operationTypes: OperationType[] = [
-            Builder<OperationType>()
-                .type('CLEANING')
-                .build(),
-            Builder<OperationType>()
-                .type('EXTRACTION')
-                .build(),
-            Builder<OperationType>()
-                .type('FILLING')
-                .build()
-        ];
-        const apiResponse = {types: operationTypes};
+        const apiResponse = {types: OPERATION_TYPES};
         mockedRestClient.get.mockResolvedValue(apiResponse);
 
         const {result} = renderHook(() => useOperationTypes());
@@ -39,7 +28,7 @@ describe('useOperationTypes', () => {
         });
 
         const expected = {
-            operationTypes: operationTypes,
+            operationTypes: OPERATION_TYPES,
             loading: false,
             error: null
         };
@@ -71,12 +60,9 @@ describe('useOperationTypes', () => {
     });
 
     it('should set loading to true when starting to fetch and false after completion', async () => {
-        const operationTypes: OperationType[] = [
-            Builder<OperationType>().type('CLEANING').build()
-        ];
         let resolvePromise: () => void;
         const promise = new Promise<{ types: OperationType[] }>((resolve) => {
-            resolvePromise = () => resolve({types: operationTypes});
+            resolvePromise = () => resolve({types: OPERATION_TYPES});
         });
         mockedRestClient.get.mockReturnValue(promise);
 
@@ -92,8 +78,26 @@ describe('useOperationTypes', () => {
             await promise;
         });
 
-        expect(result.current.loading).toBe(false);
-        expect(result.current.operationTypes).toEqual(operationTypes);
-        expect(result.current.error).toBeNull();
+        const expected = {
+            operationTypes: OPERATION_TYPES,
+            loading: false,
+            error: null
+        }
+
+        expect(result.current).toEqual(expected);
+        expect(mockedRestClient.get).toHaveBeenCalledWith('/api/operation-types');
+        expect(mockedRestClient.get).toHaveBeenCalledTimes(1);
     });
+
+    const OPERATION_TYPES: OperationType[] = [
+        Builder<OperationType>()
+            .type('CLEANING')
+            .build(),
+        Builder<OperationType>()
+            .type('EXTRACTION')
+            .build(),
+        Builder<OperationType>()
+            .type('FILLING')
+            .build()
+    ];
 });

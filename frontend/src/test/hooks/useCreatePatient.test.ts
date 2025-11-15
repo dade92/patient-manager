@@ -40,8 +40,7 @@ describe('useCreatePatient', () => {
 
     it('should handle error when creating patient fails', async () => {
         const formData = Builder<NewPatientForm>().build();
-        const error = new Error('API Error');
-        mockedRestClient.post.mockRejectedValue(error);
+        mockedRestClient.post.mockRejectedValue(new Error());
 
         const {result} = renderHook(() => useCreatePatient());
 
@@ -59,5 +58,6 @@ describe('useCreatePatient', () => {
         expect(result.current).toEqual(expected);
         expect(patient).toBeNull();
         expect(mockedRestClient.post).toHaveBeenCalledWith('/api/patient', formData);
+        expect(mockedRestClient.post).toHaveBeenCalledTimes(1);
     });
 });
