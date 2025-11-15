@@ -23,13 +23,12 @@ describe('usePatientOperations', () => {
         });
     });
 
-    it('should successfully fetch and return operations data', async () => {
+    it('should successfully fetch and save in cache', async () => {
         const patientId = 'PAT-001';
         const operations: Operation[] = [
             createMockOperation('OP-001', patientId),
             createMockOperation('OP-002', patientId)
         ];
-
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValue({operations});
 
@@ -52,6 +51,7 @@ describe('usePatientOperations', () => {
 
         expect(result.current).toEqual(expected);
         expect(mockGetCachedOperationsForPatient).toHaveBeenCalledWith(patientId);
+        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledTimes(1);
         expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${patientId}`);
         expect(mockSetCachedOperationsForPatient).toHaveBeenCalledWith(patientId, operations);
     });
@@ -61,7 +61,6 @@ describe('usePatientOperations', () => {
         const cachedOperations: Operation[] = [
             createMockOperation('OP-003', patientId)
         ];
-
         mockGetCachedOperationsForPatient.mockReturnValue(cachedOperations);
 
         const {result} = renderHook(() => usePatientOperations(patientId));
@@ -97,7 +96,6 @@ describe('usePatientOperations', () => {
 
         const {result} = renderHook(() => usePatientOperations(patientId));
 
-        // Wait for the effect to complete
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
         });
@@ -111,6 +109,7 @@ describe('usePatientOperations', () => {
 
         expect(result.current).toEqual(expected);
         expect(mockGetCachedOperationsForPatient).toHaveBeenCalledWith(patientId);
+        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledTimes(1);
         expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${patientId}`);
         expect(mockSetCachedOperationsForPatient).not.toHaveBeenCalled();
     });
@@ -158,7 +157,6 @@ describe('usePatientOperations', () => {
             {initialProps: {patientId: firstPatientId}}
         );
 
-        // Wait for first operations to load
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
         });
@@ -166,10 +164,8 @@ describe('usePatientOperations', () => {
         expect(result.current.operations).toEqual(firstOperations);
         expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${firstPatientId}`);
 
-        // Change patientId
         rerender({patientId: secondPatientId});
 
-        // Wait for second operations to load
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
         });
@@ -177,6 +173,7 @@ describe('usePatientOperations', () => {
         expect(result.current.operations).toEqual(secondOperations);
         expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${secondPatientId}`);
         expect(mockedRestClient.get).toHaveBeenCalledTimes(2);
+        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledTimes(2)
     });
 
     it('should refetch when refreshTrigger changes', async () => {
