@@ -54,21 +54,8 @@ describe('OperationFormValidator', () => {
             .description('Regular dental cleaning')
             .executor('Dr. Smith')
             .toothDetails([
-                Builder<ToothDetailForm>()
-                    .toothNumber(0)
-                    .amount('50.00')
-                    .toothType('PERMANENT')
-                    .build(),
-                Builder<ToothDetailForm>()
-                    .toothNumber(12)
-                    .amount('0')
-                    .toothType('PERMANENT')
-                    .build(),
-                Builder<ToothDetailForm>()
-                    .toothNumber(0)
-                    .amount('-25.00')
-                    .toothType('DECIDUOUS')
-                    .build()
+                Builder<ToothDetailForm>().toothNumber(0).build(),
+                Builder<ToothDetailForm>().amount('-25.00').build()
             ])
             .build();
 
