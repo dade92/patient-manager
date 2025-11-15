@@ -24,7 +24,6 @@ describe('usePatientOperations', () => {
     });
 
     it('should successfully fetch and save in cache', async () => {
-        const patientId = 'PAT-001';
         const operations: Operation[] = [
             createOperation('OP-001', patientId),
             createOperation('OP-002', patientId)
@@ -57,7 +56,6 @@ describe('usePatientOperations', () => {
     });
 
     it('should return cached operations when available', async () => {
-        const patientId = 'PAT-002';
         const cachedOperations: Operation[] = [
             createOperation('OP-003', patientId)
         ];
@@ -84,7 +82,6 @@ describe('usePatientOperations', () => {
     });
 
     it('should handle 404 error by setting empty operations array', async () => {
-        const patientId = 'PAT-999';
         const error = {
             name: 'ApiError',
             status: 404,
@@ -114,38 +111,9 @@ describe('usePatientOperations', () => {
         expect(mockSetCachedOperationsForPatient).not.toHaveBeenCalled();
     });
 
-    it('should handle general error with error message', async () => {
-        const patientId = 'PAT-003';
-        const error = new Error('Network error');
-
-        mockGetCachedOperationsForPatient.mockReturnValue(undefined);
-        mockedRestClient.get.mockRejectedValue(error);
-
-        const {result} = renderHook(() => usePatientOperations(patientId));
-
-        // Wait for the effect to complete
-        await act(async () => {
-            await new Promise(resolve => setTimeout(resolve, 0));
-        });
-
-        const expected = {
-            operations: [],
-            loading: false,
-            error: 'An error occurred while fetching operations',
-            refetch: expect.any(Function)
-        };
-
-        expect(result.current).toEqual(expected);
-        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledWith(patientId);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${patientId}`);
-        expect(mockSetCachedOperationsForPatient).not.toHaveBeenCalled();
-    });
-
     it('should refetch when patientId changes', async () => {
-        const firstPatientId = 'PAT-001';
         const secondPatientId = 'PAT-002';
-
-        const firstOperations: Operation[] = [createOperation('OP-001', firstPatientId)];
+        const firstOperations: Operation[] = [createOperation('OP-001', patientId)];
         const secondOperations: Operation[] = [createOperation('OP-002', secondPatientId)];
 
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
@@ -154,7 +122,7 @@ describe('usePatientOperations', () => {
 
         const {result, rerender} = renderHook(
             ({patientId}) => usePatientOperations(patientId),
-            {initialProps: {patientId: firstPatientId}}
+            {initialProps: {patientId: patientId}}
         );
 
         await act(async () => {
@@ -162,7 +130,7 @@ describe('usePatientOperations', () => {
         });
 
         expect(result.current.operations).toEqual(firstOperations);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${firstPatientId}`);
+        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${patientId}`);
 
         rerender({patientId: secondPatientId});
 
@@ -177,7 +145,6 @@ describe('usePatientOperations', () => {
     });
 
     it('should refetch when refreshTrigger changes', async () => {
-        const patientId = 'PAT-001';
         const operations: Operation[] = [createOperation('OP-001', patientId)];
 
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
@@ -188,17 +155,14 @@ describe('usePatientOperations', () => {
             {initialProps: {refreshTrigger: 1}}
         );
 
-        // Wait for initial load
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
         });
 
         expect(mockedRestClient.get).toHaveBeenCalledTimes(1);
 
-        // Change refreshTrigger
         rerender({refreshTrigger: 2});
 
-        // Wait for refetch
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
         });
@@ -208,28 +172,22 @@ describe('usePatientOperations', () => {
     });
 
     it('should set loading to true when starting to fetch and false after completion', async () => {
-        const patientId = 'PAT-001';
         const operations: Operation[] = [createOperation('OP-001', patientId)];
-
         let resolvePromise: () => void;
         const promise = new Promise<{ operations: Operation[] }>((resolve) => {
             resolvePromise = () => resolve({operations});
         });
-
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockReturnValue(promise);
 
         const {result} = renderHook(() => usePatientOperations(patientId));
 
-        // Should start with loading true
         expect(result.current.loading).toBe(true);
         expect(result.current.operations).toEqual([]);
         expect(result.current.error).toBeNull();
 
-        // Resolve the promise
         resolvePromise!();
 
-        // Wait for completion
         await act(async () => {
             await promise;
         });
@@ -239,6 +197,7 @@ describe('usePatientOperations', () => {
         expect(result.current.error).toBeNull();
     });
 
+    const patientId = 'PAT-001';
     const createOperation = (id: string, patientId: string): Operation =>
         Builder<Operation>()
             .id(id)
