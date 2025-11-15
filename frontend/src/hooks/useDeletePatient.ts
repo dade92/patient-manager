@@ -25,7 +25,6 @@ export const useDeletePatient = ({onSuccess}: Props): DeletePatientStatus => {
         } catch (error: any) {
             const errorMessage = error.message || 'Failed to delete patient';
             setError(errorMessage);
-            throw error;
         } finally {
             setIsDeleting(false);
         }
