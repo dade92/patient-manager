@@ -71,6 +71,7 @@ describe('usePatient', () => {
 
         expect(result.current).toEqual(expected);
         expect(mockGetCachedPatient).toHaveBeenCalledWith(patientId);
+        expect(mockGetCachedPatient).toHaveBeenCalledTimes(1);
         expect(mockedRestClient.get).not.toHaveBeenCalled();
         expect(mockSetCachedPatient).not.toHaveBeenCalled();
     });
