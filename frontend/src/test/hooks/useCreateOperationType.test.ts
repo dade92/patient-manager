@@ -20,12 +20,7 @@ describe('useCreateOperationType', () => {
     });
 
     it('should successfully create an operation type', async () => {
-        const formData = Builder<CreateOperationTypeFormData>()
-            .type('CLEANING')
-            .description('Dental cleaning')
-            .amount('100')
-            .currency('EUR')
-            .build();
+        const formData = Builder<CreateOperationTypeFormData>().build();
         const adaptedPayload = {
             type: 'CLEANING',
             description: 'Dental cleaning',
@@ -60,12 +55,7 @@ describe('useCreateOperationType', () => {
     });
 
     it('should handle error when creating operation type fails', async () => {
-        const formData = Builder<CreateOperationTypeFormData>()
-            .type('CLEANING')
-            .description('Dental cleaning')
-            .amount('100')
-            .currency('EUR')
-            .build();
+        const formData = Builder<CreateOperationTypeFormData>().build();
         const adaptedPayload = {
             type: 'CLEANING',
             description: 'Dental cleaning',
