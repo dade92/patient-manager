@@ -25,8 +25,8 @@ describe('usePatientInvoices', () => {
 
     it('should successfully fetch invoices and cache the result', async () => {
         const invoices: Invoice[] = [
-            createInvoice('INV-001', 'OP-001'),
-            createInvoice('INV-002', 'OP-002')
+            createInvoice(INVOICE_ID, 'OP-001'),
+            createInvoice(ANOTHER_INVOICE_ID, 'OP-002')
         ];
         mockGetCachedInvoicesForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValue({invoices});
@@ -58,7 +58,7 @@ describe('usePatientInvoices', () => {
     });
 
     it('should return cached invoices when available', async () => {
-        const cachedInvoices: Invoice[] = [createInvoice('INV-003', 'OP-003', InvoiceStatus.PAID)];
+        const cachedInvoices: Invoice[] = [createInvoice(INVOICE_ID, 'OP-003', InvoiceStatus.PAID)];
         mockGetCachedInvoicesForPatient.mockReturnValue(cachedInvoices);
 
         const {result} = renderHook(() => usePatientInvoices(PATIENT_ID));
@@ -112,11 +112,11 @@ describe('usePatientInvoices', () => {
     it('should successfully change invoice status', async () => {
         const expectedStatus = InvoiceStatus.PAID;
         const originalInvoices: Invoice[] = [
-            createInvoice('INV-001', 'OP-001', InvoiceStatus.PENDING),
-            createInvoice('INV-002', 'OP-002', InvoiceStatus.PENDING)
+            createInvoice(INVOICE_ID, 'OP-001', InvoiceStatus.PENDING),
+            createInvoice(ANOTHER_INVOICE_ID, 'OP-002', InvoiceStatus.PENDING)
         ];
 
-        const updatedInvoice = createInvoice('INV-001', 'OP-001', expectedStatus);
+        const updatedInvoice = createInvoice(INVOICE_ID, 'OP-001', expectedStatus);
         mockGetCachedInvoicesForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValue({invoices: originalInvoices});
         mockedRestClient.post.mockResolvedValue(updatedInvoice);
@@ -132,7 +132,7 @@ describe('usePatientInvoices', () => {
         expect(mockSetCachedInvoicesForPatient).toHaveBeenCalledWith(PATIENT_ID, originalInvoices);
 
         await act(async () => {
-            await result.current.changeInvoiceStatus('INV-001', expectedStatus);
+            await result.current.changeInvoiceStatus(INVOICE_ID, expectedStatus);
         });
 
         const finalInvoices = [
@@ -144,9 +144,11 @@ describe('usePatientInvoices', () => {
         expect(result.current.updatingCancelledInvoice).toBe('');
         expect(result.current.error).toBeNull();
         expect(mockSetCachedInvoicesForPatient).toHaveBeenCalledWith(PATIENT_ID, finalInvoices);
-        expect(mockedRestClient.post).toHaveBeenCalledWith('/api/invoice/INV-001/status', {status: expectedStatus});
+        expect(mockedRestClient.post).toHaveBeenCalledWith(`/api/invoice/${INVOICE_ID}/status`, {status: expectedStatus});
     });
 
+    const INVOICE_ID = 'INV-001';
+    const ANOTHER_INVOICE_ID = 'INV-002';
     const PATIENT_ID = 'PAT-001';
     const createInvoice = (id: string, operationId: string, status: InvoiceStatus = InvoiceStatus.PENDING): Invoice =>
         Builder<Invoice>()

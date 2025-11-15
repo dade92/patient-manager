@@ -25,8 +25,8 @@ describe('usePatientOperations', () => {
 
     it('should successfully fetch and save in cache', async () => {
         const operations: Operation[] = [
-            createOperation('OP-001', PATIENT_ID),
-            createOperation('OP-002', PATIENT_ID)
+            createOperation(OPERATION_ID, PATIENT_ID),
+            createOperation(ANOTHER_OPERATION_ID, PATIENT_ID)
         ];
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValue({operations});
@@ -45,7 +45,6 @@ describe('usePatientOperations', () => {
             operations: operations,
             loading: false,
             error: null,
-            refetch: expect.any(Function)
         };
 
         expect(result.current).toEqual(expected);
@@ -71,7 +70,6 @@ describe('usePatientOperations', () => {
             operations: cachedOperations,
             loading: false,
             error: null,
-            refetch: expect.any(Function)
         };
 
         expect(result.current).toEqual(expected);
@@ -82,14 +80,8 @@ describe('usePatientOperations', () => {
     });
 
     it('should handle 404 error by setting empty operations array', async () => {
-        const error = {
-            name: 'ApiError',
-            status: 404,
-            message: 'Operations not found'
-        };
-
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
-        mockedRestClient.get.mockRejectedValue(error);
+        mockedRestClient.get.mockRejectedValue({status: 404, message: 'Operations not found'});
 
         const {result} = renderHook(() => usePatientOperations(PATIENT_ID));
 
@@ -101,7 +93,6 @@ describe('usePatientOperations', () => {
             operations: [],
             loading: false,
             error: null,
-            refetch: expect.any(Function)
         };
 
         expect(result.current).toEqual(expected);
@@ -113,8 +104,8 @@ describe('usePatientOperations', () => {
 
     it('should refetch when patientId changes', async () => {
         const secondPatientId = 'PAT-002';
-        const firstOperations: Operation[] = [createOperation('OP-001', PATIENT_ID)];
-        const secondOperations: Operation[] = [createOperation('OP-002', secondPatientId)];
+        const firstOperations: Operation[] = [createOperation(OPERATION_ID, PATIENT_ID)];
+        const secondOperations: Operation[] = [createOperation(ANOTHER_OPERATION_ID, secondPatientId)];
 
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValueOnce({operations: firstOperations});
@@ -145,7 +136,7 @@ describe('usePatientOperations', () => {
     });
 
     it('should refetch when refreshTrigger changes', async () => {
-        const operations: Operation[] = [createOperation('OP-001', PATIENT_ID)];
+        const operations: Operation[] = [createOperation(OPERATION_ID, PATIENT_ID)];
 
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValue({operations});
@@ -172,7 +163,7 @@ describe('usePatientOperations', () => {
     });
 
     it('should set loading to true when starting to fetch and false after completion', async () => {
-        const operations: Operation[] = [createOperation('OP-001', PATIENT_ID)];
+        const operations: Operation[] = [createOperation(OPERATION_ID, PATIENT_ID)];
         let resolvePromise: () => void;
         const promise = new Promise<{ operations: Operation[] }>((resolve) => {
             resolvePromise = () => resolve({operations});
@@ -198,6 +189,8 @@ describe('usePatientOperations', () => {
     });
 
     const PATIENT_ID = 'PAT-001';
+    const OPERATION_ID = 'OP-001';
+    const ANOTHER_OPERATION_ID = 'OP-002';
     const createOperation = (id: string, patientId: string): Operation =>
         Builder<Operation>()
             .id(id)

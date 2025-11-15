@@ -7,7 +7,6 @@ interface PatientOperationsStatus {
     operations: Operation[];
     loading: boolean;
     error: string | null;
-    refetch: () => Promise<void>;
 }
 
 export const usePatientOperations = (patientId: string, refreshTrigger?: number): PatientOperationsStatus => {
@@ -53,6 +52,5 @@ export const usePatientOperations = (patientId: string, refreshTrigger?: number)
         operations,
         loading,
         error,
-        refetch: fetchOperations
     };
 };
