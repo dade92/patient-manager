@@ -24,13 +24,12 @@ describe('usePatient', () => {
     });
 
     it('should successfully fetch and return patient data', async () => {
-        const patientId = 'PAT-001';
         const patient = Builder<Patient>().build();
 
         mockGetCachedPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValue(patient);
 
-        const {result} = renderHook(() => usePatient(patientId));
+        const {result} = renderHook(() => usePatient(PATIENT_ID));
 
         expect(result.current.loading).toBe(true);
         expect(result.current.patient).toBeUndefined();
@@ -47,17 +46,16 @@ describe('usePatient', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(mockGetCachedPatient).toHaveBeenCalledWith(patientId);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/patient/${patientId}`);
-        expect(mockSetCachedPatient).toHaveBeenCalledWith(patientId, patient);
+        expect(mockGetCachedPatient).toHaveBeenCalledWith(PATIENT_ID);
+        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/patient/${PATIENT_ID}`);
+        expect(mockSetCachedPatient).toHaveBeenCalledWith(PATIENT_ID, patient);
     });
 
     it('should return cached patient when available', async () => {
-        const patientId = 'PAT-002';
         const cachedPatient: Patient = Builder<Patient>().build();
         mockGetCachedPatient.mockReturnValue(cachedPatient);
 
-        const {result} = renderHook(() => usePatient(patientId));
+        const {result} = renderHook(() => usePatient(PATIENT_ID));
 
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
@@ -70,14 +68,13 @@ describe('usePatient', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(mockGetCachedPatient).toHaveBeenCalledWith(patientId);
+        expect(mockGetCachedPatient).toHaveBeenCalledWith(PATIENT_ID);
         expect(mockGetCachedPatient).toHaveBeenCalledTimes(1);
         expect(mockedRestClient.get).not.toHaveBeenCalled();
         expect(mockSetCachedPatient).not.toHaveBeenCalled();
     });
 
     it('should handle 404 error with specific message', async () => {
-        const patientId = 'PAT-999';
         const error = {
             name: 'ApiError',
             status: 404,
@@ -86,7 +83,7 @@ describe('usePatient', () => {
         mockGetCachedPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockRejectedValue(error);
 
-        const {result} = renderHook(() => usePatient(patientId));
+        const {result} = renderHook(() => usePatient(PATIENT_ID));
 
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
@@ -95,20 +92,19 @@ describe('usePatient', () => {
         const expected = {
             patient: undefined,
             loading: false,
-            error: `Patient with ID ${patientId} was not found`
+            error: `Patient with ID ${PATIENT_ID} was not found`
         };
 
         expect(result.current).toEqual(expected);
-        expect(mockGetCachedPatient).toHaveBeenCalledWith(patientId);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/patient/${patientId}`);
+        expect(mockGetCachedPatient).toHaveBeenCalledWith(PATIENT_ID);
+        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/patient/${PATIENT_ID}`);
         expect(mockSetCachedPatient).not.toHaveBeenCalled();
     });
 
     it('should refetch when patientId changes', async () => {
-        const firstPatientId = 'PAT-001';
         const secondPatientId = 'PAT-002';
         const firstPatient: Patient = Builder<Patient>()
-            .id(firstPatientId)
+            .id(PATIENT_ID)
             .build();
         const secondPatient: Patient = Builder<Patient>()
             .id(secondPatientId)
@@ -119,7 +115,7 @@ describe('usePatient', () => {
 
         const {result, rerender} = renderHook(
             ({patientId}) => usePatient(patientId),
-            {initialProps: {patientId: firstPatientId}}
+            {initialProps: {patientId: PATIENT_ID}}
         );
 
         await act(async () => {
@@ -127,12 +123,10 @@ describe('usePatient', () => {
         });
 
         expect(result.current.patient).toEqual(firstPatient);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/patient/${firstPatientId}`);
+        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/patient/${PATIENT_ID}`);
 
-        // Change patientId
         rerender({patientId: secondPatientId});
 
-        // Wait for second patient to load
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
         });
@@ -143,7 +137,6 @@ describe('usePatient', () => {
     });
 
     it('should set loading to true when starting to fetch', async () => {
-        const patientId = 'PAT-001';
         const patient: Patient = Builder<Patient>().build();
         mockGetCachedPatient.mockReturnValue(undefined);
 
@@ -154,7 +147,7 @@ describe('usePatient', () => {
 
         mockedRestClient.get.mockReturnValue(promise);
 
-        const {result} = renderHook(() => usePatient(patientId));
+        const {result} = renderHook(() => usePatient(PATIENT_ID));
 
         expect(result.current.loading).toBe(true);
         expect(result.current.error).toBeNull();
@@ -168,4 +161,6 @@ describe('usePatient', () => {
         expect(result.current.loading).toBe(false);
         expect(result.current.patient).toEqual(patient);
     });
+
+    const PATIENT_ID = 'PAT-001';
 });

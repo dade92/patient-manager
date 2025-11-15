@@ -33,7 +33,7 @@ describe('usePatientSearch', () => {
 
     it('should successfully search and return patients after debounce timeout', async () => {
         const patients: Patient[] = [
-            createPatient('PAT-001', 'John Doe'),
+            createPatient(PATIENT_ID, 'John Doe'),
             createPatient('PAT-002', 'John Smith')
         ];
         const query = 'John';
@@ -116,7 +116,7 @@ describe('usePatientSearch', () => {
     });
 
     it('should debounce search requests and only call API once', async () => {
-        const patients: Patient[] = [createPatient('PAT-001', 'John Doe')];
+        const patients: Patient[] = [createPatient(PATIENT_ID, 'John Doe')];
         mockedRestClient.get.mockResolvedValue({patients});
         const query = 'John';
         const {result} = renderHook(() => usePatientSearch());
@@ -169,6 +169,7 @@ describe('usePatientSearch', () => {
         expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/patient/search?name=${query}`);
     });
 
+    const PATIENT_ID = 'PAT-001';
     const createPatient = (id: string, name: string): Patient =>
         Builder<Patient>()
             .id(id)

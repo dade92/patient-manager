@@ -25,13 +25,13 @@ describe('usePatientOperations', () => {
 
     it('should successfully fetch and save in cache', async () => {
         const operations: Operation[] = [
-            createOperation('OP-001', patientId),
-            createOperation('OP-002', patientId)
+            createOperation('OP-001', PATIENT_ID),
+            createOperation('OP-002', PATIENT_ID)
         ];
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValue({operations});
 
-        const {result} = renderHook(() => usePatientOperations(patientId));
+        const {result} = renderHook(() => usePatientOperations(PATIENT_ID));
 
         expect(result.current.loading).toBe(true);
         expect(result.current.operations).toEqual([]);
@@ -49,19 +49,19 @@ describe('usePatientOperations', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledWith(patientId);
+        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID);
         expect(mockGetCachedOperationsForPatient).toHaveBeenCalledTimes(1);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${patientId}`);
-        expect(mockSetCachedOperationsForPatient).toHaveBeenCalledWith(patientId, operations);
+        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${PATIENT_ID}`);
+        expect(mockSetCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID, operations);
     });
 
     it('should return cached operations when available', async () => {
         const cachedOperations: Operation[] = [
-            createOperation('OP-003', patientId)
+            createOperation('OP-003', PATIENT_ID)
         ];
         mockGetCachedOperationsForPatient.mockReturnValue(cachedOperations);
 
-        const {result} = renderHook(() => usePatientOperations(patientId));
+        const {result} = renderHook(() => usePatientOperations(PATIENT_ID));
 
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
@@ -75,7 +75,7 @@ describe('usePatientOperations', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledWith(patientId);
+        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID);
         expect(mockGetCachedOperationsForPatient).toHaveBeenCalledTimes(1);
         expect(mockedRestClient.get).not.toHaveBeenCalled();
         expect(mockSetCachedOperationsForPatient).not.toHaveBeenCalled();
@@ -91,7 +91,7 @@ describe('usePatientOperations', () => {
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockRejectedValue(error);
 
-        const {result} = renderHook(() => usePatientOperations(patientId));
+        const {result} = renderHook(() => usePatientOperations(PATIENT_ID));
 
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
@@ -105,15 +105,15 @@ describe('usePatientOperations', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledWith(patientId);
+        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID);
         expect(mockGetCachedOperationsForPatient).toHaveBeenCalledTimes(1);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${patientId}`);
+        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${PATIENT_ID}`);
         expect(mockSetCachedOperationsForPatient).not.toHaveBeenCalled();
     });
 
     it('should refetch when patientId changes', async () => {
         const secondPatientId = 'PAT-002';
-        const firstOperations: Operation[] = [createOperation('OP-001', patientId)];
+        const firstOperations: Operation[] = [createOperation('OP-001', PATIENT_ID)];
         const secondOperations: Operation[] = [createOperation('OP-002', secondPatientId)];
 
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
@@ -122,7 +122,7 @@ describe('usePatientOperations', () => {
 
         const {result, rerender} = renderHook(
             ({patientId}) => usePatientOperations(patientId),
-            {initialProps: {patientId: patientId}}
+            {initialProps: {patientId: PATIENT_ID}}
         );
 
         await act(async () => {
@@ -130,7 +130,7 @@ describe('usePatientOperations', () => {
         });
 
         expect(result.current.operations).toEqual(firstOperations);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${patientId}`);
+        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${PATIENT_ID}`);
 
         rerender({patientId: secondPatientId});
 
@@ -145,13 +145,13 @@ describe('usePatientOperations', () => {
     });
 
     it('should refetch when refreshTrigger changes', async () => {
-        const operations: Operation[] = [createOperation('OP-001', patientId)];
+        const operations: Operation[] = [createOperation('OP-001', PATIENT_ID)];
 
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValue({operations});
 
         const {rerender} = renderHook(
-            ({refreshTrigger}) => usePatientOperations(patientId, refreshTrigger),
+            ({refreshTrigger}) => usePatientOperations(PATIENT_ID, refreshTrigger),
             {initialProps: {refreshTrigger: 1}}
         );
 
@@ -168,11 +168,11 @@ describe('usePatientOperations', () => {
         });
 
         expect(mockedRestClient.get).toHaveBeenCalledTimes(2);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${patientId}`);
+        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/operation/patient/${PATIENT_ID}`);
     });
 
     it('should set loading to true when starting to fetch and false after completion', async () => {
-        const operations: Operation[] = [createOperation('OP-001', patientId)];
+        const operations: Operation[] = [createOperation('OP-001', PATIENT_ID)];
         let resolvePromise: () => void;
         const promise = new Promise<{ operations: Operation[] }>((resolve) => {
             resolvePromise = () => resolve({operations});
@@ -180,7 +180,7 @@ describe('usePatientOperations', () => {
         mockGetCachedOperationsForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockReturnValue(promise);
 
-        const {result} = renderHook(() => usePatientOperations(patientId));
+        const {result} = renderHook(() => usePatientOperations(PATIENT_ID));
 
         expect(result.current.loading).toBe(true);
         expect(result.current.operations).toEqual([]);
@@ -197,7 +197,7 @@ describe('usePatientOperations', () => {
         expect(result.current.error).toBeNull();
     });
 
-    const patientId = 'PAT-001';
+    const PATIENT_ID = 'PAT-001';
     const createOperation = (id: string, patientId: string): Operation =>
         Builder<Operation>()
             .id(id)

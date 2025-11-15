@@ -24,7 +24,6 @@ describe('usePatientInvoices', () => {
     });
 
     it('should successfully fetch invoices and cache the result', async () => {
-        const patientId = 'PAT-001';
         const invoices: Invoice[] = [
             createInvoice('INV-001', 'OP-001'),
             createInvoice('INV-002', 'OP-002')
@@ -32,7 +31,7 @@ describe('usePatientInvoices', () => {
         mockGetCachedInvoicesForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValue({invoices});
 
-        const {result} = renderHook(() => usePatientInvoices(patientId));
+        const {result} = renderHook(() => usePatientInvoices(PATIENT_ID));
 
         expect(result.current.loading).toBe(true);
         expect(result.current.invoices).toEqual([]);
@@ -52,18 +51,17 @@ describe('usePatientInvoices', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(mockGetCachedInvoicesForPatient).toHaveBeenCalledWith(patientId);
+        expect(mockGetCachedInvoicesForPatient).toHaveBeenCalledWith(PATIENT_ID);
         expect(mockGetCachedInvoicesForPatient).toHaveBeenCalledTimes(1);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/invoice/patient/${patientId}`);
-        expect(mockSetCachedInvoicesForPatient).toHaveBeenCalledWith(patientId, invoices);
+        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/invoice/patient/${PATIENT_ID}`);
+        expect(mockSetCachedInvoicesForPatient).toHaveBeenCalledWith(PATIENT_ID, invoices);
     });
 
     it('should return cached invoices when available', async () => {
-        const patientId = 'PAT-002';
         const cachedInvoices: Invoice[] = [createInvoice('INV-003', 'OP-003', InvoiceStatus.PAID)];
         mockGetCachedInvoicesForPatient.mockReturnValue(cachedInvoices);
 
-        const {result} = renderHook(() => usePatientInvoices(patientId));
+        const {result} = renderHook(() => usePatientInvoices(PATIENT_ID));
 
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
@@ -79,19 +77,18 @@ describe('usePatientInvoices', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(mockGetCachedInvoicesForPatient).toHaveBeenCalledWith(patientId);
+        expect(mockGetCachedInvoicesForPatient).toHaveBeenCalledWith(PATIENT_ID);
         expect(mockGetCachedInvoicesForPatient).toHaveBeenCalledTimes(1);
         expect(mockedRestClient.get).not.toHaveBeenCalled();
         expect(mockSetCachedInvoicesForPatient).not.toHaveBeenCalled();
     });
 
     it('should handle error when fetching invoices fails', async () => {
-        const patientId = 'PAT-003';
         const error = new Error('Network error');
         mockGetCachedInvoicesForPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockRejectedValue(error);
 
-        const {result} = renderHook(() => usePatientInvoices(patientId));
+        const {result} = renderHook(() => usePatientInvoices(PATIENT_ID));
 
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
@@ -107,14 +104,13 @@ describe('usePatientInvoices', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(mockGetCachedInvoicesForPatient).toHaveBeenCalledWith(patientId);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/invoice/patient/${patientId}`);
+        expect(mockGetCachedInvoicesForPatient).toHaveBeenCalledWith(PATIENT_ID);
+        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/invoice/patient/${PATIENT_ID}`);
         expect(mockSetCachedInvoicesForPatient).not.toHaveBeenCalled();
     });
 
     it('should successfully change invoice status', async () => {
         const expectedStatus = InvoiceStatus.PAID;
-        const patientId = 'PAT-001';
         const originalInvoices: Invoice[] = [
             createInvoice('INV-001', 'OP-001', InvoiceStatus.PENDING),
             createInvoice('INV-002', 'OP-002', InvoiceStatus.PENDING)
@@ -125,15 +121,15 @@ describe('usePatientInvoices', () => {
         mockedRestClient.get.mockResolvedValue({invoices: originalInvoices});
         mockedRestClient.post.mockResolvedValue(updatedInvoice);
 
-        const {result} = renderHook(() => usePatientInvoices(patientId));
+        const {result} = renderHook(() => usePatientInvoices(PATIENT_ID));
 
         await act(async () => {
             await new Promise(resolve => setTimeout(resolve, 0));
         });
 
         expect(result.current.invoices).toEqual(originalInvoices);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/invoice/patient/${patientId}`);
-        expect(mockSetCachedInvoicesForPatient).toHaveBeenCalledWith(patientId, originalInvoices);
+        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/invoice/patient/${PATIENT_ID}`);
+        expect(mockSetCachedInvoicesForPatient).toHaveBeenCalledWith(PATIENT_ID, originalInvoices);
 
         await act(async () => {
             await result.current.changeInvoiceStatus('INV-001', expectedStatus);
@@ -147,10 +143,11 @@ describe('usePatientInvoices', () => {
         expect(result.current.updatingPaidInvoice).toBe('');
         expect(result.current.updatingCancelledInvoice).toBe('');
         expect(result.current.error).toBeNull();
-        expect(mockSetCachedInvoicesForPatient).toHaveBeenCalledWith(patientId, finalInvoices);
+        expect(mockSetCachedInvoicesForPatient).toHaveBeenCalledWith(PATIENT_ID, finalInvoices);
         expect(mockedRestClient.post).toHaveBeenCalledWith('/api/invoice/INV-001/status', {status: expectedStatus});
     });
 
+    const PATIENT_ID = 'PAT-001';
     const createInvoice = (id: string, operationId: string, status: InvoiceStatus = InvoiceStatus.PENDING): Invoice =>
         Builder<Invoice>()
             .id(id)
