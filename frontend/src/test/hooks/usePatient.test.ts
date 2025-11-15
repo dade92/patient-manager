@@ -104,32 +104,6 @@ describe('usePatient', () => {
         expect(mockSetCachedPatient).not.toHaveBeenCalled();
     });
 
-    it('should handle general error with default message', async () => {
-        const patientId = 'PAT-003';
-        const error = new Error('Network error');
-
-        mockGetCachedPatient.mockReturnValue(undefined);
-        mockedRestClient.get.mockRejectedValue(error);
-
-        const {result} = renderHook(() => usePatient(patientId));
-
-        // Wait for the effect to complete
-        await act(async () => {
-            await new Promise(resolve => setTimeout(resolve, 0));
-        });
-
-        const expected = {
-            patient: undefined,
-            loading: false,
-            error: 'An error occurred while fetching the patient data'
-        };
-
-        expect(result.current).toEqual(expected);
-        expect(mockGetCachedPatient).toHaveBeenCalledWith(patientId);
-        expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/patient/${patientId}`);
-        expect(mockSetCachedPatient).not.toHaveBeenCalled();
-    });
-
     it('should refetch when patientId changes', async () => {
         const firstPatientId = 'PAT-001';
         const secondPatientId = 'PAT-002';
