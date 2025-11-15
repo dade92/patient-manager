@@ -10,7 +10,6 @@ interface PatientInvoicesStatus {
     updatingPaidInvoice: string;
     updatingCancelledInvoice: string;
     changeInvoiceStatus: (invoiceId: string, status: InvoiceStatus) => Promise<void>;
-    refetch: () => Promise<void>;
 }
 
 export const usePatientInvoices = (patientId: string, refreshTrigger?: number): PatientInvoicesStatus => {
@@ -86,6 +85,5 @@ export const usePatientInvoices = (patientId: string, refreshTrigger?: number): 
         updatingPaidInvoice,
         updatingCancelledInvoice,
         changeInvoiceStatus,
-        refetch: fetchInvoices
     };
 };

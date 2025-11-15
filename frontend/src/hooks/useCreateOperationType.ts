@@ -29,7 +29,6 @@ export const useCreateOperationType = ({onSuccess}: Props): CreateOperationTypeS
         } catch (err: any) {
             const errorMessage = 'An error occurred while creating the operation type';
             setError(errorMessage);
-            throw err;
         } finally {
             setIsSubmitting(false);
         }

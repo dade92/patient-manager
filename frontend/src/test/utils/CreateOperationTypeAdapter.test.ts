@@ -36,4 +36,16 @@ describe('CreateOperationTypeAdapter', () => {
         expect(validateCreateOperationTypeFormMock).toHaveBeenCalledWith(formData);
         expect(validateCreateOperationTypeFormMock).toHaveBeenCalledTimes(1);
     });
+
+    it('should throw an error if validation fails', () => {
+        const formData = Builder<CreateOperationTypeFormData>().build();
+        const error = new Error('Validation failed');
+        validateCreateOperationTypeFormMock.mockImplementation(() => {
+            throw error
+        });
+
+        expect(
+            () => adaptCreateOperationTypePayload(formData)
+        ).toThrow(error);
+    });
 });

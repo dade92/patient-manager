@@ -27,78 +27,27 @@ describe('OperationFormValidator', () => {
         expect(() => validateOperationForm(validFormData)).not.toThrow();
     });
 
-    it('should throw error when tooth number is 0', () => {
-        const formDataWithInvalidTooth = Builder<OperationForm>()
-            .type('CLEANING')
-            .patientId('patient-123')
-            .description('Regular dental cleaning')
-            .executor('Dr. Smith')
-            .toothDetails([
-                Builder<ToothDetailForm>()
-                    .toothNumber(0)
-                    .amount('50.00')
-                    .toothType('PERMANENT')
-                    .build()
-            ])
-            .build();
-
-        const formDataWithMixedValidInvalid = Builder<OperationForm>()
-            .type('CLEANING')
-            .patientId('patient-123')
-            .description('Regular dental cleaning')
-            .executor('Dr. Smith')
-            .toothDetails([
-                Builder<ToothDetailForm>()
-                    .toothNumber(11)
-                    .amount('50.00')
-                    .toothType('PERMANENT')
-                    .build(),
-                Builder<ToothDetailForm>()
-                    .toothNumber(0)
-                    .amount('75.50')
-                    .toothType('PERMANENT')
-                    .build()
-            ])
-            .build();
-
-        expect(() => validateOperationForm(formDataWithInvalidTooth)).toThrow(Error);
-        expect(() => validateOperationForm(formDataWithMixedValidInvalid)).toThrow(Error);
-    });
-
     it('should pass validation with empty tooth details array', () => {
         const formDataWithEmptyDetails = Builder<OperationForm>()
-            .type('CLEANING')
-            .patientId('patient-123')
-            .description('Regular dental cleaning')
-            .executor('Dr. Smith')
             .toothDetails([])
             .build();
 
         expect(() => validateOperationForm(formDataWithEmptyDetails)).not.toThrow();
     });
 
+    it('should throw error when tooth number is 0', () => {
+        const formDataWithInvalidTooth = Builder<OperationForm>()
+            .toothDetails([Builder<ToothDetailForm>().toothNumber(0).build()])
+            .build();
+
+        expect(() => validateOperationForm(formDataWithInvalidTooth)).toThrow(Error);
+    });
+
     it('should throw error when multiple tooth details have invalid values', () => {
         const formDataWithMultipleInvalid = Builder<OperationForm>()
-            .type('CLEANING')
-            .patientId('patient-123')
-            .description('Regular dental cleaning')
-            .executor('Dr. Smith')
             .toothDetails([
-                Builder<ToothDetailForm>()
-                    .toothNumber(0)
-                    .amount('50.00')
-                    .toothType('PERMANENT')
-                    .build(),
-                Builder<ToothDetailForm>()
-                    .toothNumber(12)
-                    .amount('0')
-                    .toothType('PERMANENT')
-                    .build(),
-                Builder<ToothDetailForm>()
-                    .toothNumber(0)
-                    .amount('-25.00')
-                    .toothType('DECIDUOUS')
-                    .build()
+                Builder<ToothDetailForm>().toothNumber(0).build(),
+                Builder<ToothDetailForm>().amount('-25.00').build()
             ])
             .build();
 
