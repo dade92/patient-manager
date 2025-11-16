@@ -16,20 +16,22 @@ export const ToothDetailListItem: FC<Props> = ({detail, index, isLast}) => {
         : 'success';
 
     return (
-        <ListItem key={index} divider={!isLast}>
+        <ListItem key={index} divider={!isLast} data-testid={`tooth-detail-item-${index}`}>
             <ListItemText
                 primary={
                     <>
-                        Tooth <strong>{detail.toothNumber}</strong>
+                        Tooth <strong data-testid="tooth-number">{detail.toothNumber}</strong>
                         <Chip
                             label={toothTypeDisplay}
                             color={chipColor}
                             size="small"
                             sx={{ ml: 1, height: '20px', fontSize: '0.7rem' }}
+                            data-testid="tooth-type-chip"
                         />
                     </>
                 }
                 secondary={formatAmount(detail.estimatedCost.amount, detail.estimatedCost.currency)}
+                data-testid="tooth-cost"
             />
         </ListItem>
     );
