@@ -30,7 +30,6 @@ export const useCreateOperation = (options: CreateOperationOptions): CreateOpera
                 adaptOperationPayload(form)
             );
 
-            // Update cache with new operation
             const cachedOperations = getCachedOperationsForPatient(options.patientId) || [];
             setCachedOperationsForPatient(options.patientId, [newOperation, ...cachedOperations]);
 
