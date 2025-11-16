@@ -47,7 +47,7 @@ export const CreateOperationForm: React.FC<Props> = ({
     const [formData, setFormData] = useState<OperationForm>(EMPTY_OPERATION_FORM);
     const [toothSelectionKey, setToothSelectionKey] = useState(0);
     const { operationTypes, loading: loadingOperationTypes, error: operationTypesError } = useOperationTypes();
-    const { createOperation, error, isSubmitting } = useCreateOperation({ patientId });
+    const { createOperation, error, isSubmitting } = useCreateOperation(patientId);
     const estimatedCost = operationTypes.find(ot => ot.type === formData.type)?.estimatedBaseCost.amount || 0;
 
     useEffect(() => {

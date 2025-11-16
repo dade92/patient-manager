@@ -5,20 +5,16 @@ import {OperationForm} from '../components/forms/CreateOperationForm';
 import {adaptOperationPayload} from '../utils/CreateOperationPayloadAdapter';
 import {useCache} from '../context/CacheContext';
 
-interface CreateOperationOptions {
-    patientId: string;
-}
-
 interface CreateOperationStatus {
     createOperation: (form: OperationForm) => Promise<Operation | null>;
     error: string | null;
     isSubmitting: boolean;
 }
 
-export const useCreateOperation = (options: CreateOperationOptions): CreateOperationStatus => {
+export const useCreateOperation = (patientId: string): CreateOperationStatus => {
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { getCachedOperationsForPatient, setCachedOperationsForPatient } = useCache();
+    const {getCachedOperationsForPatient, setCachedOperationsForPatient} = useCache();
 
     const createOperation = async (form: OperationForm): Promise<Operation | null> => {
         setError(null);
@@ -30,9 +26,8 @@ export const useCreateOperation = (options: CreateOperationOptions): CreateOpera
                 adaptOperationPayload(form)
             );
 
-            const cachedOperations = getCachedOperationsForPatient(options.patientId) || [];
-            setCachedOperationsForPatient(options.patientId, [newOperation, ...cachedOperations]);
-
+            const cachedOperations = getCachedOperationsForPatient(patientId) || [];
+            setCachedOperationsForPatient(patientId, [newOperation, ...cachedOperations]);
             return newOperation;
         } catch (err: any) {
             setError(err.message);

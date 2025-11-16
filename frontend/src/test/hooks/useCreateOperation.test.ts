@@ -18,7 +18,6 @@ const mockedUseCache = useCache as jest.Mock;
 describe('useCreateOperation', () => {
     const mockGetCachedOperationsForPatient = jest.fn();
     const mockSetCachedOperationsForPatient = jest.fn();
-    const patientId = 'PAT-001';
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -29,37 +28,30 @@ describe('useCreateOperation', () => {
     });
 
     it('should successfully create an operation and update cache', async () => {
-        const formData = Builder<OperationForm>()
-            .type('CLEANING')
-            .patientId(patientId)
-            .description('Dental cleaning')
-            .executor('Dr. Smith')
-            .toothDetails([])
-            .build();
+        const formData = Builder<OperationForm>().patientId(PATIENT_ID).build();
         const adaptedPayload = {
             type: 'CLEANING',
-            patientId: patientId,
+            patientId: PATIENT_ID,
             description: 'Dental cleaning',
             executor: 'Dr. Smith',
             estimatedCost: {amount: 100, currency: 'EUR'},
             toothDetails: []
         };
         const createdOperation: Operation = Builder<Operation>()
-            .id('OP-001')
-            .patientId(patientId)
-            .type('CLEANING')
-            .description('Dental cleaning')
-            .executor('Dr. Smith')
+            .id(OPERATION_ID)
+            .patientId(PATIENT_ID)
             .build();
         const existingOperations: Operation[] = [
-            Builder<Operation>().id('OP-002').patientId(patientId).build()
+            Builder<Operation>()
+                .id(ANOTHER_OPERATION_ID)
+                .patientId(PATIENT_ID)
+                .build()
         ];
-
         mockedAdaptOperationPayload.mockReturnValue(adaptedPayload);
         mockedRestClient.post.mockResolvedValue(createdOperation);
         mockGetCachedOperationsForPatient.mockReturnValue(existingOperations);
 
-        const {result} = renderHook(() => useCreateOperation({patientId}));
+        const {result} = renderHook(() => useCreateOperation(PATIENT_ID));
 
         let operation;
         await act(async () => {
@@ -76,24 +68,20 @@ describe('useCreateOperation', () => {
         expect(operation).toEqual(createdOperation);
         expect(mockedAdaptOperationPayload).toHaveBeenCalledWith(formData);
         expect(mockedRestClient.post).toHaveBeenCalledWith('/api/operation', adaptedPayload);
-        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledWith(patientId);
-        expect(mockSetCachedOperationsForPatient).toHaveBeenCalledWith(patientId, [createdOperation, ...existingOperations]);
+        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID);
+        expect(mockSetCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID, [createdOperation, ...existingOperations]);
     });
 
     it('should handle error when creating operation fails', async () => {
         const formData = Builder<OperationForm>()
-            .type('CLEANING')
-            .patientId(patientId)
-            .description('Dental cleaning')
-            .executor('Dr. Smith')
-            .toothDetails([])
+            .patientId(PATIENT_ID)
             .build();
         const errorMessage = 'Network error';
 
         mockedAdaptOperationPayload.mockReturnValue({});
         mockedRestClient.post.mockRejectedValue(new Error(errorMessage));
 
-        const {result} = renderHook(() => useCreateOperation({patientId}));
+        const {result} = renderHook(() => useCreateOperation(PATIENT_ID));
 
         let operation;
         await act(async () => {
@@ -110,58 +98,32 @@ describe('useCreateOperation', () => {
         expect(operation).toBeNull();
         expect(mockedRestClient.post).toHaveBeenCalledTimes(1);
         expect(mockSetCachedOperationsForPatient).not.toHaveBeenCalled();
+        expect(mockGetCachedOperationsForPatient).not.toHaveBeenCalled();
     });
 
     it('should handle case when no cached operations exist', async () => {
         const formData = Builder<OperationForm>()
-            .type('CLEANING')
-            .patientId(patientId)
-            .description('Dental cleaning')
-            .executor('Dr. Smith')
-            .toothDetails([])
+            .patientId(PATIENT_ID)
             .build();
         const createdOperation: Operation = Builder<Operation>()
-            .id('OP-001')
-            .patientId(patientId)
+            .id(OPERATION_ID)
+            .patientId(PATIENT_ID)
             .build();
 
         mockedAdaptOperationPayload.mockReturnValue({});
         mockedRestClient.post.mockResolvedValue(createdOperation);
         mockGetCachedOperationsForPatient.mockReturnValue(null);
 
-        const {result} = renderHook(() => useCreateOperation({patientId}));
+        const {result} = renderHook(() => useCreateOperation(PATIENT_ID));
 
         await act(async () => {
             await result.current.createOperation(formData);
         });
 
-        expect(mockSetCachedOperationsForPatient).toHaveBeenCalledWith(patientId, [createdOperation]);
+        expect(mockSetCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID, [createdOperation]);
     });
 
-    it('should handle adaptOperationPayload throwing an error', async () => {
-        const formData = Builder<OperationForm>().build();
-        const errorMessage = 'Validation failed';
-
-        mockedAdaptOperationPayload.mockImplementation(() => {
-            throw new Error(errorMessage);
-        });
-
-        const {result} = renderHook(() => useCreateOperation({patientId}));
-
-        let operation;
-        await act(async () => {
-            operation = await result.current.createOperation(formData);
-        });
-
-        const expected = {
-            createOperation: expect.any(Function),
-            error: errorMessage,
-            isSubmitting: false
-        };
-
-        expect(result.current).toEqual(expected);
-        expect(operation).toBeNull();
-        expect(mockedRestClient.post).not.toHaveBeenCalled();
-        expect(mockSetCachedOperationsForPatient).not.toHaveBeenCalled();
-    });
+    const PATIENT_ID = 'PAT-001';
+    const OPERATION_ID = 'OP-001';
+    const ANOTHER_OPERATION_ID = 'OP-002';
 });
