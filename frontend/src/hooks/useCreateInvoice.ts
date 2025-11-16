@@ -10,20 +10,16 @@ interface CreateInvoicePayload {
     amount: Money;
 }
 
-interface CreateInvoiceOptions {
-    patientId: string;
-}
-
 interface CreateInvoiceStatus {
     createInvoice: (payload: CreateInvoicePayload) => Promise<Invoice | null>;
     error: string | null;
     isSubmitting: boolean;
 }
 
-export const useCreateInvoice = (options: CreateInvoiceOptions): CreateInvoiceStatus => {
+export const useCreateInvoice = (patientId: string): CreateInvoiceStatus => {
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { addCachedInvoiceForPatient } = useCache();
+    const {addCachedInvoiceForPatient} = useCache();
 
     const createInvoice = async (payload: CreateInvoicePayload): Promise<Invoice | null> => {
         setError(null);
@@ -32,7 +28,7 @@ export const useCreateInvoice = (options: CreateInvoiceOptions): CreateInvoiceSt
         try {
             const newInvoice = await RestClient.post<Invoice>('/api/invoice', payload);
 
-            addCachedInvoiceForPatient(options.patientId, newInvoice);
+            addCachedInvoiceForPatient(patientId, newInvoice);
 
             return newInvoice;
         } catch (err: any) {

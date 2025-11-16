@@ -36,7 +36,7 @@ describe('useCreateInvoice', () => {
 
         mockedRestClient.post.mockResolvedValue(createdInvoice);
 
-        const {result} = renderHook(() => useCreateInvoice({patientId: PATIENT_ID}));
+        const {result} = renderHook(() => useCreateInvoice(PATIENT_ID));
 
         let invoice;
         await act(async () => {
@@ -63,7 +63,7 @@ describe('useCreateInvoice', () => {
         };
         mockedRestClient.post.mockRejectedValue(new Error());
 
-        const {result} = renderHook(() => useCreateInvoice({patientId: PATIENT_ID}));
+        const {result} = renderHook(() => useCreateInvoice(PATIENT_ID));
 
         let invoice;
         await act(async () => {

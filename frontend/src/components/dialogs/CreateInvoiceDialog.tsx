@@ -12,7 +12,6 @@ import {
     TextField
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import {Invoice} from '../../types/invoice';
 import {Money} from "../../types/Money";
 import {useCreateInvoice} from "../../hooks/useCreateInvoice";
 
@@ -34,7 +33,7 @@ export const CreateInvoiceDialog: React.FC<Props> = ({
      estimatedCost
  }) => {
     const [amount, setAmount] = useState('');
-    const { createInvoice, error, isSubmitting } = useCreateInvoice({ patientId });
+    const { createInvoice, error, isSubmitting } = useCreateInvoice(patientId);
 
     useEffect(() => {
         setAmount(estimatedCost.amount.toString());
