@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import {Operation} from "../types/operation";
 
 interface Props {
@@ -11,7 +11,7 @@ interface FileUploadStatus {
     uploadFile: (operationId: string, file: File) => Promise<void>;
 }
 
-export const useFileUpload = ({ onSuccess }: Props): FileUploadStatus => {
+export const useFileUpload = ({onSuccess}: Props): FileUploadStatus => {
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -31,7 +31,6 @@ export const useFileUpload = ({ onSuccess }: Props): FileUploadStatus => {
             if (!response.ok) {
                 const errorData = await response.json();
                 const errorMessage = errorData.message || 'Failed to upload file';
-                const uploadError = new Error(errorMessage);
                 setError(errorMessage);
             }
 
