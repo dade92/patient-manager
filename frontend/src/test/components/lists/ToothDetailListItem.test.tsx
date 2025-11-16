@@ -11,24 +11,6 @@ jest.mock('../../../utils/currencyUtils', () => ({
 
 const mockedFormatAmount = formatAmount as jest.Mock;
 
-const TOOTH_NUMBER = 11;
-const AMOUNT = 150;
-const CURRENCY = 'EUR';
-const FORMATTED_AMOUNT = '150.00 EUR';
-const INDEX = 0;
-
-const PERMANENT_DETAIL = Builder<ToothDetail>()
-    .toothNumber(TOOTH_NUMBER)
-    .estimatedCost({amount: AMOUNT, currency: CURRENCY})
-    .toothType(ToothType.PERMANENT)
-    .build();
-
-const DECIDUOUS_DETAIL = Builder<ToothDetail>()
-    .toothNumber(21)
-    .estimatedCost({amount: 100, currency: CURRENCY})
-    .toothType(ToothType.DECIDUOUS)
-    .build();
-
 describe('ToothDetailListItem', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -53,7 +35,7 @@ describe('ToothDetailListItem', () => {
     });
 
     it('renders deciduous tooth correctly', () => {
-        mockedFormatAmount.mockReturnValue('100.00 EUR');
+        mockedFormatAmount.mockReturnValue(FORMATTED_AMOUNT);
 
         render(
             <ToothDetailListItem
@@ -66,7 +48,7 @@ describe('ToothDetailListItem', () => {
         expect(screen.getByTestId('tooth-detail-item-1')).toBeInTheDocument();
         expect(screen.getByTestId('tooth-number')).toHaveTextContent('21');
         expect(screen.getByTestId('tooth-type-chip')).toHaveTextContent('Baby');
-        expect(screen.getByTestId('tooth-cost')).toHaveTextContent('100.00 EUR');
+        expect(screen.getByTestId('tooth-cost')).toHaveTextContent(FORMATTED_AMOUNT);
         expect(mockedFormatAmount).toHaveBeenCalledWith(100, CURRENCY);
     });
 
@@ -99,5 +81,21 @@ describe('ToothDetailListItem', () => {
         const listItem = screen.getByTestId(`tooth-detail-item-${INDEX}`);
         expect(listItem).not.toHaveClass('MuiListItem-divider');
     });
+
+    const TOOTH_NUMBER = 11;
+    const AMOUNT = 150;
+    const CURRENCY = 'EUR';
+    const FORMATTED_AMOUNT = '150.00 EUR';
+    const INDEX = 0;
+    const PERMANENT_DETAIL = Builder<ToothDetail>()
+        .toothNumber(TOOTH_NUMBER)
+        .estimatedCost({amount: AMOUNT, currency: CURRENCY})
+        .toothType(ToothType.PERMANENT)
+        .build();
+    const DECIDUOUS_DETAIL = Builder<ToothDetail>()
+        .toothNumber(21)
+        .estimatedCost({amount: 100, currency: CURRENCY})
+        .toothType(ToothType.DECIDUOUS)
+        .build();
 });
 
