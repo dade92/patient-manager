@@ -12,16 +12,15 @@ import {
     TextField
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import {Invoice} from '../../types/invoice';
-import {RestClient} from '../../utils/restClient';
 import {Money} from "../../types/Money";
+import {useCreateInvoice} from "../../hooks/useCreateInvoice";
 
 interface Props {
     open: boolean;
     onClose: () => void;
     operationId: string;
     patientId: string;
-    onInvoiceCreated: (invoice: Invoice) => void;
+    onInvoiceCreated: () => void;
     estimatedCost: Money;
 }
 
@@ -34,43 +33,30 @@ export const CreateInvoiceDialog: React.FC<Props> = ({
      estimatedCost
  }) => {
     const [amount, setAmount] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { createInvoice, error, isSubmitting } = useCreateInvoice(patientId);
 
     useEffect(() => {
         setAmount(estimatedCost.amount.toString());
     }, [open, estimatedCost]);
 
     const handleSubmit = async () => {
-        if (!amount || parseFloat(amount) <= 0) {
-            setError('Please enter a valid amount');
-            return;
-        }
+        const newInvoice = await createInvoice({
+            operationId,
+            patientId,
+            amount: {
+                amount: parseFloat(amount),
+                currency: 'EUR'
+            }
+        });
 
-        setLoading(true);
-        setError(null);
-
-        try {
-            const createdInvoice = await RestClient.post<Invoice>('/api/invoice', {
-                operationId,
-                patientId,
-                amount: {
-                    amount: parseFloat(amount),
-                    currency: 'EUR'
-                }
-            });
-            onInvoiceCreated(createdInvoice);
+        if (newInvoice) {
+            onInvoiceCreated();
             handleClose();
-        } catch (err: any) {
-            setError('An error occurred while creating the invoice');
-        } finally {
-            setLoading(false);
         }
     };
 
     const handleClose = () => {
         setAmount('');
-        setError(null);
         onClose();
     };
 
@@ -78,7 +64,7 @@ export const CreateInvoiceDialog: React.FC<Props> = ({
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
             <DialogTitle sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 Create Invoice
-                <IconButton onClick={handleClose} disabled={loading}>
+                <IconButton onClick={handleClose} disabled={isSubmitting}>
                     <CloseIcon/>
                 </IconButton>
             </DialogTitle>
@@ -97,7 +83,7 @@ export const CreateInvoiceDialog: React.FC<Props> = ({
                         onChange={(e) => setAmount(e.target.value)}
                         fullWidth
                         inputProps={{min: 0, step: 0.01}}
-                        disabled={loading}
+                        disabled={isSubmitting}
                         placeholder="0.00"
                     />
                 </Box>
@@ -106,9 +92,9 @@ export const CreateInvoiceDialog: React.FC<Props> = ({
                 <Button
                     onClick={handleSubmit}
                     variant="contained"
-                    disabled={loading || !amount}
+                    disabled={isSubmitting || !amount}
                 >
-                    {loading ? <CircularProgress size={20}/> : 'Create Invoice'}
+                    {isSubmitting ? <CircularProgress size={20}/> : 'Create Invoice'}
                 </Button>
             </DialogActions>
         </Dialog>

@@ -8,7 +8,6 @@ import {ConfirmationDialog} from '../components/dialogs/ConfirmationDialog';
 import {PatientOperations} from '../components/lists/PatientOperations';
 import {PatientInvoices} from '../components/lists/PatientInvoices';
 import {PatientDetailCard} from '../components/cards/PatientDetailCard';
-import {useCache} from '../context/CacheContext';
 import {BackButton} from '../components/atoms/BackButton';
 import {Operation} from "../types/operation";
 import {usePatient} from '../hooks/usePatient';
@@ -23,11 +22,6 @@ export const PatientDetail: React.FC = () => {
     const [refreshKey, setRefreshKey] = useState(0);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const {patient, loading, error} = usePatient(patientId);
-
-    const {
-        setCachedOperationsForPatient,
-        getCachedOperationsForPatient
-    } = useCache();
 
     const {deletePatient, isDeleting, error: deleteError} = useDeletePatient({
         onSuccess: () => {
@@ -112,9 +106,7 @@ export const PatientDetail: React.FC = () => {
                         open={isCreateOperationOpen}
                         onClose={() => setIsCreateOperationOpen(false)}
                         patientId={patient.id}
-                        onOperationCreated={(newOperation: Operation) => {
-                            const cachedOperations = getCachedOperationsForPatient(patientId) || [];
-                            setCachedOperationsForPatient(patientId, [newOperation, ...cachedOperations]);
+                        onOperationCreated={(_newOperation: Operation) => {
                             setRefreshKey(prev => prev + 1);
                         }}
                     />
