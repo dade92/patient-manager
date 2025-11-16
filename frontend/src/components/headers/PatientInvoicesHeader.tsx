@@ -34,6 +34,7 @@ export const PatientInvoicesHeader: React.FC<Props> = ({
                 mx: -1
             }}
             onClick={onToggleExpanded}
+            data-testid="patient-invoices-header"
         >
             <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
                 {pendingInvoicesCount > 0 ? (
@@ -49,6 +50,7 @@ export const PatientInvoicesHeader: React.FC<Props> = ({
                                 height: '16px'
                             }
                         }}
+                        data-testid="pending-invoices-badge"
                     >
                         <InvoiceTitle/>
                     </Badge>
@@ -56,15 +58,15 @@ export const PatientInvoicesHeader: React.FC<Props> = ({
                     <InvoiceTitle/>
                 )}
             </Box>
-            <IconButton size="small">
-                {expanded ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+            <IconButton size="small" data-testid="toggle-button">
+                {expanded ? <ExpandLessIcon data-testid="collapse-icon"/> : <ExpandMoreIcon data-testid="expand-icon"/>}
             </IconButton>
         </Box>
     );
 
 const InvoiceTitle: React.FC = () =>
     (
-        <Typography variant="h6">
+        <Typography variant="h6" data-testid="invoices-title">
             Invoices
         </Typography>
     );
