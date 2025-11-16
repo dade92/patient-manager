@@ -28,9 +28,10 @@ describe('ToothDetails', () => {
         render(<ToothDetails details={[]}/>);
         expect(screen.getByTestId('tooth-details-empty')).toBeInTheDocument();
         expect(screen.queryByTestId('tooth-details')).toBeNull();
+        expect(mockListItem).not.toHaveBeenCalled();
     });
 
-    it('renders list with total', () => {
+    it('renders teeth list', () => {
         mockedFormatAmount.mockReturnValue(FORMATTED_TOTAL);
 
         render(<ToothDetails details={DETAILS}/>);
@@ -51,19 +52,16 @@ describe('ToothDetails', () => {
     const CURRENCY = 'EUR';
     const TOTAL_AMOUNT = 250;
     const FORMATTED_TOTAL = '250.00 EUR';
-
     const DETAIL_1 = Builder<ToothDetail>()
         .toothNumber(TOOTH_NUMBER_1)
         .estimatedCost({amount: AMOUNT_1, currency: CURRENCY})
         .toothType(ToothType.PERMANENT)
         .build();
-
     const DETAIL_2 = Builder<ToothDetail>()
         .toothNumber(TOOTH_NUMBER_2)
         .estimatedCost({amount: AMOUNT_2, currency: CURRENCY})
         .toothType(ToothType.PERMANENT)
         .build();
-
     const DETAILS: ToothDetail[] = [DETAIL_1, DETAIL_2];
 });
 
