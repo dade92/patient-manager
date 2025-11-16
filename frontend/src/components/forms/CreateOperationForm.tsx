@@ -14,10 +14,9 @@ import {
     TextField
 } from '@mui/material';
 import {Operation} from '../../types/operation';
-import {RestClient} from '../../utils/restClient';
 import {ToothDetailForm, ToothSelectionForm} from './ToothSelectionForm';
-import {adaptOperationPayload} from "../../utils/CreateOperationPayloadAdapter";
 import {useOperationTypes} from "../../hooks/useOperationTypes";
+import {useCreateOperation} from "../../hooks/useCreateOperation";
 
 export interface OperationForm {
     type: string;
@@ -46,10 +45,9 @@ export const CreateOperationForm: React.FC<Props> = ({
         toothDetails: []
     };
     const [formData, setFormData] = useState<OperationForm>(EMPTY_OPERATION_FORM);
-    const [error, setError] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [toothSelectionKey, setToothSelectionKey] = useState(0);
     const { operationTypes, loading: loadingOperationTypes, error: operationTypesError } = useOperationTypes();
+    const { createOperation, error, isSubmitting } = useCreateOperation({ patientId });
     const estimatedCost = operationTypes.find(ot => ot.type === formData.type)?.estimatedBaseCost.amount || 0;
 
     useEffect(() => {
@@ -70,19 +68,10 @@ export const CreateOperationForm: React.FC<Props> = ({
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        setError(null);
-        setIsSubmitting(true);
 
-        try {
-            const newOperation = await RestClient.post<Operation>(
-                '/api/operation',
-                adaptOperationPayload(formData)
-            );
+        const newOperation = await createOperation(formData);
+        if (newOperation) {
             onOperationCreated(newOperation);
-        } catch (err: any) {
-            setError(err.message);
-        } finally {
-            setIsSubmitting(false);
         }
     };
 
