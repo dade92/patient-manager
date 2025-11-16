@@ -3,6 +3,7 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import {OperationDetailCard} from '../../../components/cards/OperationDetailCard';
 import {Operation} from '../../../types/operation';
 import {formatAmount} from '../../../utils/currencyUtils';
+import {Builder} from 'builder-pattern';
 
 jest.mock('../../../utils/currencyUtils', () => ({
     formatAmount: jest.fn()
@@ -81,17 +82,17 @@ describe('OperationDetailCard', () => {
     const ESTIMATED_CURRENCY = 'EUR';
     const MOCKED_FORMATTED_AMOUNT = 'MOCKED_AMOUNT';
 
-    const OPERATION: Operation = {
-        id: OP_ID,
-        patientId: PATIENT_ID,
-        type: TYPE,
-        description: DESCRIPTION,
-        executor: EXECUTOR,
-        assets: [ASSET_1, ASSET_2],
-        additionalNotes: [{content: NOTE_CONTENT, createdAt: NOTE_CREATED_AT}],
-        createdAt: CREATED_AT,
-        updatedAt: UPDATED_AT,
-        estimatedCost: {amount: ESTIMATED_AMOUNT, currency: ESTIMATED_CURRENCY},
-        patientOperationInfo: {details: []}
-    };
+    const OPERATION: Operation = Builder<Operation>()
+        .id(OP_ID)
+        .patientId(PATIENT_ID)
+        .type(TYPE)
+        .description(DESCRIPTION)
+        .executor(EXECUTOR)
+        .assets([ASSET_1, ASSET_2])
+        .additionalNotes([{content: NOTE_CONTENT, createdAt: NOTE_CREATED_AT}])
+        .createdAt(CREATED_AT)
+        .updatedAt(UPDATED_AT)
+        .estimatedCost({amount: ESTIMATED_AMOUNT, currency: ESTIMATED_CURRENCY})
+        .patientOperationInfo({details: []})
+        .build();
 });
