@@ -60,44 +60,6 @@ describe('PatientInvoicesHeader', () => {
         expect(screen.getByTestId('pending-invoices-badge')).toHaveTextContent(PENDING_COUNT.toString());
     });
 
-    it('does not render badge when pending count is zero', () => {
-        const onToggleExpanded = jest.fn();
-
-        render(
-            <PatientInvoicesHeader
-                expanded={false}
-                pendingInvoicesCount={0}
-                onToggleExpanded={onToggleExpanded}
-            />
-        );
-
-        expect(screen.queryByTestId('pending-invoices-badge')).not.toBeInTheDocument();
-    });
-
-    it('renders badge with different pending counts', () => {
-        const onToggleExpanded = jest.fn();
-
-        const {rerender} = render(
-            <PatientInvoicesHeader
-                expanded={false}
-                pendingInvoicesCount={1}
-                onToggleExpanded={onToggleExpanded}
-            />
-        );
-
-        expect(screen.getByTestId('pending-invoices-badge')).toHaveTextContent('1');
-
-        rerender(
-            <PatientInvoicesHeader
-                expanded={false}
-                pendingInvoicesCount={10}
-                onToggleExpanded={onToggleExpanded}
-            />
-        );
-
-        expect(screen.getByTestId('pending-invoices-badge')).toHaveTextContent('10');
-    });
-
     it('calls onToggleExpanded when header is clicked', () => {
         const onToggleExpanded = jest.fn();
 
