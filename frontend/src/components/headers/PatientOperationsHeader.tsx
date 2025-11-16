@@ -24,12 +24,13 @@ export const PatientOperationsHeader: React.FC<Props> = ({expanded, onToggle}) =
                 mx: -1
             }}
             onClick={onToggle}
+            data-testid="patient-operations-header"
         >
-            <Typography variant="h6">
+            <Typography variant="h6" data-testid="operations-title">
                 Operations History
             </Typography>
-            <IconButton size="small">
-                {expanded ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+            <IconButton size="small" data-testid="toggle-button">
+                {expanded ? <ExpandLessIcon data-testid="collapse-icon"/> : <ExpandMoreIcon data-testid="expand-icon"/>}
             </IconButton>
         </Box>
     );
