@@ -11,9 +11,9 @@ interface Props {
     onSuccess?: (updatedOperation: Operation) => void;
 }
 
-export const AddNoteDialog: React.FC<Props> = ({ open, onClose, operationId, onSuccess }) => {
+export const AddNoteDialog: React.FC<Props> = ({open, onClose, operationId, onSuccess}) => {
     const [noteContent, setNoteContent] = useState('');
-    const { addNote, error, isSubmitting } = useAddNote({ operationId });
+    const {addNote, error, isSubmitting} = useAddNote(operationId!);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

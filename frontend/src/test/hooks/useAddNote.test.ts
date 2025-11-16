@@ -17,7 +17,7 @@ describe('useAddNote', () => {
 
     it('should successfully add a note', async () => {
         mockedRestClient.post.mockResolvedValue(createdOperation);
-        const {result} = renderHook(() => useAddNote({operationId: OPERATION_ID}));
+        const {result} = renderHook(() => useAddNote(OPERATION_ID));
 
         let returnedOperation: Operation | null = null;
         await act(async () => {
@@ -38,7 +38,7 @@ describe('useAddNote', () => {
 
     it('should set error when backend call fails', async () => {
         mockedRestClient.post.mockRejectedValue(new Error('Network error'));
-        const {result} = renderHook(() => useAddNote({operationId: OPERATION_ID}));
+        const {result} = renderHook(() => useAddNote(OPERATION_ID));
 
         let returnedOperation: Operation | null = null;
         await act(async () => {

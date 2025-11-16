@@ -2,17 +2,13 @@ import {useState} from 'react';
 import {RestClient} from '../utils/restClient';
 import {Operation} from '../types/operation';
 
-interface UseAddNoteOptions {
-    operationId: string;
-}
-
 interface UseAddNoteResult {
     addNote: (content: string) => Promise<Operation | null>;
     error: string | null;
     isSubmitting: boolean;
 }
 
-export const useAddNote = ({operationId}: UseAddNoteOptions): UseAddNoteResult => {
+export const useAddNote = (operationId: string): UseAddNoteResult => {
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
