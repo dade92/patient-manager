@@ -1,55 +1,34 @@
 import React, {useState} from 'react';
 import {Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import {Operation} from "../../types/operation";
-import {RestClient} from '../../utils/restClient';
+import {useAddNote} from '../../hooks/useAddNote';
+import {Operation} from '../../types/operation';
 
 interface Props {
     open: boolean;
     onClose: () => void;
     operationId: string;
-    onNoteAdded: (updatedOperation: Operation) => void;
+    onSuccess?: (updatedOperation: Operation) => void;
 }
 
-export const AddNoteDialog: React.FC<Props> = ({
-    open,
-    onClose,
-    operationId,
-    onNoteAdded
-}) => {
+export const AddNoteDialog: React.FC<Props> = ({ open, onClose, operationId, onSuccess }) => {
     const [noteContent, setNoteContent] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { addNote, error, isSubmitting } = useAddNote({ operationId });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!noteContent.trim()) {
-            setError('Note content cannot be empty');
-            return;
-        }
-
-        setIsSubmitting(true);
-        setError(null);
-
-        try {
-            const updatedOperation = await RestClient.post<Operation>(
-                `/api/operation/${operationId}/notes`,
-                {content: noteContent}
-            );
-            onNoteAdded(updatedOperation);
+        const updatedOperation = await addNote(noteContent);
+        if (updatedOperation) {
             setNoteContent('');
+            if (onSuccess) {
+                onSuccess(updatedOperation);
+            }
             onClose();
-        } catch (err: any) {
-            setError('An error occurred while adding the note');
-        } finally {
-            setIsSubmitting(false);
         }
     };
 
     const handleCancel = () => {
         setNoteContent('');
-        setError(null);
         onClose();
     };
 
@@ -57,7 +36,7 @@ export const AddNoteDialog: React.FC<Props> = ({
         <Dialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
             <DialogTitle sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 Add Note
-                <IconButton onClick={handleCancel}>
+                <IconButton onClick={handleCancel} disabled={isSubmitting}>
                     <CloseIcon/>
                 </IconButton>
             </DialogTitle>
@@ -77,14 +56,11 @@ export const AddNoteDialog: React.FC<Props> = ({
                         value={noteContent}
                         onChange={(e) => setNoteContent(e.target.value)}
                         margin="dense"
+                        disabled={isSubmitting}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        disabled={isSubmitting}
-                    >
+                    <Button type="submit" variant="contained" disabled={isSubmitting}>
                         Add Note
                     </Button>
                 </DialogActions>
