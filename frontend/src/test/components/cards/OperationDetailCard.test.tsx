@@ -34,6 +34,8 @@ describe('OperationDetailCard', () => {
         expect(screen.getByTestId('operation-estimated-cost')).toHaveTextContent(MOCKED_FORMATTED_AMOUNT);
         expect(mockedFormatAmount).toHaveBeenCalledWith(ESTIMATED_AMOUNT, ESTIMATED_CURRENCY);
         expect(screen.getByTestId('operation-create-invoice-button')).toBeInTheDocument();
+
+        //TODO check the other FC like tooth details, assets, notes...
     });
 
     it('fires patient id click handler', () => {
