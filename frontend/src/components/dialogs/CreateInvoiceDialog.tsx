@@ -21,7 +21,7 @@ interface Props {
     onClose: () => void;
     operationId: string;
     patientId: string;
-    onInvoiceCreated: (invoice: Invoice) => void;
+    onInvoiceCreated: () => void;
     estimatedCost: Money;
 }
 
@@ -51,7 +51,7 @@ export const CreateInvoiceDialog: React.FC<Props> = ({
         });
 
         if (newInvoice) {
-            onInvoiceCreated(newInvoice);
+            onInvoiceCreated();
             handleClose();
         }
     };

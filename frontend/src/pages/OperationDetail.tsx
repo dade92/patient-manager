@@ -12,16 +12,16 @@ import {useFileUpload} from '../hooks/useFileUpload';
 
 export const OperationDetail: React.FC = () => {
     const {operationId} = useParams();
-    if(!operationId) return null;
+    if (!operationId) return null;
 
     const navigate = useNavigate();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-    const { addCachedInvoiceForPatient } = useCache();
+    const {addCachedInvoiceForPatient} = useCache();
 
-    const { operation, loading, error, updateOperation } = useOperation(operationId);
-    const { uploadFile } = useFileUpload({
+    const {operation, loading, error, updateOperation} = useOperation(operationId);
+    const {uploadFile} = useFileUpload({
         onSuccess: (updatedOperation) => {
             updateOperation(updatedOperation);
         },
@@ -72,12 +72,8 @@ export const OperationDetail: React.FC = () => {
                 onClose={() => setInvoiceDialogOpen(false)}
                 operationId={operationId || ''}
                 patientId={operation?.patientId || ''}
-                onInvoiceCreated={(createdInvoice) => {
-                    setShowSuccessMessage(true);
-
-                    if (operation?.patientId) {
-                        addCachedInvoiceForPatient(operation.patientId, createdInvoice);
-                    }
+                onInvoiceCreated={() => {
+                    setShowSuccessMessage(true)
                 }}
                 estimatedCost={operation!.estimatedCost}
             />
