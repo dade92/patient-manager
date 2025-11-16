@@ -30,11 +30,9 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <kotlin.version>2.1.21</kotlin.version>
-        <slf4j-api.version>2.0.7</slf4j-api.version>
-        <jackson-module-kotlin.version>2.19.0</jackson-module-kotlin.version>
-        <log4j2.version>2.24.3</log4j2.version>
-        <junit.jupiter.version>5.13.1</junit.jupiter.version>
-        <mockk-jvm.version>1.13.2</mockk-jvm.version>
+        <slf4j-api.version>2.0.17</slf4j-api.version>
+        <jackson-module-kotlin.version>2.20.1</jackson-module-kotlin.version>
+        <mockk-jvm.version>1.14.6</mockk-jvm.version>
     </properties>
 
     <dependencies>

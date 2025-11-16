@@ -17,8 +17,8 @@
 
     <properties>
         <awssdk.version>2.31.62</awssdk.version>
-        <mysql-connector-java.version>8.0.33</mysql-connector-java.version>
-        <h2.version>2.2.224</h2.version>
+        <mysql-connector-java.version>9.5.0</mysql-connector-java.version>
+        <h2.version>2.4.240</h2.version>
     </properties>
 
     <dependencyManagement>
@@ -52,8 +52,8 @@
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <version>${mysql-connector-java.version}</version>
         </dependency>
         <dependency>
