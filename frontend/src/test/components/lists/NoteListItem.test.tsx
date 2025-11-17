@@ -31,8 +31,8 @@ describe('NoteListItem', () => {
         const firstContent = 'Initial assessment complete';
         const secondContent = 'Patient notified about results';
 
-        const firstNote = buildNote(firstContent, '2025-03-01T09:00:00');
-        const secondNote = buildNote(secondContent, '2025-03-02T11:30:00');
+        const firstNote = buildNote(firstContent, NOTE_CREATED_AT);
+        const secondNote = buildNote(secondContent, NOTE_CREATED_AT);
 
         render(
             <>
@@ -45,9 +45,9 @@ describe('NoteListItem', () => {
         expect(items.length).toBe(2);
 
         expect(screen.getAllByTestId('note-text')[0]).toHaveTextContent(firstContent);
-        expect(screen.getAllByTestId('note-text')[0]).toHaveTextContent('2025-03-01T09:00:00');
+        expect(screen.getAllByTestId('note-text')[0]).toHaveTextContent(NOTE_CREATED_AT);
         expect(screen.getAllByTestId('note-text')[1]).toHaveTextContent(secondContent);
-        expect(screen.getAllByTestId('note-text')[1]).toHaveTextContent('2025-03-02T11:30:00');
+        expect(screen.getAllByTestId('note-text')[1]).toHaveTextContent(NOTE_CREATED_AT);
         expect(screen.getAllByTestId('note-divider').length).toBe(1);
     });
 

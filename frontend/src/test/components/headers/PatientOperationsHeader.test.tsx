@@ -3,8 +3,13 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import {PatientOperationsHeader} from '../../../components/headers/PatientOperationsHeader';
 
 describe('PatientOperationsHeader', () => {
+    const onToggle = jest.fn();
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
     it('renders with expanded state', () => {
-        const onToggle = jest.fn();
 
         render(<PatientOperationsHeader expanded={true} onToggle={onToggle}/>);
 
@@ -16,7 +21,6 @@ describe('PatientOperationsHeader', () => {
     });
 
     it('renders with collapsed state', () => {
-        const onToggle = jest.fn();
 
         render(<PatientOperationsHeader expanded={false} onToggle={onToggle}/>);
 
@@ -28,7 +32,6 @@ describe('PatientOperationsHeader', () => {
     });
 
     it('calls onToggle when header is clicked', () => {
-        const onToggle = jest.fn();
 
         render(<PatientOperationsHeader expanded={false} onToggle={onToggle}/>);
 
@@ -38,7 +41,6 @@ describe('PatientOperationsHeader', () => {
     });
 
     it('calls onToggle when toggle button is clicked', () => {
-        const onToggle = jest.fn();
 
         render(<PatientOperationsHeader expanded={false} onToggle={onToggle}/>);
 
@@ -48,7 +50,6 @@ describe('PatientOperationsHeader', () => {
     });
 
     it('calls onToggle multiple times on repeated clicks', () => {
-        const onToggle = jest.fn();
 
         render(<PatientOperationsHeader expanded={false} onToggle={onToggle}/>);
 

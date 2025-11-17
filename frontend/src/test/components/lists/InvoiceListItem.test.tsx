@@ -22,13 +22,14 @@ jest.mock('../../../components/lists/InvoiceItemPayment', () => ({
 }));
 
 describe('InvoiceListItem', () => {
+    const onChange = jest.fn();
+
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
     it('renders invoice item and children', () => {
         const invoice = buildInvoice(InvoiceStatus.PENDING);
-        const onChange = jest.fn();
 
         render(
             <InvoiceListItem
@@ -63,7 +64,7 @@ describe('InvoiceListItem', () => {
                 isLast={true}
                 isUpdatingOnPaid={true}
                 isUpdatingOnCancel={false}
-                onChangeInvoiceStatus={jest.fn()}
+                onChangeInvoiceStatus={onChange}
             />
         );
 
@@ -80,7 +81,7 @@ describe('InvoiceListItem', () => {
                 isLast={false}
                 isUpdatingOnPaid={true}
                 isUpdatingOnCancel={true}
-                onChangeInvoiceStatus={jest.fn()}
+                onChangeInvoiceStatus={onChange}
             />
         );
 
@@ -93,11 +94,10 @@ describe('InvoiceListItem', () => {
 
     const INVOICE_ID = 'INV-001';
     const OPERATION_ID = 'OP-001';
-    const CREATED_AT = '2025-02-01T09:30:00';
-    const UPDATED_AT = '2025-02-01T10:00:00';
+    const CREATED_AT = 'createdAt';
+    const UPDATED_AT = 'updatedAt';
     const AMOUNT = 1500;
     const CURRENCY = 'EUR';
-
     const buildInvoice = (status: InvoiceStatus): Invoice => Builder<Invoice>()
         .id(INVOICE_ID)
         .operationId(OPERATION_ID)

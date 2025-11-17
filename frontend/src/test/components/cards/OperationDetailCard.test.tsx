@@ -12,6 +12,12 @@ jest.mock('../../../utils/currencyUtils', () => ({
 const mockedFormatAmount = formatAmount as jest.Mock;
 
 describe('OperationDetailCard', () => {
+    const onPatientIdClick = jest.fn();
+    const onCreateInvoice = jest.fn();
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    })
 
     it('renders correctly', () => {
         mockedFormatAmount.mockReturnValue(MOCKED_FORMATTED_AMOUNT);
@@ -20,8 +26,8 @@ describe('OperationDetailCard', () => {
                 operation={OPERATION}
                 onAddAsset={jest.fn()}
                 onAddNote={jest.fn()}
-                onCreateInvoice={jest.fn()}
-                onPatientIdClick={jest.fn()}
+                onCreateInvoice={onCreateInvoice}
+                onPatientIdClick={onPatientIdClick}
             />
         );
 
@@ -39,13 +45,12 @@ describe('OperationDetailCard', () => {
     });
 
     it('fires patient id click handler', () => {
-        const onPatientIdClick = jest.fn();
         render(
             <OperationDetailCard
                 operation={OPERATION}
                 onAddAsset={jest.fn()}
                 onAddNote={jest.fn()}
-                onCreateInvoice={jest.fn()}
+                onCreateInvoice={onCreateInvoice}
                 onPatientIdClick={onPatientIdClick}
             />
         );
@@ -55,14 +60,13 @@ describe('OperationDetailCard', () => {
     });
 
     it('fires create invoice handler', () => {
-        const onCreateInvoice = jest.fn();
         render(
             <OperationDetailCard
                 operation={OPERATION}
                 onAddAsset={jest.fn()}
                 onAddNote={jest.fn()}
                 onCreateInvoice={onCreateInvoice}
-                onPatientIdClick={jest.fn()}
+                onPatientIdClick={onPatientIdClick}
             />
         );
         fireEvent.click(screen.getByTestId('operation-create-invoice-button'));

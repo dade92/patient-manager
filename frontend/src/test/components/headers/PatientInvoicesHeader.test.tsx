@@ -5,9 +5,13 @@ import {PatientInvoicesHeader} from '../../../components/headers/PatientInvoices
 const PENDING_COUNT = 3;
 
 describe('PatientInvoicesHeader', () => {
-    it('renders with expanded state and no pending invoices', () => {
-        const onToggleExpanded = jest.fn();
+    const onToggleExpanded = jest.fn();
 
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('renders with expanded state and no pending invoices', () => {
         render(
             <PatientInvoicesHeader
                 expanded={true}
@@ -25,8 +29,6 @@ describe('PatientInvoicesHeader', () => {
     });
 
     it('renders with collapsed state and no pending invoices', () => {
-        const onToggleExpanded = jest.fn();
-
         render(
             <PatientInvoicesHeader
                 expanded={false}
@@ -44,8 +46,6 @@ describe('PatientInvoicesHeader', () => {
     });
 
     it('renders with pending invoices badge', () => {
-        const onToggleExpanded = jest.fn();
-
         render(
             <PatientInvoicesHeader
                 expanded={false}
@@ -61,8 +61,6 @@ describe('PatientInvoicesHeader', () => {
     });
 
     it('calls onToggleExpanded when header is clicked', () => {
-        const onToggleExpanded = jest.fn();
-
         render(
             <PatientInvoicesHeader
                 expanded={false}
@@ -77,8 +75,6 @@ describe('PatientInvoicesHeader', () => {
     });
 
     it('calls onToggleExpanded when toggle button is clicked', () => {
-        const onToggleExpanded = jest.fn();
-
         render(
             <PatientInvoicesHeader
                 expanded={false}
@@ -93,8 +89,6 @@ describe('PatientInvoicesHeader', () => {
     });
 
     it('calls onToggleExpanded multiple times on repeated clicks', () => {
-        const onToggleExpanded = jest.fn();
-
         render(
             <PatientInvoicesHeader
                 expanded={false}
@@ -111,4 +105,3 @@ describe('PatientInvoicesHeader', () => {
         expect(onToggleExpanded).toHaveBeenCalledTimes(3);
     });
 });
-

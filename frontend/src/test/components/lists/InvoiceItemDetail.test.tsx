@@ -57,9 +57,8 @@ describe('InvoiceItemDetail', () => {
 
     const BASE_ID = 'INV-001-ABC';
     const BASE_OPERATION_ID = 'OP-001-XYZ';
-    const CREATED_AT = '2025-02-01T09:30:00';
-    const UPDATED_AT = '2025-02-01T10:00:00';
-
+    const CREATED_AT = 'createdAt';
+    const UPDATED_AT = 'updatedAt';
     const anInvoiceWithStatus = (status: InvoiceStatus): Invoice => Builder<Invoice>()
         .id(BASE_ID)
         .operationId(BASE_OPERATION_ID)
