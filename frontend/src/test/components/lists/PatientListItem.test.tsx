@@ -4,18 +4,13 @@ import {PatientListItem} from '../../../components/lists/PatientListItem';
 import {Patient} from '../../../types/patient';
 import {Builder} from 'builder-pattern';
 
-const PATIENT_ID = 'PAT-123';
-const NAME = 'Jane Smith';
-const EMAIL = 'jane.smith@example.com';
-const TAX_CODE = 'TAX123SMITH';
-
 describe('PatientListItem', () => {
     const onClick = jest.fn();
 
     beforeEach(() => {
         jest.clearAllMocks();
     });
-    
+
     it('renders patient name and secondary text', () => {
         render(<PatientListItem patient={PATIENT} onPatientClick={onClick}/>);
 
@@ -37,6 +32,10 @@ describe('PatientListItem', () => {
         expect(onClick).toHaveBeenCalledWith(PATIENT_ID);
     });
 
+    const PATIENT_ID = 'PAT-123';
+    const NAME = 'Jane Smith';
+    const EMAIL = 'jane.smith@example.com';
+    const TAX_CODE = 'TAX123SMITH';
     const PATIENT: Patient = Builder<Patient>()
         .id(PATIENT_ID)
         .name(NAME)

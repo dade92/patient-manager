@@ -2,8 +2,6 @@ import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
 import {PatientInvoicesHeader} from '../../../components/headers/PatientInvoicesHeader';
 
-const PENDING_COUNT = 3;
-
 describe('PatientInvoicesHeader', () => {
     const onToggleExpanded = jest.fn();
 
@@ -104,4 +102,6 @@ describe('PatientInvoicesHeader', () => {
 
         expect(onToggleExpanded).toHaveBeenCalledTimes(3);
     });
+
+    const PENDING_COUNT = 3;
 });

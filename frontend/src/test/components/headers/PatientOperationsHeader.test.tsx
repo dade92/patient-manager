@@ -10,7 +10,6 @@ describe('PatientOperationsHeader', () => {
     });
 
     it('renders with expanded state', () => {
-
         render(<PatientOperationsHeader expanded={true} onToggle={onToggle}/>);
 
         expect(screen.getByTestId('patient-operations-header')).toBeInTheDocument();
@@ -21,7 +20,6 @@ describe('PatientOperationsHeader', () => {
     });
 
     it('renders with collapsed state', () => {
-
         render(<PatientOperationsHeader expanded={false} onToggle={onToggle}/>);
 
         expect(screen.getByTestId('patient-operations-header')).toBeInTheDocument();
@@ -32,7 +30,6 @@ describe('PatientOperationsHeader', () => {
     });
 
     it('calls onToggle when header is clicked', () => {
-
         render(<PatientOperationsHeader expanded={false} onToggle={onToggle}/>);
 
         fireEvent.click(screen.getByTestId('patient-operations-header'));
@@ -41,7 +38,6 @@ describe('PatientOperationsHeader', () => {
     });
 
     it('calls onToggle when toggle button is clicked', () => {
-
         render(<PatientOperationsHeader expanded={false} onToggle={onToggle}/>);
 
         fireEvent.click(screen.getByTestId('toggle-button'));
@@ -50,7 +46,6 @@ describe('PatientOperationsHeader', () => {
     });
 
     it('calls onToggle multiple times on repeated clicks', () => {
-
         render(<PatientOperationsHeader expanded={false} onToggle={onToggle}/>);
 
         const header = screen.getByTestId('patient-operations-header');
