@@ -14,9 +14,10 @@ describe('OperationNotes', () => {
     it('renders empty state when no notes', () => {
         render(<OperationNotes notes={[]} onAddNote={onAddNote}/>);
 
-        expect(screen.getByText('Notes')).toBeInTheDocument();
-        expect(screen.getByText('No notes yet')).toBeInTheDocument();
-        expect(screen.getByRole('button', {name: /add note/i})).toBeInTheDocument();
+        expect(screen.getByTestId('operation-notes-empty')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-notes-title')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-notes-empty-message')).toBeInTheDocument();
+        expect(screen.getByTestId('add-note-button')).toBeInTheDocument();
     });
 
     it('renders notes list when notes exist', () => {
@@ -27,9 +28,11 @@ describe('OperationNotes', () => {
 
         render(<OperationNotes notes={notes} onAddNote={onAddNote}/>);
 
-        expect(screen.getByText('Notes')).toBeInTheDocument();
-        expect(screen.getByRole('button', {name: /add note/i})).toBeInTheDocument();
-        expect(screen.queryByText('No notes yet')).not.toBeInTheDocument();
+        expect(screen.getByTestId('operation-notes-with-items')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-notes-title')).toBeInTheDocument();
+        expect(screen.getByTestId('add-note-button')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-notes-list')).toBeInTheDocument();
+        expect(screen.queryByTestId('operation-notes-empty-message')).not.toBeInTheDocument();
 
         const noteItems = screen.getAllByTestId('note-list-item');
         expect(noteItems).toHaveLength(2);
@@ -38,7 +41,7 @@ describe('OperationNotes', () => {
     it('calls onAddNote when Add Note button is clicked', () => {
         render(<OperationNotes notes={[]} onAddNote={onAddNote}/>);
 
-        const addButton = screen.getByRole('button', {name: /add note/i});
+        const addButton = screen.getByTestId('add-note-button');
         fireEvent.click(addButton);
 
         expect(onAddNote).toHaveBeenCalledTimes(1);
@@ -52,6 +55,9 @@ describe('OperationNotes', () => {
         ];
 
         render(<OperationNotes notes={notes} onAddNote={onAddNote}/>);
+
+        expect(screen.getByTestId('operation-notes-with-items')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-notes-list')).toBeInTheDocument();
 
         const noteItems = screen.getAllByTestId('note-list-item');
         expect(noteItems).toHaveLength(3);

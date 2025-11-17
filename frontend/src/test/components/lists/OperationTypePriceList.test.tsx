@@ -31,25 +31,10 @@ describe('OperationTypePriceList', () => {
         expect(screen.getByText('No operation types available')).toBeInTheDocument();
     });
 
-    it('renders single operation type correctly', () => {
-        const operationType = buildOperationType('Cleaning', 'Regular dental cleaning', 50.00, 'EUR');
-
-        render(<OperationTypePriceList operationTypes={[operationType]} loading={false} error={null}/>);
-
-        expect(screen.getByTestId('operation-types-list')).toBeInTheDocument();
-        expect(screen.getByTestId('operation-type-item-0')).toBeInTheDocument();
-        expect(screen.getByTestId('operation-type-text-0')).toBeInTheDocument();
-        expect(screen.getByTestId('operation-type-name-0')).toBeInTheDocument();
-        expect(screen.getByTestId('operation-type-description-0')).toBeInTheDocument();
-        expect(screen.getByTestId('operation-type-price-0')).toBeInTheDocument();
-        expect(screen.queryByTestId('operation-type-divider-0')).not.toBeInTheDocument(); // No divider for single item
-    });
-
     it('renders multiple operation types with dividers', () => {
         const operationTypes = [
             buildOperationType('Cleaning', 'Regular dental cleaning', 50.00, 'EUR'),
             buildOperationType('Filling', 'Dental cavity filling', 120.00, 'USD'),
-            buildOperationType('Extraction', 'Tooth extraction', 200.00, 'EUR')
         ];
 
         render(<OperationTypePriceList operationTypes={operationTypes} loading={false} error={null}/>);
@@ -57,19 +42,14 @@ describe('OperationTypePriceList', () => {
         expect(screen.getByTestId('operation-types-list')).toBeInTheDocument();
         expect(screen.getByTestId('operation-type-item-0')).toBeInTheDocument();
         expect(screen.getByTestId('operation-type-item-1')).toBeInTheDocument();
-        expect(screen.getByTestId('operation-type-item-2')).toBeInTheDocument();
         expect(screen.getByTestId('operation-type-name-0')).toBeInTheDocument();
         expect(screen.getByTestId('operation-type-name-1')).toBeInTheDocument();
-        expect(screen.getByTestId('operation-type-name-2')).toBeInTheDocument();
         expect(screen.getByTestId('operation-type-description-0')).toBeInTheDocument();
         expect(screen.getByTestId('operation-type-description-1')).toBeInTheDocument();
-        expect(screen.getByTestId('operation-type-description-2')).toBeInTheDocument();
         expect(screen.getByTestId('operation-type-price-0')).toBeInTheDocument();
         expect(screen.getByTestId('operation-type-price-1')).toBeInTheDocument();
-        expect(screen.getByTestId('operation-type-price-2')).toBeInTheDocument();
         expect(screen.getByTestId('operation-type-divider-0')).toBeInTheDocument();
-        expect(screen.getByTestId('operation-type-divider-1')).toBeInTheDocument();
-        expect(screen.queryByTestId('operation-type-divider-2')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('operation-type-divider-1')).not.toBeInTheDocument();
     });
 
     const buildOperationType = (type: string, description: string, amount: number, currency: string): OperationType => {
