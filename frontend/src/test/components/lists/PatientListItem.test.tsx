@@ -10,8 +10,13 @@ const EMAIL = 'jane.smith@example.com';
 const TAX_CODE = 'TAX123SMITH';
 
 describe('PatientListItem', () => {
+    const onClick = jest.fn();
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+    
     it('renders patient name and secondary text', () => {
-        const onClick = jest.fn();
         render(<PatientListItem patient={PATIENT} onPatientClick={onClick}/>);
 
         const button = screen.getByTestId('patient-list-item-button');
@@ -24,7 +29,6 @@ describe('PatientListItem', () => {
     });
 
     it('invokes callback with patient id on click', () => {
-        const onClick = jest.fn();
         render(<PatientListItem patient={PATIENT} onPatientClick={onClick}/>);
 
         fireEvent.click(screen.getByTestId('patient-list-item-button'));

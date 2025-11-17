@@ -5,8 +5,13 @@ import {Operation, OperationNote} from '../../../types/operation';
 import {Builder} from 'builder-pattern';
 
 describe('OperationListItem', () => {
+    const onClick = jest.fn();
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
     it('renders operation info', () => {
-        const onClick = jest.fn();
         render(<OperationListItem operation={OPERATION} isLast={false} onOperationClick={onClick}/>);
 
         expect(screen.getByTestId('operation-list-item-button')).toBeInTheDocument();
@@ -24,7 +29,6 @@ describe('OperationListItem', () => {
     });
 
     it('invokes callback when clicked', () => {
-        const onClick = jest.fn();
         render(<OperationListItem operation={OPERATION} isLast={false} onOperationClick={onClick}/>);
 
         fireEvent.click(screen.getByTestId('operation-list-item-button'));
@@ -35,17 +39,8 @@ describe('OperationListItem', () => {
 
     it('renders zero counts when arrays are empty', () => {
         const EMPTY_OPERATION: Operation = Builder<Operation>()
-            .id('OP-EMPTY')
-            .patientId(PATIENT_ID)
-            .type('CHECK')
-            .description('Simple check')
-            .executor('Dr House')
             .assets([])
             .additionalNotes([])
-            .createdAt(CREATED_AT)
-            .updatedAt(CREATED_AT)
-            .estimatedCost({amount: 0, currency: 'EUR'})
-            .patientOperationInfo({details: []})
             .build();
 
         render(<OperationListItem operation={EMPTY_OPERATION} isLast={false} onOperationClick={jest.fn()}/>);
