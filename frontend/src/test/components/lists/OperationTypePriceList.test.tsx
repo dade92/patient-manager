@@ -9,9 +9,10 @@ describe('OperationTypePriceList', () => {
     it('renders loading state with skeletons', () => {
         render(<OperationTypePriceList operationTypes={[]} loading={true} error={null}/>);
 
-        // Component renders 2 list items with 3 skeletons each (primary, secondary, price)
-        const skeletonElements = document.querySelectorAll('.MuiSkeleton-root');
-        expect(skeletonElements.length).toBe(6); // 2 items × 3 skeletons per item
+        expect(screen.getByTestId('operation-types-loading-list')).toBeInTheDocument();
+        expect(screen.getAllByTestId('skeleton-primary')).toHaveLength(2);
+        expect(screen.getAllByTestId('skeleton-secondary')).toHaveLength(2);
+        expect(screen.getAllByTestId('skeleton-price')).toHaveLength(2);
     });
 
     it('renders error state', () => {
@@ -19,13 +20,14 @@ describe('OperationTypePriceList', () => {
 
         render(<OperationTypePriceList operationTypes={[]} loading={false} error={errorMessage}/>);
 
-        expect(screen.getByRole('alert')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-types-error')).toBeInTheDocument();
         expect(screen.getByText(errorMessage)).toBeInTheDocument();
     });
 
     it('renders empty state when no operation types', () => {
         render(<OperationTypePriceList operationTypes={[]} loading={false} error={null}/>);
 
+        expect(screen.getByTestId('operation-types-empty')).toBeInTheDocument();
         expect(screen.getByText('No operation types available')).toBeInTheDocument();
     });
 

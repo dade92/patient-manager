@@ -24,16 +24,16 @@ export const OperationTypePriceList: React.FC<Props> = ({
 }) => {
     if (loading) {
         return (
-            <List>
+            <List data-testid="operation-types-loading-list">
                 {Array.from({ length: 2 }, (_, index) => (
                     <React.Fragment key={index}>
                         <ListItem>
                             <ListItemText
-                                primary={<Skeleton variant="text" width="60%" />}
-                                secondary={<Skeleton variant="text" width="80%" />}
+                                primary={<Skeleton variant="text" width="60%" data-testid="skeleton-primary" />}
+                                secondary={<Skeleton variant="text" width="80%" data-testid="skeleton-secondary" />}
                             />
                             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                                <Skeleton variant="text" width={80} height={32} />
+                                <Skeleton variant="text" width={80} height={32} data-testid="skeleton-price" />
                             </Box>
                         </ListItem>
                         {index < 1 && <Divider />}
@@ -45,7 +45,7 @@ export const OperationTypePriceList: React.FC<Props> = ({
 
     if (error) {
         return (
-            <Alert severity="error" sx={{ mt: 2 }}>
+            <Alert severity="error" sx={{ mt: 2 }} data-testid="operation-types-error">
                 {error}
             </Alert>
         );
@@ -53,7 +53,7 @@ export const OperationTypePriceList: React.FC<Props> = ({
 
     if (operationTypes.length === 0) {
         return (
-            <Typography variant="body2" color="text.secondary" sx={{ p: 2, textAlign: 'center' }}>
+            <Typography variant="body2" color="text.secondary" sx={{ p: 2, textAlign: 'center' }} data-testid="operation-types-empty">
                 No operation types available
             </Typography>
         );
