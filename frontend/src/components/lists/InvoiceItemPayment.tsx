@@ -14,8 +14,8 @@ interface Props {
 }
 
 export const InvoiceItemPayment: React.FC<Props> = ({invoice, isUpdatingOnPaid, isUpdatingOnCancel, onChangeInvoiceStatus}) =>
-    <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1, minWidth: 120, ml: 2}}>
-        <Typography sx={{ fontWeight: 400 }} noWrap>
+    <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1, minWidth: 120, ml: 2}} data-testid="invoice-item-payment">
+        <Typography sx={{ fontWeight: 400 }} noWrap data-testid="invoice-amount">
             {formatAmount(invoice.amount.amount, invoice.amount.currency)}
         </Typography>
         <Chip
@@ -23,9 +23,10 @@ export const InvoiceItemPayment: React.FC<Props> = ({invoice, isUpdatingOnPaid, 
             size="small"
             color={getInvoiceStatusColor(invoice.status)}
             variant="outlined"
+            data-testid="invoice-status-chip"
         />
         {invoice.status === InvoiceStatus.PENDING && (
-            <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
+            <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }} data-testid="invoice-payment-buttons">
                 <Button
                     variant="contained"
                     size="small"
@@ -37,6 +38,7 @@ export const InvoiceItemPayment: React.FC<Props> = ({invoice, isUpdatingOnPaid, 
                     onClick={() => onChangeInvoiceStatus(invoice.id, InvoiceStatus.PAID)}
                     sx={{ minWidth: 80, px: 1, py: 0.5, fontSize: '0.75rem', lineHeight: 1.2 }}
                     disabled={isUpdatingOnPaid || isUpdatingOnCancel}
+                    data-testid="mark-as-paid-button"
                 >
                     {isUpdatingOnPaid ? 'Updating...' : 'Mark as Paid'}
                 </Button>
@@ -51,6 +53,7 @@ export const InvoiceItemPayment: React.FC<Props> = ({invoice, isUpdatingOnPaid, 
                     onClick={() => onChangeInvoiceStatus(invoice.id, InvoiceStatus.CANCELLED)}
                     sx={{ minWidth: 80, px: 1, py: 0.5, fontSize: '0.75rem', lineHeight: 1.2 }}
                     disabled={isUpdatingOnPaid || isUpdatingOnCancel}
+                    data-testid="cancel-invoice-button"
                 >
                     {isUpdatingOnCancel ? 'Updating...' : 'Cancel'}
                 </Button>
