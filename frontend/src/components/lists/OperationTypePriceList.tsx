@@ -60,20 +60,39 @@ export const OperationTypePriceList: React.FC<Props> = ({
     }
 
     return (
-        <List>
+        <List data-testid="operation-types-list">
             {operationTypes.map((operationType, index) => (
                 <React.Fragment key={operationType.type}>
-                    <ListItem>
+                    <ListItem data-testid={`operation-type-item-${index}`}>
                         <ListItemText
-                            primary={operationType.type}
-                            secondary={operationType.description}
-                            primaryTypographyProps={{ fontWeight: 'medium' }}
+                            primary={
+                                <Typography
+                                    fontWeight="medium"
+                                    data-testid={`operation-type-name-${index}`}
+                                >
+                                    {operationType.type}
+                                </Typography>
+                            }
+                            secondary={
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    data-testid={`operation-type-description-${index}`}
+                                >
+                                    {operationType.description}
+                                </Typography>
+                            }
+                            data-testid={`operation-type-text-${index}`}
                         />
-                        <Typography variant="h6" color="primary">
+                        <Typography
+                            variant="h6"
+                            color="primary"
+                            data-testid={`operation-type-price-${index}`}
+                        >
                             {operationType.estimatedBaseCost.currency} {operationType.estimatedBaseCost.amount.toFixed(2)}
                         </Typography>
                     </ListItem>
-                    {index < operationTypes.length - 1 && <Divider />}
+                    {index < operationTypes.length - 1 && <Divider data-testid={`operation-type-divider-${index}`} />}
                 </React.Fragment>
             ))}
         </List>

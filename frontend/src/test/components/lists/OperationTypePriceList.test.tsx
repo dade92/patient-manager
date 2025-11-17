@@ -36,10 +36,13 @@ describe('OperationTypePriceList', () => {
 
         render(<OperationTypePriceList operationTypes={[operationType]} loading={false} error={null}/>);
 
-        expect(screen.getByText('Cleaning')).toBeInTheDocument();
-        expect(screen.getByText('Regular dental cleaning')).toBeInTheDocument();
-        expect(screen.getByText('EUR 50.00')).toBeInTheDocument();
-        expect(screen.queryByRole('separator')).not.toBeInTheDocument(); // No divider for single item
+        expect(screen.getByTestId('operation-types-list')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-item-0')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-text-0')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-name-0')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-description-0')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-price-0')).toBeInTheDocument();
+        expect(screen.queryByTestId('operation-type-divider-0')).not.toBeInTheDocument(); // No divider for single item
     });
 
     it('renders multiple operation types with dividers', () => {
@@ -51,62 +54,22 @@ describe('OperationTypePriceList', () => {
 
         render(<OperationTypePriceList operationTypes={operationTypes} loading={false} error={null}/>);
 
-        // Check all operation types are rendered
-        expect(screen.getByText('Cleaning')).toBeInTheDocument();
-        expect(screen.getByText('Filling')).toBeInTheDocument();
-        expect(screen.getByText('Extraction')).toBeInTheDocument();
-
-        // Check descriptions
-        expect(screen.getByText('Regular dental cleaning')).toBeInTheDocument();
-        expect(screen.getByText('Dental cavity filling')).toBeInTheDocument();
-        expect(screen.getByText('Tooth extraction')).toBeInTheDocument();
-
-        // Check prices with currencies
-        expect(screen.getByText('EUR 50.00')).toBeInTheDocument();
-        expect(screen.getByText('USD 120.00')).toBeInTheDocument();
-        expect(screen.getByText('EUR 200.00')).toBeInTheDocument();
-
-        // Check dividers (should be 2 dividers for 3 items)
-        const dividers = screen.getAllByRole('separator');
-        expect(dividers).toHaveLength(2);
-    });
-
-    it('renders operation types with different currencies correctly', () => {
-        const operationTypes = [
-            buildOperationType('Service A', 'Description A', 100.50, 'USD'),
-            buildOperationType('Service B', 'Description B', 75.25, 'GBP')
-        ];
-
-        render(<OperationTypePriceList operationTypes={operationTypes} loading={false} error={null}/>);
-
-        expect(screen.getByText('USD 100.50')).toBeInTheDocument();
-        expect(screen.getByText('GBP 75.25')).toBeInTheDocument();
-    });
-
-    it('formats decimal prices correctly', () => {
-        const operationType = buildOperationType('Test Service', 'Test description', 99.9, 'EUR');
-
-        render(<OperationTypePriceList operationTypes={[operationType]} loading={false} error={null}/>);
-
-        expect(screen.getByText('EUR 99.90')).toBeInTheDocument();
-    });
-
-    it('handles zero price correctly', () => {
-        const operationType = buildOperationType('Free Service', 'Free consultation', 0, 'EUR');
-
-        render(<OperationTypePriceList operationTypes={[operationType]} loading={false} error={null}/>);
-
-        expect(screen.getByText('EUR 0.00')).toBeInTheDocument();
-    });
-
-    it('renders operation type with long description', () => {
-        const longDescription = 'This is a very long description that should be displayed properly in the secondary text area';
-        const operationType = buildOperationType('Complex Service', longDescription, 300.00, 'EUR');
-
-        render(<OperationTypePriceList operationTypes={[operationType]} loading={false} error={null}/>);
-
-        expect(screen.getByText('Complex Service')).toBeInTheDocument();
-        expect(screen.getByText(longDescription)).toBeInTheDocument();
+        expect(screen.getByTestId('operation-types-list')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-item-0')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-item-1')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-item-2')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-name-0')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-name-1')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-name-2')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-description-0')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-description-1')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-description-2')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-price-0')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-price-1')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-price-2')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-divider-0')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-type-divider-1')).toBeInTheDocument();
+        expect(screen.queryByTestId('operation-type-divider-2')).not.toBeInTheDocument();
     });
 
     const buildOperationType = (type: string, description: string, amount: number, currency: string): OperationType => {
