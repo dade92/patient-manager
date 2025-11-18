@@ -33,7 +33,7 @@ export const OperationAssets: React.FC<Props> = ({assets, onAddAsset}) => {
     };
 
     return (
-        <Grid item xs={12}>
+        <Grid item xs={12} data-testid={'operation-assets'}>
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1}}>
                 <Typography variant="subtitle1" color="textSecondary">
                     Assets

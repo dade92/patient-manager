@@ -13,12 +13,14 @@ export const AssetListItem: React.FC<Props> = ({ asset }) => (
         target="_blank"
         rel="noopener noreferrer"
         underline="hover"
+        data-testid="asset-link"
     >
         <ExpandableChip
             icon={<AttachFileIcon/>}
             label={asset}
             variant="outlined"
             clickable
+            data-testid="asset-chip"
         />
     </Link>
 );

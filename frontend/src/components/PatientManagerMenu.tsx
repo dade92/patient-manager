@@ -25,6 +25,7 @@ export const PatientManagerMenu: React.FC = () => {
                 aria-controls={open ? 'actions-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
+                data-testid="menu-button"
             >
                 <MenuIcon/>
             </IconButton>
@@ -36,11 +37,13 @@ export const PatientManagerMenu: React.FC = () => {
                 MenuListProps={{
                     'aria-labelledby': 'actions-button',
                 }}
+                data-testid="actions-menu"
             >
                 <MenuItem
                     component={Link}
                     to="/new-patient"
                     onClick={handleClose}
+                    data-testid="new-patient-menu-item"
                 >
                     New Patient
                 </MenuItem>
@@ -48,6 +51,7 @@ export const PatientManagerMenu: React.FC = () => {
                     component={Link}
                     to="/new-operation-type"
                     onClick={handleClose}
+                    data-testid="operation-types-menu-item"
                 >
                     Operation types
                 </MenuItem>

@@ -7,15 +7,16 @@ interface Props {
     onPatientClick: (patientId: string) => void;
 }
 
-export const PatientListItem: React.FC<Props> = ({patient, onPatientClick}) =>
-    (
-        <ListItemButton
-            key={patient.id}
-            onClick={() => onPatientClick(patient.id)}
-        >
-            <ListItemText
-                primary={patient.name}
-                secondary={`${patient.taxCode} • ${patient.email}`}
-            />
-        </ListItemButton>
-    );
+export const PatientListItem: React.FC<Props> = ({patient, onPatientClick}) => (
+    <ListItemButton
+        key={patient.id}
+        onClick={() => onPatientClick(patient.id)}
+        data-testid="patient-list-item-button"
+    >
+        <ListItemText
+            primary={patient.name}
+            secondary={`${patient.taxCode} • ${patient.email}`}
+            data-testid="patient-list-item-text"
+        />
+    </ListItemButton>
+);

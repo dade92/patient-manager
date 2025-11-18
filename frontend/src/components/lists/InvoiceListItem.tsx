@@ -14,7 +14,7 @@ interface Props {
 
 export const InvoiceListItem: React.FC<Props> = ({invoice, isLast, isUpdatingOnPaid, isUpdatingOnCancel, onChangeInvoiceStatus}) => (
     <React.Fragment key={invoice.id}>
-        <ListItem alignItems="flex-start" disableGutters sx={{ height: 140 }}>
+        <ListItem alignItems="flex-start" disableGutters sx={{ height: 140 }} data-testid="invoice-list-item">
             <Box sx={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'flex-start'}}>
                 <InvoiceItemDetail invoice={invoice}/>
                 <InvoiceItemPayment
@@ -25,6 +25,6 @@ export const InvoiceListItem: React.FC<Props> = ({invoice, isLast, isUpdatingOnP
                 />
             </Box>
         </ListItem>
-        {!isLast && <Divider/>}
+        {!isLast && <Divider data-testid="invoice-divider"/>}
     </React.Fragment>
 );
