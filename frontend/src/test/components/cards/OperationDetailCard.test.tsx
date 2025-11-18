@@ -40,11 +40,9 @@ describe('OperationDetailCard', () => {
         expect(screen.getByTestId('operation-estimated-cost')).toHaveTextContent(MOCKED_FORMATTED_AMOUNT);
         expect(mockedFormatAmount).toHaveBeenCalledWith(ESTIMATED_AMOUNT, ESTIMATED_CURRENCY);
         expect(screen.getByTestId('operation-create-invoice-button')).toBeInTheDocument();
-
-        //TODO check the other FC like tooth details, assets, notes...
     });
 
-    it('fires patient id click handler', () => {
+    it('calls on patient id click callback when clicking on patient id button ', () => {
         render(
             <OperationDetailCard
                 operation={OPERATION}
@@ -59,7 +57,7 @@ describe('OperationDetailCard', () => {
         expect(onPatientIdClick).toHaveBeenCalledTimes(1);
     });
 
-    it('fires create invoice handler', () => {
+    it('calls invoice handler when clicking on create invoice button ', () => {
         render(
             <OperationDetailCard
                 operation={OPERATION}
@@ -70,7 +68,9 @@ describe('OperationDetailCard', () => {
             />
         );
         fireEvent.click(screen.getByTestId('operation-create-invoice-button'));
+
         expect(onCreateInvoice).toHaveBeenCalledTimes(1);
+        expect(onPatientIdClick).not.toHaveBeenCalled();
     });
 
     const OP_ID = 'OP-001';
