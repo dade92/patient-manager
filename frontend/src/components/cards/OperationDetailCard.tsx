@@ -77,16 +77,16 @@ export const OperationDetailCard: React.FC<Props> = ({
                     </Typography>
                 </Grid>
 
-                <ToothDetails data-testid={'tooth-details'}
+                <ToothDetails
                     details={operation.patientOperationInfo.details}
                 />
 
-                <OperationAssets data-testid={'operation-assets'}
+                <OperationAssets
                     assets={operation.assets}
                     onAddAsset={onAddAsset}
                 />
 
-                <OperationNotes data-testid={'operation-notes'}
+                <OperationNotes
                     notes={operation.additionalNotes}
                     onAddNote={onAddNote}
                 />

@@ -1,9 +1,11 @@
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
 import {OperationDetailCard} from '../../../components/cards/OperationDetailCard';
-import {Operation} from '../../../types/operation';
+import {Operation, OperationNote, PatientOperationInfo} from '../../../types/operation';
 import {formatAmount} from '../../../utils/currencyUtils';
 import {Builder} from 'builder-pattern';
+import {ToothDetail} from "../../../types/ToothDetail";
+import {Money} from "../../../types/Money";
 
 jest.mock('../../../utils/currencyUtils', () => ({
     formatAmount: jest.fn()
@@ -19,7 +21,7 @@ describe('OperationDetailCard', () => {
         jest.clearAllMocks();
     })
 
-    it('renders correctly', () => {
+    it('renders correctly, also child components', () => {
         mockedFormatAmount.mockReturnValue(MOCKED_FORMATTED_AMOUNT);
         render(
             <OperationDetailCard
@@ -40,6 +42,10 @@ describe('OperationDetailCard', () => {
         expect(screen.getByTestId('operation-estimated-cost')).toHaveTextContent(MOCKED_FORMATTED_AMOUNT);
         expect(mockedFormatAmount).toHaveBeenCalledWith(ESTIMATED_AMOUNT, ESTIMATED_CURRENCY);
         expect(screen.getByTestId('operation-create-invoice-button')).toBeInTheDocument();
+
+        expect(screen.getByTestId('tooth-details')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-assets')).toBeInTheDocument();
+        expect(screen.getByTestId('operation-notes-with-items')).toBeInTheDocument();
     });
 
     it('calls on patient id click callback when clicking on patient id button ', () => {
@@ -87,6 +93,15 @@ describe('OperationDetailCard', () => {
     const ESTIMATED_AMOUNT = 1500;
     const ESTIMATED_CURRENCY = 'EUR';
     const MOCKED_FORMATTED_AMOUNT = 'MOCKED_AMOUNT';
+    const PATIENT_OPERATION_INFO =
+        Builder<PatientOperationInfo>()
+            .details([
+                Builder<ToothDetail>()
+                    .estimatedCost(Builder<Money>().amount(10).currency('EUR').build())
+                    .build()
+            ])
+            .build();
+    const NOTES = [Builder<OperationNote>().content('test').build()];
 
     const OPERATION: Operation = Builder<Operation>()
         .id(OP_ID)
@@ -100,5 +115,7 @@ describe('OperationDetailCard', () => {
         .updatedAt(UPDATED_AT)
         .estimatedCost({amount: ESTIMATED_AMOUNT, currency: ESTIMATED_CURRENCY})
         .patientOperationInfo({details: []})
+        .patientOperationInfo(PATIENT_OPERATION_INFO)
+        .additionalNotes(NOTES)
         .build();
 });
