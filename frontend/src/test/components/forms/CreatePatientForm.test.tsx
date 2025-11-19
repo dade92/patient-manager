@@ -49,19 +49,7 @@ describe('CreatePatientForm', () => {
     });
 
     it('calls onPatientCreated with correct patient when form is submitted successfully', async () => {
-        const formData = {
-            name: 'John Doe',
-            email: 'john@example.com',
-            taxCode: 'JDOE123',
-            phoneNumber: '+1234567890',
-            address: '123 Main St',
-            cityOfResidence: 'New York',
-            nationality: 'USA',
-            birthDate: '1990-01-01',
-            medicalHistory: 'No allergies'
-        };
-
-        const createdPatient = buildPatient(ID, formData.name, formData.email);
+        const createdPatient = buildPatient(formData.name, formData.email);
         createPatient.mockResolvedValue(createdPatient);
 
         render(<CreatePatientForm onPatientCreated={onPatientCreated} onCancel={onCancel}/>);
@@ -89,9 +77,9 @@ describe('CreatePatientForm', () => {
 
     const ID = 'PAT-001';
 
-    const buildPatient = (id: string, name: string, email: string): Patient =>
+    const buildPatient = (name: string, email: string): Patient =>
         Builder<Patient>()
-            .id(id)
+            .id(ID)
             .name(name)
             .email(email)
             .phoneNumber('+1234567890')
@@ -102,6 +90,17 @@ describe('CreatePatientForm', () => {
             .taxCode('JDOE123')
             .medicalHistory('No allergies')
             .build();
+    const formData = {
+        name: 'John Doe',
+        email: 'john@example.com',
+        taxCode: 'JDOE123',
+        phoneNumber: '+1234567890',
+        address: '123 Main St',
+        cityOfResidence: 'New York',
+        nationality: 'USA',
+        birthDate: '1990-01-01',
+        medicalHistory: 'No allergies'
+    };
 
     const compileForm = (formData: {
         name: string;
