@@ -18,7 +18,7 @@ jest.mock('../../../hooks/useCreatePatient', () => ({
 const {useCreatePatient} = require('../../../hooks/useCreatePatient');
 
 describe('CreatePatientForm', () => {
-    const mockOnPatientCreated = jest.fn();
+    const onPatientCreated = jest.fn();
     const onCancel = jest.fn();
 
     beforeEach(() => {
@@ -29,7 +29,7 @@ describe('CreatePatientForm', () => {
     });
 
     it('renders all necessary components', () => {
-        render(<CreatePatientForm onPatientCreated={mockOnPatientCreated} onCancel={onCancel}/>);
+        render(<CreatePatientForm onPatientCreated={onPatientCreated} onCancel={onCancel}/>);
 
         expect(screen.getByTestId('create-patient-form')).toBeInTheDocument();
         expect(screen.getByTestId('name-input')).toBeInTheDocument();
@@ -49,52 +49,48 @@ describe('CreatePatientForm', () => {
     });
 
     it('calls onPatientCreated with correct patient when form is submitted successfully', async () => {
-        const createdPatient = buildPatient('PAT-001', 'John Doe', 'john@example.com');
+        const formData = {
+            name: 'John Doe',
+            email: 'john@example.com',
+            taxCode: 'JDOE123',
+            phoneNumber: '+1234567890',
+            address: '123 Main St',
+            cityOfResidence: 'New York',
+            nationality: 'USA',
+            birthDate: '1990-01-01',
+            medicalHistory: 'No allergies'
+        };
+
+        const createdPatient = buildPatient(ID, formData.name, formData.email);
         createPatient.mockResolvedValue(createdPatient);
 
-        render(<CreatePatientForm onPatientCreated={mockOnPatientCreated} onCancel={onCancel}/>);
+        render(<CreatePatientForm onPatientCreated={onPatientCreated} onCancel={onCancel}/>);
 
-        fireEvent.change(screen.getByTestId('name-input').querySelector('input')!, {target: {value: 'John Doe'}});
-        fireEvent.change(screen.getByTestId('email-input').querySelector('input')!, {target: {value: 'john@example.com'}});
-        fireEvent.change(screen.getByTestId('tax-code-input').querySelector('input')!, {target: {value: 'JDOE123'}});
-        fireEvent.change(screen.getByTestId('phone-number-input').querySelector('input')!, {target: {value: '+1234567890'}});
-        fireEvent.change(screen.getByTestId('address-input').querySelector('input')!, {target: {value: '123 Main St'}});
-        fireEvent.change(screen.getByTestId('city-input').querySelector('input')!, {target: {value: 'New York'}});
-        fireEvent.change(screen.getByTestId('nationality-input').querySelector('input')!, {target: {value: 'USA'}});
-        fireEvent.change(screen.getByTestId('birth-date-input').querySelector('input')!, {target: {value: '1990-01-01'}});
-        fireEvent.change(screen.getByTestId('medical-history-input').querySelector('input')!, {target: {value: 'No allergies'}});
+        compileForm(formData);
 
         fireEvent.click(screen.getByTestId('create-patient-button'));
 
         await waitFor(() => {
-            expect(createPatient).toHaveBeenCalledWith({
-                name: 'John Doe',
-                email: 'john@example.com',
-                taxCode: 'JDOE123',
-                phoneNumber: '+1234567890',
-                address: '123 Main St',
-                cityOfResidence: 'New York',
-                nationality: 'USA',
-                birthDate: '1990-01-01',
-                medicalHistory: 'No allergies'
-            });
-            expect(mockOnPatientCreated).toHaveBeenCalledWith(createdPatient);
-            expect(mockOnPatientCreated).toHaveBeenCalledTimes(1);
+            expect(createPatient).toHaveBeenCalledWith(formData);
+            expect(onPatientCreated).toHaveBeenCalledWith(createdPatient);
+            expect(onPatientCreated).toHaveBeenCalledTimes(1);
         });
     });
 
     it('calls onCancel when cancel button is clicked', () => {
-        render(<CreatePatientForm onPatientCreated={mockOnPatientCreated} onCancel={onCancel}/>);
+        render(<CreatePatientForm onPatientCreated={onPatientCreated} onCancel={onCancel}/>);
 
         const cancelButton = screen.getByTestId('cancel-button');
         fireEvent.click(cancelButton);
 
         expect(onCancel).toHaveBeenCalledTimes(1);
-        expect(mockOnPatientCreated).not.toHaveBeenCalled();
+        expect(onPatientCreated).not.toHaveBeenCalled();
     });
 
-    const buildPatient = (id: string, name: string, email: string): Patient => {
-        return Builder<Patient>()
+    const ID = 'PAT-001';
+
+    const buildPatient = (id: string, name: string, email: string): Patient =>
+        Builder<Patient>()
             .id(id)
             .name(name)
             .email(email)
@@ -106,5 +102,26 @@ describe('CreatePatientForm', () => {
             .taxCode('JDOE123')
             .medicalHistory('No allergies')
             .build();
+
+    const compileForm = (formData: {
+        name: string;
+        email: string;
+        taxCode: string;
+        phoneNumber: string;
+        address: string;
+        cityOfResidence: string;
+        nationality: string;
+        birthDate: string;
+        medicalHistory: string
+    }) => {
+        fireEvent.change(screen.getByTestId('name-input').querySelector('input')!, {target: {value: formData.name}});
+        fireEvent.change(screen.getByTestId('email-input').querySelector('input')!, {target: {value: formData.email}});
+        fireEvent.change(screen.getByTestId('tax-code-input').querySelector('input')!, {target: {value: formData.taxCode}});
+        fireEvent.change(screen.getByTestId('phone-number-input').querySelector('input')!, {target: {value: formData.phoneNumber}});
+        fireEvent.change(screen.getByTestId('address-input').querySelector('input')!, {target: {value: formData.address}});
+        fireEvent.change(screen.getByTestId('city-input').querySelector('input')!, {target: {value: formData.cityOfResidence}});
+        fireEvent.change(screen.getByTestId('nationality-input').querySelector('input')!, {target: {value: formData.nationality}});
+        fireEvent.change(screen.getByTestId('birth-date-input').querySelector('input')!, {target: {value: formData.birthDate}});
+        fireEvent.change(screen.getByTestId('medical-history-input').querySelector('input')!, {target: {value: formData.medicalHistory}});
     };
 });
