@@ -75,8 +75,8 @@ export const ToothSelectionForm: React.FC<Props> = ({
     };
 
     return (
-        <Box sx={{ mt: 2 }}>
-            <Typography variant="subtitle1" gutterBottom>
+        <Box sx={{ mt: 2 }} data-testid="tooth-selection-form">
+            <Typography variant="subtitle1" gutterBottom data-testid="tooth-details-title">
                 Tooth Details
             </Typography>
 
@@ -85,22 +85,24 @@ export const ToothSelectionForm: React.FC<Props> = ({
                     key={detailIndex}
                     elevation={1}
                     sx={{ p: 2, mb: 2, position: 'relative' }}
+                    data-testid={`tooth-detail-paper-${detailIndex}`}
                 >
                     <IconButton
                         size="small"
                         sx={{ position: 'absolute', top: 8, right: 8 }}
                         onClick={() => removeToothDetail(detailIndex)}
                         disabled={toothDetails.length <= 1}
+                        data-testid={`remove-tooth-button-${detailIndex}`}
                     >
                         <DeleteIcon fontSize="small" />
                     </IconButton>
 
-                    <Typography variant="subtitle2" gutterBottom>
+                    <Typography variant="subtitle2" gutterBottom data-testid={`selection-title-${detailIndex}`}>
                         Selection {detailIndex + 1}
                     </Typography>
 
                     <Box sx={{ mb: 2 }}>
-                        <Typography variant="body2" color="textSecondary" gutterBottom>
+                        <Typography variant="body2" color="textSecondary" gutterBottom data-testid={`select-tooth-label-${detailIndex}`}>
                             Select tooth number:
                         </Typography>
                         <TeethGrid
@@ -116,6 +118,7 @@ export const ToothSelectionForm: React.FC<Props> = ({
                         value={detail.amount}
                         onChange={(e) => handleAmountChange(detailIndex, e.target.value)}
                         sx={{ mb: 1 }}
+                        data-testid={`amount-input-${detailIndex}`}
                     />
                 </Paper>
             ))}
@@ -124,6 +127,7 @@ export const ToothSelectionForm: React.FC<Props> = ({
                 startIcon={<AddIcon />}
                 onClick={addToothDetail}
                 sx={{ mt: 1 }}
+                data-testid="add-tooth-button"
             >
                 Add Another Tooth
             </Button>
