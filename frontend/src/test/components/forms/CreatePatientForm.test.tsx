@@ -49,7 +49,7 @@ describe('CreatePatientForm', () => {
     });
 
     it('calls onPatientCreated with correct patient when form is submitted successfully', async () => {
-        const createdPatient = buildPatient(formData.name, formData.email);
+        const createdPatient = buildPatient(NAME, EMAIL);
         createPatient.mockResolvedValue(createdPatient);
 
         render(<CreatePatientForm onPatientCreated={onPatientCreated} onCancel={onCancel}/>);
@@ -76,30 +76,39 @@ describe('CreatePatientForm', () => {
     });
 
     const ID = 'PAT-001';
+    const NAME = 'John Doe';
+    const EMAIL = 'john@example.com';
+    const PHONE = '+1234567890';
+    const ADDRESS = '123 Main St';
+    const CITY = 'New York';
+    const NATIONALITY = 'USA';
+    const BIRTH_DATE = '1990-01-01';
+    const TAX_CODE = 'JDOE123';
+    const HISTORY = 'No allergies';
 
     const buildPatient = (name: string, email: string): Patient =>
         Builder<Patient>()
             .id(ID)
             .name(name)
             .email(email)
-            .phoneNumber('+1234567890')
-            .address('123 Main St')
-            .cityOfResidence('New York')
-            .nationality('USA')
-            .birthDate('1990-01-01')
-            .taxCode('JDOE123')
-            .medicalHistory('No allergies')
+            .phoneNumber(PHONE)
+            .address(ADDRESS)
+            .cityOfResidence(CITY)
+            .nationality(NATIONALITY)
+            .birthDate(BIRTH_DATE)
+            .taxCode(TAX_CODE)
+            .medicalHistory(HISTORY)
             .build();
     const formData = {
-        name: 'John Doe',
-        email: 'john@example.com',
-        taxCode: 'JDOE123',
-        phoneNumber: '+1234567890',
-        address: '123 Main St',
-        cityOfResidence: 'New York',
-        nationality: 'USA',
-        birthDate: '1990-01-01',
-        medicalHistory: 'No allergies'
+        name: NAME,
+        email: EMAIL,
+        taxCode: TAX_CODE,
+        phoneNumber: PHONE,
+        address: ADDRESS,
+        cityOfResidence: CITY,
+        nationality: NATIONALITY,
+        birthDate: BIRTH_DATE,
+        medicalHistory: HISTORY
     };
 
     const compileForm = (formData: {
