@@ -122,39 +122,38 @@ describe('ToothSelectionForm', () => {
             <ToothSelectionForm onSelectionChange={onSelectionChange} estimatedCost={100}/>
         );
 
-        // Check initial amount is set to estimated cost
         const amountInput = screen.getByTestId('amount-input-0').querySelector('input')!;
         expect(amountInput).toHaveValue('100');
 
-        // Add another tooth detail
+        fireEvent.click(screen.getByTestId('mock-tooth-button-11'));
+
         fireEvent.click(screen.getByTestId('add-tooth-button'));
 
-        // Clear mock for rerender test
+        const secondToothGrid = screen.getAllByTestId('mocked-teeth-grid')[1];
+        fireEvent.click(secondToothGrid.querySelector('[data-testid="mock-tooth-button-12"]')!);
+
         onSelectionChange.mockClear();
 
-        // Change estimated cost
         rerender(
             <ToothSelectionForm onSelectionChange={onSelectionChange} estimatedCost={250}/>
         );
 
-        // Verify both amounts are updated to new estimated cost
         const firstAmountInput = screen.getByTestId('amount-input-0').querySelector('input')!;
         const secondAmountInput = screen.getByTestId('amount-input-1').querySelector('input')!;
 
         expect(firstAmountInput).toHaveValue('250');
         expect(secondAmountInput).toHaveValue('250');
 
-        // Verify onSelectionChange was called with updated amounts
         expect(onSelectionChange).toHaveBeenCalledWith([
             {
-                toothNumber: 0,
+                toothNumber: 11,
                 amount: '250',
-                toothType: ''
+                toothType: ToothType.PERMANENT
             },
             {
-                toothNumber: 0,
+                toothNumber: 12,
                 amount: '250',
-                toothType: ''
+                toothType: ToothType.PERMANENT
             }
         ]);
     });
