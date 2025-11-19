@@ -19,7 +19,7 @@ const {useCreatePatient} = require('../../../hooks/useCreatePatient');
 
 describe('CreatePatientForm', () => {
     const mockOnPatientCreated = jest.fn();
-    const mockOnCancel = jest.fn();
+    const onCancel = jest.fn();
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -29,7 +29,7 @@ describe('CreatePatientForm', () => {
     });
 
     it('renders all necessary components', () => {
-        render(<CreatePatientForm onPatientCreated={mockOnPatientCreated} onCancel={mockOnCancel}/>);
+        render(<CreatePatientForm onPatientCreated={mockOnPatientCreated} onCancel={onCancel}/>);
 
         expect(screen.getByTestId('create-patient-form')).toBeInTheDocument();
         expect(screen.getByTestId('name-input')).toBeInTheDocument();
@@ -52,9 +52,8 @@ describe('CreatePatientForm', () => {
         const createdPatient = buildPatient('PAT-001', 'John Doe', 'john@example.com');
         createPatient.mockResolvedValue(createdPatient);
 
-        render(<CreatePatientForm onPatientCreated={mockOnPatientCreated} onCancel={mockOnCancel}/>);
+        render(<CreatePatientForm onPatientCreated={mockOnPatientCreated} onCancel={onCancel}/>);
 
-        // Use querySelector to find the actual input elements within the TextFields
         fireEvent.change(screen.getByTestId('name-input').querySelector('input')!, {target: {value: 'John Doe'}});
         fireEvent.change(screen.getByTestId('email-input').querySelector('input')!, {target: {value: 'john@example.com'}});
         fireEvent.change(screen.getByTestId('tax-code-input').querySelector('input')!, {target: {value: 'JDOE123'}});
@@ -85,12 +84,12 @@ describe('CreatePatientForm', () => {
     });
 
     it('calls onCancel when cancel button is clicked', () => {
-        render(<CreatePatientForm onPatientCreated={mockOnPatientCreated} onCancel={mockOnCancel}/>);
+        render(<CreatePatientForm onPatientCreated={mockOnPatientCreated} onCancel={onCancel}/>);
 
         const cancelButton = screen.getByTestId('cancel-button');
         fireEvent.click(cancelButton);
 
-        expect(mockOnCancel).toHaveBeenCalledTimes(1);
+        expect(onCancel).toHaveBeenCalledTimes(1);
         expect(mockOnPatientCreated).not.toHaveBeenCalled();
     });
 
