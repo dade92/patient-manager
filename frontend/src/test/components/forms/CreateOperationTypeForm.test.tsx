@@ -1,19 +1,18 @@
 import React from 'react';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {CreateOperationTypeForm} from '../../../components/forms/CreateOperationTypeForm';
+const {useCreateOperationType} = require('../../../hooks/useCreateOperationType');
 
 const createOperationType = jest.fn();
-const createOperationTypeStatus = {
+const CREATE_OPERATION_TYPE_STATUS = {
     createOperationType: createOperationType,
     error: null as string | null,
     isSubmitting: false
 };
 
 jest.mock('../../../hooks/useCreateOperationType', () => ({
-    useCreateOperationType: jest.fn(() => createOperationTypeStatus)
+    useCreateOperationType: jest.fn(() => CREATE_OPERATION_TYPE_STATUS)
 }));
-
-const {useCreateOperationType} = require('../../../hooks/useCreateOperationType');
 
 describe('CreateOperationTypeForm', () => {
     const onOperationTypeCreated = jest.fn();
@@ -21,9 +20,9 @@ describe('CreateOperationTypeForm', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        createOperationTypeStatus.error = null;
-        createOperationTypeStatus.isSubmitting = false;
-        useCreateOperationType.mockReturnValue(createOperationTypeStatus);
+        CREATE_OPERATION_TYPE_STATUS.error = null;
+        CREATE_OPERATION_TYPE_STATUS.isSubmitting = false;
+        useCreateOperationType.mockReturnValue(CREATE_OPERATION_TYPE_STATUS);
     });
 
     it('renders all necessary components', () => {
