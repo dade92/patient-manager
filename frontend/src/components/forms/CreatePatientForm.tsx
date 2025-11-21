@@ -60,11 +60,11 @@ export const CreatePatientForm: React.FC<Props> = ({
     return (
         <>
             {error && (
-                <Alert severity="error" sx={{mb: 2}}>
+                <Alert severity="error" sx={{mb: 2}} data-testid="create-patient-error-alert">
                     {error}
                 </Alert>
             )}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} data-testid="create-patient-form">
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <TextField
@@ -75,6 +75,7 @@ export const CreatePatientForm: React.FC<Props> = ({
                             value={form.name}
                             onChange={handleChange}
                             disabled={isSubmitting}
+                            data-testid="name-input"
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -87,6 +88,7 @@ export const CreatePatientForm: React.FC<Props> = ({
                             value={form.email}
                             onChange={handleChange}
                             disabled={isSubmitting}
+                            data-testid="email-input"
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -98,6 +100,7 @@ export const CreatePatientForm: React.FC<Props> = ({
                             value={form.taxCode}
                             onChange={handleChange}
                             disabled={isSubmitting}
+                            data-testid="tax-code-input"
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -109,6 +112,7 @@ export const CreatePatientForm: React.FC<Props> = ({
                             value={form.phoneNumber}
                             onChange={handleChange}
                             disabled={isSubmitting}
+                            data-testid="phone-number-input"
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -120,6 +124,7 @@ export const CreatePatientForm: React.FC<Props> = ({
                             value={form.address}
                             onChange={handleChange}
                             disabled={isSubmitting}
+                            data-testid="address-input"
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -131,6 +136,7 @@ export const CreatePatientForm: React.FC<Props> = ({
                             value={form.cityOfResidence}
                             onChange={handleChange}
                             disabled={isSubmitting}
+                            data-testid="city-input"
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -143,6 +149,7 @@ export const CreatePatientForm: React.FC<Props> = ({
                             onChange={handleChange}
                             select={false}
                             disabled={isSubmitting}
+                            data-testid="nationality-input"
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -158,6 +165,7 @@ export const CreatePatientForm: React.FC<Props> = ({
                                 shrink: true,
                             }}
                             disabled={isSubmitting}
+                            data-testid="birth-date-input"
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -169,6 +177,7 @@ export const CreatePatientForm: React.FC<Props> = ({
                             value={form.medicalHistory}
                             onChange={handleChange}
                             disabled={isSubmitting}
+                            data-testid="medical-history-input"
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -177,6 +186,7 @@ export const CreatePatientForm: React.FC<Props> = ({
                                 variant="outlined"
                                 onClick={onCancel}
                                 disabled={isSubmitting}
+                                data-testid="cancel-button"
                             >
                                 Cancel
                             </Button>
@@ -185,6 +195,7 @@ export const CreatePatientForm: React.FC<Props> = ({
                                 variant="contained"
                                 color="primary"
                                 disabled={isSubmitting}
+                                data-testid="create-patient-button"
                             >
                                 Create Patient
                             </Button>

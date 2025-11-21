@@ -33,7 +33,7 @@ export const TeethGrid: React.FC<Props> = ({
             display: 'flex',
             flexDirection: 'column',
             gap: 2
-        }}>
+        }} data-testid="teeth-grid-container">
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'flex-end'
@@ -44,11 +44,12 @@ export const TeethGrid: React.FC<Props> = ({
                     onChange={handleTeethTypeChange}
                     aria-label="teeth type"
                     size="small"
+                    data-testid="teeth-type-toggle-group"
                 >
-                    <ToggleButton value={ToothType.PERMANENT} aria-label="permanent teeth">
+                    <ToggleButton value={ToothType.PERMANENT} aria-label="permanent teeth" data-testid="permanent-teeth-button">
                         Permanent
                     </ToggleButton>
-                    <ToggleButton value={ToothType.DECIDUOUS} aria-label="deciduous teeth">
+                    <ToggleButton value={ToothType.DECIDUOUS} aria-label="deciduous teeth" data-testid="deciduous-teeth-button">
                         Baby
                     </ToggleButton>
                 </ToggleButtonGroup>
@@ -62,9 +63,10 @@ export const TeethGrid: React.FC<Props> = ({
                     maxHeight: '120px',
                     overflowY: 'auto'
                 }}
+                data-testid="teeth-grid"
             >
                 {teeth.map((row, rowIndex) => (
-                    <Box key={rowIndex} sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+                    <Box key={rowIndex} sx={{ display: 'flex', gap: 1, justifyContent: 'center' }} data-testid={`teeth-row-${rowIndex}`}>
                         {row.map((tooth) => (
                             <Tooltip key={tooth} title={`Tooth ${tooth}`}>
                                 <Button
@@ -76,6 +78,7 @@ export const TeethGrid: React.FC<Props> = ({
                                         height: '36px',
                                         p: 0
                                     }}
+                                    data-testid={`tooth-button-${tooth}`}
                                 >
                                     {tooth}
                                 </Button>

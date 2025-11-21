@@ -53,7 +53,7 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
     };
 
     return (
-        <Paper elevation={3} sx={{ p: 4, maxWidth: 600, mx: 'auto' }}>
+        <Paper elevation={3} sx={{ p: 4, maxWidth: 600, mx: 'auto' }} data-testid="create-operation-type-form">
             <Typography variant="h5" component="h1" gutterBottom>
                 Create New Operation Type
             </Typography>
@@ -63,7 +63,7 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
             </Typography>
 
             {error && (
-                <Alert severity="error" sx={{ mb: 2 }}>
+                <Alert severity="error" sx={{ mb: 2 }} data-testid="create-operation-type-error-alert">
                     {error}
                 </Alert>
             )}
@@ -78,6 +78,7 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
                     onChange={handleChange}
                     helperText="Use uppercase letters and underscores (will be converted automatically)"
                     sx={{ mb: 3 }}
+                    data-testid="type-input"
                 />
 
                 <TextField
@@ -91,6 +92,7 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
                     rows={3}
                     placeholder="Describe this type of operation..."
                     sx={{ mb: 3 }}
+                    data-testid="description-input"
                 />
 
                 <TextField
@@ -107,6 +109,7 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
                     placeholder="0.00"
                     helperText="Base cost for this operation on a single tooth"
                     sx={{ mb: 3 }}
+                    data-testid="amount-input"
                 />
 
                 <TextField
@@ -118,6 +121,7 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
                     disabled
                     helperText="Currently only EUR is supported"
                     sx={{ mb: 4 }}
+                    data-testid="currency-input"
                 />
 
                 <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
@@ -125,6 +129,7 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
                         variant="outlined"
                         onClick={onCancel}
                         disabled={isSubmitting}
+                        data-testid="cancel-button"
                     >
                         Cancel
                     </Button>
@@ -132,6 +137,7 @@ export const CreateOperationTypeForm: React.FC<Props> = ({
                         type="submit"
                         variant="contained"
                         disabled={isSubmitting}
+                        data-testid="create-operation-type-button"
                     >
                         {isSubmitting ? 'Creating...' : 'Create Operation Type'}
                     </Button>
