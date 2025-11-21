@@ -43,7 +43,12 @@ describe('CreateOperationTypeForm', () => {
     it('calls useCreateOperationType hook and onOperationTypeCreated when form is submitted successfully', async () => {
         createOperationType.mockResolvedValue(undefined);
 
-        render(<CreateOperationTypeForm onOperationTypeCreated={onOperationTypeCreated} onCancel={onCancel}/>);
+        render(
+            <CreateOperationTypeForm
+                onOperationTypeCreated={onOperationTypeCreated}
+                onCancel={onCancel}
+            />
+        );
 
         compileForm(formData);
 

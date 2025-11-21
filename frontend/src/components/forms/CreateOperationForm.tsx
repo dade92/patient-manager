@@ -91,10 +91,10 @@ export const CreateOperationForm: React.FC<Props> = ({
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} data-testid="create-operation-form">
             <DialogContent>
                 {(error || operationTypesError) && (
-                    <Alert severity="error" sx={{mb: 2}}>
+                    <Alert severity="error" sx={{mb: 2}} data-testid="create-operation-error-alert">
                         {error || operationTypesError}
                     </Alert>
                 )}
@@ -108,6 +108,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                             label="Operation Type"
                             onChange={handleChange}
                             disabled={loadingOperationTypes}
+                            data-testid="operation-type-select"
                         >
                             {operationTypes.map(operationType => (
                                 <MenuItem key={operationType.type} value={operationType.type}>
@@ -127,6 +128,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                         value={formData.description}
                         onChange={handleChange}
                         autoComplete="off"
+                        data-testid="description-input"
                     />
 
                     <TextField
@@ -137,15 +139,14 @@ export const CreateOperationForm: React.FC<Props> = ({
                         value={formData.executor}
                         onChange={handleChange}
                         autoComplete="off"
+                        data-testid="executor-input"
                     />
-
-
                     <Divider sx={{ my: 1 }} />
-
                     <ToothSelectionForm
                         key={toothSelectionKey}
                         onSelectionChange={handleToothSelectionChange}
                         estimatedCost={estimatedCost}
+                        data-testid="tooth-selection-form"
                     />
                 </Box>
             </DialogContent>
@@ -154,6 +155,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                     type="submit"
                     variant="contained"
                     disabled={isSubmitting}
+                    data-testid="create-operation-button"
                 >
                     Create Operation
                 </Button>
@@ -161,6 +163,7 @@ export const CreateOperationForm: React.FC<Props> = ({
                     onClick={onCancel}
                     variant="outlined"
                     disabled={isSubmitting}
+                    data-testid="cancel-button"
                 >
                     Cancel
                 </Button>
