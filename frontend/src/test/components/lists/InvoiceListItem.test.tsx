@@ -92,18 +92,17 @@ describe('InvoiceListItem', () => {
         }));
     });
 
-    const INVOICE_ID = 'INV-001';
-    const OPERATION_ID = 'OP-001';
+    const INVOICE_ID = 'INV-ID';
+    const OPERATION_ID = 'OP-ID';
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
-    const AMOUNT = 1500;
-    const CURRENCY = 'EUR';
-    const buildInvoice = (status: InvoiceStatus): Invoice => Builder<Invoice>()
-        .id(INVOICE_ID)
-        .operationId(OPERATION_ID)
-        .amount({amount: AMOUNT, currency: CURRENCY})
-        .status(status)
-        .createdAt(CREATED_AT)
-        .updatedAt(UPDATED_AT)
-        .build();
+    const buildInvoice = (status: InvoiceStatus): Invoice =>
+        Builder<Invoice>()
+            .id(INVOICE_ID)
+            .operationId(OPERATION_ID)
+            .amount({amount: 1500, currency: 'EUR'})
+            .status(status)
+            .createdAt(CREATED_AT)
+            .updatedAt(UPDATED_AT)
+            .build();
 });

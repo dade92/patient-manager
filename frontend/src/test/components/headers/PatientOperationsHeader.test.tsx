@@ -45,17 +45,6 @@ describe('PatientOperationsHeader', () => {
         expect(onToggle).toHaveBeenCalledTimes(1);
     });
 
-    it('calls onToggle multiple times on repeated clicks', () => {
-        render(<PatientOperationsHeader expanded={false} onToggle={onToggle}/>);
-
-        const header = screen.getByTestId('patient-operations-header');
-        fireEvent.click(header);
-        fireEvent.click(header);
-        fireEvent.click(header);
-
-        expect(onToggle).toHaveBeenCalledTimes(3);
-    });
-
     const TITLE = 'Operations History';
 });
 

@@ -43,7 +43,7 @@ describe('OperationListItem', () => {
             .additionalNotes([])
             .build();
 
-        render(<OperationListItem operation={EMPTY_OPERATION} isLast={false} onOperationClick={jest.fn()}/>);
+        render(<OperationListItem operation={EMPTY_OPERATION} isLast={false} onOperationClick={onClick}/>);
 
         expect(screen.getByTestId('operation-assets-chip')).toHaveTextContent('0');
         expect(screen.getByTestId('operation-notes-chip')).toHaveTextContent('0');

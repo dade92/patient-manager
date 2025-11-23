@@ -32,7 +32,7 @@ describe('PatientListItem', () => {
         expect(onClick).toHaveBeenCalledWith(PATIENT_ID);
     });
 
-    const PATIENT_ID = 'PAT-123';
+    const PATIENT_ID = 'PAT-ID';
     const NAME = 'Jane Smith';
     const EMAIL = 'jane.smith@example.com';
     const TAX_CODE = 'TAX123SMITH';

@@ -52,15 +52,14 @@ describe('OperationTypePriceList', () => {
         expect(screen.queryByTestId('operation-type-divider-1')).not.toBeInTheDocument();
     });
 
-    const buildOperationType = (type: string, description: string, amount: number, currency: string): OperationType => {
-        const money = Builder<Money>()
-            .amount(amount)
-            .currency(currency)
-            .build();
-        return Builder<OperationType>()
+    const buildOperationType = (type: string, description: string, amount: number, currency: string): OperationType =>
+        Builder<OperationType>()
             .type(type)
             .description(description)
-            .estimatedBaseCost(money)
+            .estimatedBaseCost(
+                Builder<Money>()
+                    .amount(amount)
+                    .currency(currency)
+                    .build())
             .build();
-    };
 });

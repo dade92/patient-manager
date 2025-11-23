@@ -9,7 +9,7 @@ jest.mock('../../../utils/currencyUtils', () => ({
     formatAmount: jest.fn()
 }));
 
-const mockedFormatAmount = formatAmount as jest.Mock;
+const formatter = formatAmount as jest.Mock;
 
 const mockListItem = jest.fn();
 jest.mock('../../../components/lists/ToothDetailListItem', () => ({
@@ -32,7 +32,7 @@ describe('ToothDetails', () => {
     });
 
     it('renders teeth list', () => {
-        mockedFormatAmount.mockReturnValue(FORMATTED_TOTAL);
+        formatter.mockReturnValue(FORMATTED_TOTAL);
 
         render(<ToothDetails details={DETAILS}/>);
 
@@ -40,7 +40,7 @@ describe('ToothDetails', () => {
         expect(screen.getByTestId('tooth-detail-item-0')).toBeInTheDocument();
         expect(screen.getByTestId('tooth-detail-item-1')).toBeInTheDocument();
         expect(screen.getByTestId('tooth-details-total')).toHaveTextContent(FORMATTED_TOTAL);
-        expect(mockedFormatAmount).toHaveBeenCalledWith(TOTAL_AMOUNT, CURRENCY);
+        expect(formatter).toHaveBeenCalledWith(TOTAL_AMOUNT, CURRENCY);
         expect(mockListItem).toHaveBeenNthCalledWith(1, expect.objectContaining({detail: DETAIL_1, index: 0}));
         expect(mockListItem).toHaveBeenNthCalledWith(2, expect.objectContaining({detail: DETAIL_2, index: 1}));
     });

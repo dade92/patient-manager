@@ -25,21 +25,21 @@ jest.mock('../../../utils/invoiceUtils', () => ({
 }));
 
 describe('InvoiceItemPayment', () => {
-    const mockOnChangeInvoiceStatus = jest.fn();
+    const onChangeInvoiceStatus = jest.fn();
 
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
     it('renders invoice amount correctly', () => {
-        const invoice = buildInvoice('123', InvoiceStatus.PENDING, 150.50, 'EUR');
+        const invoice = buildInvoice(InvoiceStatus.PENDING);
 
         render(
             <InvoiceItemPayment
                 invoice={invoice}
                 isUpdatingOnPaid={false}
                 isUpdatingOnCancel={false}
-                onChangeInvoiceStatus={mockOnChangeInvoiceStatus}
+                onChangeInvoiceStatus={onChangeInvoiceStatus}
             />
         );
 
@@ -49,19 +49,14 @@ describe('InvoiceItemPayment', () => {
     });
 
     it('shows payment buttons when invoice status is PENDING', () => {
-        const invoice = buildInvoice(
-            '123',
-            InvoiceStatus.PENDING,
-            150.50,
-            'EUR'
-        );
+        const invoice = buildInvoice(InvoiceStatus.PENDING);
 
         render(
             <InvoiceItemPayment
                 invoice={invoice}
                 isUpdatingOnPaid={false}
                 isUpdatingOnCancel={false}
-                onChangeInvoiceStatus={mockOnChangeInvoiceStatus}
+                onChangeInvoiceStatus={onChangeInvoiceStatus}
             />
         );
 
@@ -71,19 +66,14 @@ describe('InvoiceItemPayment', () => {
     });
 
     it('does not show payment buttons when invoice status is PAID', () => {
-        const invoice = buildInvoice(
-            '123',
-            InvoiceStatus.PAID,
-            150.50,
-            'EUR'
-        );
+        const invoice = buildInvoice(InvoiceStatus.PAID);
 
         render(
             <InvoiceItemPayment
                 invoice={invoice}
                 isUpdatingOnPaid={false}
                 isUpdatingOnCancel={false}
-                onChangeInvoiceStatus={mockOnChangeInvoiceStatus}
+                onChangeInvoiceStatus={onChangeInvoiceStatus}
             />
         );
 
@@ -93,19 +83,14 @@ describe('InvoiceItemPayment', () => {
     });
 
     it('does not show payment buttons when invoice status is CANCELLED', () => {
-        const invoice = buildInvoice(
-            '123',
-            InvoiceStatus.CANCELLED,
-            150.50,
-            'EUR'
-        );
+        const invoice = buildInvoice(InvoiceStatus.CANCELLED);
 
         render(
             <InvoiceItemPayment
                 invoice={invoice}
                 isUpdatingOnPaid={false}
                 isUpdatingOnCancel={false}
-                onChangeInvoiceStatus={mockOnChangeInvoiceStatus}
+                onChangeInvoiceStatus={onChangeInvoiceStatus}
             />
         );
 
@@ -115,50 +100,50 @@ describe('InvoiceItemPayment', () => {
     });
 
     it('calls onChangeInvoiceStatus with PAID when Mark as Paid button is clicked', () => {
-        const invoice = buildInvoice('123', InvoiceStatus.PENDING, 150.50, 'EUR');
+        const invoice = buildInvoice(InvoiceStatus.PENDING);
 
         render(
             <InvoiceItemPayment
                 invoice={invoice}
                 isUpdatingOnPaid={false}
                 isUpdatingOnCancel={false}
-                onChangeInvoiceStatus={mockOnChangeInvoiceStatus}
+                onChangeInvoiceStatus={onChangeInvoiceStatus}
             />
         );
 
         fireEvent.click(screen.getByTestId('mark-as-paid-button'));
 
-        expect(mockOnChangeInvoiceStatus).toHaveBeenCalledTimes(1);
-        expect(mockOnChangeInvoiceStatus).toHaveBeenCalledWith('123', InvoiceStatus.PAID);
+        expect(onChangeInvoiceStatus).toHaveBeenCalledTimes(1);
+        expect(onChangeInvoiceStatus).toHaveBeenCalledWith(ID, InvoiceStatus.PAID);
     });
 
     it('calls onChangeInvoiceStatus with CANCELLED when Cancel button is clicked', () => {
-        const invoice = buildInvoice('123', InvoiceStatus.PENDING, 150.50, 'EUR');
+        const invoice = buildInvoice(InvoiceStatus.PENDING);
 
         render(
             <InvoiceItemPayment
                 invoice={invoice}
                 isUpdatingOnPaid={false}
                 isUpdatingOnCancel={false}
-                onChangeInvoiceStatus={mockOnChangeInvoiceStatus}
+                onChangeInvoiceStatus={onChangeInvoiceStatus}
             />
         );
 
         fireEvent.click(screen.getByTestId('cancel-invoice-button'));
 
-        expect(mockOnChangeInvoiceStatus).toHaveBeenCalledTimes(1);
-        expect(mockOnChangeInvoiceStatus).toHaveBeenCalledWith('123', InvoiceStatus.CANCELLED);
+        expect(onChangeInvoiceStatus).toHaveBeenCalledTimes(1);
+        expect(onChangeInvoiceStatus).toHaveBeenCalledWith(ID, InvoiceStatus.CANCELLED);
     });
 
     it('shows loading state for Mark as Paid button when isUpdatingOnPaid is true', () => {
-        const invoice = buildInvoice('123', InvoiceStatus.PENDING, 150.50, 'EUR');
+        const invoice = buildInvoice(InvoiceStatus.PENDING);
 
         render(
             <InvoiceItemPayment
                 invoice={invoice}
                 isUpdatingOnPaid={true}
                 isUpdatingOnCancel={false}
-                onChangeInvoiceStatus={mockOnChangeInvoiceStatus}
+                onChangeInvoiceStatus={onChangeInvoiceStatus}
             />
         );
 
@@ -167,14 +152,14 @@ describe('InvoiceItemPayment', () => {
     });
 
     it('shows loading state for Cancel button when isUpdatingOnCancel is true', () => {
-        const invoice = buildInvoice('123', InvoiceStatus.PENDING, 150.50, 'EUR');
+        const invoice = buildInvoice(InvoiceStatus.PENDING);
 
         render(
             <InvoiceItemPayment
                 invoice={invoice}
                 isUpdatingOnPaid={false}
                 isUpdatingOnCancel={true}
-                onChangeInvoiceStatus={mockOnChangeInvoiceStatus}
+                onChangeInvoiceStatus={onChangeInvoiceStatus}
             />
         );
 
@@ -182,18 +167,14 @@ describe('InvoiceItemPayment', () => {
         expect(screen.getByTestId('cancel-invoice-button')).toBeDisabled();
     });
 
-    const buildInvoice = (id: string, status: InvoiceStatus, amount: number, currency: string): Invoice => {
-        const money = Builder<Money>()
-            .amount(amount)
-            .currency(currency)
-            .build();
-        return Builder<Invoice>()
-            .id(id)
+    const ID = '123'
+    const buildInvoice = (status: InvoiceStatus): Invoice =>
+        Builder<Invoice>()
+            .id(ID)
             .operationId('op-123')
-            .amount(money)
+            .amount(Builder<Money>().amount(150.50).currency('EUR').build())
             .status(status)
             .createdAt('2025-02-01T10:00:00Z')
             .updatedAt('2025-02-01T10:00:00Z')
             .build();
-    };
 });

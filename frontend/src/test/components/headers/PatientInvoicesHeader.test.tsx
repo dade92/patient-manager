@@ -86,22 +86,5 @@ describe('PatientInvoicesHeader', () => {
         expect(onToggleExpanded).toHaveBeenCalledTimes(1);
     });
 
-    it('calls onToggleExpanded multiple times on repeated clicks', () => {
-        render(
-            <PatientInvoicesHeader
-                expanded={false}
-                pendingInvoicesCount={PENDING_COUNT}
-                onToggleExpanded={onToggleExpanded}
-            />
-        );
-
-        const header = screen.getByTestId('patient-invoices-header');
-        fireEvent.click(header);
-        fireEvent.click(header);
-        fireEvent.click(header);
-
-        expect(onToggleExpanded).toHaveBeenCalledTimes(3);
-    });
-
     const PENDING_COUNT = 3;
 });

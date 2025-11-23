@@ -7,16 +7,10 @@ describe('AssetListItem', () => {
         render(<AssetListItem asset={ASSET_FILENAME}/>);
 
         const link = screen.getByTestId('asset-link');
+        const chip = screen.getByTestId('asset-chip');
 
         expect(link).toBeInTheDocument();
         expect(link).toHaveAttribute('href', `/files?filename=${ASSET_FILENAME}`);
-    });
-
-    it('renders chip with asset label', () => {
-        render(<AssetListItem asset={ASSET_FILENAME}/>);
-
-        const chip = screen.getByTestId('asset-chip');
-
         expect(chip).toBeInTheDocument();
         expect(chip).toHaveTextContent(ASSET_FILENAME);
     });

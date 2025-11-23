@@ -6,24 +6,24 @@ import {Builder} from "builder-pattern";
 
 describe('NoteListItem', () => {
     it('renders note with divider when not last', () => {
-        const note = buildNote(NOTE_CONTENT, NOTE_CREATED_AT);
+        const note = buildNote(NOTE_CONTENT, CREATED_AT);
 
         render(<NoteListItem note={note} isLast={false}/>);
 
         expect(screen.getByTestId('note-list-item')).toBeInTheDocument();
         expect(screen.getByTestId('note-text')).toHaveTextContent(NOTE_CONTENT);
-        expect(screen.getByTestId('note-text')).toHaveTextContent(NOTE_CREATED_AT);
+        expect(screen.getByTestId('note-text')).toHaveTextContent(CREATED_AT);
         expect(screen.getByTestId('note-divider')).toBeInTheDocument();
     });
 
     it('renders note without divider when last', () => {
-        const note = buildNote(NOTE_CONTENT, NOTE_CREATED_AT);
+        const note = buildNote(NOTE_CONTENT, CREATED_AT);
 
         render(<NoteListItem note={note} isLast={true}/>);
 
         expect(screen.getByTestId('note-list-item')).toBeInTheDocument();
         expect(screen.getByTestId('note-text')).toHaveTextContent(NOTE_CONTENT);
-        expect(screen.getByTestId('note-text')).toHaveTextContent(NOTE_CREATED_AT);
+        expect(screen.getByTestId('note-text')).toHaveTextContent(CREATED_AT);
         expect(screen.queryByTestId('note-divider')).toBeNull();
     });
 
@@ -31,8 +31,8 @@ describe('NoteListItem', () => {
         const firstContent = 'Initial assessment complete';
         const secondContent = 'Patient notified about results';
 
-        const firstNote = buildNote(firstContent, NOTE_CREATED_AT);
-        const secondNote = buildNote(secondContent, NOTE_CREATED_AT);
+        const firstNote = buildNote(firstContent, CREATED_AT);
+        const secondNote = buildNote(secondContent, CREATED_AT);
 
         render(
             <>
@@ -45,14 +45,14 @@ describe('NoteListItem', () => {
         expect(items.length).toBe(2);
 
         expect(screen.getAllByTestId('note-text')[0]).toHaveTextContent(firstContent);
-        expect(screen.getAllByTestId('note-text')[0]).toHaveTextContent(NOTE_CREATED_AT);
+        expect(screen.getAllByTestId('note-text')[0]).toHaveTextContent(CREATED_AT);
         expect(screen.getAllByTestId('note-text')[1]).toHaveTextContent(secondContent);
-        expect(screen.getAllByTestId('note-text')[1]).toHaveTextContent(NOTE_CREATED_AT);
+        expect(screen.getAllByTestId('note-text')[1]).toHaveTextContent(CREATED_AT);
         expect(screen.getAllByTestId('note-divider').length).toBe(1);
     });
 
-    const NOTE_CONTENT = 'Follow-up required';
-    const NOTE_CREATED_AT = '2025-02-01T10:00:00';
+    const NOTE_CONTENT = 'content';
+    const CREATED_AT = '2025-02-01T10:00:00';
     const buildNote = (content: string, createdAt: string): OperationNote =>
         Builder<OperationNote>()
             .content(content)
