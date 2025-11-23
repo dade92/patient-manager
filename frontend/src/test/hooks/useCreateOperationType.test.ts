@@ -20,7 +20,6 @@ describe('useCreateOperationType', () => {
     });
 
     it('should successfully create an operation type', async () => {
-        const formData = Builder<CreateOperationTypeFormData>().build();
         const adaptedPayload = {
             type: 'CLEANING',
             description: 'Dental cleaning',
@@ -45,17 +44,16 @@ describe('useCreateOperationType', () => {
         const {result} = renderHook(() => useCreateOperationType({onSuccess: mockOnSuccess}));
 
         await act(async () => {
-            await result.current.createOperationType(formData);
+            await result.current.createOperationType(FORM_DATA);
         });
 
         expect(result.current).toEqual(expected);
-        expect(mockedAdaptCreateOperationTypePayload).toHaveBeenCalledWith(formData);
+        expect(mockedAdaptCreateOperationTypePayload).toHaveBeenCalledWith(FORM_DATA);
         expect(mockedRestClient.post).toHaveBeenCalledWith('/api/operation-type', adaptedPayload);
         expect(mockOnSuccess).toHaveBeenCalledTimes(1);
     });
 
     it('should handle error when creating operation type fails', async () => {
-        const formData = Builder<CreateOperationTypeFormData>().build();
         const adaptedPayload = {
             type: 'CLEANING',
             description: 'Dental cleaning',
@@ -76,10 +74,12 @@ describe('useCreateOperationType', () => {
         const {result} = renderHook(() => useCreateOperationType({onSuccess: mockOnSuccess}));
 
         await act(async () => {
-            await result.current.createOperationType(formData);
+            await result.current.createOperationType(FORM_DATA);
         });
 
         expect(result.current).toEqual(expected);
         expect(mockOnSuccess).not.toHaveBeenCalled();
     });
+
+    const FORM_DATA = Builder<CreateOperationTypeFormData>().build();
 });

@@ -9,14 +9,12 @@ jest.mock('../../utils/restClient');
 const mockedRestClient = RestClient as jest.Mocked<typeof RestClient>;
 
 describe('useAddNote', () => {
-    const createdOperation = Builder<Operation>().build()
-
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
     it('should successfully add a note', async () => {
-        mockedRestClient.post.mockResolvedValue(createdOperation);
+        mockedRestClient.post.mockResolvedValue(CREATED_OPERATION);
         const {result} = renderHook(() => useAddNote(OPERATION_ID));
 
         let returnedOperation: Operation | null = null;
@@ -31,7 +29,7 @@ describe('useAddNote', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(returnedOperation).toEqual(createdOperation);
+        expect(returnedOperation).toEqual(CREATED_OPERATION);
         expect(mockedRestClient.post).toHaveBeenCalledWith(`/api/operation/${OPERATION_ID}/notes`, {content: NOTE});
         expect(mockedRestClient.post).toHaveBeenCalledTimes(1);
     });
@@ -57,7 +55,8 @@ describe('useAddNote', () => {
         expect(mockedRestClient.post).toHaveBeenCalledTimes(1);
     });
 
-    const OPERATION_ID = 'OP-1';
-    const NOTE = 'New note';
+    const OPERATION_ID = 'OP-ID';
+    const CREATED_OPERATION = Builder<Operation>().id(OPERATION_ID).build()
+    const NOTE = 'a note';
 });
 

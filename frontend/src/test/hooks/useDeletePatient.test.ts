@@ -78,6 +78,6 @@ describe('useDeletePatient', () => {
         expect(mockedRestClient.post).toHaveBeenCalledTimes(1);
     });
 
-    const PATIENT_ID = 'PAT-001';
+    const PATIENT_ID = 'PAT-ID';
 });
 

@@ -29,12 +29,7 @@ describe('useCreateInvoice', () => {
             amount: {amount: 150, currency: 'EUR'} as Money
         };
 
-        const createdInvoice: Invoice = Builder<Invoice>()
-            .id(INVOICE_ID)
-            .operationId(OPERATION_ID)
-            .build();
-
-        mockedRestClient.post.mockResolvedValue(createdInvoice);
+        mockedRestClient.post.mockResolvedValue(AN_INVOICE);
 
         const {result} = renderHook(() => useCreateInvoice(PATIENT_ID));
 
@@ -50,9 +45,9 @@ describe('useCreateInvoice', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(invoice).toEqual(createdInvoice);
+        expect(invoice).toEqual(AN_INVOICE);
         expect(mockedRestClient.post).toHaveBeenCalledWith('/api/invoice', payload);
-        expect(mockAddCachedInvoiceForPatient).toHaveBeenCalledWith(PATIENT_ID, createdInvoice);
+        expect(mockAddCachedInvoiceForPatient).toHaveBeenCalledWith(PATIENT_ID, AN_INVOICE);
     });
 
     it('should handle error when creating invoice fails', async () => {
@@ -85,4 +80,9 @@ describe('useCreateInvoice', () => {
     const INVOICE_ID = 'INV-001';
     const PATIENT_ID = 'PAT-001';
     const OPERATION_ID = 'OP-001';
+    const AN_INVOICE =
+        Builder<Invoice>()
+            .id(INVOICE_ID)
+            .operationId(OPERATION_ID)
+            .build();
 });

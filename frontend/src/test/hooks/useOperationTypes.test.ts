@@ -14,8 +14,7 @@ describe('useOperationTypes', () => {
     });
 
     it('should successfully fetch and return operation types data', async () => {
-        const apiResponse = {types: OPERATION_TYPES};
-        mockedRestClient.get.mockResolvedValue(apiResponse);
+        mockedRestClient.get.mockResolvedValue({types: OPERATION_TYPES});
 
         const {result} = renderHook(() => useOperationTypes());
 

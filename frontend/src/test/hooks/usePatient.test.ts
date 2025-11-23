@@ -24,10 +24,8 @@ describe('usePatient', () => {
     });
 
     it('should successfully fetch and cache the retrieved patient', async () => {
-        const patient = Builder<Patient>().build();
-
         mockGetCachedPatient.mockReturnValue(undefined);
-        mockedRestClient.get.mockResolvedValue(patient);
+        mockedRestClient.get.mockResolvedValue(PATIENT);
 
         const {result} = renderHook(() => usePatient(PATIENT_ID));
 
@@ -40,7 +38,7 @@ describe('usePatient', () => {
         });
 
         const expected = {
-            patient: patient,
+            patient: PATIENT,
             loading: false,
             error: null
         };
@@ -50,7 +48,7 @@ describe('usePatient', () => {
         expect(mockGetCachedPatient).toHaveBeenCalledTimes(1);
         expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/patient/${PATIENT_ID}`);
         expect(mockedRestClient.get).toHaveBeenCalledTimes(1);
-        expect(mockSetCachedPatient).toHaveBeenCalledWith(PATIENT_ID, patient);
+        expect(mockSetCachedPatient).toHaveBeenCalledWith(PATIENT_ID, PATIENT);
     });
 
     it('should return cached patient when available', async () => {
@@ -171,4 +169,5 @@ describe('usePatient', () => {
     });
 
     const PATIENT_ID = 'PAT-001';
+    const PATIENT = Builder<Patient>().id(PATIENT_ID).build();
 });

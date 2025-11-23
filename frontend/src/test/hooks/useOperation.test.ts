@@ -88,8 +88,7 @@ describe('useOperation', () => {
 
     it('handles correctly operation not found', async () => {
         getCachedOperation.mockReturnValue(undefined);
-        const notFoundError: any = {status: 404};
-        mockedRestClient.get.mockRejectedValue(notFoundError);
+        mockedRestClient.get.mockRejectedValue({status: 404});
 
         const {result} = renderHook(() => useOperation(OPERATION_ID));
         await waitFor(() => result.current.error !== null);
@@ -157,7 +156,7 @@ describe('useOperation', () => {
             .id(OPERATION_ID)
             .patientId(PATIENT_ID)
             .build()
-    const OPERATION_ID = 'OP-001';
-    const PATIENT_ID = 'PAT-001';
+    const OPERATION_ID = 'OP-ID';
+    const PATIENT_ID = 'PAT-ID';
 });
 

@@ -15,7 +15,6 @@ describe('useCreatePatient', () => {
     });
 
     it('should successfully create a patient', async () => {
-        const formData = Builder<NewPatientForm>().build();
         const createdPatient: Patient = Builder<Patient>().build();
         mockedRestClient.post.mockResolvedValue(createdPatient);
 
@@ -23,7 +22,7 @@ describe('useCreatePatient', () => {
 
         let patient;
         await act(async () => {
-            patient = await result.current.createPatient(formData);
+            patient = await result.current.createPatient(FORM_DATA);
         });
 
         const expected = {
@@ -34,19 +33,18 @@ describe('useCreatePatient', () => {
 
         expect(result.current).toEqual(expected);
         expect(patient).toEqual(createdPatient);
-        expect(mockedRestClient.post).toHaveBeenCalledWith('/api/patient', formData);
+        expect(mockedRestClient.post).toHaveBeenCalledWith('/api/patient', FORM_DATA);
         expect(mockedRestClient.post).toHaveBeenCalledTimes(1);
     });
 
     it('should handle error when creating patient fails', async () => {
-        const formData = Builder<NewPatientForm>().build();
         mockedRestClient.post.mockRejectedValue(new Error());
 
         const {result} = renderHook(() => useCreatePatient());
 
         let patient;
         await act(async () => {
-            patient = await result.current.createPatient(formData);
+            patient = await result.current.createPatient(FORM_DATA);
         });
 
         const expected = {
@@ -57,7 +55,9 @@ describe('useCreatePatient', () => {
 
         expect(result.current).toEqual(expected);
         expect(patient).toBeNull();
-        expect(mockedRestClient.post).toHaveBeenCalledWith('/api/patient', formData);
+        expect(mockedRestClient.post).toHaveBeenCalledWith('/api/patient', FORM_DATA);
         expect(mockedRestClient.post).toHaveBeenCalledTimes(1);
     });
+
+    const FORM_DATA = Builder<NewPatientForm>().build();
 });

@@ -80,7 +80,7 @@ describe('usePatientSearch', () => {
     });
 
     it('should handle 404 error by setting empty patients array', async () => {
-        const query = 'NonExistent';
+        const query = 'query';
         mockedRestClient.get.mockRejectedValue({status: 404, message: 'Patients not found'});
 
         const {result} = renderHook(() => usePatientSearch());
