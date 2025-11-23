@@ -19,7 +19,7 @@ describe('CreateOperationTypeAdapter', () => {
             .type('  teeth cleaning  ')
             .description('  Professional dental cleaning procedure  ')
             .amount('150.75')
-            .currency('EUR')
+            .currency(CURRENCY)
             .build();
 
         const result = adaptCreateOperationTypePayload(formData);
@@ -29,7 +29,7 @@ describe('CreateOperationTypeAdapter', () => {
             description: 'Professional dental cleaning procedure',
             estimatedBaseCost: {
                 amount: 150.75,
-                currency: 'EUR'
+                currency: CURRENCY
             }
         });
 
@@ -48,4 +48,6 @@ describe('CreateOperationTypeAdapter', () => {
             () => adaptCreateOperationTypePayload(formData)
         ).toThrow(error);
     });
+
+    const CURRENCY = 'EUR';
 });

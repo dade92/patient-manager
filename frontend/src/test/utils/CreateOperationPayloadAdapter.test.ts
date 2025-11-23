@@ -5,6 +5,7 @@ import {Builder} from "builder-pattern";
 import {ToothDetailForm} from "../../components/forms/ToothSelectionForm";
 import {toMoney} from "../../utils/AmountToMoneyConverter";
 import {validateOperationForm} from "../../utils/OperationFormValidator";
+import {Money} from "../../types/Money";
 
 jest.mock(
     '../../utils/AmountToMoneyConverter',
@@ -24,9 +25,9 @@ describe('CreateOperationPayloadAdapter', () => {
 
     it('should correctly adapt operation form data', () => {
         toMoneyMock
-            .mockReturnValueOnce({amount: 125.5, currency: 'EUR'})
-            .mockReturnValueOnce({amount: 50.0, currency: 'EUR'})
-            .mockReturnValueOnce({amount: 75.5, currency: 'EUR'});
+            .mockReturnValueOnce(Builder<Money>().amount(AN_AMOUNT).currency(EUR).build())
+            .mockReturnValueOnce(Builder<Money>().amount(ANOTHER_AMOUNT).currency(EUR).build())
+            .mockReturnValueOnce(Builder<Money>().amount(THIRD_AMOUNT).currency(EUR).build());
 
         const formData = Builder<OperationForm>()
             .type(TYPE)
@@ -59,8 +60,8 @@ describe('CreateOperationPayloadAdapter', () => {
             patientId: PATIENT_ID,
             description: DESCRIPTION,
             estimatedCost: {
-                amount: 125.5,
-                currency: 'EUR'
+                amount: AN_AMOUNT,
+                currency: EUR
             },
             executor: EXECUTOR,
             patientOperationInfo: {
@@ -68,16 +69,16 @@ describe('CreateOperationPayloadAdapter', () => {
                     {
                         toothNumber: A_TOOTH_NUMBER,
                         estimatedCost: {
-                            amount: 50.00,
-                            currency: 'EUR'
+                            amount: ANOTHER_AMOUNT,
+                            currency: EUR
                         },
                         toothType: ToothType.PERMANENT
                     },
                     {
                         toothNumber: ANOTHER_TOOTH_NUMBER,
                         estimatedCost: {
-                            amount: 75.50,
-                            currency: 'EUR'
+                            amount: THIRD_AMOUNT,
+                            currency: EUR
                         },
                         toothType: ToothType.DECIDUOUS
                     }
@@ -111,4 +112,8 @@ describe('CreateOperationPayloadAdapter', () => {
     const EXECUTOR = 'Dr. Smith';
     const A_TOOTH_NUMBER = 11;
     const ANOTHER_TOOTH_NUMBER = 12;
+    const EUR = 'EUR';
+    const AN_AMOUNT = 125.5;
+    const ANOTHER_AMOUNT = 50;
+    const THIRD_AMOUNT = 75.5;
 });
