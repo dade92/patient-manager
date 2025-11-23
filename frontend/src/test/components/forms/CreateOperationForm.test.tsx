@@ -138,9 +138,9 @@ describe('CreateOperationForm', () => {
     });
 
     const CHOSEN_OPERATION_TYPE = 'CLEANING';
-    const DESCRIPTION = 'Regular cleaning operation';
+    const DESCRIPTION = 'description';
     const EXECUTOR = 'Dr. Smith';
-    const PATIENT_ID = 'PAT-001';
+    const PATIENT_ID = 'PAT-ID';
     const formData = {
         type: CHOSEN_OPERATION_TYPE,
         patientId: PATIENT_ID,
@@ -150,7 +150,7 @@ describe('CreateOperationForm', () => {
     };
     const buildOperation = (): Operation =>
         Builder<Operation>()
-            .id('OP-001')
+            .id('OP-ID')
             .type(CHOSEN_OPERATION_TYPE)
             .patientId(PATIENT_ID)
             .description(DESCRIPTION)

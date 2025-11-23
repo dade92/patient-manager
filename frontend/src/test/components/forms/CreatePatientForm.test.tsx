@@ -85,7 +85,6 @@ describe('CreatePatientForm', () => {
     const BIRTH_DATE = '1990-01-01';
     const TAX_CODE = 'JDOE123';
     const HISTORY = 'No allergies';
-
     const buildPatient = (name: string, email: string): Patient =>
         Builder<Patient>()
             .id(ID)
@@ -110,7 +109,6 @@ describe('CreatePatientForm', () => {
         birthDate: BIRTH_DATE,
         medicalHistory: HISTORY
     };
-
     const compileForm = (formData: {
         name: string;
         email: string;

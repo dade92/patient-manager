@@ -1,6 +1,7 @@
 import React from 'react';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {CreateOperationTypeForm} from '../../../components/forms/CreateOperationTypeForm';
+
 const {useCreateOperationType} = require('../../../hooks/useCreateOperationType');
 
 const createOperationType = jest.fn();
@@ -72,15 +73,11 @@ describe('CreateOperationTypeForm', () => {
         expect(onOperationTypeCreated).not.toHaveBeenCalled();
     });
 
-    const TYPE = 'CLEANING';
-    const DESCRIPTION = 'Regular dental cleaning';
-    const AMOUNT = '50.00';
-    const CURRENCY = 'EUR';
     const formData = {
-        type: TYPE,
-        description: DESCRIPTION,
-        amount: AMOUNT,
-        currency: CURRENCY
+        type: 'CLEANING',
+        description: 'Regular dental cleaning',
+        amount: '50.00',
+        currency: 'EUR'
     };
     const compileForm = (formData: {
         type: string;

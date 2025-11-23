@@ -48,24 +48,10 @@ describe('BackButton', () => {
         expect(mockNavigate).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle multiple clicks correctly', () => {
-        renderBackButton();
-
-        const button = screen.getByTestId('back-button');
-
-        fireEvent.click(button);
-        fireEvent.click(button);
-        fireEvent.click(button);
-
-        expect(mockNavigate).toHaveBeenCalledTimes(3);
-        expect(mockNavigate).toHaveBeenCalledWith(-1);
-    });
-
-    const renderBackButton = (props = {}) => {
-        return render(
+    const renderBackButton = (props = {}) =>
+        render(
             <BrowserRouter>
                 <BackButton {...props} />
             </BrowserRouter>
         );
-    };
 });

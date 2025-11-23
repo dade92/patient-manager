@@ -30,7 +30,7 @@ describe('ToothSelectionForm', () => {
         jest.clearAllMocks();
     });
 
-    it('renders all components properly', () => {
+    it('renders properly', () => {
         render(<ToothSelectionForm onSelectionChange={onSelectionChange} estimatedCost={ESTIMATED_COST}/>);
 
         expect(screen.getByTestId('tooth-selection-form')).toBeInTheDocument();
