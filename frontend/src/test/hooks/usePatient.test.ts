@@ -12,19 +12,19 @@ const mockedRestClient = RestClient as jest.Mocked<typeof RestClient>;
 const mockedUseCache = useCache as jest.Mock;
 
 describe('usePatient', () => {
-    const mockGetCachedPatient = jest.fn();
-    const mockSetCachedPatient = jest.fn();
+    const getCachedPatient = jest.fn();
+    const setCachedPatient = jest.fn();
 
     beforeEach(() => {
         jest.clearAllMocks();
         mockedUseCache.mockReturnValue({
-            getCachedPatient: mockGetCachedPatient,
-            setCachedPatient: mockSetCachedPatient,
+            getCachedPatient: getCachedPatient,
+            setCachedPatient: setCachedPatient,
         });
     });
 
     it('should successfully fetch and cache the retrieved patient', async () => {
-        mockGetCachedPatient.mockReturnValue(undefined);
+        getCachedPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValue(PATIENT);
 
         const {result} = renderHook(() => usePatient(PATIENT_ID));
@@ -44,16 +44,16 @@ describe('usePatient', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(mockGetCachedPatient).toHaveBeenCalledWith(PATIENT_ID);
-        expect(mockGetCachedPatient).toHaveBeenCalledTimes(1);
+        expect(getCachedPatient).toHaveBeenCalledWith(PATIENT_ID);
+        expect(getCachedPatient).toHaveBeenCalledTimes(1);
         expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/patient/${PATIENT_ID}`);
         expect(mockedRestClient.get).toHaveBeenCalledTimes(1);
-        expect(mockSetCachedPatient).toHaveBeenCalledWith(PATIENT_ID, PATIENT);
+        expect(setCachedPatient).toHaveBeenCalledWith(PATIENT_ID, PATIENT);
     });
 
     it('should return cached patient when available', async () => {
         const cachedPatient: Patient = Builder<Patient>().build();
-        mockGetCachedPatient.mockReturnValue(cachedPatient);
+        getCachedPatient.mockReturnValue(cachedPatient);
 
         const {result} = renderHook(() => usePatient(PATIENT_ID));
 
@@ -68,14 +68,14 @@ describe('usePatient', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(mockGetCachedPatient).toHaveBeenCalledWith(PATIENT_ID);
-        expect(mockGetCachedPatient).toHaveBeenCalledTimes(1);
+        expect(getCachedPatient).toHaveBeenCalledWith(PATIENT_ID);
+        expect(getCachedPatient).toHaveBeenCalledTimes(1);
         expect(mockedRestClient.get).not.toHaveBeenCalled();
-        expect(mockSetCachedPatient).not.toHaveBeenCalled();
+        expect(setCachedPatient).not.toHaveBeenCalled();
     });
 
     it('should handle 404 error with specific message', async () => {
-        mockGetCachedPatient.mockReturnValue(undefined);
+        getCachedPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockRejectedValue({
             status: 404,
             message: 'Patient not found'
@@ -94,9 +94,9 @@ describe('usePatient', () => {
         };
 
         expect(result.current).toEqual(expected);
-        expect(mockGetCachedPatient).toHaveBeenCalledWith(PATIENT_ID);
+        expect(getCachedPatient).toHaveBeenCalledWith(PATIENT_ID);
         expect(mockedRestClient.get).toHaveBeenCalledWith(`/api/patient/${PATIENT_ID}`);
-        expect(mockSetCachedPatient).not.toHaveBeenCalled();
+        expect(setCachedPatient).not.toHaveBeenCalled();
     });
 
     it('should refetch when patientId changes', async () => {
@@ -107,7 +107,7 @@ describe('usePatient', () => {
         const secondPatient: Patient = Builder<Patient>()
             .id(secondPatientId)
             .build();
-        mockGetCachedPatient.mockReturnValue(undefined);
+        getCachedPatient.mockReturnValue(undefined);
         mockedRestClient.get.mockResolvedValueOnce(firstPatient);
         mockedRestClient.get.mockResolvedValueOnce(secondPatient);
 
@@ -136,7 +136,7 @@ describe('usePatient', () => {
 
     it('should set loading to true when starting to fetch', async () => {
         const patient: Patient = Builder<Patient>().build();
-        mockGetCachedPatient.mockReturnValue(undefined);
+        getCachedPatient.mockReturnValue(undefined);
 
         let resolvePromise: () => void;
         const promise = new Promise<Patient>((resolve) => {

@@ -16,14 +16,14 @@ const mockedAdaptOperationPayload = adaptOperationPayload as jest.Mock;
 const mockedUseCache = useCache as jest.Mock;
 
 describe('useCreateOperation', () => {
-    const mockGetCachedOperationsForPatient = jest.fn();
-    const mockSetCachedOperationsForPatient = jest.fn();
+    const getCachedOperationsForPatient = jest.fn();
+    const setCachedOperationsForPatient = jest.fn();
 
     beforeEach(() => {
         jest.clearAllMocks();
         mockedUseCache.mockReturnValue({
-            getCachedOperationsForPatient: mockGetCachedOperationsForPatient,
-            setCachedOperationsForPatient: mockSetCachedOperationsForPatient
+            getCachedOperationsForPatient: getCachedOperationsForPatient,
+            setCachedOperationsForPatient: setCachedOperationsForPatient
         });
     });
 
@@ -44,7 +44,7 @@ describe('useCreateOperation', () => {
         ];
         mockedAdaptOperationPayload.mockReturnValue(adaptedPayload);
         mockedRestClient.post.mockResolvedValue(CREATED_OPERATION);
-        mockGetCachedOperationsForPatient.mockReturnValue(existingOperations);
+        getCachedOperationsForPatient.mockReturnValue(existingOperations);
 
         const {result} = renderHook(() => useCreateOperation(PATIENT_ID));
 
@@ -63,8 +63,8 @@ describe('useCreateOperation', () => {
         expect(operation).toEqual(CREATED_OPERATION);
         expect(mockedAdaptOperationPayload).toHaveBeenCalledWith(FORM_DATA);
         expect(mockedRestClient.post).toHaveBeenCalledWith('/api/operation', adaptedPayload);
-        expect(mockGetCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID);
-        expect(mockSetCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID, [CREATED_OPERATION, ...existingOperations]);
+        expect(getCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID);
+        expect(setCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID, [CREATED_OPERATION, ...existingOperations]);
     });
 
     it('should handle error when creating operation fails', async () => {
@@ -89,14 +89,14 @@ describe('useCreateOperation', () => {
         expect(result.current).toEqual(expected);
         expect(operation).toBeNull();
         expect(mockedRestClient.post).toHaveBeenCalledTimes(1);
-        expect(mockSetCachedOperationsForPatient).not.toHaveBeenCalled();
-        expect(mockGetCachedOperationsForPatient).not.toHaveBeenCalled();
+        expect(setCachedOperationsForPatient).not.toHaveBeenCalled();
+        expect(getCachedOperationsForPatient).not.toHaveBeenCalled();
     });
 
     it('should handle case when no cached operations exist', async () => {
         mockedAdaptOperationPayload.mockReturnValue({});
         mockedRestClient.post.mockResolvedValue(CREATED_OPERATION);
-        mockGetCachedOperationsForPatient.mockReturnValue(null);
+        getCachedOperationsForPatient.mockReturnValue(null);
 
         const {result} = renderHook(() => useCreateOperation(PATIENT_ID));
 
@@ -104,7 +104,7 @@ describe('useCreateOperation', () => {
             await result.current.createOperation(FORM_DATA);
         });
 
-        expect(mockSetCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID, [CREATED_OPERATION]);
+        expect(setCachedOperationsForPatient).toHaveBeenCalledWith(PATIENT_ID, [CREATED_OPERATION]);
     });
 
     const PATIENT_ID = 'PAT-ID';

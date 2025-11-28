@@ -13,12 +13,12 @@ const mockedRestClient = RestClient as jest.Mocked<typeof RestClient>;
 const mockedUseCache = useCache as jest.Mock;
 
 describe('useCreateInvoice', () => {
-    const mockAddCachedInvoiceForPatient = jest.fn();
+    const addCachedInvoiceForPatient = jest.fn();
 
     beforeEach(() => {
         jest.clearAllMocks();
         mockedUseCache.mockReturnValue({
-            addCachedInvoiceForPatient: mockAddCachedInvoiceForPatient
+            addCachedInvoiceForPatient: addCachedInvoiceForPatient
         });
     });
 
@@ -47,7 +47,7 @@ describe('useCreateInvoice', () => {
         expect(result.current).toEqual(expected);
         expect(invoice).toEqual(AN_INVOICE);
         expect(mockedRestClient.post).toHaveBeenCalledWith('/api/invoice', payload);
-        expect(mockAddCachedInvoiceForPatient).toHaveBeenCalledWith(PATIENT_ID, AN_INVOICE);
+        expect(addCachedInvoiceForPatient).toHaveBeenCalledWith(PATIENT_ID, AN_INVOICE);
     });
 
     it('should handle error when creating invoice fails', async () => {
@@ -74,7 +74,7 @@ describe('useCreateInvoice', () => {
         expect(result.current).toEqual(expected);
         expect(invoice).toBeNull();
         expect(mockedRestClient.post).toHaveBeenCalledWith('/api/invoice', payload);
-        expect(mockAddCachedInvoiceForPatient).not.toHaveBeenCalled();
+        expect(addCachedInvoiceForPatient).not.toHaveBeenCalled();
     });
 
     const INVOICE_ID = 'INV-001';
